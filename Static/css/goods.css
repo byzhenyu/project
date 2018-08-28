@@ -1,0 +1,44 @@
+/**
+ * 商品类css样式
+ * create by songguoyuan
+*/
+.search-box { margin-top: 5px; }
+.search-box .order{ border:1px solid #eee; width:100%; height:40px; overflow:hidden; margin-top: 20px; }
+.search-box .order .orders{ display:inline-block; border-right:1px solid #eee; color:#93989B; padding:15px 12px; cursor:pointer;}
+.search-box .order .price{ background:url('../images/ico_filter.png') -16px 0 no-repeat; float:right; width:8px; height:10px; margin:2px 0 0 3px;}
+.search-box .order .s-up{ background-position: -8px 0;}
+.search-box .order .s-down{ background-position: 0 0;}
+.search-box .order .on,.order .on:hover{background:#ff682f; color:#fff;}
+.search-box .price-l-h { display:inline-block; border-right:1px solid #eee; color:#93989B; padding:10px 12px; cursor:pointer;}
+.search-box .order .input{ width:54px; height:21px; line-height:21px; border:1px solid #999; margin:0 2px;padding:0 4px;}
+.search-box .order .btn{ display:inline-block; height:23px; background:#f8f8f8;border:1px solid #eee; color:#999; line-height:23px; margin:8px 12px; padding:0 15px;}
+.search-box .order .btn.on{ background:#ff682f; border:1px solid #ff682f; color:#fff;}
+
+.search-box .tab-list{ display:table; position:relative; border:1px solid #eee; border-top:0 none; width:100%;}
+.search-box .tab-list .hidden{ overflow: hidden;}
+.search-box .tab-list:first-child{ border-top:1px solid #eee;}
+.search-box .tab-list .tab-hd,.tab-list .tab-bd,.tab-list .foot{ display:table-cell; height:40px; line-height:40px;}
+.search-box .tab-list .tab-hd{ width:70px; padding-right:6px; background:#f1f1f1; border-right:1px solid #eee; text-align:right;}
+.search-box .tab-list .tab-hd,.tab-list .tab-hd h4{ color:#818181; font-weight:400;}
+.search-box .tab-list .tab-bd{ padding-left:8px;}
+.search-box .tab-list .foot{ width:46px; padding:0 12px;}
+.search-box .tab-list .foot,.tab-list .foot a{ color:#757575;}
+.search-box .tab-list .icon{ position:relative;}
+.search-box .tab-list .foot .icon{ top:1px;}
+.search-box .tab-list .service .tags:hover .icon{ background-position:-21px -111px;}
+.search-box .tab-bd .tagbox{ height:40px;}
+.search-box .tab-bd .tagbox.show{ height:auto;}
+.search-box .tab-bd .tags,.tab-bd strong{ display:inline-block; cursor:pointer; font-size:12px; font-weight:400; color:#666; margin:0 14px;}
+.search-box .tab-bd strong{ margin-left:6px;}
+.search-box .tab-bd .tags:hover,.tab-bd .tags.on,.gd-attr-hd:hover,.gd-attr-hd.on,.tab-list .foot a:hover{ color:#ff682f;}
+.search-box .gd-attr{ display:inline-block;}
+.search-box .gd-attr-hd{ border:1px solid #999;color:#424242;cursor:pointer;margin:8px 0 8px 14px;padding:0 6px;font-weight:400;line-height:24px;}
+.search-box .gd-attr-hd:hover,.gd-attr-hd.on{ border-color:#ff682f;}
+.search-box .gd-attr-hd .icon{ top:2px;left:3px;}
+.search-box .gd-attr-list{ position:absolute;display:none;top:41px;left:0;width:1136px;background:#fff;border:1px solid #eee;z-index:3;}
+
+/* 列表页分页样式 */
+.list-page{margin:30px auto; width:800px!important; text-align: center;}
+.list-page a {text-decoration: none; color: #666; border: 1px solid #e3e3e3; background-color: #fff;}
+.list-page a, .list-page span {margin: auto; padding: 6px 12px;}
+.list-page span.current{ border: 1px solid #ff682f;background: #ff682f;color: #fff;height: 30px;line-height: 30px;}
