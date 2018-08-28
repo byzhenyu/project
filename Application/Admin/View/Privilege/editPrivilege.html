@@ -1,0 +1,133 @@
+<extend name="Common/base"/>
+<block name="style">
+
+</block>
+
+<block name="body">
+	<div class="row-content am-cf">
+		<div class="row">
+			<div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+				<div class="widget am-cf">
+					<div class="widget-head am-cf">
+						<div class="widget-title am-fl">{$privilege['id'] ? '编辑' : '添加'}权限节点</div>
+					</div>
+					<div class="widget-body am-fr">
+
+						<form action="__ACTION__" method="post" class="ajaxForm am-form tpl-form-border-form tpl-form-border-br">
+
+							<div class="am-form-group">
+								<label for="parent_id" class="am-u-sm-3 am-form-label">
+									所属上级权限
+								</label>
+								<div class="am-u-sm-9">
+									<div class="tpl-table-list-select am-align-left">
+										<select data-am-selected="{searchBox: 1}" style="display: none;" name="parent_id" id="parent_id">
+											<option value="0">顶级权限</option>
+											<foreach name="privilegelist" item="v">
+												<option value="{$v['id']}">
+													<if condition="$v['parent_id'] eq 0"> <b> {$v['pri_name']} </b>
+													<else /> {$v['level']|str_repeat='&nbsp;&nbsp;&nbsp;&nbsp;',###} ├- {$v['pri_name']}
+													</if>
+												</option>
+											</foreach>
+										</select>
+										<if condition="$privilege['parent_id'] neq 0">
+											<script>
+                                                $('#parent_id').val("{$privilege['parent_id']}");
+											</script>
+										</if>
+									</div>
+								</div>
+							</div>
+
+							<div class="am-form-group">
+								<label for="pri_name" class="am-u-sm-3 am-form-label">
+									角色名称 <span class="tpl-form-line-small-title must-input">*</span>
+								</label>
+								<div class="am-u-sm-7 am-u-sm-pull-2">
+									<input type="text" class="tpl-form-input" id="pri_name" name="pri_name" value="{$privilege['pri_name']}" placeholder="请输入角色名称" >
+								</div>
+							</div>
+
+							<div class="am-form-group">
+								<label for="module_name" class="am-u-sm-3 am-form-label">
+									模块名称
+								</label>
+								<div class="am-u-sm-7 am-u-sm-pull-2">
+									<input type="text" class="tpl-form-input" id="module_name" name="module_name" value="{$privilege['module_name']}" placeholder="请输入模块名称" >
+								</div>
+							</div>
+
+							<div class="am-form-group">
+								<label for="controller_name" class="am-u-sm-3 am-form-label">
+									控制器名称
+								</label>
+								<div class="am-u-sm-7 am-u-sm-pull-2">
+									<input type="text" class="tpl-form-input" id="controller_name" name="controller_name" value="{$privilege['controller_name']}" placeholder="请输入控制器名称" >
+								</div>
+							</div>
+
+							<div class="am-form-group">
+								<label for="action_name" class="am-u-sm-3 am-form-label">
+									方法名称
+								</label>
+								<div class="am-u-sm-7 am-u-sm-pull-2">
+									<input type="text" class="tpl-form-input" id="action_name" name="action_name" value="{$privilege['action_name']}" placeholder="请输入方法名称" >
+								</div>
+							</div>
+
+							<div class="am-form-group">
+								<label for="params" class="am-u-sm-3 am-form-label">
+									URL参数
+								</label>
+								<div class="am-u-sm-7 am-u-sm-pull-2">
+									<input type="text" class="tpl-form-input" id="params" name="params" value="{$privilege['params']}" placeholder="请输入URL参数路径" >
+								</div>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label">
+									排序 <span class="tpl-form-line-small-title must-input">*</span>
+								</label>
+								<div class="am-u-sm-9">
+									<div class="row">
+										<div class="am-u-sm-3">
+											<input type="text" placeholder="从小到大排序" id="sort" name="sort" value="{$privilege['sort']}">
+											<small>请输入整数类型</small>
+										</div>
+										<div class="am-u-sm-9"></div></div>
+								</div>
+							</div>
+
+							<div class="am-form-group">
+								<div class="am-u-sm-9 am-u-sm-push-3">
+									<input type="hidden" name="id" value="{$privilege['id']}">
+									<button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+									<button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback();">返回</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</block>
+
+<block name="script">
+	<script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.all.min.js"></script>
+	<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ajaxupload/ajaxupload.js?v=1.0"></script>
+	<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ajaxupload/imgupload.js?v=1.0"></script>
+
+	<script type="text/javascript">
+        var ue = UE.getEditor('content1', {
+            autoHeight: false,
+            initialFrameHeight: 500
+        })
+
+        $(function(){
+            ajaxUpload('#btnUpload', $("#img"), 'Article', '');
+        })
+	</script>
+</block>

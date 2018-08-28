@@ -1,0 +1,139 @@
+<extend name="Common/base"/>
+<block name="style">
+
+</block>
+
+<block name="body">
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                <div class="widget am-cf">
+                    <div class="widget-head am-cf">
+                        <div class="widget-title  am-cf">用户列表</div>
+
+                    </div>
+                    <div class="widget-body  am-fr">
+
+                        <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+                            <div class="am-form-group">
+                                <div class="am-btn-toolbar">
+                                    <div class="am-btn-group am-btn-group-xs">
+                                        <button type="button" class="am-btn am-btn-default am-btn-danger" onclick="recycle('chkbId', '确认删除?! 删除后无法恢复!', true)">
+                                            <span class="am-icon-trash-o"></span> 批量删除
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <form action="__SELF__" method="get">
+                            <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
+                                <div class="am-form-group tpl-table-list-select">
+                                    <if condition="rank_id neq -1">
+                                        <script>
+                                            $('#rank_id').val('{$rank_id}');
+                                        </script>
+                                    </if>
+                                </div>
+                            </div>
+                            <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+                                <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                                    <input type="text" class="am-form-field" name="keyword" placeholder="请输入会员账号" value="{$keyword}">
+                                    <span class="am-input-group-btn">
+                                        <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="submit"></button>
+                                        <a class="am-btn  am-btn-default am-btn-danger tpl-table-list-field am-icon-refresh" type="button" href="__ACTION__"></a>
+                                    </span>
+                                </div>
+                            </div>
+                            <input name="p" value="1" type="hidden"/>
+                        </form>
+
+                        <div class="am-u-sm-12">
+                            <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                                <thead>
+                                    <tr>
+                                        <th width="20"><input class="check-all" type="checkbox"></th>
+                                        <th width="60">编号</th>
+                                        <th width="20%" >会员手机/账号</th>
+                                        <th width="12%" class="align-center">可用资金</th>
+                                        <th width="12%" class="align-center">冻结资金</th>
+                                        <th width="18%" class="align-center">注册时间</th>
+                                        <th width="10%" class="align-center">状态</th>
+                                        <th width="15%">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <foreach name="userslist" item="v" key="k">
+                                        <tr class="gradeX">
+                                            <td><input value="{$v['user_id']}" class="ids" type="checkbox" name="chkbId"></td>
+                                            <td>{:pageNumber(15, $k+1)}</td>
+                                            <td>{$v['mobile']}</td>
+                                            <td class="align-center">￥{:fen_to_yuan($v['user_money'])}</td>
+                                            <td class="align-center">￥{:fen_to_yuan($v['frozen_money'])}</td>
+                                            <td class="align-center">{:time_format($v['register_time'])}</td>
+                                            <td class="align-center">
+                                                {:show_disabled($v['disabled'])}
+                                                
+                                            </td>
+                                            <td class="f-14">
+                                                <div class="tpl-table-black-operation">
+                                                    <if condition="$v['disabled'] eq 0">
+                                                        <a title="点击启用" href="javascript:void(0)" onclick="changeDisabled({$v['user_id']});">
+                                                            启用
+                                                        </a>
+                                                    </if>
+                                                    <if condition="$v['disabled'] eq 1">
+                                                        <a title="点击禁用" href="javascript:void(0)" class="tpl-table-black-operation-del" onclick="changeDisabled('{$v.user_id}');">
+                                                            禁用
+                                                        </a>
+                                                    </if>
+                                                    <a href="{:U('User/userDetail', array('user_id'=>$v['user_id']))}"> 用户详情 </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </foreach>
+
+                                <!-- more data -->
+                                </tbody>
+                            </table>
+
+                            <empty name="userslist">
+                                <h4>aOh! 没有相关内容!</h4>
+                            </empty>
+                        </div>
+                        <div class="am-u-lg-12 am-cf">
+                            <div class="am-fr">
+                                <div class="am-pagination tpl-pagination">
+                                    {$page}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+        function changeDisabled(user_id){
+            $.ajax({
+                url : "{:U('User/changeDisabled')}",
+                type : "POST",
+                dataType : "json",
+                data : {
+                    "user_id" : user_id,
+                },
+                success : function(data){
+                    toastr(data.info);
+                    if(data.status == 1){
+                        setInterval('reload()', 2000);
+                    }
+                }
+            });
+        }
+        function reload() {
+            location.reload();
+        }
+    </script>
+</block>

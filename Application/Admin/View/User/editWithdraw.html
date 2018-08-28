@@ -1,0 +1,125 @@
+<extend name="Common/base"/>
+<block name="style">
+    <style>
+        .am-table {
+            font-size: 1.3rem;
+            margin-bottom: 0;
+        }
+        .am-btn{
+            padding:5px 15px;font-size:12px
+        }
+    </style>
+</block>
+
+<block name="body">
+    <!-- 内容区域 -->
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">会员提现申请</div>
+                </div>
+                <div class="widget-body  am-fr">
+                    <form id="orderForm" action="{:U('editWithdraw')}" method="post" class="ajaxForm">
+                    <table width="100%" class="am-table am-table-bordered">
+                        <thead>
+                            <tr><th colspan="4">提现信息</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td width="18%"><div align="right"><strong>会员账号：</strong></div></td>
+                                <td>{$info.mobile}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>提现方式：</strong></div></td>
+                                <td>{:paymentType($info['payment'])}</td>
+                            </tr>
+                            	<tr>
+	                                <td><div align="right"><strong>支付宝账号：</strong></div></td>
+	                                <td>{$info.brank_no}</td>
+	                            </tr>
+	                            <tr>
+	                                <td><div align="right"><strong>支付宝姓名：</strong></div></td>
+	                                <td>{$info.brank_name}</td>
+	                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>提现金额：</strong></div></td>
+                                <td>￥{:fen_to_yuan($info['money'])}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>申请时间：</strong></div></td>
+                                <td>{:time_format($info['add_time'])}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>用户备注：</strong></div></td>
+                                <td>{$info['user_note']}</td>
+                            </tr>
+                        </tbody>
+                    </table>     
+                    <table width="100%" class="am-table am-table-bordered">
+                        <thead>
+                            <tr><th colspan="5">管理员操作</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><div align="right"><strong>管理员备注：</strong></div></td>
+                                <td>
+                                	<if condition="$info.state eq 0">
+                                		<textarea class="tpl-form-input" name="admin_note" rows="4" cols="80"></textarea>
+                                	<else/>
+                                		{$info.admin_note}
+                                	</if>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="18%"><div align="right"><strong>状态：</strong></div></td>
+                                <td>
+                                	<if condition="$info.state eq 0">
+	                                	<div class="am-form-group">
+											<label class="am-radio-inline">
+												<input type="radio" name="state" id="state" value="1" data-am-ucheck checked> 通过
+											</label>
+											<label class="am-radio-inline">
+												<input type="radio" name="state" id="state" value="2" data-am-ucheck> 驳回
+											</label>
+										</div>
+									<else/>
+                                		{:accountState($info['state'])}
+                                	</if>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>          
+                    <table width="100%" class="am-table">
+                        <tbody>
+                            <tr>
+                                <td align="center">
+                                	<input type="hidden" value="{$info['id']}" name="id">
+                                	<if condition="$info.state eq 0">
+	                                    <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+	                                </if>
+                                    <button type="button" class="am-btn am-btn-default tpl-btn-bg-color-default " onclick="goback()">返回</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>  
+                    <input type="hidden" name="order_id" value="{$info.order_id}">
+                    </form>         
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        function callback(data) {
+        	toastr(data.info);
+            if (data.status == 1) {
+                location.href = '__URL__/editWithdraw?id='+data.data;
+            }
+        }
+        function goback() {
+            location.href = '__URL__/withdrawList';
+        }
+    </script>
+</block>

@@ -1,0 +1,86 @@
+<extend name="Common/base"/>
+<block name="style">
+
+</block>
+
+<block name="body">
+	<div class="row-content am-cf">
+		<div class="row">
+			<div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+				<div class="widget am-cf">
+					<div class="widget-head am-cf">
+						<div class="widget-title am-fl">系统参数管理</div>
+						<br/>
+						<div class="must-input"><small>警告: 系统参数请慎重修改, 在不确定的情况下修改可能会造成系统无法正常使用.</small></div>
+					</div>
+					<div class="widget-body am-fr">
+
+						<form action="{:U('save')}" method="post" class="ajaxForm am-form tpl-form-border-form tpl-form-border-br">
+							<div class="am-tabs" data-am-tabs="{noSwipe: 1}" id="doc-tab-demo-1">
+								<ul class="am-tabs-nav am-nav am-nav-tabs">
+									<volist name="Think.config.CONFIG_GROUP_LIST" id="group">
+										<li <eq name="id" value="$key">class="am-active"</eq> onclick="window.location.href='{:U('?id='.$key)}'">
+											<a href="javascript:void(0)">{$group}</a>
+										</li>
+									</volist>
+								</ul>
+							</div>
+
+							<div class="am-tabs-bd">
+								<div class="am-tab-panel am-active">
+									<volist name="list" id="config">
+										<div class="am-form-group">
+											<label class="am-u-sm-3 am-form-label">
+												 <span class="tpl-form-line-small-title">{$config.key}</span> {$config.name}
+											</label>
+											<div class="am-u-sm-7 am-u-sm-pull-2">
+												<switch name="config.type">
+													<case value="0">
+														<input type="text" class="tpl-form-input" name="config[{$config.key}]" value="{$config.value}">
+													</case>
+													<case value="1">
+														<input type="text" class="tpl-form-input" name="config[{$config.key}]" value="{$config.value}">
+													</case>
+													<case value="2" rows="5" cols="">
+														<textarea class="tpl-form-input" name="config[{$config.key}]">{$config.value}</textarea>
+													</case>
+													<case value="3">
+														<select class="select" name="config[{$config.key}]">
+															<volist name=":parse_config_attr($config['extra'])" id="vo">
+																<option value="{$key}" <eq name="config.value" value="$key">selected</eq>>{$vo}</option>
+															</volist>
+														</select>
+													</case>
+													<case value="4">
+														<textarea class="tpl-form-input" name="config[{$config.key}]" rows="5" cols="">{$config.value}</textarea>
+													</case>
+												</switch>
+												<small>{$config.desc}</small>
+											</div>
+										</div>
+									</volist>
+
+									<empty name="list">
+										<h4>aOh! 参数内容为空, 请新建!</h4>
+									<else/>
+										<div class="am-form-group">
+											<div class="am-u-sm-7 am-u-sm-pull-2 am-u-sm-push-3">
+												<input type="hidden" name="rank_id" value="{$rankinfo['rank_id']}" />
+
+												<button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+											</div>
+										</div>
+									</empty>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</block>
+
+<block name="script">
+
+</block>

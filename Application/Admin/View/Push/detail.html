@@ -1,0 +1,100 @@
+<extend name="Common/base"/>
+<block name="style">
+
+</block>
+
+<block name="body">
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                <div class="widget am-cf">
+                    <div class="widget-head am-cf">
+                        <div class="widget-title am-fl">查看推送</div>
+                    </div>
+                    <div class="widget-body am-fr">
+
+                        <form action="__ACTION__" method="post"                            class="ajaxForm am-form tpl-form-border-form tpl-form-border-br">
+                            <div class="am-form-group">
+                                <label class="am-u-sm-2 am-form-label">
+                                    公告推送名称 <span class="tpl-form-line-small-title must-input">*</span>
+                                </label>
+                                <div class="am-u-sm-9 am-u-sm-pull-1">
+                                    {$info['title']}
+                                </div>
+                            </div>
+
+
+
+                            <div class="am-form-group">
+                                <label for="description" class="am-u-sm-2 am-form-label">
+                                    描述
+                                </label>
+                                <div class="am-u-sm-9 am-u-sm-pull-1">
+                                    <textarea name="description" id="description" rows="3" cols="57" placeholder="">{$info.description|default=''}</textarea>
+                                    <small>对于文章正文的简单介绍, 最多100字符</small>
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <div class="row">
+                                    <label for="description" class="am-u-sm-2 am-form-label">
+                                        公告内容
+                                    </label>
+                                    <div class="am-u-sm-10">
+                                        <div data-am-widget="tabs" class="am-tabs am-tabs-default">
+                                            <ul class="am-tabs-nav am-cf">
+                                                <li class="am-active"><a id="data-tab-panel-0" href="[data-tab-panel-0]" data-open_type="2">公告推送内容</a></li>
+                                                <li class=""><a id="data-tab-panel-1" href="[data-tab-panel-1]" data-open_type="1">公告外部链接</a></li>
+                                            </ul>
+                                            <div class="am-tabs-bd">
+                                                <div data-tab-panel-0 class="am-tab-panel am-active">
+                                                    <script id="content_desc" name="content" type="text/plain">{$info['content']|htmlspecialchars_decode}</script>
+                                                </div>
+                                                <div data-tab-panel-1 class="am-tab-panel ">
+                                                    外部链接URL ：<input type="text" class="text input-large" name="url" value="{$info.url}" placeholder="必须以http://开头">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <div class="am-u-sm-10 am-u-sm-push-2">
+                                    <button type="button" class="am-btn am-btn-primary am-btn-warning "
+                                            onclick="goback();">返回
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.all.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="__PUBLIC__/ajaxupload/ajaxupload.js?v=1.0"></script>
+    <script type="text/javascript" charset="utf-8" src="__PUBLIC__/ajaxupload/imgupload.js?v=1.0"></script>
+
+    <script type="text/javascript">
+        var ue = UE.getEditor('content_desc', {
+            autoHeight: false,
+            initialFrameHeight: 300,
+            initialFrameWidth:'100%'
+        })
+        $(function(){
+           // ajaxUpload('#btnUpload', $("#img"), 'Push', '');
+
+            var open_type = $('input[name=open_type]').val();
+            $('.am-tabs-nav li a[data-open_type='+ open_type +']').click();
+
+            $('.am-tabs-nav li a').on('click', function(){
+                $("#open_type").val($(this).attr('data-open_type'));
+            });
+        })
+    </script>
+</block>

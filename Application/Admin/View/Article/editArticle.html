@@ -1,0 +1,159 @@
+<extend name="Common/base"/>
+<block name="style">
+
+</block>
+
+<block name="body">
+    <div class="row-content am-cf">
+        <div class="row">
+           <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                <div class="widget am-cf">
+                    <div class="widget-head am-cf">
+                        <div class="widget-title am-fl">{$articleInfo['article_id'] ? '编辑' : '添加'}文章</div>
+                    </div>
+                    <div class="widget-body am-fr">
+
+                        <form action="__ACTION__" method="post" class="ajaxForm am-form tpl-form-border-form tpl-form-border-br">
+                            <div class="am-form-group">
+                                <label for="title" class="am-u-sm-2 am-form-label">
+                                    文章标题 <span class="tpl-form-line-small-title must-input">*</span>
+                                </label>
+                                <div class="am-u-sm-10">
+                                    <input type="text" class="tpl-form-input" id="title" name="title" placeholder="请输入标题文字"  value="{$articleInfo['title']}">
+                                    <small>请填写标题文字1-30字符。</small>
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <label for="article_cat_id" class="am-u-sm-2 am-form-label">
+                                    所属分类 <span class="tpl-form-line-small-title must-input">*</span>
+                                </label>
+                                <div class="am-u-sm-10">
+                                    <div class="tpl-table-list-select am-align-left">
+                                        <select data-am-selected="{searchBox: 1}" style="display: none;" name="article_cat_id" id="article_cat_id">
+                                            <option value="0">选择文章所属分类</option>
+                                            <foreach name="categoryData" item="v">
+                                                <option value="{$v['article_cat_id']}">{$v['cat_name']}</option>
+                                            </foreach>
+                                        </select>
+                                        <if condition="article_cat_id neq -1">
+                                            <script>
+                                                $('#article_cat_id').val('{$articleInfo["article_cat_id"]}');
+                                            </script>
+                                        </if>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <label class="am-u-sm-2 am-form-label">封面图</label>
+                                <div class="am-u-sm-10">
+                                    <div class="row">
+                                        <div class="am-u-sm-3">
+                                            <div class="am-form-group am-form-file">
+                                                <div class="tpl-form-file-img">
+                                                    <img src="{$articleInfo['thumb_img']}" alt="" style="min-height:122px; width: 122px;" id="img_">
+                                                </div>
+                                                <input type="hidden" value="{$articleInfo['thumb_img']}" name="thumb_img" id="img" />
+                                                <button type="button" class="am-btn am-btn-success am-btn-sm" id="btnUpload">上传</button>
+                                                <button type="button" class="am-btn am-btn-danger am-btn-sm" onclick="delFile($('#img').val(), '')" id="btn_delete_">删除</button>
+                                                <if condition="$articleInfo['thumb_img'] eq ''">
+                                                    <script>
+                                                        $("#img_, #btn_delete_").hide();
+                                                    </script>
+                                                </if>
+                                            </div>
+                                        </div>
+                                        <div class="am-u-sm-9"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="am-form-group">
+                                <label for="introduce" class="am-u-sm-2 am-form-label">
+                                    文章简介 <span class="tpl-form-line-small-title must-input">*</span>
+                                </label>
+                                <div class="am-u-sm-10">
+                                    <textarea id="introduce" name="introduce" placeholder="请输入简介文字" >{$articleInfo['introduce']}</textarea>
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <label for="content1" class="am-u-sm-2 am-form-label">
+                                    文章内容<span class="tpl-form-line-small-title must-input">*</span>
+                                </label>
+                                <div class="am-u-sm-10">
+                                    <script id="content1" name="content" type="text/plain">{$articleInfo["content"]|htmlspecialchars_decode}</script>
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <label class="am-u-sm-2 am-form-label">
+                                    排序 <span class="tpl-form-line-small-title must-input">*</span>
+                                </label>
+                                <div class="am-u-sm-10">
+                                    <div class="row">
+                                        <div class="am-u-sm-3">
+                                            <input type="text" placeholder="从小到大排序" id="sort" name="sort" value="{$articleInfo['sort']|default=50}">
+                                            <small>请输入整数类型</small>
+                                        </div>
+                                        <div class="am-u-sm-9"></div></div>
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <label class="am-u-sm-2 am-form-label">是否显示</label>
+                                <div class="am-u-sm-10">
+                                    <div class="am-form-group">
+                                        <label class="am-radio-inline">
+                                            <input type="radio" name="display" id="display" value="1" data-am-ucheck> 显示
+                                        </label>
+                                        <label class="am-radio-inline">
+                                            <input type="radio" name="display" id="hide" value="0" data-am-ucheck> 隐藏
+                                        </label>
+                                    </div>
+                                    <if condition="$articleInfo['display'] eq 1 or $articleInfo['display'] eq ''">
+                                        <script>
+                                            $('#display').attr('checked','true');
+                                        </script>
+                                    <else/>
+                                        <script>
+                                            $('#hide').attr('checked','true');
+                                        </script>
+                                    </if>
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <div class="am-u-sm-10 am-u-sm-push-2">
+                                    <input type="hidden" name="article_id" value="{$articleInfo['article_id']}">
+                                    <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+                                    <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback();">返回</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.all.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="__PUBLIC__/ajaxupload/ajaxupload.js?v=1.0"></script>
+    <script type="text/javascript" charset="utf-8" src="__PUBLIC__/ajaxupload/imgupload.js?v=1.0"></script>
+
+    <script type="text/javascript">
+        var ue = UE.getEditor('content1', {
+            autoHeightEnabled: false,
+            initialFrameWidth: '700',
+            initialFrameHeight: 350
+        })
+
+        $(function(){
+            ajaxUpload('#btnUpload', $("#img"), 'Article', '');
+        })
+    </script>
+</block>

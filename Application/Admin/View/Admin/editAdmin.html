@@ -1,0 +1,133 @@
+<extend name="Common/base"/>
+<block name="style">
+
+</block>
+
+<block name="body">
+	<div class="row-content am-cf">
+		<div class="row">
+			<div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+				<div class="widget am-cf">
+					<div class="widget-head am-cf">
+						<div class="widget-title am-fl">{$adminInfo['admin_id'] ? '编辑' : '添加'}管理员</div>
+					</div>
+					<div class="widget-body am-fr">
+
+						<form action="__ACTION__" method="post" class="ajaxForm am-form tpl-form-border-form tpl-form-border-br">
+							<div class="am-form-group">
+								<label for="admin_name" class="am-u-sm-3 am-form-label">
+									管理员账号
+									<if condition="$adminInfo['admin_id'] elt 0">
+										<span class="tpl-form-line-small-title must-input">*</span>
+									</if>
+								</label>
+								<div class="am-u-sm-7 am-u-sm-pull-2">
+									<input type="text" class="tpl-form-input" id="admin_name" name="admin_name"
+									       placeholder="请输入管理员账号"  value="{$adminInfo['admin_name']}"
+										<if condition="$adminInfo['admin_id'] gt 0">
+											readonly
+										</if> >
+									<small>
+										<if condition="$adminInfo['admin_id'] elt 0">
+											请填写管理员账号1-30字符, 字母或数字, 不含中文或特殊字符。
+										<else/>
+											管理员账号不可编辑
+										</if>
+									</small>
+								</div>
+							</div>
+
+							<div class="am-form-group">
+								<label for="password" class="am-u-sm-3 am-form-label">
+									密码
+									<if condition="$adminInfo['admin_id'] elt 0">
+										<span class="tpl-form-line-small-title must-input">*</span>
+									</if>
+								</label>
+								<div class="am-u-sm-7 am-u-sm-pull-2">
+									<input type="password" placeholder="" id="password" name="password" value="">
+									<small>
+										<if condition="$adminInfo['admin_id'] elt 0">
+											如果不修改密码, 请留空.
+										</if>
+										6-30位密码, 建议大小写字符加数字及特殊字符混合使用
+									</small>
+								</div>
+							</div>
+
+							<div class="am-form-group">
+								<label for="cpassword" class="am-u-sm-3 am-form-label">
+									确认密码
+									<if condition="$adminInfo['admin_id'] elt 0">
+										<span class="tpl-form-line-small-title must-input">*</span>
+									</if>
+								</label>
+								<div class="am-u-sm-7 am-u-sm-pull-2">
+									<input type="password" placeholder="" id="cpassword" name="cpassword" value="">
+									<small>再次输入管理员密码</small>
+								</div>
+							</div>
+
+							<div class="am-form-group">
+								<label for="email" class="am-u-sm-3 am-form-label">
+									邮箱
+								</label>
+								<div class="am-u-sm-7 am-u-sm-pull-2">
+									<input type="email" placeholder="@" id="email" name="email" value="{$adminInfo['email']}">
+									<small>管理员常用邮箱</small>
+								</div>
+							</div>
+
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label">是否禁用</label>
+								<div class="am-u-sm-7 am-u-sm-pull-2">
+									<div class="am-form-group">
+										<label class="am-radio-inline">
+											<input type="radio" name="disabled" id="able" value="1" data-am-ucheck> 启用
+										</label>
+										<label class="am-radio-inline">
+											<input type="radio" name="disabled" id="disable" value="0" data-am-ucheck> 禁用
+										</label>
+									</div>
+									<if condition="$adminInfo['disabled'] eq 1 or $adminInfo['disabled'] eq ''">
+										<script>
+                                            $('#able').attr('checked','true');
+										</script>
+									<else/>
+										<script>
+                                            $('#disable').attr('checked','true');
+										</script>
+									</if>
+								</div>
+							</div>
+							<div class="am-form-group">
+								<label class="am-u-sm-3 am-form-label">所属角色</label>
+								<div class="am-u-sm-7 am-u-sm-pull-2">
+									<foreach name="roleData" item="v">
+										<label class="am-checkbox-inline">
+											<input data-am-ucheck name="role_ids[]" type="checkbox"  value="{$v['id']}"
+												<if condition="strpos(','.$rids.',' , ','.$v['id'].',') !== false"> checked="checked"</if> >
+											{$v['role_name']}
+										</label>
+									</foreach>
+								</div>
+							</div>
+
+							<div class="am-form-group">
+								<div class="am-u-sm-9 am-u-sm-push-3">
+									<input type="hidden" name="admin_id" value="{$adminInfo['admin_id']}">
+									<button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+									<button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback();">返回</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</block>
+
+<block name="script">
+
+</block>
