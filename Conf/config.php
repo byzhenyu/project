@@ -4,7 +4,7 @@
         /* 数据库设置 */
         'DB_TYPE'               =>  'mysqli',     // 数据库类型
         'DB_HOST'               =>  '120.77.211.154', // 服务器地址
-        'DB_NAME'               =>  'ln_beidanci',          // 数据库名
+        'DB_NAME'               =>  'ln_shanjian',          // 数据库名
         'DB_USER'               =>  'xijiushop',      // 用户名
         'DB_PWD'                =>  'xijiushop',          // 密码
         'DB_PORT'               =>  '3306',        // 端口
