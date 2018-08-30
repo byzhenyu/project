@@ -11,7 +11,6 @@ class ArticleController extends CommonController {
         $article_id = I('article_id', 0, 'intval');
         $model = D('Admin/Article');
         if(IS_POST){
-            // p($_POST);die;
             if ($article_id > 0){
                 if($model->create(I('post.'), 2)){
                     if ($model->save() !== false) {

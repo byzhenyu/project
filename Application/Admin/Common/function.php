@@ -17,6 +17,16 @@ function show_disabled($disabled) {
     }
 }
 
+//展示是否是最佳答案
+function show_optimum($isOptimum) {
+    switch ($isOptimum) {
+        case 0  : return    '<span class = "disabled_0" style="color: #ff230e">否</span>';   break;
+        case 1  : return    '<span class = "disabled_1" style="color: #3eff17">是</span>';   break;
+        default : return    false;      break;
+    }
+}
+
+
 
 // 分析枚举类型配置值 格式 a:名称1,b:名称2
 function parse_config_attr($string) {

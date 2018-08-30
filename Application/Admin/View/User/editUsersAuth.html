@@ -1,0 +1,88 @@
+<extend name="Common/base"/>
+<block name="style">
+	<style>
+		.am-table {
+			font-size: 1.3rem;
+			margin-bottom: 0;
+		}
+		.am-btn{
+			padding:5px 15px;font-size:12px
+		}
+	</style>
+</block>
+<block name="body">
+	<!-- 内容区域 -->
+	<div class="row-content am-cf">
+		<div class="row">
+			<div class="widget am-cf">
+				<div class="widget-head am-cf">
+					<div class="widget-title  am-cf">用户验证信息</div>
+				</div>
+				<div class="widget-body  am-fr">
+					<form id="orderForm" action="__ACTION__" method="post" class="ajaxForm">
+						<table width="100%" class="am-table am-table-bordered">
+							<thead>
+							<tr><th colspan="4">用户验证信息</th></tr>
+							</thead>
+							<tbody>
+							<tr>
+								<td style="width: 35%;"><div align="right"><strong>真实姓名：</strong></div></td>
+								<td>{$info['true_name']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>证件类型：</strong></div></td>
+								<td>{$info['cert_type']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>证件号：</strong></div></td>
+								<td>{$info['idcard_number']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>身份证照片：</strong></div></td>
+								<td><img src="{$info['idcard_pic']}" width="100px" alt="身份证照片"></td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>手持身份证照片：</strong></div></td>
+								<td>
+									<img src="{$info['hand_pic']}" alt="手持身份证照片" width="100px">
+								</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>添加时间：</strong></div></td>
+								<td>{:time_format($info['add_time'])}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>验证结果：</strong></div></td>
+								<td>
+									<div class="am-form-group">
+										<label class="am-radio-inline">
+											<input type="radio" name="state" id="able" value="1" data-am-ucheck> 通过
+										</label>
+										<label class="am-radio-inline">
+											<input type="radio" name="state" id="disable" value="0" data-am-ucheck> 不通过
+										</label>
+									</div>
+								</td>
+							</tr>
+
+							</tbody>
+						</table>
+						<table width="100%" class="am-table">
+							<tbody>
+							<tr>
+								<td align="center">
+									<input type="hidden" value="{$info['user_id']}" name="user_id" />
+									<button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</block>
+<block name="script">
+
+</block>

@@ -9,7 +9,7 @@
             <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                 <div class="widget am-cf">
                     <div class="widget-head am-cf">
-                        <div class="widget-title  am-cf">用户列表</div>
+                        <div class="widget-title  am-cf">问题列表</div>
 
                     </div>
                     <div class="widget-body  am-fr">
@@ -18,9 +18,7 @@
                             <div class="am-form-group">
                                 <div class="am-btn-toolbar">
                                     <div class="am-btn-group am-btn-group-xs">
-                                        <button type="button" class="am-btn am-btn-default am-btn-danger" onclick="recycle('chkbId', '确认删除?! 删除后无法恢复!', true)">
-                                            <span class="am-icon-trash-o"></span> 批量删除
-                                        </button>
+
                                     </div>
                                 </div>
                             </div>
@@ -28,16 +26,12 @@
                         <form action="__SELF__" method="get">
                             <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
                                 <div class="am-form-group tpl-table-list-select">
-                                    <if condition="rank_id neq -1">
-                                        <script>
-                                            $('#rank_id').val('{$rank_id}');
-                                        </script>
-                                    </if>
+
                                 </div>
                             </div>
                             <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
                                 <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                                    <input type="text" class="am-form-field" name="keyword" placeholder="请输入会员账号" value="{$keyword}">
+                                    <input type="text" class="am-form-field" name="keyword" placeholder="请输入问题标题/问题类型" value="{$keyword}">
                                     <span class="am-input-group-btn">
                                         <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="submit"></button>
                                         <a class="am-btn  am-btn-default am-btn-danger tpl-table-list-field am-icon-refresh" type="button" href="__ACTION__"></a>
@@ -51,59 +45,56 @@
                             <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
                                 <thead>
                                     <tr>
-                                        <th width="20"><input class="check-all" type="checkbox"></th>
-                                        <th width="60">编号</th>
-                                        <th width="17%" >会员手机/账号</th>
-                                        <th width="12%" class="align-center">可用资金</th>
-                                        <th width="12%" class="align-center">冻结资金</th>
-                                        <th width="17%" class="align-center">注册时间</th>
-                                        <th width="10%" class="align-center">验证状态</th>
-                                        <th width="10%" class="align-center">状态</th>
-                                        <th width="15%">操作</th>
+                                        <th width="7%" class="align-center">序号</th>
+                                        <th width="12%" class="align-center">发布人</th>
+                                        <th width="20%" class="align-center">问题标题</th>
+                                        <th width="15%" class="align-center">问题类型</th>
+                                        <th width="15%" class="align-center">添加时间</th>
+                                        <th width="8%" class="align-center">状态</th>
+                                        <th class="align-center">操作</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <foreach name="userslist" item="v" key="k">
+                                    <foreach name="list" item="v">
                                         <tr class="gradeX">
-                                            <td><input value="{$v['user_id']}" class="ids" type="checkbox" name="chkbId"></td>
-                                            <td>{:pageNumber(15, $k+1)}</td>
-                                            <td>{$v['mobile']}</td>
-                                            <td class="align-center">￥{:fen_to_yuan($v['user_money'])}</td>
-                                            <td class="align-center">￥{:fen_to_yuan($v['frozen_money'])}</td>
-                                            <td class="align-center">{:time_format($v['register_time'])}</td>
-                                            <td class="align-center">
-                                                <if condition="$v['is_auth'] eq 1">已验证<else/><div class="tpl-table-black-operation"><a href="{:U('User/editUsersAuth', array('user_id'=>$v['user_id']))}"> 验证 </a></div></if>
-                                            </td>
+                                            <td class="align-center">{$v['id']}</td>
+                                            <td class="align-center">{$v['nickname']}</td>
+                                            <td class="align-center"><div style="text-align: left; width: 90%">{$v['question_title']}</div></td>
+                                            <td class="align-center">{$v['question_type']}</td>
+                                            <td class="align-center">{:time_format($v['add_time'])}</td>
                                             <td class="align-center">
                                                 {:show_disabled($v['disabled'])}
                                             </td>
-                                            <td class="f-14">
+                                            <td class="f-14 align-center">
                                                 <div class="tpl-table-black-operation">
                                                     <if condition="$v['disabled'] eq 0">
-                                                        <a title="点击启用" href="javascript:void(0)" onclick="changeDisabled({$v['user_id']});">
+                                                        <a title="点击启用" href="javascript:void(0)" onclick="changeDisabled({$v['id']});">
                                                             启用
                                                         </a>
                                                     </if>
                                                     <if condition="$v['disabled'] eq 1">
-                                                        <a title="点击禁用" href="javascript:void(0)" class="tpl-table-black-operation-del" onclick="changeDisabled('{$v.user_id}');">
+                                                        <a title="点击禁用" href="javascript:void(0)" class="tpl-table-black-operation-del" onclick="changeDisabled('{$v.id}');">
                                                             禁用
                                                         </a>
                                                     </if>
-                                                    <a href="{:U('User/userDetail', array('user_id'=>$v['user_id']))}"> 用户详情 </a>
+                                                    <a href="{:U('Question/listAnswer',array('id'=>$v['id']))}">
+                                                        <i class="am-icon-pencil"></i> 答案列表
+                                                    </a>
+                                                    <a href="{:U('Question/seeQuestionDetail',array('id'=>$v['id']))}">
+                                                        <i class="am-icon-trash"></i> 问题详情
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
                                     </foreach>
-
-                                <!-- more data -->
                                 </tbody>
                             </table>
-
-                            <empty name="userslist">
+                            <empty name="list">
                                 <h4>aOh! 没有相关内容!</h4>
                             </empty>
                         </div>
                         <div class="am-u-lg-12 am-cf">
+
                             <div class="am-fr">
                                 <div class="am-pagination tpl-pagination">
                                     {$page}
@@ -119,13 +110,13 @@
 
 <block name="script">
     <script type="text/javascript">
-        function changeDisabled(user_id){
+        function changeDisabled(question_id){
             $.ajax({
-                url : "{:U('User/changeDisabled')}",
+                url : "{:U('Question/changeQuestionDisabled')}",
                 type : "POST",
                 dataType : "json",
                 data : {
-                    "user_id" : user_id,
+                    "question_id" : question_id,
                 },
                 success : function(data){
                     toastr(data.info);

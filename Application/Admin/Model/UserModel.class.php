@@ -6,13 +6,12 @@ namespace Admin\Model;
 use Think\Model;
 use Common\Tools\Emchat;
 class UserModel extends Model{
-    protected $insertFields = array('user_name','nickname','password','mobile','email', 'register_time', 'sex', 'status', 'rank_id', 'user_type');
-    protected $updateFields = array('user_id','user_name','nickname','password','mobile','email', 'sex', 'status', 'rank_id', 'disabled', 'user_type');
-    protected $selectFields = array('user_id, user_name, nickname, password, mobile, email, sex, status, points,user_money,frozen_money,disabled,register_time,user_type,invitation_code,invitation_uid','weixin','qq');
+    protected $insertFields = array('user_name','nickname','password','mobile','email', 'register_time', 'sex', 'status', 'user_type', 'is_auth');
+    protected $updateFields = array('user_id','user_name','nickname','password','mobile','email', 'sex', 'status', 'disabled', 'user_type', 'is_auth');
+    protected $selectFields = array('user_id, user_name, nickname, password, mobile, email, sex, status, user_money,frozen_money,disabled,register_time,user_type,is_auth');
     protected $_validate = array(
         array('mobile', 'require', '会员手机/账号不能为空！', 1, 'regex', 3),
-        array('mobile','/^1[3|4|5|7|8][0-9]\d{8}$/','不是有效的手机号码',1,'regex', 3),
-        //array('mobile','','会员手机/账号已经存在！',0,'unique',1),
+        array('mobile','/^1[3|4|5|7|8|9][0-9]\d{8}$/','不是有效的手机号码',1,'regex', 3),
         array('mobile,user_type', 'checkUserExist', '此账号已存在', self::MUST_VALIDATE, 'callback', 1),
         array('password', 'require', '密码不能为空！', 1, 'regex', 1),
     	array('password', '6,20', '密码长度有误', 1, 'length', 1),
@@ -54,23 +53,6 @@ class UserModel extends Model{
         return array(
             'userslist'=>$userslist,
             'page'=>$usersData['page']
-        );
-    }
-
-    /**
-     * 获取有推广的会员列表
-     */
-    public function getuserCashbackByPage($where, $field = false, $order = 'user_id desc'){
-        if(!$field) {
-            $field = 'user_id, user_name, mobile, user_money, register_time, invitation_code';
-        }
-        $number = $this->where($where)->count();
-        $page = get_page($number, 15);
-        $list = $this->where($where)->field($field)->limit($page['limit'])->order($order)->select();
-
-        return array(
-            'info' => $list,
-            'page' => $page['page']
         );
     }
 
@@ -124,6 +106,17 @@ class UserModel extends Model{
             $data['password'] = pwdHash($data['password']);
     }
 
+    /**
+     * @desc 获取用户的指定字段
+     * @param $where
+     * @param $field
+     * @return mixed
+     */
+    public function getUserField($where, $field){
+        $info = $this->where($where)->getField($field);
+        return $info;
+    }
+
     //修改操作前的钩子操作
     protected function _after_update(&$data, $option){
         $user_id = I('user_id', 0);
@@ -149,7 +142,6 @@ class UserModel extends Model{
      * 查询用户信息
      * @param $user_id
      *@return mixed
-     * create by wangwujiang 2018/3/22
      */
     public function getUserName($user_id){
         $userInfo = $this->where('user_id ='.$user_id)->getField('user_name');
@@ -163,17 +155,4 @@ class UserModel extends Model{
         M('user_token')->where($where)->data($data)->save();
         return $token;
     }
-
-    public function getUserAlipayList($where, $field = false){
-        if(!$field) $field = 'alipay_name,alipay_num,default,id';
-        $number = M('UserAlipay')->where($where)->count();
-        $page = get_web_page($number);
-        $list = M('UserAlipay')->where($where)->limit($page['limit'])->field($field)->select();
-        return array(
-            'info' => $list,
-            'page' => $page['page']
-        );
-    }
-
-
 }

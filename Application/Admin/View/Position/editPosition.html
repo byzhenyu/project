@@ -1,0 +1,54 @@
+<extend name="Common/base"/>
+<block name="style">
+
+</block>
+
+<block name="body">
+    <div class="row-content am-cf">
+        <div class="row">
+           <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                <div class="widget am-cf">
+                    <div class="widget-head am-cf">
+                        <div class="widget-title am-fl">{$info['id'] ? '编辑' : '添加'}职位</div>
+                    </div>
+                    <div class="widget-body am-fr">
+
+                        <form action="__ACTION__" method="post" class="ajaxForm am-form tpl-form-border-form tpl-form-border-br">
+                            <div class="am-form-group">
+                                <label for="position_name" class="am-u-sm-2 am-form-label">
+                                    职位名称 <span class="tpl-form-line-small-title must-input">*</span>
+                                </label>
+                                <div class="am-u-sm-10">
+                                    <input type="text" class="tpl-form-input" id="position_name" name="position_name" placeholder="请输入职位名称"  value="{$info['position_name']}">
+                                    <small>请输入职位名称。</small>
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <label for="sort" class="am-u-sm-2 am-form-label">
+                                    排序 <span class="tpl-form-line-small-title must-input">*</span>
+                                </label>
+                                <div class="am-u-sm-10">
+                                    <input type="text" class="tpl-form-input" id="sort" name="sort" placeholder="请输入排序序号"  value="{$info['sort']}">
+                                    <small>请输入序号。</small>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <div class="am-u-sm-10 am-u-sm-push-2">
+                                    <input type="hidden" name="id" value="{$info['id']}">
+                                    <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+                                    <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback();">返回</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+<script type="text/javascript">
+</script>
+</block>

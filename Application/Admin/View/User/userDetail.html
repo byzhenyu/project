@@ -26,7 +26,7 @@
 							</thead>
 							<tbody>
 							<tr>
-								<td><div align="right"><strong>用户名：</strong></div></td>
+								<td style="width: 35%;"><div align="right"><strong>用户名：</strong></div></td>
 								<td>{$userInfo['user_name']}</td>
 							</tr>
 							<tr>
@@ -65,13 +65,47 @@
 								<td><div align="right"><strong>注册时间：</strong></div></td>
 								<td>{:time_format($userInfo['register_time'])}</td>
 							</tr>
+
+							</tbody>
+						</table>
+						<table width="100%" class="am-table am-table-bordered">
+							<thead>
+							<tr><th colspan="4">用户验证信息</th></tr>
+							</thead>
+							<tbody>
+							<notempty name="info">
+								<tr>
+									<td style="width: 35%;"><div align="right"><strong>真实姓名：</strong></div></td>
+									<td>{$info['true_name']}</td>
+								</tr>
+								<tr>
+									<td><div align="right"><strong>证件类型：</strong></div></td>
+									<td>{$info['cert_type']}</td>
+								</tr>
+								<tr>
+									<td><div align="right"><strong>证件号：</strong></div></td>
+									<td>{$info['idcard_number']}</td>
+								</tr>
+								<tr>
+									<td><div align="right"><strong>身份证照片：</strong></div></td>
+									<td><img src="{$info['idcard_pic']}" width="100px" alt="身份证照片"></td>
+								</tr>
+								<tr>
+									<td><div align="right"><strong>手持身份证照片：</strong></div></td>
+									<td>
+										<img src="{$info['hand_pic']}" alt="手持身份证照片" width="100px">
+									</td>
+								</tr>
+								<tr>
+									<td><div align="right"><strong>添加时间：</strong></div></td>
+									<td>{:time_format($info['add_time'])}</td>
+								</tr>
+							</notempty>
 							<tr>
-								<td><div align="right"><strong>邀请码：</strong></div></td>
-								<td>{$userInfo['invitation_code']}</td>
-							</tr>
-							<tr>
-								<td><div align="right"><strong>推荐人：</strong></div></td>
-								<td>{$userInfo['invitation_uid']}</td>
+								<td style="width: 35%;"><div align="right"><strong>验证结果：</strong></div></td>
+								<td>
+									<if condition="$userInfo['is_auth'] eq 1">已验证<else/>未验证</if>
+								</td>
 							</tr>
 
 							</tbody>

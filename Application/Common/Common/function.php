@@ -6,6 +6,24 @@ function p($arr) {
     print_r($arr);
     echo '</pre>';
 }
+/**
+ * 价格转换 分->元
+ * @param $fen
+ * @return string
+ */
+function fen_to_yuan($fen) {
+    return sprintf('%.2f', $fen / 100.00);
+}
+
+/**
+ * 价格转换 元->分
+ * @param $yuan
+ * @return mixed
+ */
+function yuan_to_fen($yuan) {
+    return intval(strval($yuan * 100));
+}
+
 
 /**
  * 密码加密与密码验证
@@ -576,6 +594,32 @@ function get_web_page($count, $page_size=0){
     $show = $page->show();
     $limit = $page->firstRow.','.$page->listRows;
     return array('page'=>$show,'limit'=>$limit);
+}
+
+/**
+ * 充值/提现状态
+ * @param int $type 类型
+ */
+function accountState($type) {
+    switch ($type) {
+        case 0  : return  C('ACCOUNT_STATE')[0];   break;
+        case 1  : return  C('ACCOUNT_STATE')[1];   break;
+        case 2  : return  C('ACCOUNT_STATE')[2];   break;
+        default : return  false;      break;
+    }
+}
+
+/**
+ * 付款类型
+ * @param int $type 类型
+ */
+function paymentType($type) {
+    switch ($type) {
+        case 1  : return  C('PAYMENT_TYPE')[1];   break;
+        case 2  : return  C('PAYMENT_TYPE')[2];   break;
+        case 3  : return  C('PAYMENT_TYPE')[3];   break;
+        default : return  false;      break;
+    }
 }
 
 

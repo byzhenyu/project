@@ -1,0 +1,115 @@
+<extend name="Common/base"/>
+<block name="style">
+	<style>
+		.am-table {
+			font-size: 1.3rem;
+			margin-bottom: 0;
+		}
+		.am-btn{
+			padding:5px 15px;font-size:12px
+		}
+	</style>
+</block>
+<block name="body">
+	<!-- 内容区域 -->
+	<div class="row-content am-cf">
+		<div class="row">
+			<div class="widget am-cf">
+				<div class="widget-head am-cf">
+					<div class="widget-title  am-cf">问题详情</div>
+				</div>
+				<div class="widget-body  am-fr">
+					<form id="orderForm" action="__ACTION__" method="post" class="ajaxForm">
+						<table width="100%" class="am-table am-table-bordered">
+							<thead>
+							<tr><th colspan="4">问题详细信息</th></tr>
+							</thead>
+							<tbody>
+							<tr>
+								<td style="width: 35%;"><div align="right"><strong>发布人：</strong></div></td>
+								<td>{$info['nickname']}</td>
+							</tr>
+							<tr>
+								<td style="width: 35%;"><div align="right"><strong>创建时间：</strong></div></td>
+								<td>{$info['add_time']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>问题标题：</strong></div></td>
+								<td>{$info['question_title']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>问题类型：</strong></div></td>
+								<td>{$info['question_type']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>问题内容：</strong></div></td>
+								<td>{$info['question_content']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>点赞量：</strong></div></td>
+								<td>{$info['like_number']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>浏览量：</strong></div></td>
+								<td>{$info['browse_number']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>回答数：</strong></div></td>
+								<td>{$info['answer_number']}</td>
+							</tr>
+						</table>
+						<table width="100%" class="am-table am-table-bordered">
+							<thead>
+							<tr><th colspan="4">最佳答案</th></tr>
+							</thead>
+							<tbody>
+							<empty name="answer">
+								<tr>
+									<td style="width: 35%">
+										<div align="right"><strong>答案</strong></div>
+									</td>
+									<td>
+										暂无
+									</td>
+								</tr>
+							</empty>
+							<notempty name="answer">
+								<tr>
+									<td style="width: 35%;"><div align="right"><strong>回答用户：</strong></div></td>
+									<td>{$answer['nickname']}</td>
+								</tr>
+								<tr>
+									<td><div align="right"><strong>答案内容：</strong></div></td>
+									<td>{$answer['answer_content']}</td>
+								</tr>
+								<tr>
+									<td><div align="right"><strong>回答时间：</strong></div></td>
+									<td>{:time_format($answer['add_time'])}</td>
+								</tr>
+								<tr>
+									<td><div align="right"><strong>点赞数量：</strong></div></td>
+									<td>{$answer['like_number']}</td>
+								</tr>
+
+							</notempty>
+
+							</tbody>
+						</table>
+						<table width="100%" class="am-table">
+							<tbody>
+							<tr>
+								<td align="center">
+									<button type="button" class="am-btn am-btn-default tpl-btn-bg-color-default " onclick="goback()">返回</button>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</block>
+<block name="script">
+
+</block>

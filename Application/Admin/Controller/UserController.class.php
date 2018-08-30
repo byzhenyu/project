@@ -5,12 +5,12 @@
 namespace Admin\Controller;
 use Think\Controller;
 class UserController extends CommonController {
-    //管理员列表显示
-    public function listUsers(){
+    //会员HR列表
+    public function listUser(){
         $keyword = I('keyword', '');
-        $rank_id = I('rank_id', -1, 'intval');
+        $type = I('type', 0, 'intval');
         $userModel = D('Admin/User');
-        $where = array('user_type' => 0, 'rank_id' => 1);
+        $where = array('user_type' => $type, 'rank_id' => 1);
         if ($keyword) {
             $where['mobile|user_name'] = array('like','%'.$keyword.'%');
         }
@@ -19,10 +19,9 @@ class UserController extends CommonController {
         $data = $userModel->getUsersList($where);
         $this->userslist = $data['userslist'];
         $this->page = $data['page'];
+        $this->keyword = $keyword;
 
-        $this->assign('rank_id', $rank_id);
-        $this->assign('keyword', $keyword);
-        $this->display();
+        $this->display('listUsers');
     }
 
     /**
@@ -32,8 +31,11 @@ class UserController extends CommonController {
         $user_id = I('user_id', 0, 'intval');
         $where['user_id'] = $user_id;
         $userModel = D('Admin/User');
+        $authModel = D('Admin/UserAuth');
         $userInfo = $userModel->getUserInfo($where);
+        $auth = $authModel->getAuthInfo($where);
         $this->userInfo = $userInfo;
+        $this->info = $auth;
 
         $this->display();
     }
@@ -66,22 +68,13 @@ class UserController extends CommonController {
     //会员提现列表
     public function withdrawList(){
         $keyword  = I('mobile', '', 'trim');
-        $accountType = I('account_type', 0, 'intval');
-        $where['ua.account_type'] = $accountType;
+        $accountType = I('type', 0, 'intval');
         $where['ua.type'] = 1;
         $where['ua.status'] = 1;
         if ($keyword) {
             $where['u.mobile'] = array('like','%'.$keyword.'%');
         }
-        if ($accountType == 1) {
-            $field = 'ua.id, ua.money, ua.add_time, ua.state, u.user_name, u.user_money, r.user_id, r.rider_name';
-            $list = D('Admin/UserAccount')->getRiderAccountList($where, $field);
-        }
-        else if ($accountType == 3) {
-            $field = 'ua.id, ua.money, ua.add_time, ua.state, u.user_name, u.user_money, s.shop_name';
-            $list = D('Admin/UserAccount')->getShopAccountList($where, $field);
-        }
-        else {
+        if ($accountType == 0) {
             $field = 'ua.id, ua.money, ua.add_time, ua.state, u.user_name, u.user_money';
             $list = D('Admin/UserAccount')->getUserAccountList($where, $field);
         }
@@ -89,9 +82,6 @@ class UserController extends CommonController {
         $this->list = $list['info'];
         $this->page = $list['page'];
         if ($accountType == 1 || $accountType == 3) {
-            $tpl = 'withdrawShopList';
-        } 
-        else {
             $tpl = 'withdrawList';
         } 
         $this->account_type = $accountType;
@@ -115,18 +105,22 @@ class UserController extends CommonController {
         $this->display();
     }
 
-    public function editUsersVerify() {
-        $id = I('id', 0, 'intval');
-        $where['id'] = $id;      
+    /***
+     * @desc 用户身份验证
+     */
+    public function editUsersAuth() {
+        $id = I('user_id', 0, 'intval');
+        $where['user_id'] = $id;
         if (IS_POST) {
             if ($id > 0) {
-                $data['verify_state'] = I('verify_state', 0, 'intval');
-                $result = D('Admin/UserVerify')->where($where)->save($data);
-                $this->ajaxReturn(V(1, '操作成功'));
+                $data['is_auth'] = I('state', 0, 'intval');
+                $result = D('Admin/User')->where($where)->save($data);
+                if(false !== $result) $this->ajaxReturn(V(1, '操作成功'));
+                $this->ajaxReturn(V(0, '修改失败请稍后重试！'));
             }
         } else {
-            $result = D('Admin/UserVerify')->getVerifyInfo($where);
-            $this->assign('message', $result);
+            $result = D('Admin/UserAuth')->getAuthInfo($where);
+            $this->assign('info', $result);
             $this->display();
         }
         
@@ -156,7 +150,7 @@ class UserController extends CommonController {
                             M()->rollback(); // 事务回滚
                             $this->ajaxReturn(V(0, '操作失败'));
                         }
-                        account_log($accountInfo['user_id'], $accountInfo['money'], 1, '提现', '');
+                        M('AccountLog')->where(array('order_sn'=>"$id"))->setField('change_desc', '提现-已完成');
 
                     }
                     else if ($state == 2) { //驳回
