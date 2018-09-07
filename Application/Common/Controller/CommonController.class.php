@@ -17,7 +17,6 @@ class CommonController extends Controller
         //获取参数配置
         $this->get_global_config();
         //获取搜索关键词
-        $this->get_keywords();
         if (is_login()){
             define('UID', session('user_auth')['uid']);
 
@@ -42,14 +41,6 @@ class CommonController extends Controller
 
     }
 
-    /**
-     * 获取搜索关键词方法
-     */
-    function get_keywords(){
-        $keywordsModel = D('Home/Keywords');
-        $keywordsList = $keywordsModel->getKeywordsList();
-        $this->keywordsList = $keywordsList;
-    }
 
     /**
      * 图片上传类

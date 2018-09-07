@@ -1,9 +1,4 @@
 <?php
-/**
- * Created by liuniukeji.com
- * 公用接口
- * @author songgy <1661745274@qq.com>
-*/
 namespace Api\Controller;
 use Common\Controller\ApiCommonController;
 use Common\Tools\RongCloud;
@@ -12,20 +7,15 @@ use Think\Verify;
 class PublicApiController extends ApiCommonController {
 
     /**
-     * 登录接口
+     * @desc 登录接口
      */
     public function login() {
-        $mobile = I('post.username', '');
+        $user_name = I('post.user_name', '');
         $password = I('post.password', '');
-        $userType = I('post.user_type', 0);//用户类型
-        $loginInfo = D('Home/User')->dologin($mobile, $password, '', $userType);
+        $userType = I('post.user_type', 0);//0、普通会员  1、HR
+        $loginInfo = D('Admin/User')->dologin($user_name, $password, '', $userType);
 
         if( $loginInfo['status'] == 1 ){ //登录成功
-            $loginInfo['data']['shop_id'] = (int)$loginInfo['data']['shop_id'];
-            $loginInfo['data']['register_time'] = time_format($loginInfo['register_time'], 'Y-m-d');
-            $loginInfo['data']['user_level'] = 'VIP1';
-            $loginInfo['data']['pay_password'] = $loginInfo['data']['pay_password'] != '' ? 1 : 0;
-            unset($loginInfo['password']);
             $this->apiReturn($loginInfo);
         } else {
             $this->apiReturn(V(0, $loginInfo['info']));
@@ -33,47 +23,25 @@ class PublicApiController extends ApiCommonController {
     }
 
     /**
-     * 注册接口
+     * @desc 注册接口
      */
     public function register() {
         $mobile = I('mobile', '');
         $sms_code = I('sms_code', '');
-        $invitation_code = I('invitation_code', '');
-        $userModel = D('Home/User');
-        if (isMobile($mobile)  != true) {
-            $this->apiReturn(V(0, '请填写正确的手机格式'));
-        }
-        if (!$invitation_code) {
-            $this->apiReturn(V(0,'请填写邀请码'));
-        }
-        if ($invitation_code != '') {
-            $invitation_uid = $userModel->getRecommendUidBaseCode($invitation_code);
-            if (!$invitation_uid)
-                $this->apiReturn(V(0, '邀请码不存在'));
-        }
-        //$check_sms = D('Home/SmsMessage')->checkSmsMessage($sms_code, $mobile);
-
-        //if ($check_sms['status'] == 0) {
-            //$this->apiReturn($check_sms);
-        //}
-   
+        $email = I('email', '', 'trim');
+        $password = I('password', '', 'trim');
+        $userModel = D('Admin/User');
+        if (!isMobile($mobile)) $this->apiReturn(V(0, '请填写正确的手机格式！'));
+        if(!is_email($email)) $this->apiReturn(V(0, '请输入正确的邮箱格式！'));
+        $valid = D('Admin/SmsMessage')->checkSmsMessage($sms_code, $mobile);
+        if(!$valid['status']) $this->apiReturn($valid);
         $data = I('post.');
         $data['user_type'] = 0;
         if ($userModel->create($data, 1) !== false) {
             $user_id = $userModel->add();
             if ($user_id > 0) {
-                //注册成功、推荐双方各得5元优惠券
-                if($invitation_code) $userModel->allInviteCoupon($invitation_code, $user_id);
-
-                $loginInfo = D('Home/User')->dologin($data['mobile'], $data['password'], '', 0);
-
-                if( $loginInfo['status'] == 1 ){ //登录成功
-
-                    $loginInfo['data']['shop_id'] = (int)$loginInfo['data']['shop_id'];
-                    $loginInfo['data']['register_time'] = time_format($loginInfo['register_time'], 'Y-m-d');
-                    $loginInfo['data']['user_level'] = 'VIP1';
-                    $loginInfo['data']['pay_password'] = $loginInfo['data']['pay_password'] != '' ? 1 : 0;
-                    unset($loginInfo['password']);
+                $loginInfo = $userModel->dologin($mobile, $password, '', 0);
+                if( $loginInfo['status'] == 1 ){
                     $this->apiReturn($loginInfo);
                 } else {
                     $this->apiReturn(V(0, $loginInfo['info']));
@@ -89,31 +57,29 @@ class PublicApiController extends ApiCommonController {
     }
 
     /**
-     * 获取短信接口
-     * user_type 0普通会员1、骑手 2、商家端
-     * type 1注册短信，2找回密码 3修改密码 4绑定手机 6设置支付密码
+     * @desc 获取短信接口
+     * @param user_type int 0普通会员1、HR
+     * @param type int 1注册短信，2找回密码 3修改密码 4绑定手机 6设置支付密码
      */
     public function smsCode() {
         $mobile = I('mobile', '');
         $user_type = I('user_type', 0, 'intval');
         $type = I('type', 0, 'intval');
         //1注册短信，2找回密码 3修改密码 4绑定手机 6设置支付密码
-        $type_array = array(1, 2 , 3, 4, 5, 6); 
+        $type_array = array(1, 2, 3, 4, 6);
         if (!in_array($type, $type_array)) {
             $this->apiReturn(V(0, '参数错误'));
         }
-        $user_type_array = array(0, 1,2);
+        $user_type_array = array(0, 1);
         if (!in_array($user_type, $user_type_array)) {
             $this->apiReturn(V(0, '用户类型参数错误'));
         }
-        if (empty($mobile) || !isMobile($mobile)) {
+        if (!isMobile($mobile)) {
             $this->apiReturn(V(0, '请输入有效的手机号码'));
-            exit;
         }
-        //验证手机号码是否已经验证
         $info['mobile'] = $mobile;
         $info['user_type'] = $user_type;
-        $result = D('Home/User')->checkUserExist($info);
+        $result = D('Admin/User')->checkUserExist($info);
 
         if ($result == false && $type == 1) {
             $this->apiReturn(V(0, '手机号码已存在'));
@@ -122,41 +88,32 @@ class PublicApiController extends ApiCommonController {
         } elseif ($result == false && $type == 4) {
             $this->apiReturn(V(0, '手机号码已存在'));
         }
-        // 短信内容
         $sms_code = randCode(C('SMS_CODE_LEN'), 1);
-
         switch ($type) {
-            case 1: //注册短信
+            case 1:
                 $msg = '注册验证码';
                 $sms_content = C('SMS_REGISTER_MSG') . $sms_code;
                 break;
-            case 2: //找回密码
+            case 2:
                 $msg = '找回密码验证码';
                 $sms_content = C('SMS_FINDPWD_MSG') . $sms_code;
                 break;
-            case 3: //修改密码
+            case 3:
                 $msg = '修改密码验证码';
                 $sms_content = C('SMS_MODPWD_MSG') . $sms_code;
                 break;
-            case 4: //绑定手机号码
+            case 4:
                 $msg = '绑定手机号验证码';
                 $sms_content = C('SMS_MODMOBILE_MSG') . $sms_code;
                 break;
-            case 5: //修改提现密码
-                $msg = '修改提现密码验证码';
-                $sms_content = C('SMS_WITHDRAW_MSG') . $sms_code;
-                break;
-            case 6: //设置支付密码
+            case 6:
                 $msg = '设置支付密码验证码';
                 $sms_content = C('SMS_PAY_MSG') . $sms_code;
-                break;
-            default:
                 break;
         }        
 
         $send_result = sendMessageRequest($mobile, $sms_content);
-
-        // 保存短信信息
+        //保存短信信息
         $data['sms_content'] = $sms_content;
         $data['sms_code'] = $sms_code;
         $data['mobile'] = $mobile;
@@ -172,37 +129,14 @@ class PublicApiController extends ApiCommonController {
             $this->apiReturn(V(0, '发送失败:'. $send_result['info']));
         }
     }
-    /**
-     * 验证短信码是否正确
-     */
-    public function checkSmsCode() {
-        $mobile = I('mobile', '');
-        $sms_code = I('sms_code', '');
-        $user_type = I('user_type', 0, 'intval');
-        $result = D('Home/SmsMessage')->checkSmsMessage($sms_code, $mobile,$user_type);
-        $this->apiReturn($result);
-    }
 
     /**
-     * 找回密码 --- 验证手机号码
+     * @desc 找回密码、保存密码
      */
-    public function checkFindpwdMobile() {
-        $mobile = I('mobile', '');
-        $result = D('Home/User')->checkUserExist($mobile);
-        if ($result == false) { // 不存在
-            $this->apiReturn(V(0, '手机号码不存在'));
-        }
-        $this->apiReturn(V(1, '验证正确'));
-    }
-
-    /**
-     * 找回密码 -- 保存密码
-     */
-    public function findpwdSave() {
+    public function findPasswordSave() {
         $mobile = I('mobile', '');
         $password = I('password', '');
         $user_type = I('user_type', 0);//用户类型
-        //$confirm_password = I('confirm_password', '');
         $sms_code = I('sms_code', '');
         if (isMobile($mobile) != true) {
             $this->apiReturn(V(0, '请输入有效的手机号码'));
@@ -225,22 +159,12 @@ class PublicApiController extends ApiCommonController {
         $userModel->change_pwd($mobile, $password,$user_type);
         $this->apiReturn(V(1, '密码修改成功'));
     }
-    /**
-     * 启动页广告接口
-     */
-    public function startAppAd() {
-        $where['position_id'] = 4;
-        $field = 'ad_id, title, link_url, content, type, item_id';
-        $data = D('Home/Ad')->getAdList($where, $field);
-        $this->apiReturn(V(1, '启动页广告', $data));        
-    }
 
     /**
      * @desc 微信登录
      */
     public function thirdLogin() {
-        $thirdType = I('third_type');
-        $thirdType = 'wx';
+        $thirdType = I('third_type', 'wx', 'trim');
         $open_id = I('open_id');
         if($thirdType && !in_array($thirdType, array('wx', 'qq'))) $this->apiReturn(V(0, '第三方登录类型有误'));
         if('wx' == $thirdType){
@@ -315,17 +239,4 @@ class PublicApiController extends ApiCommonController {
             $this->apiReturn(V(0, '行政区域列表获取失败'));
         }
     }
-
-    /**
-     * 随机下单信息
-     */
-    public function getOrderMsg()
-    {
-        $username = randCode(8);
-        $time = date('Y-m-d H:i:s');
-        $msg = '用户 '.$username.' 已在'.$time.'下单';
-        $this->apiReturn(V(1, '订单信息', $msg));
-    }
-
-    
 }

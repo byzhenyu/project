@@ -7,7 +7,7 @@ namespace Admin\Model;
 use Think\Model;
 
 class AnswerModel extends Model {
-    protected $insertFields = array('question_id', 'user_id', 'answer_content', 'add_time');
+    protected $insertFields = array('question_id', 'user_id', 'answer_content', 'add_time', 'is_anonymous');
     protected $updateFields = array('');
     protected $_validate = array(
         array('question_id', 'require', '回答问题不能为空！', 1, 'regex', 3),
@@ -61,6 +61,12 @@ class AnswerModel extends Model {
     //添加操作前的钩子操作
     protected function _before_insert(&$data, $option){
         $data['add_time'] = NOW_TIME;
+        $question_id = $data['question_id'];
+        $questionInfo = D('Question')->getQuestionDetail(array('id' => $question_id));
+        if($questionInfo){
+            $this->error = '问题不存在！';
+            return false;
+        }
     }
     //更新操作前的钩子操作
     protected function _before_update(&$data, $option){

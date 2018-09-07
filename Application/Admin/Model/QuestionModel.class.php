@@ -8,11 +8,13 @@ use Think\Model;
 
 class QuestionModel extends Model {
     protected $insertFields = array('question_title', 'question_type', 'question_content', 'add_time', 'user_id');
-    protected $updateFields = array('question_title', 'question_type', 'question_content', 'user_id');
+    protected $updateFields = array('question_title', 'question_type', 'question_content', 'user_id', 'browse_number', 'like_number', 'answer_number', 'disabled');
     protected $_validate = array(
         array('question_title', 'require', '问题标题不能为空！', 1, 'regex', 3),
+        array('question_title', '10,40', '标题长度10-40字之间', 1, 'length', 3),
         array('question_type', 'require', '问题类型不能为空！', 1, 'regex', 3),
         array('question_content', 'require', '问题内容不能为空！', 1, 'regex', 3),
+        array('question_content', '1,200', '问题内容不能超过200字', 1, 'length', 3)
     );
 
     /**
@@ -35,8 +37,7 @@ class QuestionModel extends Model {
      * @return array
      */
     public function changeDisabled($question_id){
-
-        $userInfo = $this->where(array('id'=>$question_id))->field('disabled, id')->find();
+        $userInfo = $this->where(array('id' => $question_id))->field('disabled, id')->find();
         $dataInfo = $userInfo['disabled'] == 1 ? 0 : 1;
         $update_info = $this->where(array('id'=>$question_id))->setField('disabled', $dataInfo);
         if($update_info !== false){

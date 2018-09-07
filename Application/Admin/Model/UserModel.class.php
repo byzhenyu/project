@@ -57,9 +57,59 @@ class UserModel extends Model{
     }
 
     /**
+     * @desc 用户端登录
+     * @param $user_name string 登录账号
+     * @param $pwd string 登录密码
+     * @param string $field 返回字段
+     * @param $user_type int 用户类型 0、普通会员 1、HR
+     * @return array
+     */
+    public function doLogin($user_name, $pwd, $field = '', $user_type){
+        if(!$field) $field = 'user_id,user_name,password,pay_password,mobile,email,head_pic,nickname,sex,user_money,frozen_money,disabled,register_time,recommended_number,recruit_number,is_auth,user_type';
+        $where = array('user_name|mobile' => $user_name, 'status' => 1, 'user_type' => $user_type);
+        $info = $this->where($where)->field($field)->find();
+        if($info){
+            if(!$info['disabled']) return V(0, '用户已经被禁用！');
+            if(pwdHash($pwd, $info['password'], true) != true) return V(0, '密码输入不正确');
+            $unArr = array('disabled', 'password', 'pay_password');
+            $info['pay_password'] = $info['pay_password'] ? 1 : 0;
+            $info['register_time'] = time_format($info['register_time']);
+            foreach($unArr as &$val) unset($info[$val]); unset($val);
+            $info['head_pic'] = strval($info['head_pic']);
+            $info['nickname'] = strval($info['nickname']);
+            $info['token'] = $this->updateUserToken($info['user_id']);
+            return V(1, '用户登录成功！', $info);
+        }
+        else{
+            return V(0, '检查输入账号是否正确！');
+        }
+    }
+
+    /**
+     * @desc 用户登录/注册token变动信息
+     * @param $userId
+     * @return string
+     */
+    public function updateUserToken($userId){
+        $model = M('UserToken');
+        $where = array('user_id' => $userId);
+        $info = $model->where($where)->find();
+        if($info) return $this->changeToken($userId);
+        $userInfo = $this->getUserInfo($where);
+        $token = randNumber(18);
+        $data = array(
+            'user_id' => $userId,
+            'user_name' => $userInfo['user_name'],
+            'token' => $token,
+            'login_time' => NOW_TIME,
+        );
+        $model->add($data);
+        return $token;
+    }
+
+    /**
      * 修改用户启用禁用状态
-     * @param $shop_id
-     * @param $is_admin
+     * @param $user_id int 用户id
      * @return array
      */
     public function changeDisabled($user_id){
@@ -138,6 +188,19 @@ class UserModel extends Model{
         $userInfo = $this->field($fields)->where($where)->find();
         return $userInfo;
     }
+
+    /**
+     * @desc 修改用户信息
+     * @param $where
+     * @param array $saveData
+     * @return bool
+     */
+    public function saveUserData($where, $saveData = array()){
+        if(!is_array($saveData)) return false;
+        $result = $this->where($where)->data($saveData)->save();
+        return $result;
+    }
+
     /**
      * 查询用户信息
      * @param $user_id

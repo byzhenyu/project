@@ -264,84 +264,6 @@ function randCode($length = 5, $type = 0) {
 }
 
 /**
- * 极光推送通用消息
- * @param string $alert  提示标题
- * @param mixed $userId 用户id 可传数组
- * @param string $msg  信息内容
- * @param string $type 信息类型
- * * @param string $pushType 信息类型
- * @return mixed
- */
-function jPush( $alert, $userId = null, $msg = '', $type='message', $pushType, $order_sn) {
-    require_once ('./Plugins/JPush/JPush.php');
-
-    try {
-        if ($pushType == 1) {
-            //商家端极光key和secret
-            $client = new \JPush( '94b0b753ead3913b62885955', 'bd7f75bc12a3b6d4cb429722' );
-        } elseif($pushType == 2) {
-            //用户端极光key和secret
-            $client = new \JPush( '5a79011d04d1e484acaea257', '6237da327b3dbca89eeec233' );
-        }
-
-        $extras = array (
-            'type' => $type,
-            'alert' => $alert,
-            'content' => $msg,
-            'order_sn' => $order_sn,
-        );
-        $client = $client->push();
-        $client = $client->setPlatform( 'all' );
-        $client = $client->setNotificationAlert( $alert );
-        $client = $client->addIosNotification( $alert, 'default', null, null, null, $extras );
-        //$client = $client->setMessage ( $alert, $alert, 'type', $extras );
-        $client = $client->addAndroidNotification( $alert, $alert, null, $extras );
-        //$client = $client->setOptions( 100000, 3600, null, false ); //测试环境
-        $client = $client->setOptions ( 100000, 3600, null, true ); //生产环境
-        if ($userId) {
-            // $client = $client->addRegistrationId ( $registrationIds );
-            $client->addAlias( $userId );
-        } else {
-            $client = $client->addAllAudience();
-        }
-
-        $result = $client->send();
-        // echo 'Result=' . json_encode ( $result ) . $br;
-        return json_encode( $result );
-    }catch (Exception $e){
-        return $e->getMessage();
-    }
-}
-
-/**
- * 计算两个坐标之间的距离(米)
- *
- * @param float $fP1Lat
- *            起点(纬度)
- * @param float $fP1Lon
- *            起点(经度)
- * @param float $fP2Lat
- *            终点(纬度)
- * @param float $fP2Lon
- *            终点(经度)
- * @return int
- */
-function distanceBetween($fP1Lat, $fP1Lon, $fP2Lat, $fP2Lon) {
-    $fEARTH_RADIUS = 6378137;
-    // 角度换算成弧度
-    $fRadLon1 = deg2rad($fP1Lon);
-    $fRadLon2 = deg2rad($fP2Lon);
-    $fRadLat1 = deg2rad($fP1Lat);
-    $fRadLat2 = deg2rad($fP2Lat);
-    // 计算经纬度的差值
-    $fD1 = abs($fRadLat1 - $fRadLat2);
-    $fD2 = abs($fRadLon1 - $fRadLon2);
-    // 距离计算
-    $fP = pow(sin($fD1 / 2), 2) + cos($fRadLat1) * cos($fRadLat2) * pow(sin($fD2 / 2), 2);
-    return intval($fEARTH_RADIUS * 2 * asin(sqrt($fP)) + 0.5);
-}
-
-/**
  * 删除指定的目录该件
  */
 function deldir($path) {
@@ -814,3 +736,70 @@ function pageNumber($page_total, $add_num = 1) {
     $num = ($page - 1) * $page_total + $add_num;
     return $num;
 }
+
+/**
+ * 六牛科技发送短信HTTP请求
+ * @param $mobile 手机号码
+ * @param $content 短信内容
+ * @return   mixed
+ */
+
+function sendMessageRequest($mobile, $content) {
+
+    /********参数配置区域start*********/
+
+    $min_limit = C('SMS_MIN_LIMIT'); //每分钟限制条数
+    $day_limit = C('SMS_DAY_LIMIT'); //每天短信限制条数
+    $sign = '【'. C('SMS_SIGN') .'】'; // 企业签名
+    $username = C('SMS_USERNAME'); // 用户名
+    $password = C('SMS_PASSWORD'); // 密码
+
+    /********参数配置区域end*********/
+
+    /**********短信条数限制处理区域start*******/
+    $count = S('sms_count_' . date('YmdHi') . $mobile);
+    $dayCount = S('sms_count_' . date('Ymd') . $mobile);
+
+    if ($count >= $min_limit) {
+        LL($mobile . '短信超出限制,' . date('Y-m-d Hi') . ':' . $count, './logs/sms_privalige_min' . date('Y_m_d') . '.log');
+        return V(0, '验证码'. $min_limit .'分钟内不能重复发送');
+    }
+    if ($dayCount >= $day_limit) {
+        LL($mobile . '短信超出限制,' . date('Y-m-d') . ':' . $dayCount, './logs/sms_privalige_day' . date('Y_m_d') . '.log');
+        return V(0, '24小时内不能再发送短信');
+    }
+
+    $count || $count = 0;
+    $dayCount || $dayCount = 0;
+    S('sms_count_' . date('YmdHi') . $mobile, ++$count, 60);
+    S('sms_count_' . date('Ymd') . $mobile, ++$dayCount, 60 * 60 * 24);
+    /**********短信条数限制处理区域end*******/
+    $phone = $mobile; // 目标号码
+    $url = "http://api.ykqxt.com/yksmservice.asmx/SendSMAsArray";
+    $content = urlencode($sign . $content); // 短信内容之后添加企业签名，同时进行UrlEncode转码
+    $istimer = 'FALSE';
+    $timerset = date('Y-m-d H:i:s', time());
+    $identifyNum = '';
+
+    $postdata = "username=$username&password=$password&phone=$phone&content=$content&pipeid=&istimer=$istimer&timerset=$timerset&identifyNum=$identifyNum";
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_HEADER, false);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+    $result = curl_exec($ch);
+    curl_close($ch);
+
+    // 发送有没有成功
+    if (strstr($result, "提交成功") == false) {
+        LL($result, './logs/sms_error' . date('Y_m_d') . '.log');
+        return V(0, $result);
+    } else {
+        LL($result, './logs/sms_success' . date('Y_m_d') . '.log');
+        return V(1, '短信发送成功');
+    }
+
+}
+
