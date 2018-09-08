@@ -354,7 +354,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $data['user_id'] = UID;
         $model = D('Admin/Contacts');
         if($data['id'] > 0){
-            $create = $model->create($data);
+            $create = $model->create($data, 2);
             if(false !== $create){
                 $res = $model->save($data);
                 if(false !== $res){
@@ -369,7 +369,7 @@ class UserCenterApiController extends ApiUserCommonController{
             }
         }
         else{
-            $create = $model->create($data);
+            $create = $model->create($data, 1);
             if(false !== $create){
                 $res = $model->add($data);
                 if(false !== $res){
