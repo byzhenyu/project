@@ -10,7 +10,6 @@ class ContactsModel extends Model
     protected $updateFields = array();
     protected $selectFields = array();
     protected $_validate = array(
-        array('user_id', 'require', '关联人不能为空！', 1, 'regex', 3),
         array('contact_name', 'require', '联系人姓名不能为空！', 1, 'regex', 3),
         array('contact_name', '0,12', '联系人姓名长度0-12位！', 1, 'length', 3),
         array('relation_id', 'require', '联系人关系不能为空！', 1, 'regex', 3),
