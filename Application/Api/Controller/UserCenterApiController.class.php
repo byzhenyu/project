@@ -351,6 +351,7 @@ class UserCenterApiController extends ApiUserCommonController{
      */
     public function editContacts(){
         $data = I('post.');
+        $data['user_id'] = UID;
         $model = D('Admin/Contacts');
         if($data['id'] > 0){
             $create = $model->create($data);
