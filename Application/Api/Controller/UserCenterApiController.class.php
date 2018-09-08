@@ -324,9 +324,9 @@ class UserCenterApiController extends ApiUserCommonController{
      * @desc 我的提问列表
      */
     public function getPersonalQuestion(){
-        $where = array('user_id' => UID, 'a.disabled' => 1);
+        $where = array('a.user_id' => UID, 'a.disabled' => 1);
         $model = D('Admin/Question');
-        $field = 'u.nickname,u.head_pic,a.id,a.like_number,a.browse_number,a.answer_number,a.add_time,a.title';
+        $field = 'u.nickname,u.head_pic,a.id,a.like_number,a.browse_number,a.answer_number,a.add_time,a.question_title';
         $question = $model->getQuestionList($where, $field);
         $question_list = $question['info'];
         foreach($question_list as &$val){
