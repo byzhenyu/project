@@ -15,16 +15,26 @@ class AnswerModel extends Model {
     );
 
     /**
-     * 获取答案列表
-     * @param
-     * @return mixed
+     * @desc 获取答案列表
+     * @param $where
+     * @param bool $field
+     * @param string $order
+     * @return array
      */
     public function getAnswerList($where, $field = false, $order = 'add_time desc'){
-        if(!$field) $field = 'a.*,u.nickname';
+        $where['disabled'] = 1;
+        if(!$field) $field = 'a.*,u.nickname,u.head_pic';
         $count = $this->alias('a')->join('__USER__ as u on u.user_id = a.user_id')->where($where)->count();
         $page = get_web_page($count);
         $list = $this->alias('a')->where($where)->field($field)->limit($page['limit'])->join('__USER__ as u on u.user_id = a.user_id')->order($order)->select();
-
+        foreach($list as &$val){
+            $val['add_time'] = time_format($val['add_time']);
+            $val['head_pic'] = strval($val['head_pic']);
+            if(!$val['is_anonymous']) $val['nickname'] = '匿名用户';
+            $imgWhere = array('type' => 2, 'item_id' => $val['id']);
+            $val['answer_img'] = D('Admin/QuestionImg')->getQuestionImgList($imgWhere);
+        }
+        unset($val);
         return array('info' => $list, 'page' => $page['page']);
     }
 
@@ -44,16 +54,50 @@ class AnswerModel extends Model {
      * 修改答案启用禁用状态
      * @return array
      */
-    public function changeDisabled($question_id){
+    public function changeDisabled($id){
 
-        $userInfo = $this->where(array('id'=>$question_id))->field('disabled, id')->find();
+        $userInfo = $this->where(array('id'=>$id))->field('disabled, id')->find();
         $dataInfo = $userInfo['disabled'] == 1 ? 0 : 1;
-        $update_info = $this->where(array('id'=>$question_id))->setField('disabled', $dataInfo);
+        $update_info = $this->where(array('id'=>$id))->setField('disabled', $dataInfo);
         if($update_info !== false){
             return V(1, '修改成功！');
         }else{
             return V(0, '修改失败！');
         }
+    }
+
+    /**
+     * @desc 设置为最佳答案
+     * @param $where
+     * @return array
+     */
+    public function settingOptimum($where){
+        $answer_id = $where['id'];
+        $answerInfo = $this->getAnswerDetail($where);
+        if(!$answerInfo) return V(0, '未找到对应的答案信息！');
+        unset($where['id']);
+        $where['is_optimum'] = 1;
+        $answerInfo = $this->getAnswerDetail($where);
+        if($answerInfo) return V('该问题已经有最佳答案！');
+        $where['id'] = $answer_id;
+        $save = $this->where($where)->save(array('is_optimum' => 1));
+        if(false !== $save){
+            return V(1, '设置成功！');
+        }
+        else{
+            return V(0, '设置失败！');
+        }
+    }
+
+    /**
+     * @desc 回答点赞/
+     * @param $where
+     * @param string $field
+     * @return bool
+     */
+    public function setAnswerInc($where, $field = 'like_number'){
+        $res = $this->where($where)->setInc($field);
+        return $res;
     }
 
 
@@ -67,6 +111,7 @@ class AnswerModel extends Model {
             $this->error = '问题不存在！';
             return false;
         }
+
     }
     //更新操作前的钩子操作
     protected function _before_update(&$data, $option){

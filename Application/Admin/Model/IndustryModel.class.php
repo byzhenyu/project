@@ -13,6 +13,19 @@ class IndustryModel extends Model {
             array('parent_id', 'number', '上级权限的ID，0：代表顶级权限必须是一个整数！', 2, 'regex', 3),
     );
 
+    /**
+     * @desc 获取行业信息列表
+     * @param $where
+     * @param bool $field
+     * @param string $order
+     * @return mixed
+     */
+    public function getIndustryList($where, $field = false, $order = 'sort'){
+        if(!$field) $field = '';
+        $list = $this->where($where)->field($field)->order($order)->select();
+        return $list;
+    }
+
     //提取全部权限并作排序
     public function getTree(){
         $data = $this->order('sort asc')->select();

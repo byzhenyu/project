@@ -58,6 +58,17 @@ class QuestionModel extends Model {
         return $info;
     }
 
+    /**
+     * @desc 设置问题浏览量/回答数/点赞数
+     * @param $where
+     * @param string $field
+     * @return bool
+     */
+    public function setQuestionInc($where, $field = 'browse_number'){
+        $res = $this->where($where)->setInc($field);
+        return $res;
+    }
+
     //添加操作前的钩子操作
     protected function _before_insert(&$data, $option){
         $data['add_time'] = NOW_TIME;

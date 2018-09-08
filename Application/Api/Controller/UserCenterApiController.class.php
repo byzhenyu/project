@@ -183,12 +183,129 @@ class UserCenterApiController extends ApiUserCommonController{
                     thumb($img_url, 180,240);
                 }
             }
+            $incWhere = array('id' => $data['question_id']);
+            D('Admin/Question')->setQuestionInc($incWhere, 'answer_number');//问题回答数
             $this->apiReturn(V(1, '回答成功！'));
         }
         else{
             $this->apiReturn(V(0, $model->getError()));
         }
     }
+
+    /**
+     * @desc 获取问题详情
+     */
+    public function getQuestionDetail(){
+        $question_id = I('question_id', 0, 'intval');
+        $where = array('id' => $question_id, 'disabled' => 1);
+        $quesModel = D('Admin/Question');
+        $questionDetail = $quesModel->getQuestionDetail($where);
+        $ques_img_where = array('type' => 1, 'item_id' => $question_id);
+        $questionImg = D('Admin/QuestionImg')->getQuestionImgList($ques_img_where);
+        $answer_where = array('question_id' => $question_id);
+        $answerModel = D('Admin/Answer');
+        $answer_list = $answerModel->getAnswerList($answer_where);
+        $questionPointsModel = D('Admin/QuestionPoints');
+        $points_where = array('item_id' => $question_id, 'type' => 1, 'operate_type' => 2, 'user_id' => UID);
+        $points_info = $questionPointsModel->getQuestionPointsInfo($points_where);
+        if(!$points_info) $quesModel->setQuestionInc($where, 'browse_number');
+        $returnArray = array('question' => $questionDetail, 'question_img' => $questionImg, 'answer_list' => $answer_list);
+        $this->apiReturn(V(1, '问题详情获取成功！', $returnArray));
+    }
+
+    /**
+     * @desc 问题点赞
+     */
+    public function likeQuestion(){
+        $data = I('post.');
+        $data['user_id'] = UID;
+        $model = D("Admin/QuestionPoints");
+        $where = array(
+            'item_id' => $data['item_id'],
+            'user_id' => $data['user_id'],
+            'operate_type' => 1,
+            'type' => 1
+        );
+        $info = $model->getQuestionPointsInfo($where);
+        if($info) $this->apiReturn(V(0, '您已经对该问题点过赞！'));
+        M()->startTrans();
+        $create = $model->create($data);
+        if(false !== $create){
+            $res = $model->add($data);
+            if(false !== $res){
+                $incWhere = array('id' => $data['item_id']);
+                $qRes = D('Admin/Question')->setQuestionInc($incWhere, 'like_number');
+                if(false !== $qRes){
+                    M()->commit();
+                    $this->apiReturn(V(1, '点赞成功！'));
+                }
+                else{
+                    M()->rollback();
+                    $this->apiReturn(V(0, '点赞失败！'));
+                }
+            }
+            else{
+                $this->apiReturn(V(0, $model->getError()));
+            }
+        }
+        else{
+            $this->apiReturn(V(0, $model->getError()));
+        }
+    }
+
+    /**
+     * @desc 回答点赞
+     */
+    public function likeAnswer(){
+        $data = I('post.');
+        $data['user_id'] = UID;
+        if(!$data['type']) $data['type'] = 2;
+        $model = D("Admin/QuestionPoints");
+        $where = array(
+            'item_id' => $data['item_id'],
+            'user_id' => $data['user_id'],
+            'operate_type' => 1,
+            'type' => 2
+        );
+        $info = $model->getQuestionPointsInfo($where);
+        if($info) $this->apiReturn(V(0, '您已经对该回答点过赞！'));
+        M()->startTrans();
+        $create = $model->create($data);
+        if(false !== $create){
+            $res = $model->add($data);
+            if(false !== $res){
+                $incWhere = array('id' => $data['item_id']);
+                $qRes = D('Admin/Answer')->setAnswerInc($incWhere, 'like_number');
+                if(false !== $qRes){
+                    M()->commit();
+                    $this->apiReturn(V(1, '点赞成功！'));
+                }
+                else{
+                    M()->rollback();
+                    $this->apiReturn(V(0, '点赞失败！'));
+                }
+            }
+            else{
+                $this->apiReturn(V(0, $model->getError()));
+            }
+        }
+        else{
+            $this->apiReturn(V(0, $model->getError()));
+        }
+    }
+
+    /**
+     * @desc 设置答案为最佳答案
+     */
+    public function settingAnswerOptimum(){
+        $answer_id = I('answer_id', 0, 'intval');
+        $question_id = I('question_id', 0, 'intval');
+        if(!$answer_id || !$question_id) $this->apiReturn(V(0, '请传入合法的参数！'));
+        $where = array('id' => $answer_id, 'question_id' => $question_id, 'user_id' => UID);
+        $res = D('Admin/Answer')->settingOptimum($where);
+        $this->apiReturn($res);
+    }
+
 
     /**
      * @desc 联系人关系列表
@@ -287,5 +404,39 @@ class UserCenterApiController extends ApiUserCommonController{
         else{
             $this->apiReturn(V(0, '删除失败！'));
         }
+    }
+
+    /**
+     * @desc 获取行业/职位信息列表
+     */
+    public function getPositionIndustryList(){
+        $type = I('type', 1, 'intval');
+        $parent_id = I('parent_id', 0, 'intval');
+        $where = array('parent_id' => $parent_id);
+        switch ($type){
+            case 1:
+                $model = D('Admin/Industry');
+                $list = $model->getIndustryList($where);
+                break;
+            case 2:
+                $model = D('Admin/Position');
+                $list = $model->getPositionList($where, '', false);
+                break;
+            default:
+                $this->apiReturn(V(0, '不合法的数据类型！'));
+        }
+        $this->apiReturn(V(1, '列表信息获取成功！', $list));
+    }
+
+    /**
+     * @desc 获取标签
+     */
+    public function getTags(){
+        $type = I('type', 0, 'intval');
+        if(!in_array($type, array(1,2,3,4,5))) $this->apiReturn(V(0, '标签类型不合法！'));
+        $model = D('Admin/Tags');
+        $where = array('tags_type' => $type);
+        $list = $model->getTagsList($where);
+        $this->apiReturn(V(1, '标签列表获取成功！', $list));
     }
 }
