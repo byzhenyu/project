@@ -37,7 +37,7 @@ class PublicApiController extends ApiCommonController {
         foreach($question_list as &$val){
             $val['nickname'] = strval($val['nickname']);
             $val['head_pic'] = strval($val['head_pic']);
-            $val['add_time'] = time_format($val['add_time']);
+            $val['add_time'] = time_format($val['add_time'], 'Y-m-d');
             $img_where = array('type' => 1, 'item_id' => $val['id']);
             $val['question_img'] = D('Admin/QuestionImg')->getQuestionImgList($img_where);
         }
