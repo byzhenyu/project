@@ -16,9 +16,11 @@ class SmsMessageModel extends Model
      * 验证短信验证是否正确
      * @param $code
      * @param $mobile
+     * @param $user_type
+     * @param $type
      * @return mixed
      */
-    public function checkSmsMessage($code, $mobile) {
+    public function checkSmsMessage($code, $mobile, $user_type = 0, $type = 1) {
         if (strlen($code) != C('SMS_CODE_LEN')){
             return V(0, '短信验证码长度有误');
         }
@@ -29,7 +31,8 @@ class SmsMessageModel extends Model
         $where['mobile'] = $mobile;
         $where['add_time'] = array('EGT', NOW_TIME - C('SMS_EXPIRE_TIME') * 60);
         $where['is_used'] = 0;
-        $where['user_type'] = 0;
+        $where['user_type'] = $user_type;
+        $where['type'] = $type;
         $smsInfo = $this->where($where)->find();
 
         if (count($smsInfo) > 0) {

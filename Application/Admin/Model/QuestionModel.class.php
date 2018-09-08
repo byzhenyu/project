@@ -7,14 +7,15 @@ namespace Admin\Model;
 use Think\Model;
 
 class QuestionModel extends Model {
-    protected $insertFields = array('question_title', 'question_type', 'question_content', 'add_time', 'user_id');
+    protected $insertFields = array('question_title', 'question_type', 'question_content', 'add_time', 'user_id', 'city_id', 'city_name');
     protected $updateFields = array('question_title', 'question_type', 'question_content', 'user_id', 'browse_number', 'like_number', 'answer_number', 'disabled');
     protected $_validate = array(
         array('question_title', 'require', '问题标题不能为空！', 1, 'regex', 3),
         array('question_title', '10,40', '标题长度10-40字之间', 1, 'length', 3),
         array('question_type', 'require', '问题类型不能为空！', 1, 'regex', 3),
         array('question_content', 'require', '问题内容不能为空！', 1, 'regex', 3),
-        array('question_content', '1,200', '问题内容不能超过200字', 1, 'length', 3)
+        array('question_content', '1,200', '问题内容不能超过200字', 1, 'length', 3),
+        array('city_id', 'require', '所在城市获取失败!', 1, 'length', 3)
     );
 
     /**
@@ -23,7 +24,7 @@ class QuestionModel extends Model {
      * @return mixed
      */
     public function getQuestionList($where, $field = false, $order = 'add_time desc'){
-        if(!$field) $field = 'a.*,u.nickname';
+        if(!$field) $field = 'a.*,u.nickname,u.head_pic';
         $count = $this->alias('a')->where($where)->join('__USER__ as u on u.user_id = a.user_id')->count();
         $page = get_web_page($count);
         $list = $this->alias('a')->where($where)->field($field)->limit($page['limit'])->join('__USER__ as u on u.user_id = a.user_id')->order($order)->select();
@@ -72,6 +73,10 @@ class QuestionModel extends Model {
     //添加操作前的钩子操作
     protected function _before_insert(&$data, $option){
         $data['add_time'] = NOW_TIME;
+        if(!$data['city_name']){
+            $region_info = D('Admin/Region')->getRegionInfo(array('id' => $data['city_id']));
+            $data['city_name'] = $region_info['name'];
+        }
     }
     //更新操作前的钩子操作
     protected function _before_update(&$data, $option){

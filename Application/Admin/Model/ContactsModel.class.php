@@ -58,6 +58,7 @@ class ContactsModel extends Model
     public function getContactsInfo($where, $field = false){
         if(!$field) $field = '*';
         $res = $this->where($where)->field($field)->find();
+        if(!$res) return false;
         $relation = D('Admin/ContactsRelation')->getContactsRelationInfo(array('id' => $res['relation_id']));
         $res['relation_name'] = $relation['relation_name'];
         return $res;

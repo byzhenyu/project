@@ -21,7 +21,6 @@ class UserModel extends Model{
 
     // 判断用户是否存在
     public function checkUserExist($info){
-
         $where['mobile'] = $info['mobile'];
         $where['status'] = 1;
         $where['user_type'] =$info['user_type'];
@@ -105,6 +104,21 @@ class UserModel extends Model{
         );
         $model->add($data);
         return $token;
+    }
+
+    /**
+     * 找回密码时修改密码
+     * @param $mobile
+     * @param $password
+     * @param $user_type
+     * @return bool
+     */
+    public function change_pwd($mobile, $password, $user_type){
+        $where['mobile'] = $mobile;
+        $where['user_type'] = $user_type;
+        $data['password'] = $password;
+        $this->where($where)->data($data)->save();
+        return true;
     }
 
     /**

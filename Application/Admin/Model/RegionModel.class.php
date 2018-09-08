@@ -1,6 +1,5 @@
 <?php
 // +----------------------------------------------------------------------
-// | Author: liuyang 594353482@qq.com
 // +----------------------------------------------------------------------
 namespace Admin\Model;
 use Think\Model;
@@ -21,6 +20,18 @@ class RegionModel extends Model {
     	}
 
     	return $res;
+    }
+
+    /**
+     * @desc 获取地区信息
+     * @param $where
+     * @param bool $field
+     * @return mixed
+     */
+    public function getRegionInfo($where, $field = false){
+        if(!$field) $field = '';
+        $res = $this->where($where)->field($field)->find();
+        return $res;
     }
 
 }

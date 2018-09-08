@@ -67,10 +67,14 @@ class UserCenterApiController extends ApiUserCommonController{
         $mobile = I('mobile');
         $sms_code = I('sms_code', 0, 'intval');
         $pay_word = I('pay_password', '', 'trim');
+        $model = D('Admin/User');
+        $where = array('user_id' => UID);
+        $userInfo = $model->getUserInfo($where);
+        $user_type = $userInfo['user_type'];
         if(!isMobile($mobile)) $this->apiReturn(V(0, '请输入合法的手机号！'));
         $payLen = strlen($pay_word);
         if($payLen < 6 || $payLen > 18) $this->apiReturn(V(0, '密码长度6-18位！'));
-        $valid = D('Admin/SmsMessage')->checkSmsMessage($sms_code, $mobile);
+        $valid = D('Admin/SmsMessage')->checkSmsMessage($sms_code, $mobile, $user_type, 6);
         if(!$valid['status']) $this->apiReturn($valid);
         $model = D('Admin/User');
         $where = array('user_id' => UID);
@@ -316,6 +320,71 @@ class UserCenterApiController extends ApiUserCommonController{
         $this->apiReturn($res);
     }
 
+    /**
+     * @desc 我的提问列表
+     */
+    public function getPersonalQuestion(){
+        $where = array('user_id' => UID, 'disabled' => 1);
+        $model = D('Admin/Question');
+        $field = 'u.nickname,u.head_pic,a.id,a.like_number,a.browse_number,a.answer_number,a.add_time,a.title';
+        $question = $model->getQuestionList($where, $field);
+        $question_list = $question['info'];
+        foreach($question_list as &$val){
+            $val['nickname'] = strval($val['nickname']);
+            $val['head_pic'] = strval($val['head_pic']);
+            $val['add_time'] = time_format($val['add_time'], 'Y-m-d');
+            $img_where = array('type' => 1, 'item_id' => $val['id']);
+            $val['question_img'] = D('Admin/QuestionImg')->getQuestionImgList($img_where);
+        }
+        unset($val);
+        $this->apiReturn(V(1, '获取成功！', $question_list));
+    }
+
+    /**
+     * @desc 我的回答列表
+     */
+    public function getPersonalAnswer(){
+        $where = array('a.user_id' => UID);
+        $model = D('Admin/Answer');
+        $answer_field = 'a.id,a.answer_content,a.add_time,a.question_id,a.is_anonymous,u.nickname,u.head_pic';
+        $answer = $model->getAnswerList($where, $answer_field);
+        $answerList = $answer['info'];
+        $ques_model = D('Admin/Question');
+        $ques_img_model = D('Admin/QuestionImg');
+        $ques_field = 'id,question_title,question_content,question_type,like_number,browse_number,answer_number,add_time';
+        foreach($answerList as &$val){
+            $t_ques_where = array('id' => $val['question_id']);
+            $val['question_detail'] = $ques_model->getQuestionDetail($t_ques_where, $ques_field);
+            $val['question_detail']['add_time'] = time_format($val['question_detail']['add_time'], 'Y-m-d');
+            $img_where = array('type' => 1, 'item_id' => $val['question_id']);
+            $val['question_img'] = $ques_img_model->getQuestionImgList($img_where);
+        }
+        $this->apiReturn(V(1, '', $answerList));
+    }
+
+    /**
+     * @desc 首页数据
+     */
+    public function getHomeData(){
+        $keywords = I('keywords', '', 'trim');
+        $city_id = I('city_id', 0, 'intval');
+        $where = array('city_id' => $city_id, 'disabled' => 1);
+        if($keywords) $where['question_title'] = array('like', '%'.$keywords.'%');
+        $model = D('Admin/Question');
+        $field = 'u.nickname,u.head_pic,a.id,a.like_number,a.browse_number,a.answer_number,a.add_time,a.title';
+        $question_list = $model->getQuestionList($where, $field);
+        foreach($question_list as &$val){
+            $val['nickname'] = strval($val['nickname']);
+            $val['head_pic'] = strval($val['head_pic']);
+            $val['add_time'] = time_format($val['add_time']);
+            $img_where = array('type' => 1, 'item_id' => $val['id']);
+            $val['question_img'] = D('Admin/QuestionImg')->getQuestionImgList($img_where);
+        }
+        unset($val);
+        $array = array();
+        $array['question_list'] = $question_list;
+        $this->apiReturn(V(1, '获取成功！', $array));
+    }
 
     /**
      * @desc 联系人关系列表

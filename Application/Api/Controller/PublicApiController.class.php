@@ -30,13 +30,14 @@ class PublicApiController extends ApiCommonController {
         $sms_code = I('sms_code', '');
         $email = I('email', '', 'trim');
         $password = I('password', '', 'trim');
+        $user_type = I('user_type', 0, 'intval');
         $userModel = D('Admin/User');
         if (!isMobile($mobile)) $this->apiReturn(V(0, '请填写正确的手机格式！'));
         if(!is_email($email)) $this->apiReturn(V(0, '请输入正确的邮箱格式！'));
-        $valid = D('Admin/SmsMessage')->checkSmsMessage($sms_code, $mobile);
+        $valid = D('Admin/SmsMessage')->checkSmsMessage($sms_code, $mobile, $user_type, 1);
         if(!$valid['status']) $this->apiReturn($valid);
         $data = I('post.');
-        $data['user_type'] = 0;
+        $data['user_type'] = $user_type;
         if ($userModel->create($data, 1) !== false) {
             $user_id = $userModel->add();
             if ($user_id > 0) {
@@ -136,27 +137,24 @@ class PublicApiController extends ApiCommonController {
     public function findPasswordSave() {
         $mobile = I('mobile', '');
         $password = I('password', '');
-        $user_type = I('user_type', 0);//用户类型
+        $user_type = I('user_type', 0);
         $sms_code = I('sms_code', '');
         if (isMobile($mobile) != true) {
             $this->apiReturn(V(0, '请输入有效的手机号码'));
         }
-        $check_mobile = D('Home/User')->checkUserExist($mobile);
+        $check_mobile = D('Admin/User')->checkUserExist($mobile);
         if ($check_mobile == false) { // 不存在
             $this->apiReturn(V(0, '手机号码不存在'));
         }
-        $check_sms = D('Home/SmsMessage')->checkSmsMessage($sms_code, $mobile, $user_type);
+        $check_sms = D('Admin/SmsMessage')->checkSmsMessage($sms_code, $mobile, $user_type, 2);
         if ($check_sms['status'] == 0) {
             $this->apiReturn($check_sms);
         }
         if (strlen($password) < 6 || strlen($password) > 15){
             $this->apiReturn(V(0, '密码必须是6-20位的字符'));
         }
-        /*if ($password != $confirm_password){
-            $this->apiReturn(V(0, '两次密码不一致'));
-        }*/
-        $userModel = D('Home/User');
-        $userModel->change_pwd($mobile, $password,$user_type);
+        $userModel = D('Admin/User');
+        $userModel->change_pwd($mobile, $password, $user_type);
         $this->apiReturn(V(1, '密码修改成功'));
     }
 
