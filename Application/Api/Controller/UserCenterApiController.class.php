@@ -201,7 +201,10 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('id' => $question_id, 'disabled' => 1);
         $quesModel = D('Admin/Question');
         $questionDetail = $quesModel->getQuestionDetail($where);
+        $releaseInfo = D('Admin/User')->getUserInfo(array('user_id' => $questionDetail['user_id']));
         $questionDetail['add_time'] = time_format($questionDetail['add_time']);
+        $questionDetail['head_pic'] = strval($releaseInfo['head_pic']);
+        $questionDetail['nickname'] = strval($releaseInfo['nickname']);
         $ques_img_where = array('type' => 1, 'item_id' => $question_id);
         $questionImg = D('Admin/QuestionImg')->getQuestionImgList($ques_img_where);
         $answer_where = array('question_id' => $question_id);
