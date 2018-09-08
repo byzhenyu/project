@@ -32,7 +32,8 @@ class PublicApiController extends ApiCommonController {
         if($keywords) $where['question_title'] = array('like', '%'.$keywords.'%');
         $model = D('Admin/Question');
         $field = 'u.nickname,u.head_pic,a.id,a.like_number,a.browse_number,a.answer_number,a.add_time,a.question_title';
-        $question_list = $model->getQuestionList($where, $field);
+        $question = $model->getQuestionList($where, $field);
+        $question_list = $question['info'];
         foreach($question_list as &$val){
             $val['nickname'] = strval($val['nickname']);
             $val['head_pic'] = strval($val['head_pic']);
