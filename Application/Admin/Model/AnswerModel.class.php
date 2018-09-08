@@ -107,7 +107,7 @@ class AnswerModel extends Model {
         $data['add_time'] = NOW_TIME;
         $question_id = $data['question_id'];
         $questionInfo = D('Admin/Question')->getQuestionDetail(array('id' => $question_id));
-        if($questionInfo){
+        if(!$questionInfo){
             $this->error = '问题不存在！';
             return false;
         }
