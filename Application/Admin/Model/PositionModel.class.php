@@ -28,15 +28,17 @@ class PositionModel extends Model {
     /**
      * 获取职位列表
      * @param $where array 条件
+     * @param $field string 字段
      * @param $isPage bool 是否返回分页数据
      * @param $order string 排序顺序
      * @return mixed
      */
-    public function getPositionList($where, $order = 'sort', $isPage = true){
-        if(!$isPage) return $this->where($where)->order($order)->select();
+    public function getPositionList($where, $field = false, $order = 'sort', $isPage = true){
+        if(!$field) $field = '*';
+        if(!$isPage) return $this->where($where)->field($field)->order($order)->select();
         $count = $this->where($where)->count();
         $page = get_web_page($count);
-        $list = $this->where($where)->limit($page['limit'])->order($order)->select();
+        $list = $this->where($where)->limit($page['limit'])->field($field)->order($order)->select();
 
         return array('info' => $list, 'page' => $page['page']);
     }

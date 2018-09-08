@@ -106,6 +106,11 @@ class AnswerModel extends Model {
     //添加操作前的钩子操作
     protected function _before_insert(&$data, $option){
         $data['add_time'] = NOW_TIME;
+        $answer_cmp = cmp_contraband($data['answer_content']);
+        if($answer_cmp){
+            $this->error = '回答内容中有违禁词！';
+            return false;
+        }
         $question_id = $data['question_id'];
         $questionInfo = D('Admin/Question')->getQuestionDetail(array('id' => $question_id));
         if(!$questionInfo){

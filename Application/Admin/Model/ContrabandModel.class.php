@@ -37,6 +37,17 @@ class ContrabandModel extends Model {
         return array('info' => $list, 'page' => $page['page']);
     }
 
+    /**
+     * @desc 违禁词列表/比较用
+     * @return array
+     */
+    public function getContrabandCmpList(){
+        $res = $this->field('contraband')->where(array('status' => 1))->select();
+        $cmp = array();
+        foreach($res as &$val) $cmp[] = $val['contraband']; unset($val);
+        return $cmp;
+    }
+
     //添加操作前的钩子操作
     protected function _before_insert(&$data, $option){
         $data['add_time'] = NOW_TIME;

@@ -803,3 +803,84 @@ function sendMessageRequest($mobile, $content) {
 
 }
 
+/**
+ * @describe 数组生成正则表达式
+ * @param array $words
+ * @return string
+ */
+function generateRegularExpression($words)
+{
+    $regular = implode('|', array_map('preg_quote', $words));
+    return "/$regular/i";
+}
+/**
+ * @describe 字符串 生成正则表达式
+ * @param array $words
+ * @return string
+ */
+function generateRegularExpressionString($string){
+    $str_arr[0]=$string;
+    $str_new_arr=  array_map('preg_quote', $str_arr);
+    return $str_new_arr[0];
+}
+/**
+ * 检查敏感词
+ * @param $banned
+ * @param $string
+ * @return bool|string|array
+ */
+function check_words($banned,$string)
+{    $match_banned=array();
+    //循环查出所有敏感词
+    $new_banned=strtolower($banned);
+    $i=0;
+    do{
+        $matches=null;
+        if (!empty($new_banned) && preg_match($new_banned, $string, $matches)) {
+            $isempyt=empty($matches[0]);
+            if(!$isempyt){
+                $match_banned = array_merge($match_banned, $matches);
+                $matches_str=strtolower(generateRegularExpressionString($matches[0]));
+                $new_banned=str_replace("|".$matches_str."|","|",$new_banned);
+                $new_banned=str_replace("/".$matches_str."|","/",$new_banned);
+                $new_banned=str_replace("|".$matches_str."/","/",$new_banned);
+            }
+        }
+        $i++;
+        if($i>20){
+            $isempyt=true;
+            break;
+        }
+    }while(count($matches)>0 && !$isempyt);
+
+    //查出敏感词
+    if($match_banned){
+        return array_unique($match_banned);
+    }
+    //没有查出敏感词
+    return array();
+}
+
+/**
+ * @desc 违禁词比较
+ * @param $content
+ * @return bool 有违禁词返回true
+ */
+function cmp_contraband($content){
+    $array = contraband_list();
+    $banner = generateRegularExpression($array);
+    $valid = check_words($banner, $content);
+    $cmp_len = count($valid);
+    if($cmp_len > 0) return true;
+    return false;
+}
+
+/**
+ * @desc 获取违禁词列表
+ * @return mixed
+ */
+function contraband_list(){
+    $res = D('Admin/Contraband')->getContrabandCmpList();
+    return $res;
+}
+

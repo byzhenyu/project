@@ -472,11 +472,13 @@ class UserCenterApiController extends ApiUserCommonController{
         switch ($type){
             case 1:
                 $model = D('Admin/Industry');
-                $list = $model->getIndustryList($where);
+                $field = 'id,industry_name as name,parent_id,sort';
+                $list = $model->getIndustryList($where, $field);
                 break;
             case 2:
                 $model = D('Admin/Position');
-                $list = $model->getPositionList($where, '', false);
+                $field = 'id,position_name as name,parent_id,sort';
+                $list = $model->getPositionList($where, $field, '', false);
                 break;
             default:
                 $this->apiReturn(V(0, '不合法的数据类型！'));
@@ -494,5 +496,15 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('tags_type' => $type);
         $list = $model->getTagsList($where);
         $this->apiReturn(V(1, '标签列表获取成功！', $list));
+    }
+
+    /**
+     * @desc 获取公司列表
+     */
+    public function getCompanyList(){
+        $keywords = I('keywords', '', 'trim');
+        $where = array('company_name' => array('like', '%'.$keywords.'%'));
+        $list = D('Admin/Company')->getCompanyList($where);
+        $this->apiReturn(V(1, '公司列表获取成功！', $list['info']));
     }
 }

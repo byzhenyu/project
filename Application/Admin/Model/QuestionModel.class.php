@@ -73,6 +73,15 @@ class QuestionModel extends Model {
     //添加操作前的钩子操作
     protected function _before_insert(&$data, $option){
         $data['add_time'] = NOW_TIME;
+        $title_cmp = cmp_contraband($data['question_title']);
+        if($title_cmp){
+            $this->error = '问题标题中有违禁词！';
+            return false;
+        }
+        $content_cmp = cmp_contraband($data['question_content']);
+        if($content_cmp){
+            $this->error = '问题内容中有违禁词！';
+        }
         if(!$data['city_name']){
             $region_info = D('Admin/Region')->getRegionInfo(array('id' => $data['city_id']));
             $data['city_name'] = $region_info['name'];
