@@ -106,7 +106,7 @@ class AnswerModel extends Model {
     protected function _before_insert(&$data, $option){
         $data['add_time'] = NOW_TIME;
         $question_id = $data['question_id'];
-        $questionInfo = D('Question')->getQuestionDetail(array('id' => $question_id));
+        $questionInfo = D('Admin/Question')->getQuestionDetail(array('id' => $question_id));
         if($questionInfo){
             $this->error = '问题不存在！';
             return false;
