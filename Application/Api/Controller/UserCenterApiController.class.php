@@ -322,7 +322,7 @@ class UserCenterApiController extends ApiUserCommonController{
      */
     public function getContactsRelationList(){
         $model = D('Admin/ContactsRelation');
-        $list = $model->getgetContactsRelationList();
+        $list = $model->getContactsRelationList();
         if($list){
             $this->apiReturn(V(1, '联系人关系列表获取成功！', $list['info']));
         }
