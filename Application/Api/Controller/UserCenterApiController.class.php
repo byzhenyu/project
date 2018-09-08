@@ -144,6 +144,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $create = $model->create($data);
         if(false !== $create){
             $question_id = $model->add($data);
+            if(!$question_id) $this->apiReturn(V(0, $model->getError()));
             //评论图片处理
             $photo = $_FILES['photo'];
             $questionImgModel = D('Admin/QuestionImg');

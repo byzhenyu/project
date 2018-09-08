@@ -81,6 +81,7 @@ class QuestionModel extends Model {
         $content_cmp = cmp_contraband($data['question_content']);
         if($content_cmp){
             $this->error = '问题内容中有违禁词！';
+            return false;
         }
         if(!$data['city_name']){
             $region_info = D('Admin/Region')->getRegionInfo(array('id' => $data['city_id']));
