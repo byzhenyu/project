@@ -79,6 +79,7 @@ class AnswerModel extends Model {
         $where['is_optimum'] = 1;
         $answerInfo = $this->getAnswerDetail($where);
         if($answerInfo) return V('该问题已经有最佳答案！');
+        unset($where);
         $where['id'] = $answer_id;
         $save = $this->where($where)->save(array('is_optimum' => 1));
         if(false !== $save){
