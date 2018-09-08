@@ -22,7 +22,7 @@ class AnswerModel extends Model {
      * @return array
      */
     public function getAnswerList($where, $field = false, $order = 'add_time desc'){
-        $where['disabled'] = 1;
+        $where['a.disabled'] = 1;
         if(!$field) $field = 'a.*,u.nickname,u.head_pic';
         $count = $this->alias('a')->join('__USER__ as u on u.user_id = a.user_id')->where($where)->count();
         $page = get_web_page($count);

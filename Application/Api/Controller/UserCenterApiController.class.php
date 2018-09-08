@@ -201,6 +201,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('id' => $question_id, 'disabled' => 1);
         $quesModel = D('Admin/Question');
         $questionDetail = $quesModel->getQuestionDetail($where);
+        $questionDetail['add_time'] = time_format($questionDetail['add_time']);
         $ques_img_where = array('type' => 1, 'item_id' => $question_id);
         $questionImg = D('Admin/QuestionImg')->getQuestionImgList($ques_img_where);
         $answer_where = array('question_id' => $question_id);
@@ -209,8 +210,11 @@ class UserCenterApiController extends ApiUserCommonController{
         $questionPointsModel = D('Admin/QuestionPoints');
         $points_where = array('item_id' => $question_id, 'type' => 1, 'operate_type' => 2, 'user_id' => UID);
         $points_info = $questionPointsModel->getQuestionPointsInfo($points_where);
-        if(!$points_info) $quesModel->setQuestionInc($where, 'browse_number');
-        $returnArray = array('question' => $questionDetail, 'question_img' => $questionImg, 'answer_list' => $answer_list);
+        if(!$points_info){
+            $quesModel->setQuestionInc($where, 'browse_number');
+            $questionPointsModel->add($points_where);
+        }
+        $returnArray = array('question' => $questionDetail, 'question_img' => $questionImg, 'answer_list' => $answer_list['info']);
         $this->apiReturn(V(1, '问题详情获取成功！', $returnArray));
     }
 
@@ -237,6 +241,7 @@ class UserCenterApiController extends ApiUserCommonController{
                 $incWhere = array('id' => $data['item_id']);
                 $qRes = D('Admin/Question')->setQuestionInc($incWhere, 'like_number');
                 if(false !== $qRes){
+                    $model->add($where);
                     M()->commit();
                     $this->apiReturn(V(1, '点赞成功！'));
                 }
@@ -278,6 +283,7 @@ class UserCenterApiController extends ApiUserCommonController{
                 $incWhere = array('id' => $data['item_id']);
                 $qRes = D('Admin/Answer')->setAnswerInc($incWhere, 'like_number');
                 if(false !== $qRes){
+                    $model->add($where);
                     M()->commit();
                     $this->apiReturn(V(1, '点赞成功！'));
                 }
