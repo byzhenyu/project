@@ -6,9 +6,9 @@ namespace Admin\Model;
 use Think\Model;
 class ContactsModel extends Model
 {
-    protected $insertFields = array();
-    protected $updateFields = array();
-    protected $selectFields = array();
+    protected $insertFields = array('relation_id', 'contact_name', 'contact_mobile', 'contact_email', 'user_id');
+    protected $updateFields = array('relation_id', 'contact_name', 'contact_mobile', 'contact_email', 'user_id');
+    protected $selectFields = array('relation_id', 'contact_name', 'contact_mobile', 'contact_email', 'user_id', 'id');
     protected $_validate = array(
         array('contact_name', 'require', '联系人姓名不能为空！', 1, 'regex', 3),
         array('contact_name', '0,12', '联系人姓名长度0-12位！', 1, 'length', 3),
