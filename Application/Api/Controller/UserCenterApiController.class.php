@@ -363,30 +363,6 @@ class UserCenterApiController extends ApiUserCommonController{
     }
 
     /**
-     * @desc 首页数据
-     */
-    public function getHomeData(){
-        $keywords = I('keywords', '', 'trim');
-        $city_id = I('city_id', 0, 'intval');
-        $where = array('city_id' => $city_id, 'disabled' => 1);
-        if($keywords) $where['question_title'] = array('like', '%'.$keywords.'%');
-        $model = D('Admin/Question');
-        $field = 'u.nickname,u.head_pic,a.id,a.like_number,a.browse_number,a.answer_number,a.add_time,a.title';
-        $question_list = $model->getQuestionList($where, $field);
-        foreach($question_list as &$val){
-            $val['nickname'] = strval($val['nickname']);
-            $val['head_pic'] = strval($val['head_pic']);
-            $val['add_time'] = time_format($val['add_time']);
-            $img_where = array('type' => 1, 'item_id' => $val['id']);
-            $val['question_img'] = D('Admin/QuestionImg')->getQuestionImgList($img_where);
-        }
-        unset($val);
-        $array = array();
-        $array['question_list'] = $question_list;
-        $this->apiReturn(V(1, '获取成功！', $array));
-    }
-
-    /**
      * @desc 联系人关系列表
      */
     public function getContactsRelationList(){
