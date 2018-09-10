@@ -68,11 +68,11 @@ class PublicApiController extends ApiCommonController {
             if ($user_id > 0) {
                 $loginInfo = $userModel->dologin($mobile, $password, '', 0);
                 if( $loginInfo['status'] == 1 ){
+                    if(1 == $user_type) D('Admin/ResumeAuth')->saveResumeAuthData(array('hr_mobile' => $mobile), array('hr_id' => $user_id));
                     $this->apiReturn($loginInfo);
                 } else {
                     $this->apiReturn(V(0, $loginInfo['info']));
                 }
-                exit;
             }
             else{
                 $this->apiReturn(V(0, $userModel->getError()));
