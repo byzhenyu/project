@@ -11,11 +11,11 @@ class UserBankModel extends Model {
     protected $updateFields = array('user_id', 'bank_name', 'bank_num', 'bank_branch', 'cardholder', 'open_bank', 'id');
     protected $_validate = array(
         array('bank_name', 'require', '银行名称不能为空！', 1, 'regex', 3),
-        array('bank_name', '1, 50', '银行名称控制在50个字之内！', 1, 'regex', 3),
+        array('bank_name', '1,50', '银行名称控制在50个字之内！', 1, 'length', 3),
         array('bank_num', 'require', '银行卡号不能为空！', 1,'regex', 3),
-        array('bank_num', '16,22','银行卡号长度16-22位', 1, 'regex', 3),
+        array('bank_num', '16,22','银行卡号长度16-22位', 1, 'length', 3),
         array('cardholder', 'require', '持卡人信息不能为空！', 1, 'regex', 3),
-        array('cardholder', '1,18','持卡人信息长度不能超过18位！', 1, 'regex', 3)
+        array('cardholder', '1,18','持卡人信息长度不能超过18位！', 1, 'length', 3)
     );
 
     /**
