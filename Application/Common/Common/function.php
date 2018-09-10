@@ -884,3 +884,23 @@ function contraband_list(){
     return $res;
 }
 
+/**
+ * 用户账户变动日志
+ * @param $user_id int 用户id
+ * @param $money int 变动金额
+ * @param $type int 变动类型  0充值 1提现 2消费
+ * @param $desc string 变动描述
+ * @param $order_sn string 订单号
+ * @return mixed
+ */
+function account_log($user_id, $money, $type, $desc = '', $order_sn = ''){
+    $data = array();
+    $data["user_id"] = $user_id;
+    $data["user_money"] = $money;
+    $data["change_time"] = NOW_TIME;
+    $data["change_type"] = $type;
+    $data["change_desc"] = $desc;
+    $data["order_sn"] = $order_sn;
+    return M('AccountLog')->add($data);
+}
+

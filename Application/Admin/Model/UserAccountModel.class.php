@@ -67,10 +67,10 @@ class UserAccountModel extends Model{
             ->where($where)
             ->find();
         return $info;
-    } 
-    //提现 
-    protected function _before_insert(&$data, $option){ 
-        $data['type'] = 1;
+    }
+
+    protected function _before_insert(&$data, $option){
+        if(!$data['type']) $data['type'] = 1;
         $data['add_time'] = time();
     }
 

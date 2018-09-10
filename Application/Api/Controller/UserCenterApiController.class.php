@@ -488,6 +488,28 @@ class UserCenterApiController extends ApiUserCommonController{
     }
 
     /**
+     * @desc 列表功能
+     */
+    public function getAssistList(){
+        $type = I('type', 0, 'intval');
+        switch($type){
+            case 1:
+                $model = D('Admin/Education');
+                $field = 'id,education_name as name';
+                $list = $model->getEducationList(array(), $field);
+                break;
+            case 2:
+                $model = D('Admin/CompanyNature');
+                $field = 'id,nature_name as name';
+                $list = $model->getCompanyNatureList(array(), $field);
+                break;
+            default:
+                $this->apiReturn(V(0, '不合法的数据类型！'));
+        }
+        $this->apiReturn(V(1, '列表获取成功！', $list));
+    }
+
+    /**
      * @desc 获取标签
      */
     public function getTags(){
@@ -507,5 +529,133 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('company_name' => array('like', '%'.$keywords.'%'));
         $list = D('Admin/Company')->getCompanyList($where);
         $this->apiReturn(V(1, '公司列表获取成功！', $list['info']));
+    }
+
+    /**
+     * @desc 获取用户银行卡号列表
+     */
+    public function getUserBankList(){
+        $where = array('user_id' => UID);
+        $model = D('Admin/UserBank');
+        $list = $model->getUserBankList($where);
+        $this->apiReturn(V(1, '银行卡号列表获取成功!', $list['info']));
+    }
+
+    /**
+     * @desc 添加/编辑用户银行卡号信息
+     */
+    public function editUserBank(){
+        $data = I('post.');
+        $model = D('Admin/UserBank');
+        if($data['id'] > 0){
+            $create = $model->create($data, 2);
+            if(false !== $create){
+                $res = $model->save($data);
+                if(false !== $res){
+                    $this->apiReturn(V(1, '保存成功！'));
+                }
+                else{
+                    $this->apiReturn(V(0, $model->getError()));
+                }
+            }
+            else{
+                $this->apiReturn(V(0, $model->getError()));
+            }
+        }
+        else{
+            $create = $model->create($data, 1);
+            if(false !== $create){
+                $res = $model->add($data);
+                if(false !== $res){
+                    $this->apiReturn(V(1, '保存成功！'));
+                }
+                else{
+                    $this->apiReturn(V(0, $model->getError()));
+                }
+            }
+            else{
+                $this->apiReturn(V(0, $model->getError()));
+            }
+        }
+    }
+
+    /**
+     * @desc 获取银行卡号信息
+     */
+    public function getUserBankInfo(){
+        $id = I('post.id', 0, 'intval');
+        $where = array('id' => $id, 'user_id' => UID);
+        $model = D('Admin/UserBank');
+        $info = $model->getUserBankInfo($where);
+        if($info){
+            $this->apiReturn(V(1, '银行卡信息获取成功！', $info));
+        }
+        else{
+            $this->apiReturn(V(0, '银行卡信息获取失败！'));
+        }
+    }
+
+    /**
+     * @desc 删除银行卡号
+     */
+    public function deleteUserBank(){
+        $id = I('post,id');
+        $where = array('user_id' => UID, 'id' => $id);
+        $model = D('Admin/UserBank');
+        $res = $model->where($where)->delete();
+        if(false !== $res){
+            $this->apiReturn(V(1, '银行卡号删除成功！'));
+        }
+        else{
+            $this->apiReturn(V(0, '操作错误！'));
+        }
+    }
+
+    /**
+     * @desc 用户提现
+     */
+    public function userWithdraw(){
+        $user_id = UID;
+        $amount = I('amount', 0, 'intval');
+        $bank_id = I('bank_id', 0, 'intval');
+        if($amount <= 0) $this->apiReturn(V(0, '请输入合法的提现金额！'));
+        $user_model = D('Admin/User');
+        $bank_where = $user_where = array('user_id' => $user_id);
+        $bank_model = D('Admin/UserBank');
+        $bank_where['id'] = $bank_id;
+        $bank_info = $bank_model->getUserBankInfo($bank_where);
+        $user_info = $user_model->getUserInfo($user_where, 'withdrawable_amount,frozen_money');
+        $user_withdraw_amount = $user_info['withdrawable_amount'];
+        $amount = yuan_to_fen($amount);
+        if($amount > $user_withdraw_amount) $this->apiReturn(V(0, '可提现金额不足！'));
+        M()->startTrans();
+        $user_account_model = D('Admin/UserAccount');
+        $accountData = array(
+            'user_id' => UID,
+            'money' => $amount,
+            'type' => 1,
+            'payment' => 1,
+            'brank_no' => $bank_info['bank_num'],
+            'brank_name' => $bank_info['bank_name'],
+            'brank_user_name' => $bank_info['cardholder'],
+            'trade_no' => 'T'.randNumber(18)
+        );
+        $account_res = $user_account_model->add($accountData);
+        if(!$account_res){
+            M()->rollback();
+            $this->apiReturn(V(0, '提现数据写入失败！'));
+        }
+        $withdrawable_amount = $user_withdraw_amount - $amount;
+        $user_frozen_money = $user_info['frozen_money'] + $amount;
+        $save_data = array('frozen_money' => $user_frozen_money, 'withdrawable_amount' => $withdrawable_amount);
+        $user_res = $user_model->saveUserData($user_where, $save_data);
+        if(!$user_res){
+            M()->rollback();
+            $this->apiReturn(V(0, '用户信息修改失败！'));
+        }
+        else{
+            account_log($user_id, $amount, 1, '用户提现！', $account_res);
+            M()->commit();
+        }
     }
 }
