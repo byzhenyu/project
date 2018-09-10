@@ -656,6 +656,7 @@ class UserCenterApiController extends ApiUserCommonController{
         else{
             account_log($user_id, $amount, 1, '用户提现！', $account_res);
             M()->commit();
+            $this->apiReturn(V(1, '用户提现成功！'));
         }
     }
 }
