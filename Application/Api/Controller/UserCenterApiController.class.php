@@ -660,4 +660,226 @@ class UserCenterApiController extends ApiUserCommonController{
             $this->apiReturn(V(1, '用户提现成功！'));
         }
     }
+
+    /**
+     * @desc 创建简历
+     */
+    public function writeResume(){
+        $data = I('post.');
+        $data['user_id'] = UID;
+        $model = D('Admin/Resume');
+        if(!$_FILES['photo']) {
+            $img = app_upload_img('photo', '', '', 'User');
+            if ($img == 0 || $img == -1) {
+                $this->apiReturn(V(0, '头像上传失败'));
+            }
+            else{
+                $data['head_pic'] = $img;
+            }
+        }
+        if(!$_FILES['voice']){
+            $img = app_upload_file('voice', '', '', 'Resume');
+            if ($img == 0 || $img == -1) {
+                $this->apiReturn(V(0, '语音文件上传失败！'));
+            }
+            else{
+                $data['introduced_voice'] = $img;
+            }
+        }
+        if($data['id'] > 0){
+            $create = $model->create($data, 2);
+            if(false !== $create){
+                $res = $model->save($data);
+                if(false !== $res){
+                    $this->apiReturn(V(1, '基本资料保存成功！'));
+                }
+                else{
+                    $this->apiReturn(V(0, $model->getError()));
+                }
+            }
+            else{
+                $this->apiReturn(V(0, $model->getError()));
+            }
+        }
+        else{
+            $create = $model->create($data, 1);
+            if(false !== $create){
+                $res = $model->add($data);
+                if($res > 0){
+                    $this->apiReturn(V(1, '基本资料保存成功！'));
+                }
+                else{
+                    $this->apiReturn(V(0, $model->getError()));
+                }
+            }
+            else{
+                $this->apiReturn(V(0, $model->getError()));
+            }
+        }
+    }
+
+    /**
+     * @desc 获取简历基本资料
+     */
+    public function getResumeInfo(){
+        $id = I('post.id', 0, 'intval');
+        $where = array('id' => $id, 'user_id' => UID);
+        $model = D('Admin/Resume');
+        $res = $model->getResumeInfo($where);
+        if($res) $this->apiReturn(V(1, '简历获取成功！', $res));
+        $this->apiReturn(V(0, '简历获取失败！'));
+    }
+
+    /**
+     * @desc 写工作经历
+     */
+    public function writeResumeWork(){
+        $data = I('post.');
+        $data['user_id'] = UID;
+        $model = D('Admin/ResumeWork');
+        if(!$data['resume_id']) $data['resume_id'] = D('Admin/Resume')->getResumeField(array('user_id' => UID), 'id');
+        $hr_mobile = $data['mobile'];
+        $hr_name = $data['hr_name'];
+        if($data['id'] > 0){
+            $create = $model->create($data, 2);
+            if(false !== $create){
+                $res = $model->save($data);
+                if(false !== $res){
+                    $this->apiReturn(V(1, '保存成功！'));
+                }
+                else{
+                    $this->apiReturn(V(0, $model->getError()));
+                }
+            }
+        }
+        else{
+            M()->startTrans();
+            $create = $model->create($data, 1);
+            if (false !== $create){
+                $res = $model->add($data);
+                if($res > 0){
+                    M()->commit();
+                    $resumeAuth = array('resume_id' => $res, 'hr_name' => $hr_name, 'hr_mobile' => $hr_mobile, 'user_id' => UID);
+                    //简历验证
+                    $auth_res = D('Admin/ResumeAuth')->changeUserAuth($resumeAuth);
+                    if(false !== $auth_res){
+                        //TODO 发送短信
+                        //TODO sendMessageRequest();
+                    }
+                    $this->apiReturn(V(1, '保存成功！'));
+                }
+                else{
+                    M()->rollback();
+                    $this->apiReturn(V(0, $model->getError()));
+                }
+            }
+            else{
+                M()->rollback();
+                $this->apiReturn(V(0, $model->getError()));
+            }
+        }
+    }
+
+    /**
+     * @desc 删除工作经历
+     */
+    public function deleteResumeWork(){
+        $id = I('post.id');
+        $where = array('id' => $id, 'user_id' => UID);
+        $model = D('Admin/ResumeWork');
+        $res = $model->deleteResumeWork($where);
+        if($res){
+            $this->apiReturn(V(1, '删除成功！'));
+        }
+        else{
+            $this->apiReturn(V(0, '删除失败！'));
+        }
+    }
+
+    /**
+     * @desc 获取工作经历详情
+     */
+    public function getResumeWorkInfo(){
+        $id = I('post.id');
+        $where = array('id' => $id, 'user_id' => UID);
+        $model = D('Admin/ResumeWork');
+        $res = $model->getResumeWorkInfo($where);
+        if(false !== $res){
+            $this->apiReturn(V(1, '经历详情获取成功！', $res));
+        }
+        else{
+            $this->apiReturn(V(0, '获取失败！'));
+        }
+    }
+
+    /**
+     * @desc 填写简历教育经历
+     */
+    public function writeResumeEdu(){
+        $data = I('post.');
+        if(!$data['resume_id']) $data['resume_id'] = D('Admin/Resume')->getResumeField(array('user_id' => UID), 'id');
+        $model = D('Admin/ResumeEdu');
+        if($data['id'] > 0){
+            $create = $model->create($data, 2);
+            if(false !== $create){
+                $res = $model->save($data);
+                if(false !== $res){
+                    $this->apiReturn(V(1, '学历信息保存成功！'));
+                }
+                else{
+                    $this->apiReturn(V(0, $model->getError()));
+                }
+            }
+            else{
+                $this->apiReturn(V(0, $model->getError()));
+            }
+        }
+        else{
+            $create = $model->create($data, 1);
+            if(false !== $create){
+                $res = $model->add($data);
+                if($res > 0){
+                    $this->apiReturn(V(1, '学历信息保存成功！'));
+                }
+                else{
+                    $this->apiReturn(V(0, $model->getError()));
+                }
+            }
+            else{
+                $this->apiReturn(V(0, $model->getError()));
+            }
+        }
+    }
+
+    /**
+     * @desc 获取简历教育背景详情
+     */
+    public function getResumeEduInfo(){
+        $id = I('post.id');
+        $where = array('id' => $id, 'user_id' => UID);
+        $model = D('Admin/ResumeEdu');
+        $res = $model->getResumeEduInfo($where);
+        if($res){
+            $this->apiReturn(V(1, '', $res));
+        }
+        else{
+            $this->apiReturn(V(0, '获取失败！'));
+        }
+    }
+
+    /**
+     * @desc 删除教育经历
+     */
+    public function deleteResumeEdu(){
+        $id = I('post.id');
+        $where = array('id' => $id, 'user_id' => UID);
+        $model = D('Admin/ResumeEdu');
+        $res = $model->deleteResumeEdu($where);
+        if($res){
+            $this->apiReturn(V(1, '删除成功！'));
+        }
+        else{
+            $this->apiReturn(V(0, '删除失败！'));
+        }
+    }
 }

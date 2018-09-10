@@ -596,6 +596,46 @@ function app_upload_img($obj = 'photo', $img = '',  $path = '', $uid = UID){
 }
 
 /**
+ * @desc 上传文件
+ * @param string $obj
+ * @param string $file
+ * @param string $path
+ * @param int|mixed $uid
+ * @param string $ext
+ * @return bool|int|string
+ */
+function app_upload_file($obj = 'voice', $file = '',  $path = '', $uid = UID, $ext = 'mp3'){
+    if (isset($_FILES[$obj]['tmp_name']) && !empty($_FILES[$obj]['tmp_name'])) {
+
+        // 旧图片地址得到图片名称
+        $file = basename($file);
+        if ($file == '' || empty($file) || $file == null) {
+            $file = createFileName($ext);
+        }
+
+        $createImgPath = '.'. C('UPLOAD_PICTURE_ROOT') .'/'. $uid ;
+        if ($path != '') {
+            $createImgPath = '.'. C('UPLOAD_PICTURE_ROOT') .'/'.$path .'/'. $uid ;
+        }
+        if ( !is_dir($createImgPath) ) {
+            mkdir($createImgPath);
+        }
+
+        $target_path = $createImgPath .'/'. $file ; //接收文件目录
+        if (move_uploaded_file( $_FILES[$obj]['tmp_name'], $target_path )) {
+            if (substr($target_path, 0, 1) == '.') {
+                $target_path = substr($target_path, 1);
+            }
+            return $target_path;
+        } else {
+            return -1;
+        }
+    } else {
+        return 0;
+    }
+}
+
+/**
  * 手机图片上传 - 多图上传
  * @param $img: 旧图片地址
  * @param $obj: 上传的表单名称
@@ -904,3 +944,67 @@ function account_log($user_id, $money, $type, $desc = '', $order_sn = ''){
     return M('AccountLog')->add($data);
 }
 
+/**
+ * @desc 检测用户是否已经实名认证过
+ * @param $user_id
+ * @return bool
+ */
+function check_is_auth($user_id){
+    if(!$user_id) $user_id = UID;
+    if(!$user_id) return false;
+    $where = array('user_id' => $user_id);
+    $is_auth = D('Admin/User')->getUserField($where, 'is_auth');
+    if($is_auth) return true;
+    return false;
+}
+
+function getFirstChar($s0){
+    $fchar = ord($s0{0});
+    if($fchar >= ord("A") and $fchar <= ord("z") )return strtoupper($s0{0});
+    $s1 = iconv("UTF-8","gb2312", $s0);
+    $s2 = iconv("gb2312","UTF-8", $s1);
+    if($s2 == $s0){$s = $s1;}else{$s = $s0;}
+    $asc = ord($s{0}) * 256 + ord($s{1}) - 65536;
+    if($asc >= -20319 and $asc <= -20284) return "A";
+    if($asc >= -20283 and $asc <= -19776) return "B";
+    if($asc >= -19775 and $asc <= -19219) return "C";
+    if($asc >= -19218 and $asc <= -18711) return "D";
+    if($asc >= -18710 and $asc <= -18527) return "E";
+    if($asc >= -18526 and $asc <= -18240) return "F";
+    if($asc >= -18239 and $asc <= -17923) return "G";
+    if($asc >= -17922 and $asc <= -17418) return "H";
+    if($asc >= -17922 and $asc <= -17418) return "I";
+    if($asc >= -17417 and $asc <= -16475) return "J";
+    if($asc >= -16474 and $asc <= -16213) return "K";
+    if($asc >= -16212 and $asc <= -15641) return "L";
+    if($asc >= -15640 and $asc <= -15166) return "M";
+    if($asc >= -15165 and $asc <= -14923) return "N";
+    if($asc >= -14922 and $asc <= -14915) return "O";
+    if($asc >= -14914 and $asc <= -14631) return "P";
+    if($asc >= -14630 and $asc <= -14150) return "Q";
+    if($asc >= -14149 and $asc <= -14091) return "R";
+    if($asc >= -14090 and $asc <= -13319) return "S";
+    if($asc >= -13318 and $asc <= -12839) return "T";
+    if($asc >= -12838 and $asc <= -12557) return "W";
+    if($asc >= -12556 and $asc <= -11848) return "X";
+    if($asc >= -11847 and $asc <= -11056) return "Y";
+    if($asc >= -11055 and $asc <= -10247) return "Z";
+    return $s0;
+}
+function rev_pinyin($zh){
+    $ret = "";
+    $s1 = iconv("UTF-8","gb2312", $zh);
+    $s2 = iconv("gb2312","UTF-8", $s1);
+    if($s2 == $zh){$zh = $s1;}
+    for($i = 0; $i < strlen($zh); $i++){
+        $s1 = substr($zh,$i,1);
+        $p = ord($s1);
+        if($p > 160){
+            $s2 = substr($zh,$i++,2);
+            $ret .= getFirstChar($s2);
+        }else{
+            $ret .= $s1;
+        }
+    }
+    return $ret;
+}

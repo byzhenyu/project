@@ -117,7 +117,10 @@ class AnswerModel extends Model {
             $this->error = '问题不存在！';
             return false;
         }
-
+        if(!check_is_auth($data['user_id'])){
+            $this->error = '请先通过身份认证！';
+            return false;
+        }
     }
     //更新操作前的钩子操作
     protected function _before_update(&$data, $option){

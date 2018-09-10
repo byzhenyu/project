@@ -13,6 +13,27 @@ class ResumeAuthModel extends Model {
     );
 
     /**
+     * @desc 工作经历新增验证
+     * @param $data
+     * @return bool|mixed
+     */
+    public function changeResumeAuth($data){
+        $authRes = $this->add($data);
+        return $authRes;
+    }
+
+    /**
+     * @desc 获取简历字段
+     * @param $where
+     * @param $field
+     * @return mixed
+     */
+    public function getResumeField($where, $field){
+        $res = $this->where($where)->getField($field);
+        return $res;
+    }
+
+    /**
      * @desc 保存简历认证信息
      * @param $where
      * @param $data
@@ -26,6 +47,9 @@ class ResumeAuthModel extends Model {
 
     protected function _before_insert(&$data, $option){
         $data['add_time'] = NOW_TIME;
+        if(isMobile($data['mobile'])) return false;
+        $hr_info = D('Admin/User')->getUserInfo(array('user_id' => $data['user_id']));
+        if($hr_info) $data['hr_id'] = $hr_info['user_id'];
     }
     protected function _before_update(&$data, $option){
     }

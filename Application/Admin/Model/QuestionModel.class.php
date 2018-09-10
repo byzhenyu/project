@@ -35,6 +35,7 @@ class QuestionModel extends Model {
 
     /**
      * 修改问题启用禁用状态
+     * @param $question_id int 问题id
      * @return array
      */
     public function changeDisabled($question_id){
@@ -86,6 +87,10 @@ class QuestionModel extends Model {
         if(!$data['city_name']){
             $region_info = D('Admin/Region')->getRegionInfo(array('id' => $data['city_id']));
             $data['city_name'] = $region_info['name'];
+        }
+        if(!check_is_auth($data['user_id'])){
+            $this->error = '请先通过实名认证！';
+            return false;
         }
     }
     //更新操作前的钩子操作
