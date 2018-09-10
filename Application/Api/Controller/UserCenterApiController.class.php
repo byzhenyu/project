@@ -599,7 +599,7 @@ class UserCenterApiController extends ApiUserCommonController{
      * @desc 删除银行卡号
      */
     public function deleteUserBank(){
-        $id = I('post,id');
+        $id = I('post.id');
         $where = array('user_id' => UID, 'id' => $id);
         $model = D('Admin/UserBank');
         $res = $model->deleteUserBank($where);
