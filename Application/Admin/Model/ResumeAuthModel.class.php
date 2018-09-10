@@ -1,0 +1,33 @@
+<?php
+/**
+ * 简历认证表
+ */
+namespace Admin\Model;
+
+use Think\Model;
+
+class ResumeAuthModel extends Model {
+    protected $insertFields = array('user_id', 'hr_id', 'hr_name', 'hr_mobile', 'resume_id', 'add_time');
+    protected $updateFields = array('user_id', 'hr_id', 'hr_name', 'hr_mobile', 'resume_id', 'add_time', 'auth_result', 'auth_time');
+    protected $_validate = array(
+    );
+
+    /**
+     * @desc 保存简历认证信息
+     * @param $where
+     * @param $data
+     * @return bool
+     */
+    public function saveResumeAuthData($where, $data){
+        if(!is_array($where) || !is_array($data)) return false;
+        $res = $this->where($where)->save($data);
+        return $res;
+    }
+
+    protected function _before_insert(&$data, $option){
+        $data['add_time'] = NOW_TIME;
+    }
+    protected function _before_update(&$data, $option){
+    }
+
+}
