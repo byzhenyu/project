@@ -624,6 +624,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $bank_model = D('Admin/UserBank');
         $bank_where['id'] = $bank_id;
         $bank_info = $bank_model->getUserBankInfo($bank_where);
+        if(!$bank_info) $this->apiReturn(V(0, '未找到相关的银行卡号信息！'));
         $user_info = $user_model->getUserInfo($user_where, 'withdrawable_amount,frozen_money');
         $user_withdraw_amount = $user_info['withdrawable_amount'];
         $amount = yuan_to_fen($amount);
