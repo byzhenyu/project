@@ -52,6 +52,7 @@ class UserBankModel extends Model {
 
     //添加操作前的钩子操作
     protected function _before_insert(&$data, $option){
+        $data['user_id'] = UID;
         $bank_num = $data['bank_num'];
         $res = $this->where(array('bank_num' => $bank_num, 'user_id' => UID))->find();
         if($res){
