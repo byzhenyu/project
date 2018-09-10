@@ -602,7 +602,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $id = I('post,id');
         $where = array('user_id' => UID, 'id' => $id);
         $model = D('Admin/UserBank');
-        $res = $model->where($where)->delete();
+        $res = $model->deleteUserBank($where);
         if(false !== $res){
             $this->apiReturn(V(1, '银行卡号删除成功！'));
         }

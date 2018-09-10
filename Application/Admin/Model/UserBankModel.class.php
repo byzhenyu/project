@@ -37,6 +37,16 @@ class UserBankModel extends Model {
     }
 
     /**
+     * @desc 银行卡号删除
+     * @param $where
+     * @return mixed
+     */
+    public function deleteUserBank($where){
+        $res = $this->where($where)->delete();
+        return $res;
+    }
+
+    /**
      * @desc 获取银行卡号详情
      * @param $where
      * @param bool $field
