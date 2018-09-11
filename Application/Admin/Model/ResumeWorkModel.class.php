@@ -13,8 +13,8 @@ class ResumeWorkModel extends Model {
         array('company_name', 'require', '公司名称不能为空！', 1, 'regex', 3),
         array('position', 'require', '职位不能为空！', 1, 'regex', 3),
         array('starttime', 'require', '请选择开始时间！', 1, 'regex', 3),
-        array('endtime', 'require', '请选择结束时间!', 1, 'length', 3),
-        array('describe', 'require', '请输入经历描述!', 1, 'length', 3)
+        array('endtime', 'require', '请选择结束时间!', 1, 'regex', 3),
+        array('describe', 'require', '请输入经历描述!', 1, 'regex', 3)
     );
 
     /**

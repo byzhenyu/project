@@ -858,6 +858,8 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('id' => $id, 'user_id' => UID);
         $model = D('Admin/ResumeEdu');
         $res = $model->getResumeEduInfo($where);
+        $res['starttime'] = time_format($res['starttime'], 'Y-m-d');
+        $res['endtime'] = time_format($res['endtime'], 'Y-m-d');
         if($res){
             $this->apiReturn(V(1, '', $res));
         }
