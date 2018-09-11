@@ -1027,3 +1027,17 @@ function rev_pinyin($zh){
     }
     return $ret;
 }
+
+/**
+ * 简历性别要求
+ */
+function getSexInfo ($sex) {
+    switch ($sex) {
+        case '1':
+            return '男';
+        case '2':
+            return '女';
+        default:
+            return '不限';
+    }
+}
