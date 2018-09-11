@@ -62,7 +62,7 @@ class ResumeEvaluationModel extends Model {
             $t_field = $v.'_number';
             $t_number = $$t_field;
             $t_score = $$v;
-            $avg_score = round($t_score / $t_number);
+            $avg_score = round($t_score / $t_number, 2);
             $ret_arr[$v] = $avg_score;
         }
         unset($v);
