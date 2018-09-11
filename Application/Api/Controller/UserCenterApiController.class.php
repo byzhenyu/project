@@ -668,7 +668,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $data = I('post.');
         $data['user_id'] = UID;
         $model = D('Admin/Resume');
-        if($_FILES['photo']) {
+        if(!empty($_FILES['photo'])) {
             $img = app_upload_img('photo', '', '', 'User');
             if ($img == 0 || $img == -1) {
                 $this->apiReturn(V(0, '头像上传失败'));
@@ -677,7 +677,7 @@ class UserCenterApiController extends ApiUserCommonController{
                 $data['head_pic'] = $img;
             }
         }
-        if($_FILES['voice']){
+        if(!empty($_FILES['voice'])){
             $img = app_upload_file('voice', '', '', 'Resume');
             if ($img == 0 || $img == -1) {
                 $this->apiReturn(V(0, '语音文件上传失败！'));
