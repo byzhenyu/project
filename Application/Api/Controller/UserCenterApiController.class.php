@@ -805,7 +805,9 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('id' => $id, 'user_id' => UID);
         $model = D('Admin/ResumeWork');
         $res = $model->getResumeWorkInfo($where);
-        if(false !== $res){
+        $res['starttime'] = time_format($res['starttime']);
+        $res['endtime'] = time_format($res['endtime']);
+        if($res){
             $this->apiReturn(V(1, '经历详情获取成功！', $res));
         }
         else{
