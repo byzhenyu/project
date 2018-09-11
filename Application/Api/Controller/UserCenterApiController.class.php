@@ -882,4 +882,26 @@ class UserCenterApiController extends ApiUserCommonController{
             $this->apiReturn(V(0, '删除失败！'));
         }
     }
+
+    /**
+     * @desc 评价简历
+     */
+    public function scoreResume(){
+        $data = I('post.');
+        $data['user_id'] = UID;
+        $model = D('Admin/ResumeEvaluation');
+        $create = $model->create($data);
+        if(false !== $create){
+            $res = $model->add($data);
+            if($res){
+                $this->apiReturn(V(1, '评价成功！'));
+            }
+            else{
+                $this->apiReturn(V(0, $model->getError()));
+            }
+        }
+        else{
+            $this->apiReturn(V(0, $model->getError()));
+        }
+    }
 }
