@@ -44,4 +44,15 @@ class TaskModel extends Model {
 
     protected function _before_insert(&$data, $option){
     }
+    /**
+     *  获取任务列表及完成情况
+     */
+    public function getTaskList() {
+        $info = $this->select();
+        $TaskLogModel = D('Admin/TaskLog');
+        foreach ($info as $k=>$v) {
+            $info[$k]['can'] = $TaskLogModel->validTaskNumber($v['id']);
+        }
+        return $info;
+    }
 }
