@@ -957,6 +957,25 @@ function check_is_auth($user_id){
     if($is_auth) return true;
     return false;
 }
+/**
+ * 数组转换
+ * @param $array
+ * @return array
+ */
+function returnArrData($array) {
+    $new  = array();
+    if (!empty($array)) {
+        $i = 0;
+        foreach ($array as $k=>$v) {
+            $new[$i]['id'] = $k;
+            $new[$i]['value'] = $v;
+            $i++;
+        }
+    }
+
+    return $new;
+}
+
 
 function getFirstChar($s0){
     $fchar = ord($s0{0});
