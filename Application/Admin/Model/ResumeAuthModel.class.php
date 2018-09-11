@@ -23,7 +23,8 @@ class ResumeAuthModel extends Model {
     }
 
     /**
-     * @desc 获取简历字段
+     *
+     * @desc 简历字段
      * @param $where
      * @param $field
      * @return mixed
