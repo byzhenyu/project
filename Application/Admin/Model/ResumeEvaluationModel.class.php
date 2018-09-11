@@ -31,4 +31,33 @@ class ResumeEvaluationModel extends Model {
     protected function _before_update(&$data, $option){
     }
 
+    /**
+     * @desc 获取简历评价均值
+     * @param $where
+     */
+    public function getResumeEvaluationAvg($where){
+        $evaluation = $this->where($where)->field('skill_score,major_score,chat_score,appearance_score,innovate_score,analysis_score')->select();
+        $fieldArray = array('skill_score', 'major_score', 'chat_score', 'appearance_score', 'innovate_score', 'analysis_score');
+        $skill_score = $major_score = $chat_score = $appearance_score = $innovate_score = $analysis_score = 0;
+        $skill_score_number = $major_score_number = $char_score_number = $appearance_score_number = $innovate_score_number = $analysis_score_number = 0;
+        foreach($evaluation as &$val){
+            foreach($fieldArray as &$value){
+                $$value += $val[$$value];
+                $temp_number_field = $value.'_number';
+                $$temp_number_field ++;
+            }
+        }
+        unset($val);
+        $ret_arr = array();
+        foreach($fieldArray as &$v){
+            $t_field = $v.'_number';
+            $t_number = $$t_field;
+            $t_score = $$v;
+            $avg_score = round($t_score / $t_number);
+            $ret_arr[] = array($v => $avg_score);
+        }
+        unset($v);
+        return $ret_arr;
+    }
+
 }

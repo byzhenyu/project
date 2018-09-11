@@ -18,6 +18,19 @@ class ResumeWorkModel extends Model {
     );
 
     /**
+     * @desc 获取简历工作经历列表
+     * @param $where
+     * @param bool $field
+     * @param string $order
+     * @return mixed
+     */
+    public function getResumeWorkList($where, $field = false, $order = ''){
+        if(!$field) $field = '*';
+        $res = $this->where($where)->field($field)->order($order)->select();
+        return $res;
+    }
+
+    /**
      * @desc 获取简历工作经历详情
      * @param $where
      * @param bool $field
