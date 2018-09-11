@@ -44,6 +44,11 @@ class ResumeModel extends Model {
                 return false;
             }
         }
+        $resumeInfo = $this->getResumeInfo($user_where);
+        if($resumeInfo){
+            $this->error = '您已经创建过简历！';
+            return false;
+        }
         if(!check_is_auth($data['user_id'])){
             $this->error = '请先通过实名认证！';
             return false;
