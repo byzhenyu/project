@@ -752,19 +752,21 @@ class UserCenterApiController extends ApiUserCommonController{
             }
         }
         else{
+            if(!isMobile($hr_mobile)) $this->apiReturn(V(0, '请输入合法的hr手机号！'));
+            if(!$hr_name) $this->apiReturn(V(0, '请输入hr姓名！'));
             M()->startTrans();
             $create = $model->create($data, 1);
             if (false !== $create){
                 $res = $model->add($data);
                 if($res > 0){
-                    M()->commit();
                     $resumeAuth = array('resume_id' => $res, 'hr_name' => $hr_name, 'hr_mobile' => $hr_mobile, 'user_id' => UID);
                     //简历验证
-                    $auth_res = D('Admin/ResumeAuth')->changeUserAuth($resumeAuth);
+                    $auth_res = D('Admin/ResumeAuth')->changeResumeAuth($resumeAuth);
                     if(false !== $auth_res){
                         //TODO 发送短信
                         //TODO sendMessageRequest();
                     }
+                    M()->commit();
                     $this->apiReturn(V(1, '保存成功！'));
                 }
                 else{
