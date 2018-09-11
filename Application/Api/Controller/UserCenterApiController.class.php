@@ -668,7 +668,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $data = I('post.');
         $data['user_id'] = UID;
         $model = D('Admin/Resume');
-        if(!$_FILES['photo']) {
+        if(!empty($_FILES['photo'])) {
             $img = app_upload_img('photo', '', '', 'User');
             if ($img == 0 || $img == -1) {
                 $this->apiReturn(V(0, '头像上传失败'));
@@ -677,7 +677,7 @@ class UserCenterApiController extends ApiUserCommonController{
                 $data['head_pic'] = $img;
             }
         }
-        if(!$_FILES['voice']){
+        if(!empty($_FILES['voice'])){
             $img = app_upload_file('voice', '', '', 'Resume');
             if ($img == 0 || $img == -1) {
                 $this->apiReturn(V(0, '语音文件上传失败！'));
@@ -722,8 +722,7 @@ class UserCenterApiController extends ApiUserCommonController{
      * @desc 获取简历基本资料
      */
     public function getResumeInfo(){
-        $id = I('post.id', 0, 'intval');
-        $where = array('id' => $id, 'user_id' => UID);
+        $where = array('user_id' => UID);
         $model = D('Admin/Resume');
         $res = $model->getResumeInfo($where);
         if($res) $this->apiReturn(V(1, '简历获取成功！', $res));
@@ -753,19 +752,21 @@ class UserCenterApiController extends ApiUserCommonController{
             }
         }
         else{
+            if(!isMobile($hr_mobile)) $this->apiReturn(V(0, '请输入合法的hr手机号！'));
+            if(!$hr_name) $this->apiReturn(V(0, '请输入hr姓名！'));
             M()->startTrans();
             $create = $model->create($data, 1);
             if (false !== $create){
                 $res = $model->add($data);
                 if($res > 0){
-                    M()->commit();
                     $resumeAuth = array('resume_id' => $res, 'hr_name' => $hr_name, 'hr_mobile' => $hr_mobile, 'user_id' => UID);
                     //简历验证
-                    $auth_res = D('Admin/ResumeAuth')->changeUserAuth($resumeAuth);
+                    $auth_res = D('Admin/ResumeAuth')->changeResumeAuth($resumeAuth);
                     if(false !== $auth_res){
                         //TODO 发送短信
                         //TODO sendMessageRequest();
                     }
+                    M()->commit();
                     $this->apiReturn(V(1, '保存成功！'));
                 }
                 else{
@@ -804,7 +805,9 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('id' => $id, 'user_id' => UID);
         $model = D('Admin/ResumeWork');
         $res = $model->getResumeWorkInfo($where);
-        if(false !== $res){
+        $res['starttime'] = time_format($res['starttime']);
+        $res['endtime'] = time_format($res['endtime']);
+        if($res){
             $this->apiReturn(V(1, '经历详情获取成功！', $res));
         }
         else{
@@ -859,6 +862,8 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('id' => $id, 'user_id' => UID);
         $model = D('Admin/ResumeEdu');
         $res = $model->getResumeEduInfo($where);
+        $res['starttime'] = time_format($res['starttime'], 'Y-m-d');
+        $res['endtime'] = time_format($res['endtime'], 'Y-m-d');
         if($res){
             $this->apiReturn(V(1, '', $res));
         }
@@ -921,7 +926,9 @@ class UserCenterApiController extends ApiUserCommonController{
         $resumeWorkList = $resumeWorkModel->getResumeWorkList($where);
         $resumeEduList = $resumeEduModel->getResumeEduList($where);
         $resumeEvaluation = $resumeEvaluationModel->getResumeEvaluationAvg($where);
-        $return = array('detail' => $resumeDetail, 'resume_work' => $resumeWorkList, 'resume_edu' => $resumeEduList, 'resume_evaluation' => $resumeEvaluation);
+        $sum = array_sum(array_values($resumeEvaluation));
+        $avg = round($sum/(count($resumeEvaluation)), 2);
+        $return = array('detail' => $resumeDetail, 'resume_work' => $resumeWorkList, 'resume_edu' => $resumeEduList, 'resume_evaluation' => $resumeEvaluation, 'evaluation_avg' => $avg);
         $this->apiReturn(V(1, '简历获取成功！', $return));
     }
 }
