@@ -12,4 +12,13 @@ class RegionApiController extends ApiCommonController {
   
         $this->apiReturn(V(1, '区域列表', $regionList));
     }
+
+    /**
+     * 获取按照abc排序的城市列表
+     */
+    public function getReginListForWx() {
+        $regionList = D('Core/Region')->getRegionInfo();
+
+        $this->apiReturn(V(1, '区域列表', $regionList));
+    }
 }

@@ -68,4 +68,24 @@ class RegionModel extends Model {
         return $returnData;
     }
 
+    /**
+     * 获取按照abc排序的城市列表
+     */
+    public function getRegionInfo() {
+
+        $citys = S('all_citys');
+
+        if (!$citys) {
+            $data = M('Region')->field('id, name, level, first_code')->where(array('level'=>2))->order('first_code, id asc')->select();
+            $citys = array();
+            foreach ($data as $key => $value) {
+                $citys[$value['first_code']][] = $value;
+
+            }
+            S('all_citys', $citys);
+        }
+
+        return $citys;
+    }
+
 }
