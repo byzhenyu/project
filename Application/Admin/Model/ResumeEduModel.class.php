@@ -19,6 +19,19 @@ class ResumeEduModel extends Model {
     );
 
     /**
+     * @desc 获取简历教育经历列表
+     * @param $where
+     * @param bool $field
+     * @param string $order
+     * @return mixed
+     */
+    public function getResumeEduList($where, $field = false, $order = ''){
+        if(!$field) $field = '*';
+        $res = $this->where($where)->field($field)->order($order)->select();
+        return $res;
+    }
+
+    /**
      * @desc 获取教育经历详情
      * @param $where
      * @param bool $field

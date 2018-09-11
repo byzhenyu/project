@@ -904,4 +904,24 @@ class UserCenterApiController extends ApiUserCommonController{
             $this->apiReturn(V(0, $model->getError()));
         }
     }
+
+    /**
+     * @desc 获取简历详情
+     */
+    public function getResumeDetail(){
+        $user_id = UID;
+        $resumeModel = D('Admin/Resume');
+        $resumeWorkModel = D('Admin/ResumeWork');
+        $resumeEduModel = D('Admin/ResumeEdu');
+        $resumeEvaluationModel = D('Admin/ResumeEvaluation');
+        $resume_where = array('user_id' => $user_id);
+        $resumeDetail = $resumeModel->getResumeInfo($resume_where);
+        if(!$resumeDetail) $this->apiReturn(V(0, '您还没有填写简历！'));
+        $where = array('resume_id' => $resumeDetail['id']);
+        $resumeWorkList = $resumeWorkModel->getResumeWorkList($where);
+        $resumeEduList = $resumeEduModel->getResumeEduList($where);
+        $resumeEvaluation = $resumeEvaluationModel->getResumeEvaluationAvg($where);
+        $return = array('detail' => $resumeDetail, 'resume_work' => $resumeWorkList, 'resume_edu' => $resumeEduList, 'resume_evaluation' => $resumeEvaluation);
+        $this->apiReturn(V(1, '简历获取成功！', $return));
+    }
 }

@@ -50,7 +50,19 @@ class ResumeModel extends Model {
         }
         $data['initials'] = rev_pinyin($data['true_name']);
     }
+
     protected function _before_update(&$data, $option){
         $data['update_time'] = NOW_TIME;
+    }
+
+    /**
+     * @desc 简历字段
+     * @param $where
+     * @param $field
+     * @return mixed
+     */
+    public function getResumeField($where, $field){
+        $res = $this->where($where)->getField($field);
+        return $res;
     }
 }

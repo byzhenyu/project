@@ -23,18 +23,6 @@ class ResumeAuthModel extends Model {
     }
 
     /**
-     *
-     * @desc 简历字段
-     * @param $where
-     * @param $field
-     * @return mixed
-     */
-    public function getResumeField($where, $field){
-        $res = $this->where($where)->getField($field);
-        return $res;
-    }
-
-    /**
      * @desc 保存简历认证信息
      * @param $where
      * @param $data
