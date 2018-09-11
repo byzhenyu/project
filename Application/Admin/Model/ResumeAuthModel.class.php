@@ -12,8 +12,32 @@ class ResumeAuthModel extends Model {
     protected $_validate = array(
     );
 
+
     /**
-     * @desc 工作经历新增验证
+     * @desc 获取简历认证列表
+     * @param $where
+     * @param bool $field
+     * @param string $order
+     * @return array
+     */
+    public function getResumeAuthList($where, $field = false, $order = ''){
+        if(!$field) $field = 'a.add_time,a.auth_result,r.head_pic,r.true_name,a.resume_id,a.id,r.age,r.sex,r.update_time';
+        $number = $this->alias('a')->join('__RESUME__ as r on a.resume_id = r.id')->where($where)->count();
+        $page = get_web_page($number);
+        $res = $this->alias('a')->join('__RESUME__ as r on a.resume_id = r.id')->where($where)->field($field)->limit($page['limit'])->order($order)->select();
+        foreach($res as &$val){
+            $val['add_time'] = time_format($val['add_time']);
+            $val['update_time'] = time_format($val['update_time']);
+            $val['auth_result_string'] = show_resume_auth_result($val['auth_result']);
+        }
+        return array(
+            'info' => $res,
+            'page' => $page['page']
+        );
+    }
+
+    /**
+     * @desc 工作经历新增同步执行
      * @param $data
      * @return bool|mixed
      */
@@ -31,6 +55,18 @@ class ResumeAuthModel extends Model {
     public function saveResumeAuthData($where, $data){
         if(!is_array($where) || !is_array($data)) return false;
         $res = $this->where($where)->save($data);
+        return $res;
+    }
+
+    /**
+     * @desc 简历认证详情
+     * @param $where
+     * @param bool $field
+     * @return mixed
+     */
+    public function getResumeAuthInfo($where, $field = false){
+        if(!$field) $field = '*';
+        $res = $this->where($where)->field($field)->find();
         return $res;
     }
 

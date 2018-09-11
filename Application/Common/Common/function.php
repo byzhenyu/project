@@ -1041,3 +1041,34 @@ function getSexInfo ($sex) {
             return '不限';
     }
 }
+
+/**
+ * @desc 简历认证结果
+ * @param $auth_result
+ * @return mixed
+ */
+function show_resume_auth_result($auth_result){
+    $array = array(
+        0 => '未认证',
+        1 => '放弃认证',
+        2 => '已认证'
+    );
+    return $array[$auth_result];
+}
+
+/**
+ * @desc 添加任务日志
+ * @param $user_id
+ * @param $task_id
+ * @param $task_name
+ */
+function add_task_log($user_id, $task_id, $task_name = ''){
+    $model = D('Admin/TaskLog');
+    $data = array(
+        'user_id' => $user_id,
+        'task_id' => $task_id,
+        'task_name' => $task_name
+    );
+    $res = $model->add($data);
+    return $res;
+}

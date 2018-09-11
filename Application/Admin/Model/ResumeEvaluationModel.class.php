@@ -43,6 +43,7 @@ class ResumeEvaluationModel extends Model {
     /**
      * @desc 获取简历评价均值
      * @param $where
+     * @return mixed
      */
     public function getResumeEvaluationAvg($where){
         $evaluation = $this->where($where)->field('skill_score,major_score,chat_score,appearance_score,innovate_score,analysis_score')->select();

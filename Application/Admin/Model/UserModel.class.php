@@ -85,6 +85,23 @@ class UserModel extends Model{
     }
 
     /**
+     * @desc 修改用户可提现金额
+     * @param $user_id int 用户id
+     * @param $type int 操作类型1、完成任务
+     * @param $item_id int 对应的类型id
+     * @return bool
+     */
+    public function changeUserWithdrawAbleAmount($user_id, $type, $item_id){
+        if(!$user_id || !$type || !$item_id) return false;
+        $res = false;
+        if($type == 1){
+            $task_info = D('Admin/Task')->getTaskInfo(array('id' => $item_id));
+            $res = $this->where(array('user_id' => $user_id))->setInc('withdrawable_amount', $task_info['reward']);
+        }
+        return $res;
+    }
+
+    /**
      * @desc 用户登录/注册token变动信息
      * @param $userId
      * @return string

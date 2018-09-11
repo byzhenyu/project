@@ -915,20 +915,97 @@ class UserCenterApiController extends ApiUserCommonController{
      */
     public function getResumeDetail(){
         $user_id = UID;
+        $id = I('post.id');
+        $resume_id = I('post.resume_id');
+        if(!$resume_id) $resume_id = D('');
         $resumeModel = D('Admin/Resume');
         $resumeWorkModel = D('Admin/ResumeWork');
         $resumeEduModel = D('Admin/ResumeEdu');
         $resumeEvaluationModel = D('Admin/ResumeEvaluation');
-        $resume_where = array('user_id' => $user_id);
+        $recruitResumeModel = D('Admin/RecruitResume');
+        $recruit_where = array('id' => $id);
+        $recommend_info = $recruitResumeModel->getRecruitResumeField($recruit_where, 'recommend_label,recommend_voice');
+        $resume_where = array('id' => $resume_id);
         $resumeDetail = $resumeModel->getResumeInfo($resume_where);
-        if(!$resumeDetail) $this->apiReturn(V(0, '您还没有填写简历！'));
-        $where = array('resume_id' => $resumeDetail['id']);
+        if(!$resumeDetail && $user_id == $resumeDetail['user_id']) $this->apiReturn(V(0, '您还没有填写简历！'));
+        $where = array('resume_id' => $resume_id);
         $resumeWorkList = $resumeWorkModel->getResumeWorkList($where);
         $resumeEduList = $resumeEduModel->getResumeEduList($where);
         $resumeEvaluation = $resumeEvaluationModel->getResumeEvaluationAvg($where);
         $sum = array_sum(array_values($resumeEvaluation));
         $avg = round($sum/(count($resumeEvaluation)), 2);
-        $return = array('detail' => $resumeDetail, 'resume_work' => $resumeWorkList, 'resume_edu' => $resumeEduList, 'resume_evaluation' => $resumeEvaluation, 'evaluation_avg' => $avg);
+        $return = array('detail' => $resumeDetail, 'resume_work' => $resumeWorkList, 'resume_edu' => $resumeEduList, 'resume_evaluation' => $resumeEvaluation, 'evaluation_avg' => $avg, 'recruit_resume' => $recommend_info);
         $this->apiReturn(V(1, '简历获取成功！', $return));
+    }
+
+
+    //TODO
+    //TODO
+    //TODO
+    /**
+     * @desc 简历认证列表
+     */
+    public function authResumeList(){
+        $where = array('a.hr_id' => UID);
+        $model = D('ResumeAuth');
+        $list = $model->getResumeAuthList($where);
+        if($list['info']){
+            $this->apiReturn(V(1, '简历认证列表获取成功！', $list['info']));
+        }
+        else{
+            $this->apiReturn(V(0, '简历认证列表获取失败！'));
+        }
+    }
+
+    /**
+     * @desc 简历认证确认/放弃
+     */
+    public function confirmResumeAuth(){
+        $id = I('post.id');
+        $auth_result = I('post.auth_result');
+        if(!in_array($auth_result, array(1, 2))) $this->apiReturn(V(0, '认证状态有误！'));
+        $user_where = array('user_id' => UID);
+        $userModel = D('Admin/User');
+        $user_info = $userModel->getUserInfo($user_where);
+        $resume_auth_where = array('id' => $id, 'hr_id' => UID);
+        $resumeAuthModel = D('Admin/ResumeAuth');
+        $resume_auth_info = $resumeAuthModel->getResumeAuthInfo($resume_auth_where);
+        if(!$resume_auth_info || $resume_auth_info['hr_mobile'] != $user_info['mobile']) $this->apiReturn(V(0, '认证信息有误！'));
+        $save_data = array('auth_result' => $auth_result, 'auth_time' => NOW_TIME);
+        M()->startTrans();
+        $res = $resumeAuthModel->saveResumeAuthData($resume_auth_where, $save_data);
+        if(1 == $auth_result){
+            if(false !== $res){
+                M()->commit();
+                $this->apiReturn(V(1, '认证操作成功！'));
+            }
+            else{
+                M()->rollback();
+                $this->apiReturn(V(0, '认证操作失败！'));
+            }
+        }
+        else{
+            $hr_resume_model = D('Admin/HrResume');
+            $data = I('post.');
+            $create = $hr_resume_model->create($data);
+            if(false !== $create){
+                $hr_resume_result = $hr_resume_model->add($data);
+                if(false !== $hr_resume_result && false !== $res){
+                    $task_id = 1;
+                    $task_log_res = add_task_log(UID, $task_id);
+                    if($task_log_res) D('Admin/User')->changeUserWithdrawAbleAmount(UID, 1, $task_id);
+                    M()->commit();
+                    $this->apiReturn(V(1, '认证操作成功！'));
+                }
+                else{
+                    M()->rollback();
+                    $this->apiReturn(V(0, $hr_resume_model->getError()));
+                }
+            }
+            else{
+                M()->rollback();
+                $this->apiReturn(V(0, $hr_resume_model->getError()));
+            }
+        }
     }
 }
