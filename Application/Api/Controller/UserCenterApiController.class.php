@@ -722,8 +722,7 @@ class UserCenterApiController extends ApiUserCommonController{
      * @desc 获取简历基本资料
      */
     public function getResumeInfo(){
-        $id = I('post.id', 0, 'intval');
-        $where = array('id' => $id, 'user_id' => UID);
+        $where = array('user_id' => UID);
         $model = D('Admin/Resume');
         $res = $model->getResumeInfo($where);
         if($res) $this->apiReturn(V(1, '简历获取成功！', $res));
