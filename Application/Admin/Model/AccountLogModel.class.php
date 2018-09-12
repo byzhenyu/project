@@ -29,7 +29,7 @@ class AccountLogModel extends Model {
             $field = $this->selectFields;
         }
         $count = $this->where($where)->count();
-        $page = get_page($count);
+        $page = get_web_page($count);
         $info = $this->field($field)
             ->where($where)
             ->order($order)
