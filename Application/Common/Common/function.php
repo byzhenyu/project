@@ -933,7 +933,7 @@ function contraband_list(){
  * @param $order_sn string 订单号
  * @return mixed
  */
-function account_log($user_id, $money, $type, $desc = '', $order_sn = ''){
+function account_log($user_id, $money, $type, $desc = '', $order_sn = '',$recruit_id = 0){
     $data = array();
     $data["user_id"] = $user_id;
     $data["user_money"] = $money;
@@ -941,6 +941,7 @@ function account_log($user_id, $money, $type, $desc = '', $order_sn = ''){
     $data["change_type"] = $type;
     $data["change_desc"] = $desc;
     $data["order_sn"] = $order_sn;
+    $data['recruit_id'] = $recruit_id;
     return M('AccountLog')->add($data);
 }
 
