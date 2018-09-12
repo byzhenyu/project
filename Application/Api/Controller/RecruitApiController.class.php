@@ -24,32 +24,47 @@ class RecruitApiController extends ApiUserCommonController{
 
         $this->apiReturn(V(1,'令牌平均值',$value));
     }
+
     //发布接口
     public function publish() {
         $data = I('post.', '');
-        $id = I('id', 0,'intval');
+
         $model = D('Admin/Recruit');
         $position_name = M('Position')->where(array('id'=>$data['position_id']))->getField('position_name');
         $data['position_name'] = $position_name;
+        //判断余额
+        $data['last_token'] = $data['commission'] = yuan_to_fen($data['commission']);
+        $data['get_resume_token'] = yuan_to_fen(C('GET_RESUME_MONEY'));
+        $data['entry_token'] = yuan_to_fen(C('GET_ENTRY_MONEY'));
+        $user_money = D('Admin/User')->getUserField(array('user_id'=>UID),'user_money');
+
+        if ($data['commission'] > $user_money) {
+            $this->apiReturn(V(0, '可用余额不足'));
+        }
+
+        $trans = M();
+        $data['hr_user_id'] = UID;
 
         if ($model->create($data) ===false) {
+            $trans->rollback();
             $this->apiReturn(V(0, $model->getError()));
         }
-        if ($id > 0) {
-            $res = $model->save();
-            if ($res ===false) {
-                $this->apiReturn(V(0,'修改失败'));
-            } else {
-                $this->apiReturn(V(1, '修改成功'));
-            }
-        } else {
-            $newId = $model->add();
-            if ($newId ===false) {
-                $this->apiReturn(V(0, '发布失败'));
-            } else {
-                $this->apiReturn(V(1,'发布成功'));
-            }
+        $newId = $model->add();
+        if ($newId ===false) {
+            $trans->rollback();
+            $this->apiReturn(V(0, '发布失败'));
         }
+
+        //修改金额
+        $res = D('Admin/User')->recruitUserMoney($data['commission']);
+        if ($res['status'] ==0) {
+            $trans->rollback();
+            $this->apiReturn($res);
+        }
+        $trans->commit();
+        $this->apiReturn(V(1,'发布成功'));
+
+
 
     }
 
@@ -71,30 +86,7 @@ class RecruitApiController extends ApiUserCommonController{
         $data = D('Admin/Recruit')->getRecruitList($where);
         $this->apiReturn(V(1, '悬赏列表', $data['info']));
     }
-    /**
-     * 根据简历匹配悬赏
-     * $resume_id 简历id
-     */
-    public function getRecruitListByResume() {
-        $resume_id = I('id', 0, 'intval');
-        $resumeInfo = D('Admin/Resume')->getResumeInfo(array('id'=>$resume_id),'id,user_id,job_intension,job_area');
 
-        $areaInfo = explode(',', $resumeInfo['job_area']);
-        $intension = explode(',', $resumeInfo['job_intension']);
-
-        foreach ($areaInfo as $v) {
-            $where[]['job_area'] = array('like', '%'.$v.'%');
-        }
-
-        foreach ($intension as $v) {
-            $where[]['position_name'] = array('like', '%'.$v.'%');
-        }
-        $where['_logic'] = 'or';
-        $map['_complex'] = $where;
-
-        $data = D('Admin/Recruit')->getRecruitList($map);
-        $this->apiReturn(V(1, '悬赏列表', $data['info']));
-    }
 
     /**
      * 悬赏详情
@@ -133,40 +125,25 @@ class RecruitApiController extends ApiUserCommonController{
     /**
      *  获取联系方式
      *  recruit_id 悬赏id
-     *  resume_id 简历id
+     * recruit_resume_id 悬赏简历id
+     *
      */
     public function getResumePhoneNumber() {
         $recruit_id = I('recruit_id', 0, 'intval');
-        $resume_id = I('resume_id', 0, 'intval');
-        //获取分配比例
-        $RecruitModel = D('Admin/Recruit');
-        $RecruitInfo =$RecruitModel->getRecruitInfo(array('id'=>$recruit_id),'id,get_resume_token');
+        $recruit_resume_id = I('recruit_resume_id', 0, 'intval');
+        //判断次数
+        $where['recruit_id'] = $recruit_id;
+        $result = D('Admin/TokenLog')->getResumeCountRes($where);
+        if ($result['status'] ==0) {
+            $this->apiReturn($result);
+        }
+        $info = D('Admin/User')->changeUserMoney($recruit_resume_id, 1);
+        if ($info['status'] ==0) {
+            $this->apiReturn($info);
+        } else {
+            $this->apiReturn(V(1, '获取联系方式成功'));
+        }
 
-        //推荐简历信息
-        $hrInfo = D('Admin/RecruitResume')->getRecruitResumeField(array('id'=>$resume_id),'id,recruit_id,recruit_hr_uid,resume_id,hr_user_id');
-        $trans = M();
-        $trans->startTrans();
-        $res =  $RecruitModel->where(array('id'=>$recruit_id))->setDec('last_token',$RecruitInfo['get_resume_token']);
-        if ($res ===false) {
-           $trans->rollback();
-           $this->apiReturn(V(0, '扣除令牌失败'));
-        }
-        $data['type'] = 1;
-        $data['token_num'] = $RecruitInfo['get_resume_token'];
-        $data['user_id'] = $hrInfo['hr_user_id'];
-        $data['recruit_id'] = $RecruitInfo['id'];
-        $tokenLogModel = D('Admin/TokenLog');
-        if($tokenLogModel->create($data) ===false) {
-            $trans->rollback();
-            $this->apiReturn(V(0, $tokenLogModel->getError()));
-        };
-        $id = $tokenLogModel->add();
-        if ($id ===false) {
-            $trans->rollback();
-            $this->apiReturn(V(0, '插入记录失败'));
-        }
-        $trans->commit();
-        $this->apiReturn(V(1, '查看成功'));
     }
 
 
