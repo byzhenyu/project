@@ -45,5 +45,10 @@ class HrResumeModel extends Model {
 
     protected function _before_insert(&$data, $option){
         $data['add_time'] = NOW_TIME;
+        $res = $this->getHrResumeInfo(array('resume_id' => $data['resume_id'], 'hr_user_id' => $data['hr_user_id']));
+        if($res){
+            $this->error = 'HR简历库中已有该简历！';
+            return false;
+        }
     }
 }
