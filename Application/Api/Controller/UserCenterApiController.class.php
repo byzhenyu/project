@@ -996,6 +996,7 @@ class UserCenterApiController extends ApiUserCommonController{
         else{
             $hr_resume_model = D('Admin/HrResume');
             $data = I('post.');
+            $data['resume_id'] = $resume_auth_info['resume_id'];
             $create = $hr_resume_model->create($data);
             if(false !== $create){
                 $hr_resume_result = $hr_resume_model->add($data);
