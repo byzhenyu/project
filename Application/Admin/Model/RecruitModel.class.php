@@ -13,7 +13,7 @@ class RecruitModel extends Model {
     protected $_validate = array(
         array('hr_user_id', 'require', '发布人不能为空', 1, 'regex', 3),
         array('position_id', 'require', '请选择悬赏职位', 1, 'regex', 3),
-        array('commission', 'number', '请填写悬赏佣金', 1, 'regex', 3),
+        array('commission,recruit_num', 'checkCommission', '悬赏佣金不足', 1, 'callback', 3),
         array('recruit_num', 'number', '请填写招聘人数', 1, 'regex', 3),
         array('nature', 'require', '发布人不能为空', 1, 'regex', 3),
         array('sex', array(0,1,2), '性别字段有误', 1, 'in', 3),
@@ -28,17 +28,21 @@ class RecruitModel extends Model {
     );
 
     /**
-     * 验证职位名称长度
+     * 验证佣金数量
      */
-    protected function checkPositionLength($data) {
-        $length = mb_strlen($data, 'utf-8');
-        if ($length > 30) {
+    protected function checkCommission($data) {
+        $resumeMoney = C('GET_RESUME_MONEY');
+        $entryMoney = C('GET_ENTRY_MONEY');
+        $resumeNum = $data['recruit_num'];
+
+        $total = ($resumeMoney + $entryMoney)*$resumeNum;
+        if ($data['commission'] < $total) {
             return false;
         }
         return true;
     }
     /**
-     * 获取职位列表
+     * 获取悬赏列表
      * @param $where array 条件
      * @param $field string 字段
      * @param $isPage bool 是否返回分页数据
@@ -61,13 +65,16 @@ class RecruitModel extends Model {
     }
 
     //添加操作前的钩子操作
-    protected function _before_insert(&$data, $option){
+    protected function _before_insert(&$data, $option) {
         $data['hr_user_id'] = UID;
-        $data['commission'] = yuan_to_fen($data['commission']);
+        $data['last_token'] = $data['commission'] = yuan_to_fen($data['commission']);
         $data['add_time'] = NOW_TIME;
+        $data['get_resume_token'] = C('GET_RESUME_MONEY');
+        $data['entry_token'] = C('GET_ENTRY_MONEY');
     }
     //更新操作前的钩子操作
-    protected function _before_update(&$data, $option){
+    protected function _before_update(&$data, $option) {
+
     }
 
     /**
@@ -80,6 +87,16 @@ class RecruitModel extends Model {
     }
 
     /**
+     *  获取字段(默认获取简历可得令牌)
+     */
+    public function getRecruitInfo($where,$field='') {
+        if (!$field) {
+            $field = $this->selectFields;
+        }
+        $info = $this->where($where)->field($field)->find();
+        return $info;
+    }
+    /**
      * 详情
      */
     public function getDetail($where) {
@@ -88,7 +105,7 @@ class RecruitModel extends Model {
         $wordArr = C('WORK_NATURE');
         $exp = C('WORK_EXP');
         $sexArr = array('0'=>'不限','1'=>'男','2'=>'女');
-        $degreeArr = M('Education')->where()->getField('id,education_name', true);
+        $degreeArr = M('Education')->getField('id,education_name', true);
         $tags = M('Tags')->where(array('tags_type'=>3))->getField('id, position_name',true);
         $info['sex'] = $exp[$info['sex']];
         $info['nature'] = $wordArr[$info['nature']];
@@ -97,6 +114,38 @@ class RecruitModel extends Model {
         $info['add_time'] = time_format($info['add_time']);
         return $info;
     }
+    /**
+     * 获取我的推荐
+     */
+    public function getMyRecruitByPage() {
+        $RecruitResumeModel = M('RecruitResume');
+        $recruit_ids = $RecruitResumeModel->where(array('hr_user_id'=>UID))->field('recruit_id')->distinct(true)->getField('recruit_id',true);
 
+        $where['id'] = array('in', $recruit_ids);
+
+        $fields = array('id,hr_user_id,position_id,position_name,commission');
+        $count = $this->where($where)->count();
+        $page = get_web_page($count);
+
+        $recruitInfo = $this->where($where)
+            ->field($fields)
+            ->limit($page['limit'])
+            ->order('id desc')
+            ->select();
+
+        foreach ($recruitInfo as $k=>$v) {
+            $map['recruit_id'] = array('eq', $v['id']);
+            $recruitInfo[$k]['total'] = $RecruitResumeModel->where($map)->count();
+
+            $map['hr_user_id'] = array('eq', UID);
+            $recruitInfo[$k]['my'] = $RecruitResumeModel->where($map)->count();
+            $recruitInfo[$k]['commission'] = fen_to_yuan($v['commission']);
+        }
+        return array(
+            'info'=>$recruitInfo,
+            'page'=>$page['page']
+        );
+
+    }
 
 }

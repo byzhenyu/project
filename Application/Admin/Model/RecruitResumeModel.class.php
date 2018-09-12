@@ -75,6 +75,9 @@ class RecruitResumeModel extends Model {
      * @return mixed
      */
     public function getRecruitResumeField($where, $field){
+        if (!$field) {
+            $field = $this->selectFields;
+        }
         $res = $this->where($where)->field($field)->find();
         return $res;
     }
@@ -115,6 +118,5 @@ class RecruitResumeModel extends Model {
         $info['add_time'] = time_format($info['add_time']);
         return $info;
     }
-
 
 }
