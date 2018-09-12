@@ -249,4 +249,94 @@ class UserModel extends Model{
         M('user_token')->where($where)->data($data)->save();
         return $token;
     }
+
+    /**
+     * 发布悬赏资金变动
+     * @param array $where
+     * @param string $money 变动金额（分）
+     */
+    public function recruitUserMoney($money) {
+        $userModel = M('User');
+        $balance = $userModel->where(array('user_id'=>UID))->field('id,user_money,frozen_money')->find();
+        $user_money = $balance['user_money'] - $money;
+        if ($user_money < 0) {
+            return V(0, '可用余额不足');
+        }
+        M()->startTrans();
+        $data['user_money'] = $user_money;
+        $data['frozen_money'] = $balance['frozen_money'] + $money;
+        if($userModel->where(array('user_id'=>UID))->save($data) ===false) {
+            M()->rollback();
+            return V(0, '资金变动失败');
+        }
+        $res = account_log(UID, $money, 2, '发布悬赏冻结', '');
+        if ($res ===false) {
+            M()->rollback();
+            return V(0 ,'资金变动记录保存失败');
+        }
+        M()->commit();
+        return V(1, '操作成功');
+    }
+
+    /**
+     * 查看简历和入职资金变动
+     * @param $recruit_resume_id 悬赏简历表信息id
+     * @param $type 1 查看简历 2 入职
+     */
+    public function changeUserMoney($recruit_resume_id,$type = 1) {
+        //悬赏简历表信息
+        $info = M('RecruitResume')->where(array('id'=>$recruit_resume_id))->find();
+        //获取分配比例
+        if ($type == 1) {
+            $field = 'get_resume_token';
+        } else {
+            $field = 'entry_token';
+        }
+        $recruitModel = M('Recruit');
+        $userModel = M('User');
+        //悬赏金额
+        $trans = M();
+        $moneyInfo = $recruitModel->where(array('id'=>$info['recruit_id']))->getField($field);
+        $resumeRes = $recruitModel->where(array('id'=>$info['recruit_id']))->setDec('last_token', $moneyInfo);
+        if ($resumeRes ===false) {
+            $trans->rollback();
+            return V(0, '悬赏信息扣除令牌失败');
+        }
+        $useRes = $userModel->where(array('user_id'=>$info['recruit_hr_uid']))->setDec('frozen_money', $moneyInfo);
+        if ($useRes ===false) {
+            $trans->rollback();
+            return V(0, '用户扣除冻结令牌失败');
+        }
+        //插入待结算表
+        $logRes = $this->addTokenLog($info['hr_user_id'], $moneyInfo, $type, $info['recruit_id']);
+        if ($logRes ===false) {
+            $trans->rollback();
+            return V(0, '插入待结算表失败');
+        }
+        $trans->commit();
+        return V(1 , '操作成功');
+    }
+
+    /**
+     *  插入tokenLog表
+     */
+    public function addTokenLog($user_id,$token_num,$type,$recruit_id) {
+        $tokenLogModel = D('Admin/TokenLog');
+        $data['user_id'] = $user_id;
+        $data['token_num'] = $token_num;
+        $data['type'] = $type;
+        $data['recruit_id'] = $recruit_id;
+        if($tokenLogModel->create($data) !==false) {
+            $id = $tokenLogModel->add();
+            if ($id ===false) {
+                return V(0 ,'添加失败');
+            } else {
+                return V(1 ,'添加成功');
+            }
+        } else {
+            return V(0, $tokenLogModel->getError());
+        }
+
+    }
+
 }
