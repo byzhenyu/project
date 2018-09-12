@@ -899,6 +899,15 @@ class UserCenterApiController extends ApiUserCommonController{
         if(false !== $create){
             $res = $model->add($data);
             if($res){
+                $resume_info = D('Admin/Resume')->getResumeInfo(array('id' => $data['resume_id']));
+                //非本人评价简历额外获得令牌完成任务
+                if($resume_info['user_id'] != UID){
+                    $task_id = 2;
+                    $tsk_log_res = add_task_log(UID, $task_id);
+                    if($tsk_log_res){
+                        D('Admin/User')->changeUserWithdrawAbleAmount(UID, 1, $task_id);
+                    }
+                }
                 $this->apiReturn(V(1, '评价成功！'));
             }
             else{
@@ -1006,6 +1015,294 @@ class UserCenterApiController extends ApiUserCommonController{
                 M()->rollback();
                 $this->apiReturn(V(0, $hr_resume_model->getError()));
             }
+        }
+    }
+
+    /**
+     * @desc 简历技能评分详情
+     */
+    public function resumeEvaluationDetail(){
+        $resume_id = I('resume_id', 0, 'intval');
+        if(!$resume_id) $this->apiReturn(V(0, '简历标识不能为空！'));
+        $resumeEvaluationModel = D('Admin/ResumeEvaluation');
+        $resumeModel = D('Admin/Resume');
+        $resumeWorkModel = D('Admin/ResumeWork');
+        $where = array('resume_id' => $resume_id);
+        $resume_where = array('id' => $resume_id);
+        $resume_info = $resumeModel->getResumeInfo($resume_where);
+        if(!$resume_info) $this->apiReturn(V(0, '简历详情获取失败！'));
+        $resumeEvaluation = $resumeEvaluationModel->getResumeEvaluationAvg($where);
+        $sum = array_sum(array_values($resumeEvaluation));
+        $avg = round($sum/(count($resumeEvaluation)), 2);
+        $resumeWorkList = $resumeWorkModel->getResumeWorkList($where, 'company_name,position,starttime,endtime', 'endtime desc');
+        $total_time = 0;
+        foreach($resumeWorkList as &$val){
+            $val['time_differ'] = $val['endtime'] - $val['starttime'];
+            $total_time += $val['endtime'] - $val['starttime'];
+            $val['year_limit'] = year_limit($val['starttime'], $val['endtime']);
+            unset($val['starttime']);
+            unset($val['endtime']);
+        }
+        unset($val);
+        foreach($resumeWorkList as &$val){
+            $val['percent'] = round($val['time_differ'] / $total_time * 100, 2);
+        }
+        unset($val);
+        $return = array('evaluation' => $resumeEvaluation, 'avg' => $avg, 'work_list' => $resumeWorkList);
+        $this->apiReturn(V(1,  '评价详情获取成功！', $return));
+    }
+
+    /**
+     * @desc hr人才库列表/悬赏推荐人才列表
+     */
+    public function getHrResumeList(){
+        $where = array('h.hr_user_id' => UID);
+        $recruit_id = I('recruit_id', 0, 'intval');
+        //悬赏参数/根据悬赏筛选人才库
+        if($recruit_id){
+            $recruitModel = D('Admin/Recruit');
+            $recruitWhere = array('id' => $recruit_id);
+            $recruit_info = $recruitModel->getRecruitInfo($recruitWhere, 'position_name,job_area');
+            $job_area = $recruit_info['job_area'];
+            $position = $recruit_info['position_name'];
+            $job_arr = explode(',', $job_area);
+            $pos_arr = explode(',', $position);
+            $where1 = array();
+            if($job_area){
+                foreach($job_arr as &$val){
+                    $where1[] = 'r.`job_area` like \'%'.$val.'%\'';
+                }
+                unset($val);
+            }
+            $where2 = array();
+            if($position){
+                foreach($pos_arr as &$val){
+                    $where2[] = 'r.`job_intension` like \'%'.$val.'%\'';
+                }
+                unset($val);
+            }
+            $position_string = implode(' or ', $where2);
+            $area_string = implode(' or ', $where1);
+            $map = '('.$position_string.') and ('.$area_string.')';
+            if(count($where1) == 0) $map = $position_string;
+            if(count($where2) == 0) $map = $area_string;
+            $where['_string'] = $map;
+        }
+        $model = D('Admin/HrResume');
+        $keywords = I('keywords', '', 'trim');
+        if($keywords) $where['r.true_name'] = array('like', '%'.$keywords.'%');
+        $list = $model->getHrResumeList($where);
+        foreach($list['info'] as &$val){
+            $val['add_time'] = time_format($val['add_time']);
+        }
+        if($list['info']){
+            $this->apiReturn(V(1, '人才列表获取成功！', $list['info']));
+        }
+        else{
+            $this->apiReturn(V(0, '没有符合条件的人选！'));
+        }
+    }
+
+    /**
+     * @desc 根据简历获取到悬赏列表
+     */
+    public function personalRecommendResume(){
+        $resume_id = I('resume_id', 0, 'intval');
+        $model = D('Admin/Resume');
+        $recruitModel = D('Admin/Recruit');
+        $resume_where = array('id' => $resume_id);
+        $hr_resume_info = $model->getResumeInfo($resume_where);
+        $job_area = $hr_resume_info['job_area'];//工作地区
+        $position = $hr_resume_info['job_intension'];//工作职位
+        $job_arr = explode(',', $job_area);
+        $pos_arr = explode(',', $position);
+        $where1 = array();
+        if($job_area){
+            foreach($job_arr as &$val){
+                $where1[] = '`job_area` like \'%'.$val.'%\'';
+            }
+            unset($val);
+        }
+        $where2 = array();
+        if($position){
+            foreach($pos_arr as &$val){
+                $where2[] = '`position_name` like \'%'.$val.'%\'';
+            }
+            unset($val);
+        }
+        $position_string = implode(' or ', $where2);
+        $area_string = implode(' or ', $where1);
+        $map = '('.$position_string.') and ('.$area_string.')';
+        if(count($where1) == 0) $map = $position_string;
+        if(count($where2) == 0) $map = $area_string;
+        $recruit_where = array('_string' => $map);
+        $recruit_list = $recruitModel->getRecruitList($recruit_where);
+        $this->apiReturn(V(1, '悬赏列表获取成功！', $recruit_list['info']));
+    }
+
+    /**
+     * @desc 确认向悬赏推荐简历
+     * @extra resume_id string 多个简历同时推荐使用,分开
+     */
+    public function confirmRecruitResume(){
+        $data = I('post.');
+        $hr_user_id = UID;
+        $recruitModel = D('Admin/Recruit');
+        $resumeModel = D('Admin/Resume');
+        $recruitResumeModel = D('Admin/RecruitResume');
+        $hrResumeModel = D('Admin/HrResume');
+        $recruit_where = array('id' => $data['recruit_id']);
+        $recruit_info = $recruitModel->getRecruitInfo($recruit_where);
+        if(!$recruit_info) $this->apiReturn(V(0, '获取不到对应的悬赏信息！'));
+        $resume_where = array('id' => $data['resume_id']);
+        $resume_info = $resumeModel->getResumeInfo($resume_where);
+        if(!$resume_info) $this->apiReturn(V(0, '获取不到对应的简历详情！'));
+        $data['hr_user_id'] = $hr_user_id;
+        $data['recruit_hr_uid'] = $recruit_info['hr_user_id'];
+        if(empty($_FILES['voice'])) $this->apiReturn(V(0, '推荐语不能为空'));
+        $voice_file = app_upload_file('voice', '', '', 'Resume');
+        if ($voice_file == 0 || $voice_file == -1) {
+            $this->apiReturn(V(0, '语音文件上传失败！'));
+        }
+        else{
+            $data['recommend_voice'] = $voice_file;
+        }
+        if(false !== strpos(',', $data['resume_id'])){
+            $addAllArr = array();
+            $resume_arr = explode(',', $data['resume_id']);
+            foreach($resume_arr as &$val){
+                $hr_recommend_where = array('resume_id' => $val, 'hr_user_id' => UID);
+                $hr_resume_info = $hrResumeModel->getHrResumeInfo($hr_recommend_where);
+                $data['recommend_label'] = $hr_resume_info['recommend_label'];
+                $data['resume_id'] = $val;
+                $addAllArr[] = $data;
+            }
+            $res = $recruitResumeModel->addAll($addAllArr);
+            if($res) $this->apiReturn(V(1, '推荐成功！'));
+            $this->apiReturn(V(0, '推荐失败！'));
+        }
+        else{
+            $hr_recommend_where = array('resume_id' => $data['resume_id'], 'hr_user_id' => UID);
+            $hr_resume_info = $hrResumeModel->getHrResumeInfo($hr_recommend_where);
+            $data['recommend_label'] = $hr_resume_info['recommend_label'];
+            $create = $recruitResumeModel->create($data);
+            if(false !== $create){
+                $res = $recruitResumeModel->add($data);
+                if($res){
+                    $this->apiReturn(V(1, '推荐成功！'));
+                }
+                else{
+                    $this->apiReturn(V(0, $recruitResumeModel->getError()));
+                }
+            }
+            else{
+                $this->apiReturn(V(0, $recruitResumeModel->getError()));
+            }
+        }
+    }
+
+    /**
+     * @desc 发起面试
+     */
+    public function launchInterview(){
+        $data = I('post.');
+        $data['hr_user_id'] = UID;
+        $model = D('Admin/Interview');
+        $create = $model->create($data);
+        if(false !== $create){
+            $res = $model->add($data);
+            if($res){
+                $this->apiReturn(V(1, '面试发起成功！'));
+            }
+            else{
+                $this->apiReturn(V(0, $model->getError()));
+            }
+        }
+        else{
+            $this->apiReturn(V(0, $model->getError()));
+        }
+    }
+
+    /**
+     * @desc 获取面试管理列表
+     */
+    public function getInterviewList(){
+        $where = array('i.hr_user_id' => UID);
+        $model = D('Admin/Interview');
+        $resumeInterviewList = $model->getInterviewList($where);
+        foreach($resumeInterviewList['info'] as &$val){
+            $val['update_time'] = time_format($val['update_time']);
+            $val['resume_time'] = time_format($val['resume_time']);
+            $val['state_string'] = interview_state($val['state']);
+        }
+        unset($val);
+        $this->apiReturn(V(1, '面试列表获取成功！', $resumeInterviewList['info']));
+    }
+
+    /**
+     * @desc 入职/放弃
+     */
+    public function updateInterviewState(){
+        $id = I('post.id');
+        $state = I('post.state',0, 'intval');
+        if(!in_array($state, array(1, 2))) $this->apiReturn(V(0, '面试状态不正确！'));
+        $where = array('hr_user_id' => UID, 'id' => $id);
+        $model = D('Admin/Interview');
+        $save_data = array('state' => $state);
+        M()->startTrans();
+        $res = $model->saveInterviewData($where, $save_data);
+        if(false !== $res){
+            M()->commit();
+            $this->apiReturn(V(1, '操作成功！'));
+        }
+        else{
+            M()->rollback();
+            $this->apiReturn(V(0, '操作失败！'));
+        }
+    }
+
+    /**
+     * @desc 生成二维码获取数据
+     */
+    public function generateInterviewCode(){
+        $id = I('post.id', 0, 'intval');
+        if(!$id) $this->apiReturn(V(0, '传入正确的面试id'));
+        $interview_where = array('id' => $id);
+        $interviewModel = D('Admin/Interview');
+        $interview_info = $interviewModel->getInterviewInfo($interview_where);
+        $return = array('hr_user_id' => $interview_info['hr_user_id'], 'resume_id' => $interview_info['resume_id']);
+        $this->apiReturn(V(1, '数据获取成功！', $return));
+    }
+
+    /**
+     * @desc 扫描二维码授权hr获得简历
+     * @extra $state int 0、放弃授权 1、同意授权
+     */
+    public function authHrAheadResume(){
+        $hr_user_id = I('hr_id', 0, 'intval');
+        $resume_id = I('resume_id', 0, 'intval');
+        $state = I('post.state', 0, 'intval');
+        if(!$state) $this->apiReturn(V(1, '操作成功！'));
+        $interviewModel = D('Admin/Interview');
+        $hrResumeModel = D('Admin/HrResume');
+        $where = array('hr_user_id' => $hr_user_id, 'resume_id' => $resume_id);
+        $interview_info = $interviewModel->getInterviewInfo($where);
+        if(!$interview_info) $this->apiReturn(V(0, '获取不到相关的面试信息！'));
+        $hr_resume = $hrResumeModel->getHrResumeInfo($where);
+        if($hr_resume) $this->apiReturn(V(0, '您的简历已经存在于该hr简历库中！'));
+        $data = array('hr_user_id' => $hr_user_id, 'resume_id' => $resume_id);
+        $create = $hrResumeModel->create($data);
+        if(false !== $create){
+            $res = $hrResumeModel->add($data);
+            if($res){
+                $this->apiReturn(V(1, '授权成功！'));
+            }
+            else{
+                $this->apiReturn(V(0, $hrResumeModel->getError()));
+            }
+        }
+        else{
+            $this->apiReturn(V(0, $hrResumeModel->getError()));
         }
     }
 }

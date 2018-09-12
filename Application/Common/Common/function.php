@@ -1061,6 +1061,7 @@ function show_resume_auth_result($auth_result){
  * @param $user_id
  * @param $task_id
  * @param $task_name
+ * @return mixed
  */
 function add_task_log($user_id, $task_id, $task_name = ''){
     $model = D('Admin/TaskLog');
@@ -1071,4 +1072,31 @@ function add_task_log($user_id, $task_id, $task_name = ''){
     );
     $res = $model->add($data);
     return $res;
+}
+
+/**
+ * @desc 简历评价详情工作经历格式化
+ * @param $start
+ * @param $end
+ * @return string
+ */
+function year_limit($start, $end){
+    $time = 365*24*60*60;
+    $year = floor(($end - $start) / $time);
+    $month = ceil(((($end - $start) - $year * 365) / ($time/365)) / 30);
+    return $year.'年'.$month.'月';
+}
+
+/**
+ * @desc 面试状态
+ * @param $state
+ * @return mixed
+ */
+function interview_state($state){
+    $arr = array(
+        0 => '邀约面试',
+        1 => '已入职',
+        2 => '已放弃'
+    );
+    return $arr[$state];
 }
