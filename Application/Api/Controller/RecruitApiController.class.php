@@ -79,8 +79,6 @@ class RecruitApiController extends ApiUserCommonController{
         $position_name = I('position_name','');//求职方向
         if ($type == 1) {
             $where['hr_user_id'] = array('eq', UID);
-        } else {
-
         }
 
         $data = D('Admin/Recruit')->getRecruitList($where);
