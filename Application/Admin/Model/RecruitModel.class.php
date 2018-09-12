@@ -82,7 +82,9 @@ class RecruitModel extends Model {
      * @param $where
      */
     public function getAverageValue($where) {
-        $info = $this->where($where)->avg('commission');
+        $commission = $this->where($where)->Sum('commission');
+        $recruit_num = $this->where($where)->Sum('recruit_num');
+        $info = $commission / $recruit_num;
         return fen_to_yuan($info);
     }
 
