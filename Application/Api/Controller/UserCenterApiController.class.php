@@ -933,7 +933,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $resumeEvaluationModel = D('Admin/ResumeEvaluation');
         $recruitResumeModel = D('Admin/RecruitResume');
         $recruit_where = array('id' => $id);
-        $recommend_info = $recruitResumeModel->getRecruitResumeField($recruit_where, 'recommend_label,recommend_voice');
+        $recommend_info = $recruitResumeModel->getRecruitResumeField($recruit_where, 'recommend_label,recommend_voice,id');
         $resume_where = array('id' => $resume_id);
         $resumeDetail = $resumeModel->getResumeInfo($resume_where);
         if(!$resumeDetail && $user_id == $resumeDetail['user_id']) $this->apiReturn(V(0, '您还没有填写简历！'));
@@ -1252,14 +1252,13 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('hr_user_id' => UID, 'id' => $id);
         $model = D('Admin/Interview');
         $save_data = array('state' => $state);
-        M()->startTrans();
         $res = $model->saveInterviewData($where, $save_data);
+        $interviewInfo = $model->getInterviewInfo($where);
         if(false !== $res){
-            M()->commit();
+            if($state == 1) D('Admin/User')->changeUserMoney($interviewInfo['recruit_resume_id'], 2);
             $this->apiReturn(V(1, '操作成功！'));
         }
         else{
-            M()->rollback();
             $this->apiReturn(V(0, '操作失败！'));
         }
     }
