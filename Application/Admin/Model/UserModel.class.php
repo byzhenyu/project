@@ -257,7 +257,7 @@ class UserModel extends Model{
      */
     public function recruitUserMoney($money) {
         $userModel = M('User');
-        $balance = $userModel->where(array('user_id'=>UID))->field('id,user_money,frozen_money')->find();
+        $balance = $userModel->where(array('user_id'=>UID))->field('user_id,user_money,frozen_money')->find();
         $user_money = $balance['user_money'] - $money;
         if ($user_money < 0) {
             return V(0, '可用余额不足');
@@ -269,7 +269,7 @@ class UserModel extends Model{
             M()->rollback();
             return V(0, '资金变动失败');
         }
-        $res = account_log(UID, $money, 2, '发布悬赏冻结', '');
+        $res = account_log(UID, $money, 4, '发布悬赏冻结', '');
         if ($res ===false) {
             M()->rollback();
             return V(0 ,'资金变动记录保存失败');
