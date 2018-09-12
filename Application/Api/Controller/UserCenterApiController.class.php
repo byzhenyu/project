@@ -980,6 +980,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $resumeAuthModel = D('Admin/ResumeAuth');
         $resume_auth_info = $resumeAuthModel->getResumeAuthInfo($resume_auth_where);
         if(!$resume_auth_info || $resume_auth_info['hr_mobile'] != $user_info['mobile']) $this->apiReturn(V(0, '认证信息有误！'));
+        if($resume_auth_info['auth_result'] == 0) $this->apiReturn(V(0, '该简历已经被认证过！'));
         $save_data = array('auth_result' => $auth_result, 'auth_time' => NOW_TIME);
         M()->startTrans();
         $res = $resumeAuthModel->saveResumeAuthData($resume_auth_where, $save_data);
@@ -995,9 +996,10 @@ class UserCenterApiController extends ApiUserCommonController{
         }
         else{
             $hr_resume_model = D('Admin/HrResume');
-            $data = I('post.');
+            $data = array();
+            $data['hr_user_id'] = UID;
             $data['resume_id'] = $resume_auth_info['resume_id'];
-            $create = $hr_resume_model->create($data);
+            $create = $hr_resume_model->create($data, 1);
             if(false !== $create){
                 $hr_resume_result = $hr_resume_model->add($data);
                 if(false !== $hr_resume_result && false !== $res){
