@@ -26,4 +26,16 @@ class TokenLogModel extends Model {
     public function getTokenLogList($where,$field='',$order='id desc') {
 
     }
+
+    /**
+     *  是否可查看简历
+     */
+    public function getResumeCountRes($where) {
+        $max_count = C('MAX_RESUME');
+        $number = $this->where($where)->count();
+        if ($max_count > $number) {
+            return V(1, '通过');
+        }
+        return V(0, '最多可查看'.$max_count.'份简历');
+    }
 }

@@ -31,10 +31,13 @@ class RecruitModel extends Model {
      * 验证佣金数量
      */
     protected function checkCommission($data) {
-        $resumeMoney = C('GET_RESUME_MONEY');
-        $entryMoney = C('GET_ENTRY_MONEY');
+        $resumeMoney = yuan_to_fen(C('GET_RESUME_MONEY'));
+        $entryMoney = yuan_to_fen(C('GET_ENTRY_MONEY'));
+        $maxResume = C('MAX_RESUME');
         $resumeNum = $data['recruit_num'];
-
+        if ($resumeNum > $maxResume) {
+            $resumeNum = $maxResume;
+        }
         $total = ($resumeMoney + $entryMoney)*$resumeNum;
         if ($data['commission'] < $total) {
             return false;
@@ -59,6 +62,9 @@ class RecruitModel extends Model {
         foreach ($list as $k=>$v) {
             $list[$k]['add_time'] = time_format($v['add_time']);
             $list[$k]['commission'] = fen_to_yuan($v['commission']);
+            $list[$k]['last_token'] = fen_to_yuan($v['last_token']);
+            $list[$k]['get_resume_token'] = fen_to_yuan($v['get_resume_token']);
+            $list[$k]['entry_token'] = fen_to_yuan($v['entry_token']);
             $list[$k]['sex'] = getSexInfo($v['sex']);
         }
         return array('info' => $list, 'page' => $page['page']);
@@ -66,11 +72,9 @@ class RecruitModel extends Model {
 
     //添加操作前的钩子操作
     protected function _before_insert(&$data, $option) {
-        $data['hr_user_id'] = UID;
-        $data['last_token'] = $data['commission'] = yuan_to_fen($data['commission']);
+
         $data['add_time'] = NOW_TIME;
-        $data['get_resume_token'] = C('GET_RESUME_MONEY');
-        $data['entry_token'] = C('GET_ENTRY_MONEY');
+
     }
     //更新操作前的钩子操作
     protected function _before_update(&$data, $option) {
@@ -85,7 +89,19 @@ class RecruitModel extends Model {
         $commission = $this->where($where)->Sum('commission');
         $recruit_num = $this->where($where)->Sum('recruit_num');
         $info = $commission / $recruit_num;
-        return fen_to_yuan($info);
+        $entry = C('GET_ENTRY_MONEY');
+        $resume = C('GET_RESUME_MONEY');
+        $ratio = C('RATIO');
+        $ratio = $ratio /100;
+        $userRatio = 1-$ratio;
+        $entry = $entry * $userRatio;
+
+        $data['average'] = fen_to_yuan($info); //平均花费
+        $data['entry'] = ($entry * $userRatio); //入职获取
+        $data['resume'] = ($resume * $userRatio);//下载简历获取
+        $data['admin'] = fen_to_yuan($info * $ratio); //平台分成
+
+        return $data;
     }
 
     /**
