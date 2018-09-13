@@ -98,6 +98,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $user_auth = $userInfo['is_auth'];
         if($user_auth) $this->apiReturn(V(0, '身份验证已经通过！'));
         $authModel = D('Admin/UserAuth');
+        $auth_info = $authModel->getAuthInfo($where);
         $data = I('post.');
         $upArray = array();
         if(1 == $user_type){
@@ -124,13 +125,47 @@ class UserCenterApiController extends ApiUserCommonController{
             }
         }
         $data = array_merge($data, $upArray);
-        $create = $authModel->create($data);
-        if(false !== $create){
-            $this->apiReturn(V(1, '身份验证凭据上传成功！'));
+        if(!$auth_info){
+            $create = $authModel->create($data, 1);
+            if(false !== $create){
+                $res = $authModel->add($data);
+                if(false !== $res){
+                    $this->apiReturn(V(1, '身份验证凭据上传成功！'));
+                }
+                else{
+                    $this->apiReturn(V(0, $authModel->getError()));
+                }
+            }
+            else{
+                $this->apiReturn(V(0, $authModel->getError()));
+            }
         }
         else{
-            $this->apiReturn(V(0, $authModel->getError()));
+            $create = $authModel->create($data, 2);
+            if(false !== $create){
+                $res = $authModel->where($where)->save($data);
+                if(false !== $res){
+                    $this->apiReturn(V(1, '身份验证凭据上传成功！'));
+                }
+                else{
+                    $this->apiReturn(V(0, $authModel->getError()));
+                }
+            }
+            else{
+                $this->apiReturn(V(0, $authModel->getError()));
+            }
         }
+    }
+
+    /**
+     * @desc 上传凭证信息
+     */
+    public function getUserAuthInfo(){
+        $where = array('user_id' => UID);
+        $model = D('Admin/UserAuth');
+        $auth_info = $model->getAuthInfo($where);
+        if($auth_info) $this->apiReturn(V(1, '', $auth_info));
+        $this->apiReturn(V(0, '获取凭证上传信息失败！'));
     }
 
     /**
