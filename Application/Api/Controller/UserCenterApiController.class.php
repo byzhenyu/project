@@ -206,6 +206,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('id' => $question_id, 'disabled' => 1);
         $quesModel = D('Admin/Question');
         $questionDetail = $quesModel->getQuestionDetail($where);
+        if(!$questionDetail) $this->apiReturn(V(0, '问题详情获取失败！'));
         $releaseInfo = D('Admin/User')->getUserInfo(array('user_id' => $questionDetail['user_id']));
         $questionDetail['add_time'] = time_format($questionDetail['add_time']);
         $questionDetail['head_pic'] = strval($releaseInfo['head_pic']);
@@ -862,9 +863,9 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('id' => $id, 'user_id' => UID);
         $model = D('Admin/ResumeEdu');
         $res = $model->getResumeEduInfo($where);
-        $res['starttime'] = time_format($res['starttime'], 'Y-m-d');
-        $res['endtime'] = time_format($res['endtime'], 'Y-m-d');
         if($res){
+            $res['starttime'] = time_format($res['starttime'], 'Y-m-d');
+            $res['endtime'] = time_format($res['endtime'], 'Y-m-d');
             $this->apiReturn(V(1, '', $res));
         }
         else{
@@ -921,6 +922,7 @@ class UserCenterApiController extends ApiUserCommonController{
 
     /**
      * @desc 获取简历详情
+     * @extra 根据推荐列表获取简历详情 TODO
      */
     public function getResumeDetail(){
         $user_id = UID;
