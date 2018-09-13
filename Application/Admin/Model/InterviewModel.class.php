@@ -58,6 +58,7 @@ class InterviewModel extends Model {
 
     protected function _before_insert(&$data, $option){
         $recruit_hr_uid = D('Admin/RecruitResume')->getRecruitResumeField(array('id' => $data['recruit_resume_id']), 'recruit_hr_uid');
+        $recruit_hr_uid = $recruit_hr_uid['recruit_hr_uid'];
         if($recruit_hr_uid != $data['hr_user_id']){
             $this->error = '获取不到对应悬赏信息！';
             return false;
