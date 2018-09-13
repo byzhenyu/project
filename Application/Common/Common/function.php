@@ -779,8 +779,8 @@ function pageNumber($page_total, $add_num = 1) {
 
 /**
  * 六牛科技发送短信HTTP请求
- * @param $mobile 手机号码
- * @param $content 短信内容
+ * @param $mobile string 手机号码
+ * @param $content string 短信内容
  * @return   mixed
  */
 
@@ -833,7 +833,6 @@ function sendMessageRequest($mobile, $content) {
     curl_close($ch);
     $resultData = xmlToArray($result);
     // 发送有没有成功
-
     if (strtolower($resultData['returnstatus']) == 'success') {
         LL($result, './logs/sms_success' . date('Y_m_d') . '.log');
         return V(1, '短信发送成功');
