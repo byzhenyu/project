@@ -39,6 +39,18 @@ class CompanyInfoModel extends Model {
         );
     }
 
+    /**
+     * @desc 公司信息详情
+     * @param $where
+     * @param bool $field
+     * @return mixed
+     */
+    public function getCompanyInfoInfo($where, $field = false){
+        if(!$field) $field = '*';
+        $res = $this->where($where)->field($field)->find();
+        return $res;
+    }
+
     //添加操作前的钩子操作
     protected function _before_insert(&$data, $option){
 
