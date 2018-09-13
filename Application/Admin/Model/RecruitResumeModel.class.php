@@ -24,15 +24,16 @@ class RecruitResumeModel extends Model {
      */
     public function getHrListByPage($where,$field='', $order='resume.id desc') {
         if (!$field) {
-            $field = array('resume.*','user.user_id,user.nickname,user.user_name,user.head_pic');
+            $field = array('resume.id as recruit_resume_id','resume.recruit_id','resume.add_time','user.user_id,user.nickname,user.user_name,user.head_pic');
         }
-        $count = $this->alias('resume')->where($where)->count();
+        $count = $this->alias('resume')->where($where)->count('distinct resume.hr_user_id');
         $page = get_web_page($count);
         $list = $this->alias('resume')
                     ->join('__USER__ user on resume.hr_user_id = user.user_id')
                     ->where($where)
                     ->field($field)
                     ->limit($page['limit'])
+                    ->group('hr_user_id')
                     ->order($order)
                     ->select();
         foreach ($list as $k=>$v) {
