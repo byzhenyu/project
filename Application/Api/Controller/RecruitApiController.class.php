@@ -7,7 +7,7 @@ class RecruitApiController extends ApiUserCommonController{
     //发布悬赏页面
     public function publishPage() {
         //获取职位需要单独接口
-        $data['ratio'] = returnArrData(C('RATIO')); //比例
+        //$data['ratio'] = returnArrData(C('RATIO')); //比例
         $data['nature'] = returnArrData(C('WORK_NATURE')); //性质
         $data['sex'] = returnArrData(array('0'=>'不限','1'=>'男','2'=>'女'));
         $data['degree'] = D('Admin/Education')->getEducationList(array(),'id,education_name');//学历
@@ -75,8 +75,6 @@ class RecruitApiController extends ApiUserCommonController{
      */
     public function getRecruitList() {
         $type = I('type', 0, 'intval');
-        $area = I('area', ''); //diqu
-        $position_name = I('position_name','');//求职方向
         if ($type == 1) {
             $where['hr_user_id'] = array('eq', UID);
         }
