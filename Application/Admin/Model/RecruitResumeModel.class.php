@@ -54,7 +54,7 @@ class RecruitResumeModel extends Model {
      */
     public function getResumeListByPage($where, $field = '', $order = 'id desc'){
         if(!$field) {
-            $field = array('r.id, r.resume_id, resume.head_pic,resume.true_name,resume.sex, resume.age,resume.update_time');
+            $field = array('r.id as recruit_resume_id, r.resume_id, resume.head_pic,resume.true_name,resume.sex, resume.age,resume.update_time');
         }
         $count = $this->alias('r')->where($where)->count();
         $page = get_web_page($count);
