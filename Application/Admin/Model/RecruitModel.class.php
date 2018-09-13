@@ -110,14 +110,11 @@ class RecruitModel extends Model {
     public function getDetail($where) {
 
         $info = $this->where($where)->find();
-        $wordArr = C('WORK_NATURE');
-        $exp = C('WORK_EXP');
         $sexArr = array('0'=>'不限','1'=>'男','2'=>'女');
+
         $degreeArr = M('Education')->getField('id,education_name', true);
-        $tags = M('Tags')->where(array('tags_type'=>3))->getField('id, position_name',true);
-        $info['sex'] = $exp[$info['sex']];
-        $info['nature'] = $wordArr[$info['nature']];
-        $info['degree'] = $degreeArr[$info['degree']];
+        $tags = M('Tags')->where(array('tags_type'=>3))->getField('id, tags_name',true);
+        $info['sex'] = $sexArr[$info['sex']];
         $info['commission'] = fen_to_yuan($info['commission']);
         $info['add_time'] = time_format($info['add_time']);
         return $info;
