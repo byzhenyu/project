@@ -70,4 +70,17 @@ class CompanyInfoModel extends Model {
         }
     }
 
+    /**
+     *  获取hr信息
+     */
+    public function getHrInfo($where,$field='') {
+        if (!$field) {
+            $field = array('nickname','head_pic','sex','c.*');
+            $info = $this->alias('c')->join('__USER__ u on u.user_id = c.user_id')
+                ->field($field)
+                ->where($where)
+                ->find();
+            return $info;
+        }
+    }
 }
