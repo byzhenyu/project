@@ -153,6 +153,8 @@ class RecruitApiController extends ApiUserCommonController{
         if ($info['status'] ==0) {
             $this->apiReturn($info);
         } else {
+            //修改状态字段
+            M('RecruitResume')->where(array('id'=>$recruit_resume_id))->setField('is_open', 1);
             $this->apiReturn(V(1, '获取联系方式成功'));
         }
 
@@ -212,6 +214,7 @@ class RecruitApiController extends ApiUserCommonController{
     public function getHrAccountLog() {
         $where['user_id'] = UID;
         $data = D('Admin/AccountLog')->getAccountLogByPage($where);
+
         $this->apiReturn(V(1, '收益明细', $data['info']));
     }
     /**
@@ -269,4 +272,11 @@ class RecruitApiController extends ApiUserCommonController{
 
     }
 
+    /**
+     *  编辑页面
+     */
+    public function getUserInfo() {
+        $info = D('Admin/CompanyInfo')->getHrInfo(array('c.user_id'=>UID));
+        $this->apiReturn(V(1 ,'编辑个人资料',$info));
+    }
 }
