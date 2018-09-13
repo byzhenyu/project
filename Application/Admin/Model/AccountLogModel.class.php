@@ -35,6 +35,10 @@ class AccountLogModel extends Model {
             ->order($order)
             ->limit($page['limit'])
             ->select();
+        foreach ($info as $k=>$v) {
+            $info[$k]['change_time'] = time_format($v['change_time']);
+            $info[$k]['user_money'] = fen_to_yuan($v['user_money']);
+        }
         return array(
             'info'=>$info,
             'page'=>$page['page']
