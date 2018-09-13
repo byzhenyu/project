@@ -169,6 +169,27 @@ class RecruitApiController extends ApiUserCommonController{
     }
 
     /**
+     * 擅长领域页面
+     * tags_type 4 擅长领域 5 求职方向
+     *
+     */
+    public function  getLikeTags() {
+        $type = I('tags_type', 4, 'intval');
+        $all = M('Tags')->where(array('tags_type'=>$type))->order('tags_sort')->select();
+
+        $tags = M('User')->where(array('user_id'=>UID))->getField('like_tags');
+
+        $tagsArr = explode(',', $tags);
+        foreach ($all as $k=>$v) {
+            if (in_array($all[$k]['id'], $tagsArr)) {
+                $all[$k]['is_select'] = 1;
+            } else {
+                $all[$k]['is_select'] = 0;
+            }
+        }
+        $this->apiReturn(V(1, '页面信息', $all));
+    }
+    /**
      *  擅长领域(求职方向)
      *  tags_id 标签id（多个用,隔开）
      */
