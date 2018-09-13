@@ -89,23 +89,13 @@ class RecruitModel extends Model {
         $commission = $this->where($where)->Sum('commission');
         $recruit_num = $this->where($where)->Sum('recruit_num');
         $info = $commission / $recruit_num;
-        $entry = C('GET_ENTRY_MONEY');
-        $resume = C('GET_RESUME_MONEY');
-        $ratio = C('RATIO');
-        $ratio = $ratio /100;
-        $userRatio = 1-$ratio;
-        $entry = $entry * $userRatio;
-
         $data['average'] = fen_to_yuan($info); //平均花费
-        $data['entry'] = ($entry * $userRatio); //入职获取
-        $data['resume'] = ($resume * $userRatio);//下载简历获取
-        $data['admin'] = fen_to_yuan($info * $ratio); //平台分成
 
         return $data;
     }
 
     /**
-     *  获取字段(默认获取简历可得令牌)
+     *  获取字段
      */
     public function getRecruitInfo($where,$field='') {
         if (!$field) {
