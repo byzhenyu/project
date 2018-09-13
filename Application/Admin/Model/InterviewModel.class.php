@@ -7,10 +7,11 @@ namespace Admin\Model;
 use Think\Model;
 
 class InterviewModel extends Model {
-    protected $insertFields = array('hr_user_id', 'resume_id', 'state', 'update_time');
-    protected $updateFields = array('hr_user_id', 'resume_id', 'state', 'update_time', 'id');
+    protected $insertFields = array('hr_user_id', 'resume_id', 'state', 'update_time', 'recruit_resume_id');
+    protected $updateFields = array('hr_user_id', 'resume_id', 'state', 'update_time', 'id', 'recruit_resume_id');
     protected $_validate = array(
         array('resume_id', 'require', '简历不能为空！', 1, 'regex', 3),
+        array('recruit_resume_id', 'require', '悬赏推荐id不能为空！', 1, 'regex', 3)
     );
 
     /**
@@ -56,6 +57,11 @@ class InterviewModel extends Model {
     }
 
     protected function _before_insert(&$data, $option){
+        $recruit_hr_uid = D('Admin/RecruitResume')->getRecruitResumeField(array('id' => $data['recruit_resume_id']), 'recruit_hr_uid');
+        if($recruit_hr_uid != $data['hr_user_id']){
+            $this->error = '获取不到对应悬赏信息！';
+            return false;
+        }
         $data['update_time'] = NOW_TIME;
     }
 

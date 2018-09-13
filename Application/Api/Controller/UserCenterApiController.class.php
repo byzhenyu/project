@@ -206,6 +206,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('id' => $question_id, 'disabled' => 1);
         $quesModel = D('Admin/Question');
         $questionDetail = $quesModel->getQuestionDetail($where);
+        if(!$questionDetail) $this->apiReturn(V(0, '问题详情获取失败！'));
         $releaseInfo = D('Admin/User')->getUserInfo(array('user_id' => $questionDetail['user_id']));
         $questionDetail['add_time'] = time_format($questionDetail['add_time']);
         $questionDetail['head_pic'] = strval($releaseInfo['head_pic']);
@@ -862,9 +863,9 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('id' => $id, 'user_id' => UID);
         $model = D('Admin/ResumeEdu');
         $res = $model->getResumeEduInfo($where);
-        $res['starttime'] = time_format($res['starttime'], 'Y-m-d');
-        $res['endtime'] = time_format($res['endtime'], 'Y-m-d');
         if($res){
+            $res['starttime'] = time_format($res['starttime'], 'Y-m-d');
+            $res['endtime'] = time_format($res['endtime'], 'Y-m-d');
             $this->apiReturn(V(1, '', $res));
         }
         else{
@@ -921,6 +922,7 @@ class UserCenterApiController extends ApiUserCommonController{
 
     /**
      * @desc 获取简历详情
+     * @extra 根据推荐列表获取简历详情 TODO
      */
     public function getResumeDetail(){
         $user_id = UID;
@@ -1252,8 +1254,9 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('hr_user_id' => UID, 'id' => $id);
         $model = D('Admin/Interview');
         $save_data = array('state' => $state);
-        $res = $model->saveInterviewData($where, $save_data);
         $interviewInfo = $model->getInterviewInfo($where);
+        if(!$interviewInfo || $interviewInfo['state'] != 0) $this->apiReturn(V(0, '面试状态不对！'));
+        $res = $model->saveInterviewData($where, $save_data);
         if(false !== $res){
             if($state == 1) D('Admin/User')->changeUserMoney($interviewInfo['recruit_resume_id'], 2);
             $this->apiReturn(V(1, '操作成功！'));
@@ -1273,6 +1276,31 @@ class UserCenterApiController extends ApiUserCommonController{
         $interviewModel = D('Admin/Interview');
         $interview_info = $interviewModel->getInterviewInfo($interview_where);
         $return = array('hr_user_id' => $interview_info['hr_user_id'], 'resume_id' => $interview_info['resume_id']);
+        $this->apiReturn(V(1, '数据获取成功！', $return));
+    }
+
+    /**
+     * @desc 获取面试授权二维码内容
+     * @extra TODO
+     */
+    public function getInterviewCodeDetail(){
+        $hr_user_id = I('hr_id', 0, 'intval');
+        $resume_id = I('resume_id', 0, 'intval');
+        if(!$hr_user_id || !$resume_id) $this->apiReturn(V(0, '传入合法的参数！'));
+        $resume_model = D('Admin/Resume');
+        $resume_where = array('id' => $resume_id);
+        $resume_info = $resume_model->getResumeInfo($resume_where, 'true_name');
+        if(!$resume_info) $this->apiReturn(V(0, '获取不到相关的简历信息！'));
+        $hr_company_model = D('Admin/CompanyInfo');
+        $hr_company_where = array('user_id' => $hr_user_id);
+        $company_info = $hr_company_model->getCompanyInfoInfo($hr_company_where, 'company_name');
+        if(!$company_info) $this->apiReturn(V(0, '获取不到相关的公司信息！'));
+        $company_name = $company_info['company_name'];
+        $true_name = $resume_info['true_name'];
+        $return = array(
+            'true_name' => $true_name,
+            'company_name' => $company_name
+        );
         $this->apiReturn(V(1, '数据获取成功！', $return));
     }
 

@@ -788,11 +788,12 @@ function sendMessageRequest($mobile, $content) {
 
     /********参数配置区域start*********/
 
-    $min_limit = C('SMS_MIN_LIMIT'); //每分钟限制条数
-    $day_limit = C('SMS_DAY_LIMIT'); //每天短信限制条数
-    $sign = '【'. C('SMS_SIGN') .'】'; // 企业签名
-    $username = C('SMS_USERNAME'); // 用户名
-    $password = C('SMS_PASSWORD'); // 密码
+    $min_limit = 1; //每分钟限制条数
+    $day_limit = 5; //每天短信限制条数
+    $sign = '【'.C('SMS_SIGN').'】'; // 企业签名
+    $userid = C('SMS_USERID');
+    $user_name = C('SMS_USERNAME');
+    $password = C('SMS_PASSWORD');
 
     /********参数配置区域end*********/
 
@@ -802,7 +803,7 @@ function sendMessageRequest($mobile, $content) {
 
     if ($count >= $min_limit) {
         LL($mobile . '短信超出限制,' . date('Y-m-d Hi') . ':' . $count, './logs/sms_privalige_min' . date('Y_m_d') . '.log');
-        return V(0, '验证码'. $min_limit .'分钟内不能重复发送');
+        return V(0, '验证码' . $min_limit . '分钟内不能重复发送');
     }
     if ($dayCount >= $day_limit) {
         LL($mobile . '短信超出限制,' . date('Y-m-d') . ':' . $dayCount, './logs/sms_privalige_day' . date('Y_m_d') . '.log');
@@ -814,14 +815,13 @@ function sendMessageRequest($mobile, $content) {
     S('sms_count_' . date('YmdHi') . $mobile, ++$count, 60);
     S('sms_count_' . date('Ymd') . $mobile, ++$dayCount, 60 * 60 * 24);
     /**********短信条数限制处理区域end*******/
-    $phone = $mobile; // 目标号码
-    $url = "http://api.ykqxt.com/yksmservice.asmx/SendSMAsArray";
-    $content = urlencode($sign . $content); // 短信内容之后添加企业签名，同时进行UrlEncode转码
-    $istimer = 'FALSE';
-    $timerset = date('Y-m-d H:i:s', time());
-    $identifyNum = '';
-
-    $postdata = "username=$username&password=$password&phone=$phone&content=$content&pipeid=&istimer=$istimer&timerset=$timerset&identifyNum=$identifyNum";
+    $url = "http://www.dxcxpt.com:8088/v2sms.aspx";
+    $content = urlencode($content . $sign); // 短信内容之后添加企业签名，同时进行UrlEncode转码
+    $sendTime = '';
+    $timestamp = str_replace(["-", " ", ":"], "", date('Y-m-d H:i:s', time()));
+    $extno = '';
+    $signData = md5($user_name . $password . $timestamp);
+    $postdata = "action=send&userid=$userid&timestamp=$timestamp&sign=$signData&mobile=$mobile&content=$content&sendTime=&extno=";
 
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -831,14 +831,15 @@ function sendMessageRequest($mobile, $content) {
     curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
     $result = curl_exec($ch);
     curl_close($ch);
-
+    $resultData = xmlToArray($result);
     // 发送有没有成功
-    if (strstr($result, "提交成功") == false) {
-        LL($result, './logs/sms_error' . date('Y_m_d') . '.log');
-        return V(0, $result);
-    } else {
+
+    if (strtolower($resultData['returnstatus']) == 'success') {
         LL($result, './logs/sms_success' . date('Y_m_d') . '.log');
         return V(1, '短信发送成功');
+    } else {
+        LL($result, './logs/sms_error' . date('Y_m_d') . '.log');
+        return V(0, $resultData['message']);
     }
 
 }
@@ -1010,6 +1011,12 @@ function getFirstChar($s0){
     if($asc >= -11055 and $asc <= -10247) return "Z";
     return $s0;
 }
+
+/**
+ * @desc 获取第一个字母
+ * @param $zh
+ * @return string
+ */
 function rev_pinyin($zh){
     $ret = "";
     $s1 = iconv("UTF-8","gb2312", $zh);
