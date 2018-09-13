@@ -222,4 +222,51 @@ class RecruitApiController extends ApiUserCommonController{
         $data = $recruitModel->getMyRecruitByPage();
         $this->apiReturn(V(1, '我的推荐列表',$data['info']));
     }
+
+    /**
+     * 编辑资料(hr)
+     */
+    public function editUserInfo() {
+        $id = I('id', 0, 'intval');
+        $data = I('post.', '');
+        $data['user_id'] = UID;
+        $userData['user_id'] = UID;
+        $userData['nickname'] = $data['nickname'];
+        $userData['sex'] = $data['sex'];
+        $userData['head_pic'] = $data['head_pic'];
+        $userModel = D('Admin/User');
+        $companyInfoModel = D('Admin/CompanyInfo');
+        $trans = M();
+        if ($userModel->create($userData,4) ===false) {
+            $trans->rollback();
+            $this->apiReturn(V(0, $userModel->getError()));
+        }
+        $res = $userModel->save();
+        if ($res ===false) {
+            $trans->rollback();
+            $this->apiReturn(V(0, '个人信息保存失败'));
+        }
+
+        //公司信息
+        if ($companyInfoModel->create($data) ===false) {
+
+            $trans->rollback();
+            $this->apiReturn(V(0, $companyInfoModel->getError()));
+        }
+        if ($id > 0) {
+            $infoRes = $companyInfoModel->save();
+
+        } else {
+            $infoRes = $companyInfoModel->add();
+        }
+
+        if ($infoRes ===false) {
+            $trans->rollback();
+            $this->apiReturn(V(0, '公司信息保存失败'));
+        }
+        $trans->commit();
+        $this->apiReturn(V(1, '保存成功'));
+
+    }
+
 }
