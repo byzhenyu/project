@@ -29,6 +29,9 @@ class RecruitApiController extends ApiUserCommonController{
 
     //发布接口
     public function publish() {
+        if(!check_is_auth(UID)) {
+            $this->apiReturn(V(0, '发布悬赏需要实名认证'));
+        };
         $data = I('post.', '');
 
         $model = D('Admin/Recruit');
@@ -43,7 +46,18 @@ class RecruitApiController extends ApiUserCommonController{
         if ($data['commission'] > $user_money) {
             $this->apiReturn(V(0, '可用余额不足'));
         }
-
+        if (cmp_contraband($data['language_ability'])) {
+            $this->apiReturn(V(0, '语言要求有违禁词'));
+        }
+        if (cmp_contraband($data['description'])) {
+            $this->apiReturn(V(0, '详情描述有违禁词'));
+        }
+        if (cmp_contraband($data['base_pay'])) {
+            $this->apiReturn(V(0, '基本工资有违禁词'));
+        }
+        if (cmp_contraband($data['merit_pay'])) {
+            $this->apiReturn(V(0, '绩效工资有违禁词'));
+        }
         $trans = M();
         $data['hr_user_id'] = UID;
 
@@ -117,7 +131,7 @@ class RecruitApiController extends ApiUserCommonController{
         $where['recruit_id'] = $recruit_id;
         $where['hr_user_id'] = $hr_id;
         $data = D('Admin/RecruitResume')->getResumeListByPage($where);
-        $this->apiReturn(V(1, '推荐人列表',$data['info']));
+        $this->apiReturn(V(1, '推荐简历列表',$data['info']));
     }
 
     /**
