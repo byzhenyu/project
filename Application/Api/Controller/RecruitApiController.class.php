@@ -269,4 +269,11 @@ class RecruitApiController extends ApiUserCommonController{
 
     }
 
+    /**
+     *  编辑页面
+     */
+    public function getUserInfo() {
+        $info = D('Admin/CompanyInfo')->getHrInfo(array('c.user_id'=>UID));
+        $this->apiReturn(V(1 ,'编辑个人资料',$info));
+    }
 }
