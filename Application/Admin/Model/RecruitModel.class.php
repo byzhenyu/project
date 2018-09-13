@@ -108,8 +108,12 @@ class RecruitModel extends Model {
      * 详情
      */
     public function getDetail($where) {
-
-        $info = $this->where($where)->find();
+        $field = 'u.nickname,u.head_pic, r.*';
+        $info = $this->alias('r')
+            ->join('__USER__ u on r.hr_user_id = u.user_id')
+            ->where($where)
+            ->field($field)
+            ->find();
         $sexArr = array('0'=>'不限','1'=>'男','2'=>'女');
 
         $degreeArr = M('Education')->getField('id,education_name', true);
