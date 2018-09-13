@@ -1010,6 +1010,12 @@ function getFirstChar($s0){
     if($asc >= -11055 and $asc <= -10247) return "Z";
     return $s0;
 }
+
+/**
+ * @desc 获取第一个字母
+ * @param $zh
+ * @return string
+ */
 function rev_pinyin($zh){
     $ret = "";
     $s1 = iconv("UTF-8","gb2312", $zh);
