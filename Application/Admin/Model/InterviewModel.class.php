@@ -22,7 +22,7 @@ class InterviewModel extends Model {
      * @return array
      */
     public function getInterviewList($where, $field = false, $order = ''){
-        if(!$field) $field = 'i.resume_id,i.state,i.update_time,r.age,r.sex,r.true_name,r.head_pic,r.update_time as resume_time';
+        if(!$field) $field = 'i.resume_id,i.state,i.update_time,r.age,r.sex,r.true_name,r.head_pic,r.update_time as resume_time,i.id as interview_id';
         $number = $this->alias('i')->join('__RESUME__ as r on i.resume_id = r.id')->where($where)->count();
         $page = get_web_page($number);
         $list = $this->alias('i')->join('__RESUME__ as r on i.resume_id = r.id')->field($field)->where($where)->limit($page['limit'])->order($order)->select();
