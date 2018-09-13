@@ -764,8 +764,7 @@ class UserCenterApiController extends ApiUserCommonController{
                     //简历验证
                     $auth_res = D('Admin/ResumeAuth')->changeResumeAuth($resumeAuth);
                     if(false !== $auth_res){
-                        //TODO 发送短信
-                        //TODO sendMessageRequest();
+                        sendMessageRequest($hr_mobile, '《闪荐》简历信息邀请您验证！');
                     }
                     M()->commit();
                     $this->apiReturn(V(1, '保存成功！'));
@@ -922,14 +921,15 @@ class UserCenterApiController extends ApiUserCommonController{
 
     /**
      * @desc 获取简历详情
-     * @extra 根据推荐列表获取简历详情 TODO
+     * @extra 根据推荐列表获取简历详情
      */
     public function getResumeDetail(){
         $user_id = UID;
         $id = I('post.id');
+        $interview_id = I('interview_id', 0, 'intval');
         $resume_id = I('post.resume_id');
-        if(!$resume_id) $resume_id = D('');
         $resumeModel = D('Admin/Resume');
+        if(!$resume_id) $resume_id = $resumeModel->getResumeField(array('user_id' => $user_id), 'id');
         $resumeWorkModel = D('Admin/ResumeWork');
         $resumeEduModel = D('Admin/ResumeEdu');
         $resumeEvaluationModel = D('Admin/ResumeEvaluation');
@@ -945,14 +945,12 @@ class UserCenterApiController extends ApiUserCommonController{
         $resumeEvaluation = $resumeEvaluationModel->getResumeEvaluationAvg($where);
         $sum = array_sum(array_values($resumeEvaluation));
         $avg = round($sum/(count($resumeEvaluation)), 2);
+        $recommend_info['interview_id'] = $interview_id;
         $return = array('detail' => $resumeDetail, 'resume_work' => $resumeWorkList, 'resume_edu' => $resumeEduList, 'resume_evaluation' => $resumeEvaluation, 'evaluation_avg' => $avg, 'recruit_resume' => $recommend_info);
         $this->apiReturn(V(1, '简历获取成功！', $return));
     }
 
 
-    //TODO
-    //TODO
-    //TODO
     /**
      * @desc 简历认证列表
      */
@@ -1281,7 +1279,6 @@ class UserCenterApiController extends ApiUserCommonController{
 
     /**
      * @desc 获取面试授权二维码内容
-     * @extra TODO
      */
     public function getInterviewCodeDetail(){
         $hr_user_id = I('hr_id', 0, 'intval');
