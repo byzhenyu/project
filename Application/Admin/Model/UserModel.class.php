@@ -17,6 +17,11 @@ class UserModel extends Model{
     	array('password', '6,20', '密码长度有误', 1, 'length', 1),
     	array('password', '6,20', '密码长度有误', 2, 'length', 12),
 
+
+        array('nickname', 'require', '姓名不能为空', 1, 'regex', 4),
+        array('sex', array(0,1,2), '性别字段有误', 1, 'in', 4),
+        array('head_pic', '1,255', '头像地址有误', 2, 'length', 4),
+
     );
 
     // 判断用户是否存在
