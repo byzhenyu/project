@@ -147,7 +147,7 @@ class PublicApiController extends ApiCommonController {
         $data['send_status'] = $send_result['status'];
         $data['send_response_msg'] = $send_result['info'];
         $data['user_type'] = $user_type;
-        D('Home/SmsMessage')->addSmsMessage($data);
+        D('Admin/SmsMessage')->addSmsMessage($data);
 
         if ($send_result['status'] == 1) {
             $this->apiReturn(V(1, '发送成功'));
