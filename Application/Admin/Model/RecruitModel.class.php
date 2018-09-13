@@ -108,7 +108,7 @@ class RecruitModel extends Model {
      * 详情
      */
     public function getDetail($where) {
-        $field = 'u.nickname,u.head_pic, r.*';
+        $field = 'u.nickname,u.head_pic, r.id,r.hr_user_id,r.position_id,r.position_name,r.recruit_num,r.age,r.nature,r.sex,r.degree,r.language_ability,r.experience,r.job_area,r.base_pay,r.merit_pay,r.welfare,r.description,r.commission,r.add_time';
         $info = $this->alias('r')
             ->join('__USER__ u on r.hr_user_id = u.user_id')
             ->where($where)
@@ -117,23 +117,14 @@ class RecruitModel extends Model {
         $sexArr = array('0'=>'不限','1'=>'男','2'=>'女');
 
         $degreeArr = M('Education')->getField('id,education_name', true);
-        $tags = M('Tags')->where(array('tags_type'=>3))->field('id, tags_name')->select();
-        $welfare = explode(',',$info['welfare']);
 
-        foreach ($tags as $k=>$v) {
-            if (in_array($v['id'],$welfare)) {
-                $tags[$k]['is_select'] = 1;
-            } else {
-                $tags[$k]['is_select'] = 0;
-            }
-        }
         $experience = C('WORK_EXP');
         $info['degree'] = $degreeArr[$info['degree']];
         $info['sex'] = $sexArr[$info['sex']];
         $info['experience'] = $experience[$info['experience']];
         $info['commission'] = fen_to_yuan($info['commission']);
         $info['add_time'] = time_format($info['add_time']);
-        $info['welfare'] = $tags;
+
         return $info;
     }
     /**
