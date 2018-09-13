@@ -175,6 +175,9 @@ class RecruitApiController extends ApiUserCommonController{
      */
     public function  getLikeTags() {
         $type = I('tags_type', 4, 'intval');
+        if (!in_array($type,[4,5])) {
+            $this->apiReturn(V(0, '类型字段不合法'));
+        }
         $all = M('Tags')->where(array('tags_type'=>$type))->order('tags_sort')->select();
 
         $tags = M('User')->where(array('user_id'=>UID))->getField('like_tags');
