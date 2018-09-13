@@ -806,8 +806,8 @@ function sendMessageRequest($mobile, $content) {
         return V(0, '验证码' . $min_limit . '分钟内不能重复发送');
     }
     if ($dayCount >= $day_limit) {
-        LL($mobile . '短信超出限制,' . date('Y-m-d') . ':' . $dayCount, './logs/sms_privalige_day' . date('Y_m_d') . '.log');
-        return V(0, '24小时内不能再发送短信');
+        //LL($mobile . '短信超出限制,' . date('Y-m-d') . ':' . $dayCount, './logs/sms_privalige_day' . date('Y_m_d') . '.log');
+        //return V(0, '24小时内不能再发送短信');
     }
 
     $count || $count = 0;
