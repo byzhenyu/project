@@ -127,8 +127,10 @@ class RecruitModel extends Model {
                 $tags[$k]['is_select'] = 0;
             }
         }
+        $experience = C('WORK_EXP');
         $info['degree'] = $degreeArr[$info['degree']];
         $info['sex'] = $sexArr[$info['sex']];
+        $info['experience'] = $experience[$info['experience']];
         $info['commission'] = fen_to_yuan($info['commission']);
         $info['add_time'] = time_format($info['add_time']);
         $info['welfare'] = $tags;
