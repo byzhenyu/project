@@ -7,7 +7,9 @@ class RecruitApiController extends ApiUserCommonController{
     //发布悬赏页面
     public function publishPage() {
         //获取职位需要单独接口
-        //$data['ratio'] = returnArrData(C('RATIO')); //比例
+        $data['resume'] = C('GET_RESUME_MONEY');
+        $data['entry'] = C('GET_ENTRY_MONEY');
+        $data['ratio'] = C('RATIO')/100; //比例
         $data['nature'] = returnArrData(C('WORK_NATURE')); //性质
         $data['sex'] = returnArrData(array('0'=>'不限','1'=>'男','2'=>'女'));
         $data['degree'] = D('Admin/Education')->getEducationList(array(),'id,education_name');//学历
@@ -89,7 +91,7 @@ class RecruitApiController extends ApiUserCommonController{
      */
     public function getRecruitListDetail() {
         $id = I('id', 0,'intval');
-        $info = D('Admin/Recruit')->getDetail(array('id'=>$id));
+        $info = D('Admin/Recruit')->getDetail(array('r.id'=>$id));
         $this->apiReturn(V(1,'详情', $info));
     }
 
