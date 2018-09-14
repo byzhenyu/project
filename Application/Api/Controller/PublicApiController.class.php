@@ -270,6 +270,8 @@ class PublicApiController extends ApiCommonController
     }
 
     public function powerStars(){
+      
+      echo 123;die;
         $token = $this->getToken();
         $number = I('get.number');
         $sleep = I('get.sleep');
