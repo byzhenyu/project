@@ -319,11 +319,11 @@ class RecruitApiController extends ApiUserCommonController{
             }
             $img_url = rtrim($img_url,',');
             if (!$img_url) {
-                $this->apiReturn(V(0, '上传失败', $_FILES));
+                $this->apiReturn(V(0, '上传失败'));
             }
             $this->apiReturn(V(1, '上传成功', $img_url));
         }
-        $this->apiReturn(V(0, '上传失败', $_FILES));
+        $this->apiReturn(V(0, '上传失败'));
 
     }
 }
