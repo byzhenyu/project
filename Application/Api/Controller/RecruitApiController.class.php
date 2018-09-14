@@ -305,7 +305,7 @@ class RecruitApiController extends ApiUserCommonController{
      * 上传公司环境
      */
     public function uploadMorePicture() {
-        $img_url = '';
+        $img_url = [];
         if (!empty($_FILES['photo'])) {
 
             $photo = $_FILES['photo'];
@@ -313,12 +313,12 @@ class RecruitApiController extends ApiUserCommonController{
             foreach ($photo['name'] as $key => $value) {
                 $res= app_upload_more_img('photo', '', 'CompanyInfo', UID, $key);
                 if ($res !== -1 && $res !== 0) {
-                    $img_url .= $res.',';
+                    $img_url[] = $res;
                 }
 
             }
-            $img_url = rtrim($img_url,',');
-            if (!$img_url) {
+
+            if (empty($img_url)) {
                 $this->apiReturn(V(0, '上传失败'));
             }
             $this->apiReturn(V(1, '上传成功', $img_url));
