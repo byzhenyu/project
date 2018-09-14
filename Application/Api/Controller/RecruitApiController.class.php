@@ -311,7 +311,7 @@ class RecruitApiController extends ApiUserCommonController{
             $photo = $_FILES['photo'];
 
             foreach ($photo['name'] as $key => $value) {
-                $res= app_upload_more_img('photo', '', 'CompanyInfo', UID, $key,320,240);
+                $res= app_upload_more_img('photo', '', 'CompanyInfo', UID, $key);
                 if ($res !== -1 && $res !== 0) {
                     $img_url .= $res.',';
                 }
