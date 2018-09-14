@@ -101,6 +101,59 @@ class WxPay {
         return $imgUrl;
         //return '<img alt="模式二扫码支付" src="/Plugins/WxPay/phpqrcode.php?data=' . urlencode($url2).'"/>';
     }
+    /**
+     * 小程序
+     */
+    public function WxAppletPay($d) {
+        $wxConfig = $this->config;
+        $out_trade_no = $d['out_trade_no'];
+        $total_fee = abs(floatval($d['total_fee'])) * 100;// 微信支付 单位为分
+        $nonce_str = $this->getRandChar(32);
+        $ip = $this->get_client_ip();
+        if ($ip == '::1')
+            $ip = '1.1.1.1';
+        $data ["appid"] = $wxConfig["app_id"];
+        $data ["body"] = $d['body'];
+        $data ["mch_id"] = $wxConfig['mch_id'];
+        $data ["nonce_str"] = $nonce_str;
+        $data ["notify_url"] = $wxConfig["notify_url"];
+        $data ['openid'] = $d['openId'];
+        $data ["out_trade_no"] = $out_trade_no;
+        $data ["spbill_create_ip"] = $ip;
+        $data ["total_fee"] = $total_fee;
+        $data ["trade_type"] = "JSAPI";
+
+        $s = $this->getSign($data);
+        $data ["sign"] = $s;
+        $xml = $this->arrayToXml($data);
+        $url = 'https://api.mch.weixin.qq.com/pay/unifiedorder';
+        $response = $this->postXmlCurl($xml, $url);
+        $array = $this->xmlstr_to_array($response);
+        if ($array['RETURN_CODE'] == 'SUCCESS' && $array['RESULT_CODE'] == 'SUCCESS') {
+            $time = time();
+            $tmp = ''; //临时数组用于签名
+            $tmp['appId'] = $wxConfig["app_id"];
+            $tmp['nonceStr'] = $nonce_str;
+            $tmp['package'] = 'prepay_id=' . $array['PREPAY_ID'];
+            $tmp['signType'] = 'MD5';
+            $tmp['timeStamp'] = "$time";
+
+            $data['state'] = 1;
+            $data['timeStamp'] = "$time"; //时间戳
+            $data['nonceStr'] = $nonce_str; //随机字符串
+            $data['signType'] = 'MD5'; //签名算法，暂支持 MD5
+            $data['package'] = 'prepay_id=' . $array['PREPAY_ID']; //统一下单接口返回的 prepay_id 参数值，提交格式如：prepay_id=*
+            $data['paySign'] = $this->getSign($tmp); //签名,具体签名方案参见微信公众号支付帮助文档;
+            $data['out_trade_no'] = $out_trade_no;
+
+        } else {
+            $data['state'] = 0;
+            $data['text'] = "错误";
+            $data['RETURN_CODE'] = $array['RETURN_CODE'];
+            $data['RETURN_MSG'] = $array['RETURN_MSG'];
+        }
+        echo json_encode($data);
+    }
 
     /**
      * 微信签名验证
@@ -132,6 +185,7 @@ class WxPay {
      */
 
 
+    // 执行第二次签名，才能返回给客户端使用
     // 执行第二次签名，才能返回给客户端使用
     public function getOrder($prepayId) {
         $data ["appid"] = $this->config ["app_id"];

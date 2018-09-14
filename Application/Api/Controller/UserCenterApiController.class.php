@@ -1366,4 +1366,25 @@ class UserCenterApiController extends ApiUserCommonController{
             $this->apiReturn(V(0, $hrResumeModel->getError()));
         }
     }
+
+    /**
+     * 会员充值
+     */
+    public function recharge() {
+        $recharge_money = I('recharge_money', '');
+        $openId = I('openId', '');
+        if ($recharge_money == '') {
+            $this->apiReturn(V(0, '请输入充值金额'));
+        }
+        $rechargeSn = 'C' . date('YmdHis', time()) . '-' . UID;
+        $wxData['body'] = '余额充值';
+        $wxData['out_trade_no'] = $rechargeSn;
+        $wxData['total_fee'] = $recharge_money;
+        $wxData['openId'] = $openId;
+        require_once("Plugins/WxPay/WxPay.php");
+        $wxPay = new \WxPay();
+        $doResult = $wxPay->WxAppletPay($wxData);
+        $this->apiReturn(V(1, '微信参数返回成功', $doResult));
+
+    }
 }
