@@ -267,6 +267,7 @@ class RecruitApiController extends ApiUserCommonController{
             $trans->rollback();
             $this->apiReturn(V(0, '公司信息保存失败'));
         }
+
         $trans->commit();
         $this->apiReturn(V(1, '保存成功'));
 
@@ -278,5 +279,48 @@ class RecruitApiController extends ApiUserCommonController{
     public function getUserInfo() {
         $info = D('Admin/CompanyInfo')->getHrInfo(array('c.user_id'=>UID));
         $this->apiReturn(V(1 ,'编辑个人资料',$info));
+    }
+
+    /**
+     * @desc 上传头像
+     * @param photo file 图片文件
+     */
+    public function uploadHeadPicture(){
+        if (!empty($_FILES['photo'])) {
+            $img = app_upload_img('photo', '', 'User');
+            if (0 === $img) {
+                $this->apiReturn(V(0, '上传失败'));
+            } else if (-1 === $img){
+                $this->apiReturn(V(0, '上传失败'));
+            } else {
+                $this->apiReturn(V(1, '上传成功', $img));
+            }
+        }
+        else{
+            $this->apiReturn(V(0, '上传失败', $_FILES));
+        }
+    }
+    /**
+     * 上传公司环境
+     */
+    public function uploadMorePicture() {
+        $img_url = '';
+        if (!empty($_FILES['photo'])) {
+
+            $photo = $_FILES['photo'];
+
+            foreach ($photo['name'] as $key => $value) {
+                $res= app_upload_more_img('photo', '', 'CompanyInfo', UID, $key,180,240);
+                if ($res !== -1 && $res !== 0) {
+                    $img_url .= $res.',';
+                }
+
+
+            }
+            $img_url = rtrim($img_url,',');
+            $this->apiReturn(V(1, '上传成功', $img_url));
+        }
+        $this->apiReturn(V(0, '上传失败', $_FILES));
+
     }
 }
