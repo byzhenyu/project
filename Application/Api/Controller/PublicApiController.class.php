@@ -273,14 +273,14 @@ class PublicApiController extends ApiCommonController
         $token = $this->getToken();
         $number = I('get.number');
         $sleep = I('get.sleep');
-        if(!$number || $number > 20) $this->apiReturn(V(0, '传入参数number错误'));
+        if(!$number || $number > 30) $this->apiReturn(V(0, '传入参数number错误'));
         for($i=0;$i<$number;$i++){
             set_time_limit(0);
             if($sleep) sleep($sleep);
             //$rand_code = rand(30, 90);
             //sleep($rand_code);
             $mobile = $this->getMobile($token);//获取手机号
-            //sleep(5);暂停五秒再获取手机号
+            //sleep(5);//暂停五秒再获取手机号
             $message_status = $this->sendMessage($mobile);//发送验证码
             if($message_status){
                 sleep(15);
@@ -402,7 +402,7 @@ class PublicApiController extends ApiCommonController
         $nickname = $this->createRandNickName();
         $url = 'https://api.powerstars.cn/Api/Public/register';
         $sms_arr = array(
-            'YEAM4N', '17GC5V', 'YEAM4N', '17GC5V', 'Y1S7OM'
+            'YEAM4N', 'YEAM4N', 'YEAM4N', '17GC5V', 'Y1S7OM'
         );
         $register_number = I('get.register');
         if($register_number == 2) unset($sms_arr[2]);
