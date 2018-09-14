@@ -14,7 +14,7 @@ class ResumeModel extends Model {
         array('true_name', '1,50', '真实姓名控制在50个字以内！',1,'length',3),
         array('email', 'is_email', '请输入正确的邮箱格式！', 1, 'function', 3),
         array('mobile', 'isMobile', '请输入正确的手机号格式！',1,'function',3),
-        array('age', array(0,1,2), '性别值范围不正确！',1,'in',3)
+        array('sex', array(0,1,2), '性别值范围不正确！',1,'in',3)
     );
 
     /**

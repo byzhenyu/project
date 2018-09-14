@@ -17,7 +17,7 @@ class UserCenterApiController extends ApiUserCommonController{
             $this->apiReturn(V(0, '昵称不能超过11个字符'));
         }
         $saveData = array();
-        $img = app_upload_img('photo', '', '', 'User');
+        $img = app_upload_img('photo', '', 'User', '');
         if (!empty($_FILES['photo'])) {
             if ($img == 0 || $img == -1) {
                 $this->apiReturn(V(0, '头像上传失败'));
@@ -103,14 +103,14 @@ class UserCenterApiController extends ApiUserCommonController{
         $upArray = array();
         if(1 == $user_type){
             if(empty($_FILES['business_license'])) $this->apiReturn(V(0, '请上传营业执照！'));
-            $business = app_upload_img('business_license', '', '', 'User');
+            $business = app_upload_img('business_license', '', 'User', '');
             $upArray['business_license'] = $business;
         }
         $array = array('idcard_up' => '请上传身份证正面照！', 'idcard_down' => '请上传身份证反面照！', 'hand_pic' => '请上传手持身份证照！');
         $keys = array_keys($array);
         foreach($keys as &$val){
             if(empty($_FILES[$val])) $this->apiReturn(V(0, $array[$val]));
-            $$val = app_upload_img($val, '', '', 'User');
+            $$val = app_upload_img($val, '', 'User', '');
             $upArray[$val] = $$val;
         }
         $upKeys = array_keys($upArray);
@@ -189,7 +189,6 @@ class UserCenterApiController extends ApiUserCommonController{
                     $data_img['item_id'] = $question_id;
                     $data_img['img_path'] = $img_url;
                     $questionImgModel->add($data_img);
-                    thumb($img_url, 180,240);
                 }
             }
             $this->apiReturn(V(1, '问题发布成功！'));
@@ -221,7 +220,6 @@ class UserCenterApiController extends ApiUserCommonController{
                     $data_img['img_path'] = $img_url;
                     $data_img['type'] = 2;
                     $questionImgModel->add($data_img);
-                    thumb($img_url, 180,240);
                 }
             }
             $incWhere = array('id' => $data['question_id']);
@@ -705,8 +703,8 @@ class UserCenterApiController extends ApiUserCommonController{
         $data['user_id'] = UID;
         $model = D('Admin/Resume');
         if(!empty($_FILES['photo'])) {
-            $img = app_upload_img('photo', '', '', 'User');
-            if ($img == 0 || $img == -1) {
+            $img = app_upload_img('photo', '', 'User', UID);
+            if ($img === 0 || $img === -1) {
                 $this->apiReturn(V(0, '头像上传失败'));
             }
             else{
@@ -715,7 +713,7 @@ class UserCenterApiController extends ApiUserCommonController{
         }
         if(!empty($_FILES['voice'])){
             $img = app_upload_file('voice', '', '', 'Resume');
-            if ($img == 0 || $img == -1) {
+            if ($img === 0 || $img === -1) {
                 $this->apiReturn(V(0, '语音文件上传失败！'));
             }
             else{
