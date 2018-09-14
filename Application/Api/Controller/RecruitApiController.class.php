@@ -293,6 +293,7 @@ class RecruitApiController extends ApiUserCommonController{
             } else if (-1 === $img){
                 $this->apiReturn(V(0, '上传失败'));
             } else {
+                thumb($img, 180, 240);
                 $this->apiReturn(V(1, '上传成功', $img));
             }
         }
@@ -310,7 +311,7 @@ class RecruitApiController extends ApiUserCommonController{
             $photo = $_FILES['photo'];
 
             foreach ($photo['name'] as $key => $value) {
-                $res= app_upload_more_img('photo', '', 'CompanyInfo', UID, $key,180,240);
+                $res= app_upload_more_img('photo', '', 'CompanyInfo', UID, $key,320,240);
                 if ($res !== -1 && $res !== 0) {
                     $img_url .= $res.',';
                 }
