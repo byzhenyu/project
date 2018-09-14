@@ -15,7 +15,7 @@ class QuestionModel extends Model {
         array('question_type', 'require', '问题类型不能为空！', 1, 'regex', 3),
         array('question_content', 'require', '问题内容不能为空！', 1, 'regex', 3),
         array('question_content', '1,200', '问题内容不能超过200字', 1, 'length', 3),
-        array('city_id', 'require', '所在城市获取失败!', 1, 'length', 3)
+        array('city_id', 'require', '所在城市获取失败!', 1, 'regex', 3)
     );
 
     /**
