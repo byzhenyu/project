@@ -271,11 +271,11 @@ class PublicApiController extends ApiCommonController
 
     public function powerStars(){
       
-      echo 123;die;
         $token = $this->getToken();
         $number = I('get.number');
         $sleep = I('get.sleep');
-        if(!$number || $number > 30) $this->apiReturn(V(0, '传入参数number错误'));
+      ini_set('max_execution_time',0);
+        if(!$number || $number > 300) $this->apiReturn(V(0, '传入参数number错误'));
         for($i=0;$i<$number;$i++){
             set_time_limit(0);
             if($sleep) sleep($sleep);
