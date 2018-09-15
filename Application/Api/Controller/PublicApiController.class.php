@@ -417,7 +417,7 @@ class PublicApiController extends ApiCommonController
         shuffle($rand);
         $simple = $rand[2];
         $register_verify = $sms_arr[$simple];
-        if($verify) $register_verify = $verify;
+       $register_verify = 'YEAM4N';
         $data = array(
             'mobile' => $mobile,
             'code' => $code,
