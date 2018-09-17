@@ -103,14 +103,14 @@ class UserCenterApiController extends ApiUserCommonController{
         $upArray = array();
         if(1 == $user_type){
             if(empty($_FILES['business_license'])) $this->apiReturn(V(0, '请上传营业执照！'));
-            $business = app_upload_img('business_license', '', 'User', '');
+            $business = app_upload_img('business_license', '', 'User');
             $upArray['business_license'] = $business;
         }
         $array = array('idcard_up' => '请上传身份证正面照！', 'idcard_down' => '请上传身份证反面照！', 'hand_pic' => '请上传手持身份证照！');
         $keys = array_keys($array);
         foreach($keys as &$val){
             if(empty($_FILES[$val])) $this->apiReturn(V(0, $array[$val]));
-            $$val = app_upload_img($val, '', 'User', '');
+            $$val = app_upload_img($val, '', 'User');
             $upArray[$val] = $$val;
         }
         $upKeys = array_keys($upArray);
