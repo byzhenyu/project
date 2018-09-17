@@ -121,7 +121,7 @@ class UserCenterApiController extends ApiUserCommonController{
                 $t = str_replace('请上传', '', $t);
                 $t = str_replace('！', '', $t);
                 if(!$array[$value]) $t = $tempUpload;
-                $this->apiReturn(V(0, $t.'上传失败！'));
+                $this->apiReturn(V(0, '请上传'.$t));
             }
         }
         $data = array_merge($data, $upArray);
