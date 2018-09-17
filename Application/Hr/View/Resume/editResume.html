@@ -1,0 +1,161 @@
+<extend name="Common/base"/>
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/fileupload/css/jquery.fileupload.css" media="all">
+    <style>
+        .am-table {
+            font-size: 1.3rem;
+            margin-bottom: 0;
+        }
+        .am-btn{
+            padding:5px 15px;font-size:12px
+        }
+    </style>
+</block>
+
+<block name="body">
+    <!-- 内容区域 -->
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">{$info['id'] ? '编辑' : '新增'}简历</div>
+                </div>
+                <div class="widget-body  am-fr">
+                    <form id="orderForm" action="__ACTION__" method="post" class="ajaxForm">
+                    <table width="100%" class="am-table am-table-bordered">
+                        <thead>
+                            <tr><th colspan="4">基本信息</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><div align="right"><em class="must-input">*</em><strong>真实姓名：</strong></div></td>
+                                <td><input type="text" id="true_name" name="true_name" value="{$info['true_name']}" style="width:500px" placeholder="请输入真实姓名"/></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><em class="must-input">*</em><strong>手机号：</strong></div></td>
+                                <td><input type="text" maxlength="11" id="mobile" name="mobile" value="{$info['mobile']}" style="width:500px" placeholder="请输入手机号" /></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><em class="must-input">*</em><strong>电子邮箱：</strong></div></td>
+                                <td><input type="text" id="email" name="email" value="{$info['email']}" style="width:500px" placeholder="请输入电子邮箱" /></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><em class="must-input">*</em><strong>年龄：</strong></div></td>
+                                <td><input type="text" id="age" name="age" value="{$info['age']}" style="width:500px" placeholder="请输入年龄" /></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><em class="must-input">*</em><strong>性别：</strong></div></td>
+                                <td>
+                                    <label class="am-radio-inline">
+                                        <input type="radio" name="sex" class="sex_default1" value="1" data-am-ucheck> 男
+                                    </label>
+                                    <label class="am-radio-inline">
+                                        <input type="radio" name="sex" class="sex_default2" value="2" data-am-ucheck> 女
+                                    </label>
+                                    <script type="text/javascript">
+                                        $(function(){
+                                            if(1 == {$info['sex']}) $('.sex_default1').attr('checked', true);
+                                            if(2 == {$info['sex']}) $('.sex_default2').attr('checked', true);
+                                        });
+                                    </script>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>第一学历：</strong></div></td>
+                                <td><input type="text" id="first_degree" name="first_degree" value="{$info['first_degree']}" style="width:500px" placeholder="请填写第一学历" /></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>第二学历：</strong></div></td>
+                                <td><input type="text" id="second_degree" name="second_degree" value="{$info['second_degree']}" style="width:500px" placeholder="请填写第二学历" /></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>语言能力：</strong></div></td>
+                                <td><input type="text" id="language_ability" name="language_ability" value="{$info['language_ability']}" style="width:500px" placeholder="请填写语言能力" /></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>详细地址：</strong></div></td>
+                                <td><input type="text" id="address" name="address" value="{$info['address']}" style="width:500px" placeholder="请填写详细地址" /></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>岗位性质：</strong></div></td>
+                                <td>
+                                    <select name="post_nature" id="post_nature" data-am-selected="{searchBox: 0}">
+                                        <option value="">请选择</option>
+                                        <foreach name="nature" item="v">
+                                            <option value="{$v['name']}">{$v['name']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>求职方向[多选]：</strong></div></td>
+                                <td>
+                                    <select name="job_intension[]" id="job_intension" data-am-selected="{searchBox: 0}" multiple="multiple">
+                                        <foreach name="intension" item="v">
+                                            <option value="{$v['name']}">{$v['name']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><div align="right"><strong>工作地区[多选]：</strong></div></td>
+                                <td>
+                                    <select name="job_area[]" id="job_area" data-am-selected="{searchBox: 1}" multiple="multiple">
+                                        <foreach name="area" item="v">
+                                            <option value="{$v['name']}">{$v['name']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><div align="right"><strong>职业标签[多选]：</strong></div></td>
+                                <td>
+                                    <select name="career_label[]" id="career_label" data-am-selected="{searchBox: 0}" multiple="multiple">
+                                        <foreach name="career" item="v">
+                                            <option value="{$v['name']}">{$v['name']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><div align="right"><strong>推荐标签[多选]：</strong></div></td>
+                                <td>
+                                    <select name="recommend_label[]" id="recommend_label" data-am-selected="{searchBox: 0}" multiple="multiple">
+                                        <foreach name="recommend" item="v">
+                                            <option value="{$v['name']}">{$v['name']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><div align="right"><strong>自我介绍：</strong></div></td>
+                                <td>
+                                    <textarea name="introduced" id="" cols="80" rows="6" placeholder="请填写自我描述">{$info['introduced']}</textarea>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="2" align="center">
+                                    <input type="hidden" name="resume_id" value="{$info['id']}">
+                                    <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+                                    <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback();">返回</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </form>         
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/vendor/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.fileupload.js"></script>
+    <script type="text/javascript" charset="utf-8" src="__SHOP__/js/shop.js?v=1.9"></script>
+</block>

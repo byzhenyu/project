@@ -1,0 +1,128 @@
+<extend name="Common/base"/>
+<block name="style">
+
+</block>
+
+<block name="body">
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                <div class="widget am-cf">
+                    <div class="widget-head am-cf">
+                        <div class="widget-title  am-cf">简历库列表</div>
+
+                    </div>
+                    <div class="widget-body  am-fr">
+
+                        <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+                            <div class="am-form-group">
+                                <div class="am-btn-toolbar">
+                                    <div class="am-btn-group am-btn-group-xs">
+                                        <a type="button" class="am-btn am-btn-default am-btn-success" href="{:U('Resume/editResume')}"><span class="am-icon-plus"></span> 新增</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <form action="__SELF__" method="get">
+                            <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
+                                <div class="am-form-group tpl-table-list-select">
+
+                                </div>
+                            </div>
+                            <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+                                <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                                    <input type="text" class="am-form-field" name="keywords" placeholder="请输入简历人员名称/手机号" value="{$keywords}">
+                                    <span class="am-input-group-btn">
+                                        <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="submit"></button>
+                                        <a class="am-btn  am-btn-default am-btn-danger tpl-table-list-field am-icon-refresh" type="button" href="__ACTION__"></a>
+                                    </span>
+                                </div>
+                            </div>
+                            <input name="p" value="1" type="hidden"/>
+                        </form>
+
+                        <div class="am-u-sm-12">
+                            <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                                <thead>
+                                    <tr>
+                                        <th width="4%" class="align-center">序号</th>
+                                        <th width="11%" class="align-center">真实姓名</th>
+                                        <th width="12%" class="align-center">手机号</th>
+                                        <th width="11%" class="align-center">邮箱</th>
+                                        <th width="12%" class="align-center">求职方向</th>
+                                        <th width="8%" class="align-center">求职区域</th>
+                                        <th width="8%" class="align-center">工作性质</th>
+                                        <th width="12%" class="align-center">更新时间</th>
+                                        <th class="align-center">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <foreach name="info" item="v">
+                                        <tr class="gradeX">
+                                            <td class="align-center">{$v['hr_resume_id']}</td>
+                                            <td class="align-center">{$v['true_name']}</td>
+                                            <td class="align-center">{$v['mobile']}</td>
+                                            <td class="align-center">{$v['email']}</td>
+                                            <td class="align-center">{$v['job_intension']}</td>
+                                            <td class="align-center">{$v['job_area']}</td>
+                                            <td class="align-center">{$v['post_nature']}</td>
+                                            <td class="align-center">{:time_format($v['update_time'])}</td>
+
+                                            <td class="f-14 align-center">
+                                                <div class="tpl-table-black-operation">
+                                                    <if condition="$v['is_edit'] eq 1">
+                                                        <a href="{:U('Resume/editResume',array('resume_id'=>$v['id']))}">
+                                                            <i class="am-icon-pencil"></i> 编辑
+                                                        </a>
+                                                    </if>
+                                                    <a href="{:U('Resume/seeResumeDetail',array('id'=>$v['id']))}">
+                                                        <i class="am-icon-dedent"></i> 查看
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </foreach>
+                                </tbody>
+                            </table>
+                            <empty name="info">
+                                <h4>aOh! 没有相关内容!</h4>
+                            </empty>
+                        </div>
+                        <div class="am-u-lg-12 am-cf">
+
+                            <div class="am-fr">
+                                <div class="am-pagination tpl-pagination">
+                                    {$page}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+        function changeDisabled(question_id){
+            $.ajax({
+                url : "{:U('Question/changeQuestionDisabled')}",
+                type : "POST",
+                dataType : "json",
+                data : {
+                    "question_id" : question_id,
+                },
+                success : function(data){
+                    toastr(data.info);
+                    if(data.status == 1){
+                        setInterval('reload()', 2000);
+                    }
+                }
+            });
+        }
+        function reload() {
+            location.reload();
+        }
+    </script>
+</block>

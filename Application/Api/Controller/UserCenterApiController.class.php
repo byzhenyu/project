@@ -719,7 +719,10 @@ class UserCenterApiController extends ApiUserCommonController{
                 $data['introduced_voice'] = $img;
             }
         }
-        if($data['id'] > 0){
+        $resume_where = array('user_id' => UID);
+        $resume_info = $model->getResumeInfo($resume_where);
+        if($resume_info){
+            $data['id'] = $resume_info['id'];
             $create = $model->create($data, 2);
             if(false !== $create){
                 $res = $model->save($data);
@@ -975,6 +978,16 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('resume_id' => $resume_id);
         $resumeWorkList = $resumeWorkModel->getResumeWorkList($where);
         $resumeEduList = $resumeEduModel->getResumeEduList($where);
+        foreach($resumeWorkList as &$wval){
+            $wval['starttime'] = time_format($wval['starttime'], 'Y-m-d');
+            $wval['endtime'] = time_format($wval['endtime'], 'Y-m-d');
+        }
+        unset($wval);
+        foreach($resumeEduList as &$eval){
+            $eval['starttime'] = time_format($eval['starttime'], 'Y-m-d');
+            $eval['endtime'] = time_format($eval['endtime'], 'Y-m-d');
+        }
+        unset($eval);
         $resumeEvaluation = $resumeEvaluationModel->getResumeEvaluationAvg($where);
         $sum = array_sum(array_values($resumeEvaluation));
         $avg = round($sum/(count($resumeEvaluation)), 2);

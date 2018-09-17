@@ -33,9 +33,9 @@ class ResumeModel extends Model {
         if(!$data['user_id']) $data['user_id'] = UID;
         $data['update_time'] = NOW_TIME;
         $saveData = array();
-        if(!$data['head_pic']) $saveData['head_pic'] = $data['head_pic'];
-        if(!$data['true_name']) $saveData['nickname'] = $data['true_name'];
-        if(!$data['sex']) $saveData['sex'] = $data['sex'];
+        if($data['head_pic']) $saveData['head_pic'] = $data['head_pic'];
+        if($data['true_name']) $saveData['nickname'] = $data['true_name'];
+        if($data['sex']) $saveData['sex'] = $data['sex'];
         $userModel = D('Admin/User');
         $user_where = array('user_id' => $data['user_id']);
         if(count($saveData) > 0){
@@ -45,13 +45,13 @@ class ResumeModel extends Model {
                 return false;
             }
         }
-        $user_info = $userModel->getUserField($user_where, 'user_type');
+        /*$user_info = $userModel->getUserField($user_where, 'user_type');
         $resumeInfo = $this->getResumeInfo($user_where);
         //普通用户简历验证
         if($resumeInfo && !$user_info){
             $this->error = '您已经创建过简历！';
             return false;
-        }
+        }*/
         if(!check_is_auth($data['user_id'])){
             $this->error = '请先通过实名认证！';
             return false;
@@ -64,6 +64,19 @@ class ResumeModel extends Model {
         if(!$data['job_area']) unset($data['job_area']);
         if(!$data['job_intension']) unset($data['job_intension']);
         if(!$data['career_label']) unset($data['career_label']);
+        $saveData = array();
+        if($data['head_pic']) $saveData['head_pic'] = $data['head_pic'];
+        if($data['true_name']) $saveData['nickname'] = $data['true_name'];
+        if($data['sex']) $saveData['sex'] = $data['sex'];
+        $userModel = D('Admin/User');
+        $user_where = array('user_id' => $data['user_id']);
+        if(count($saveData) > 0){
+            $user_res = $userModel->saveUserData($user_where, $saveData);
+            if(false === $user_res){
+                $this->error = '主表信息修改失败！';
+                return false;
+            }
+        }
         $data['initials'] = rev_pinyin($data['true_name']);
     }
 
