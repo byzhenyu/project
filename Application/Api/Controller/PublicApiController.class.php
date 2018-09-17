@@ -147,7 +147,7 @@ class PublicApiController extends ApiCommonController
         $data['sms_content'] = $sms_content;
         $data['sms_code'] = $sms_code;
         $data['mobile'] = $mobile;
-        $data['type'] = $msg;
+        $data['type'] = $type;
         $data['send_status'] = $send_result['status'];
         $data['send_response_msg'] = $send_result['info'];
         $data['user_type'] = $user_type;
