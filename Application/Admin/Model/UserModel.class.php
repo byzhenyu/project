@@ -22,6 +22,12 @@ class UserModel extends Model{
         array('sex', array(0,1,2), '性别字段有误', 1, 'in', 4),
         array('head_pic', '1,255', '头像地址有误', 2, 'length', 4),
 
+
+        array('mobile', 'require', '会员手机/账号不能为空！', 1, 'regex', 5),
+        array('mobile','/^1[3|4|5|7|8|9][0-9]\d{8}$/','不是有效的手机号码',1,'regex', 5),
+        array('password', 'require', '密码不能为空！', 1, 'regex', 5),
+        array('password', '6,20', '密码长度有误', 1, 'length', 5),
+
     );
 
     // 判断用户是否存在
@@ -190,6 +196,8 @@ class UserModel extends Model{
             unset($data['password']);
         else 
             $data['password'] = pwdHash($data['password']);
+        $data['last_login_ip'] = get_client_ip();
+        $data['last_login_time'] = NOW_TIME;
     }
 
     /**

@@ -27,7 +27,7 @@
 
         'URL_HTML_SUFFIX'       =>  '',  // URL伪静态后缀设置
 
-        //'MODULE_ALLOW_LIST' => array ('Home','Core','Admin', 'Payment', 'Api','Shop'),
+        //'MODULE_ALLOW_LIST' => array ('Core','Admin','Api'),
         'DEFAULT_MODULE' => 'Admin',
 
         /* 图片上传相关配置 */
