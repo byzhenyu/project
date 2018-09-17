@@ -73,7 +73,7 @@ class UserModel extends Model{
         $where = array('user_name|mobile' => $user_name, 'status' => 1, 'user_type' => $user_type);
         $info = $this->where($where)->field($field)->find();
         if($info){
-            if(!$info['disabled']) return V(0, '用户已经被禁用！');
+            if(!$info['disabled']) return V(0, '用户已经被禁用');
             if(pwdHash($pwd, $info['password'], true) != true) return V(0, '密码输入不正确');
             $unArr = array('disabled', 'password');
             $info['pay_password'] = $info['pay_password'] ? 1 : 0;
@@ -82,10 +82,10 @@ class UserModel extends Model{
             $info['head_pic'] = strval($info['head_pic']);
             $info['nickname'] = strval($info['nickname']);
             $info['token'] = $this->updateUserToken($info['user_id']);
-            return V(1, '用户登录成功！', $info);
+            return V(1, '用户登录成功', $info);
         }
         else{
-            return V(0, '检查输入账号是否正确！');
+            return V(0, '账号不存在！');
         }
     }
 
