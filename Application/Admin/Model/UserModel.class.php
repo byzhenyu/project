@@ -7,7 +7,7 @@ use Think\Model;
 use Common\Tools\Emchat;
 class UserModel extends Model{
     protected $insertFields = array('user_name','nickname','password','mobile','email', 'register_time', 'sex', 'status', 'user_type', 'is_auth');
-    protected $updateFields = array('user_id','user_name','nickname','password','mobile','email', 'sex', 'status', 'disabled', 'user_type', 'is_auth');
+    protected $updateFields = array('user_id','user_name','nickname','password','mobile','email', 'sex', 'status', 'disabled', 'user_type', 'is_auth', 'head_pic');
     protected $selectFields = array('user_id, user_name, nickname, password, mobile, email, sex, status, user_money,frozen_money,disabled,register_time,user_type,is_auth');
     protected $_validate = array(
         array('mobile', 'require', '会员手机/账号不能为空！', 1, 'regex', 3),

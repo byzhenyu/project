@@ -34,7 +34,8 @@ class ResumeModel extends Model {
         $data['update_time'] = NOW_TIME;
         $saveData = array();
         if(!$data['head_pic']) $saveData['head_pic'] = $data['head_pic'];
-        if(!$data['true_name']) $saveData['true_name'] = $data['true_name'];
+        if(!$data['true_name']) $saveData['nickname'] = $data['true_name'];
+        if(!$data['sex']) $saveData['sex'] = $data['sex'];
         $userModel = D('Admin/User');
         $user_where = array('user_id' => $data['user_id']);
         if(count($saveData) > 0){
