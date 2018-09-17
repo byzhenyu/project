@@ -111,8 +111,8 @@ class UserCenterApiController extends ApiUserCommonController{
         $keys = array_keys($array);
         foreach($keys as &$val){
             if(empty($_FILES[$val])) $this->apiReturn(V(0, $array[$val]));
-            $val = app_upload_img($val, '', 'User');
-            $upArray[$val] = $$val;
+            $img_url = app_upload_img($val, '', 'User');
+            $upArray[$val] = $img_url;
         }
         $upKeys = array_keys($upArray);
         foreach($upKeys as &$value){
