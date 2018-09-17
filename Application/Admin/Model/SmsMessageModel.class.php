@@ -33,6 +33,7 @@ class SmsMessageModel extends Model
         $where['is_used'] = 0;
         $where['user_type'] = $user_type;
         $smsInfo = $this->where($where)->find();
+
         if (count($smsInfo) > 0) {
             $this->where($where)->setField('is_used', 1);
             return V(1, '短信验证码正确', $mobile);
