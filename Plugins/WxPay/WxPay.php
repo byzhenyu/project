@@ -136,10 +136,10 @@ class WxPay {
             $tmp['nonceStr'] = $nonce_str;
             $tmp['package'] = 'prepay_id=' . $array['PREPAY_ID'];
             $tmp['signType'] = 'MD5';
-            $tmp['timeStamp'] = "$time";
+            $tmp['timeStamp'] = $time;
 
-            $data['state'] = 1;
-            $data['timeStamp'] = "$time"; //时间戳
+
+            $data['timeStamp'] = $time; //时间戳
             $data['nonceStr'] = $nonce_str; //随机字符串
             $data['signType'] = 'MD5'; //签名算法，暂支持 MD5
             $data['package'] = 'prepay_id=' . $array['PREPAY_ID']; //统一下单接口返回的 prepay_id 参数值，提交格式如：prepay_id=*
@@ -147,12 +147,12 @@ class WxPay {
             $data['out_trade_no'] = $out_trade_no;
 
         } else {
-            $data['state'] = 0;
+
             $data['text'] = "错误";
             $data['RETURN_CODE'] = $array['RETURN_CODE'];
             $data['RETURN_MSG'] = $array['RETURN_MSG'];
         }
-        echo json_encode($data);
+        return $data;
     }
 
     /**
