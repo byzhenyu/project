@@ -113,17 +113,18 @@ class UserCenterApiController extends ApiUserCommonController{
             $val = app_upload_img($val, '', 'User');
             $upArray[$val] = $$val;
         }
-        $upKeys = array_keys($upArray);
-        foreach($upKeys as &$value){
-            if($upArray[$value] == 0 || $upArray[$value] == -1){
-                $tempUpload = '营业执照';
-                $t = $array[$value];
-                $t = str_replace('请上传', '', $t);
-                $t = str_replace('！', '', $t);
-                if(!$array[$value]) $t = $tempUpload;
-                $this->apiReturn(V(0, '请上传'.$t));
-            }
-        }
+
+        // $upKeys = array_keys($upArray);
+        // foreach($upKeys as &$value){
+        //     if($upArray[$value] == 0 || $upArray[$value] == -1){
+        //         $tempUpload = '营业执照';
+        //         $t = $array[$value];
+        //         $t = str_replace('请上传', '', $t);
+        //         $t = str_replace('！', '', $t);
+        //         if(!$array[$value]) $t = $tempUpload;
+        //         $this->apiReturn(V(0, '请上传'.$t));
+        //     }
+        // }
         $data = array_merge($data, $upArray);
         if(!$auth_info){
             $create = $authModel->create($data, 1);
