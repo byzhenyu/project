@@ -105,6 +105,7 @@ class UserCenterApiController extends ApiUserCommonController{
             if(empty($_FILES['business_license'])) $this->apiReturn(V(0, '请上传营业执照！'));
             $business = app_upload_img('business_license', '', 'User');
             $upArray['business_license'] = $business;
+            if($business === 0 || $business === -1) $this->apiReturn(V(0, '营业执照上传失败！'));
         }
         $array = array('idcard_up' => '请上传身份证正面照！', 'idcard_down' => '请上传身份证反面照！', 'hand_pic' => '请上传手持身份证照！');
         $keys = array_keys($array);
@@ -115,12 +116,10 @@ class UserCenterApiController extends ApiUserCommonController{
         }
         $upKeys = array_keys($upArray);
         foreach($upKeys as &$value){
-            if($upArray[$value] == 0 || $upArray[$value] == -1){
-                $tempUpload = '营业执照';
+            if($upArray[$value] === 0 || $upArray[$value] === -1){
                 $t = $array[$value];
                 $t = str_replace('请上传', '', $t);
                 $t = str_replace('！', '', $t);
-                if(!$array[$value]) $t = $tempUpload;
                 $this->apiReturn(V(0, $t.'上传失败！'));
             }
         }
