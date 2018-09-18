@@ -9,7 +9,7 @@
             <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                 <div class="widget am-cf">
                     <div class="widget-head am-cf">
-                        <div class="widget-title  am-cf">闪问答案列表</div>
+                        <div class="widget-title  am-cf">悬赏列表</div>
 
                     </div>
                     <div class="widget-body  am-fr">
@@ -18,6 +18,7 @@
                             <div class="am-form-group">
                                 <div class="am-btn-toolbar">
                                     <div class="am-btn-group am-btn-group-xs">
+
                                     </div>
                                 </div>
                             </div>
@@ -30,7 +31,7 @@
                             </div>
                             <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
                                 <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                                    <input type="text" class="am-form-field" name="keyword" placeholder="请输入答案内容" value="{$keyword}">
+                                    <input type="text" class="am-form-field" name="keyword" placeholder="请输入悬赏职位/工作地区" value="{$keyword}">
                                     <span class="am-input-group-btn">
                                         <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="submit"></button>
                                         <a class="am-btn  am-btn-default am-btn-danger tpl-table-list-field am-icon-refresh" type="button" href="__ACTION__"></a>
@@ -44,13 +45,16 @@
                             <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
                                 <thead>
                                     <tr>
-                                        <th width="7%" class="align-center">序号</th>
-                                        <th width="12%" class="align-center">回答人</th>
-                                        <th width="26%" class="align-center">答案内容</th>
-                                        <th width="15%" class="align-center">添加时间</th>
-                                        <th width="8%" class="align-center">点赞数</th>
-                                        <th width="8%" class="align-center">状态</th>
-                                        <th width="3%" class="align-center">最佳</th>
+                                        <th width="4%" class="align-center">序号</th>
+                                        <th width="6%" class="align-center">发布人</th>
+                                        <th width="12%" class="align-center">悬赏职位</th>
+                                        <th width="6%" class="align-center">招聘人数</th>
+                                        <th width="6%" class="align-center">岗位性质</th>
+                                        <th width="8%" class="align-center">语言要求</th>
+                                        <th width="12%" class="align-center">工作地区</th>
+                                        <th width="8%" class="align-center">悬赏令牌</th>
+                                        <th width="8%" class="align-center">剩余数量</th>
+                                        <th width="12%" class="align-center">添加时间</th>
                                         <th class="align-center">操作</th>
                                     </tr>
                                 </thead>
@@ -58,24 +62,23 @@
                                     <foreach name="list" item="v">
                                         <tr class="gradeX">
                                             <td class="align-center">{$v['id']}</td>
-                                            <td class="align-center">{$v['nickname']|default='未设置昵称'}</td>
-                                            <td class="align-center"><div style="width: 90%; text-align: left">{$v['answer_content']}</div></td>
+                                            <td class="align-center">{$v['release_name']}</td>
+                                            <td class="align-center">{$v['position_name']}</td>
+                                            <td class="align-center">{$v['recruit_num']}</td>
+                                            <td class="align-center">{$v['nature']}</td>
+                                            <td class="align-center">{$v['language_ability']}</td>
+                                            <td class="align-center">{$v['job_area']}</td>
+                                            <td class="align-center">{$v['commission']}</td>
+                                            <td class="align-center">{$v['last_token']}</td>
                                             <td class="align-center">{$v['add_time']}</td>
-                                            <td class="align-center">{$v['like_number']}</td>
-                                            <td class="align-center">{:show_disabled($v['disabled'])}</td>
-                                            <td class="align-center">{:show_optimum($v['is_optimum'])}</td>
                                             <td class="f-14 align-center">
                                                 <div class="tpl-table-black-operation">
-                                                    <if condition="$v['disabled'] eq 0">
-                                                        <a title="点击启用" href="javascript:void(0)" onclick="changeDisabled({$v['id']});">
-                                                            启用
-                                                        </a>
-                                                    </if>
-                                                    <if condition="$v['disabled'] eq 1">
-                                                        <a title="点击禁用" href="javascript:void(0)" class="tpl-table-black-operation-del" onclick="changeDisabled('{$v.id}');">
-                                                            禁用
-                                                        </a>
-                                                    </if>
+                                                    <a href="{:U('Recruit/listRecruitResume',array('id'=>$v['id']))}">
+                                                        <i class="am-icon-recycle"></i> 推荐列表
+                                                    </a>
+                                                    <a href="{:U('Recruit/seeRecruitDetail',array('id'=>$v['id']))}">
+                                                        <i class="am-icon-dedent"></i> 悬赏详情
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -103,24 +106,5 @@
 
 <block name="script">
     <script type="text/javascript">
-        function changeDisabled(answer_id){
-            $.ajax({
-                url : "{:U('Question/changeAnswerDisabled')}",
-                type : "POST",
-                dataType : "json",
-                data : {
-                    "answer_id" : answer_id,
-                },
-                success : function(data){
-                    toastr(data.info);
-                    if(data.status == 1){
-                        setInterval('reload()', 2000);
-                    }
-                }
-            });
-        }
-        function reload() {
-            location.reload();
-        }
     </script>
 </block>
