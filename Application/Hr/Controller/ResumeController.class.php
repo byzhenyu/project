@@ -133,4 +133,35 @@ class ResumeController extends HrCommonController {
         $this->info = $info;
         $this->display();
     }
+
+    /**
+     * @desc 获取简历教育经历列表
+     */
+    public function getResumeEduList()
+    {
+        $resume_id = I('resume_id', 0, 'intval');
+        $keywords = I('keywords', '', 'trim');
+        $resume_edu_where = array('resume_id' => $resume_id);
+        $resume_edu_model = D('Admin/ResumeEdu');
+        if ($keywords) $resume_edu_where['school_name'] = array('like', '%'.$keywords.'%');
+        $list = $resume_edu_model->getResumeEduList($resume_edu_where);
+        $this->list = $list;
+        $this->keywords = $keywords;
+        $this->display();
+    }
+
+    /**
+     * @desc 获取简历工作经历列表
+     */
+    public function getResumeWorkList(){
+        $resume_id = I('resume_id', 0, 'intval');
+        $keywords = I('keywords', '', 'trim');
+        $resume_work_where = array('resume_id' => $resume_id);
+        $resume_work_model = D('Admin/ResumeWork');
+        if($keywords) $resume_work_where['company_name'] = array('like', '%'.$keywords.'%');
+        $list = $resume_work_model->getResumeWorkList($resume_work_where);
+        $this->list = $list;
+        $this->keywords = $keywords;
+        $this->display();
+    }
 }

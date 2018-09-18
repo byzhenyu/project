@@ -1,0 +1,89 @@
+<extend name="Common/base"/>
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/fileupload/css/jquery.fileupload.css" media="all">
+    <style>
+        .am-table {
+            font-size: 1.3rem;
+            margin-bottom: 0;
+        }
+        .am-btn{
+            padding:5px 15px;font-size:12px
+        }
+    </style>
+</block>
+
+<block name="body">
+    <!-- 内容区域 -->
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">{$info['id'] ? '编辑' : '新增'}教育经历</div>
+                </div>
+                <div class="widget-body  am-fr">
+                    <form id="orderForm" action="__ACTION__" method="post" class="ajaxForm">
+                    <table width="100%" class="am-table am-table-bordered">
+                        <thead>
+                            <tr><th colspan="4">基本信息</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><div align="right"><em class="must-input">*</em><strong>学校名称：</strong></div></td>
+                                <td><input type="text" id="school_name" name="school_name" value="{$info['school_name']}" style="width:500px" placeholder="请输入学校名称"/></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><em class="must-input">*</em><strong>学历：</strong></div></td>
+                                <td><input type="text" id="degree" name="degree" value="{$info['degree']}" style="width:500px" placeholder="请输入学历" /></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><em class="must-input">*</em><strong>专业：</strong></div></td>
+                                <td><input type="text" id="major" name="major" value="{$info['major']}" style="width:500px" placeholder="请输入专业" /></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><em class="must-input">*</em><strong>开始时间：</strong></div></td>
+                                <td><input type="text" id="starttime" name="starttime" value="{$info['starttime']|date='Y-m-d', ###}"  style="width:500px"/></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><em class="must-input">*</em><strong>开始时间：</strong></div></td>
+                                <td><input type="text" id="endtime" name="endtime" value="{$info['endtime']|date='Y-m-d', ###}"  style="width:500px"/></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>描述信息：</strong></div></td>
+                                <td>
+                                    <textarea name="describe" id="" cols="80" rows="6" placeholder="请填写描述信息">{$info['describe']}</textarea>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="2" align="center">
+                                    <input type="hidden" name="resume_id" value="{$info['resume_id']}">
+                                    <input type="hidden" name="id" value="{$info['id']}">
+                                    <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+                                    <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback();">返回</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </form>         
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/vendor/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.fileupload.js"></script>
+    <script type="text/javascript" charset="utf-8" src="__SHOP__/js/shop.js?v=1.9"></script>
+    <script type="text/javascript" src="__ADMIN__/layDate-v5.0.9/laydate/laydate.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            laydate.render({
+                elem: '#starttime'
+            });
+            laydate.render({
+                elem: '#endtime'
+            });
+        });
+    </script>
+</block>

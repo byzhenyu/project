@@ -75,6 +75,12 @@
                                                             <i class="am-icon-pencil"></i> 编辑
                                                         </a>
                                                     </if>
+                                                    <a href="{:U('ResumeEdu/getResumeEduList',array('resume_id'=>$v['id']))}">
+                                                        <i class="am-icon-dedent"></i> 教育经历
+                                                    </a>
+                                                    <a href="{:U('ResumeWork/getResumeWorkList',array('resume_id'=>$v['id']))}">
+                                                        <i class="am-icon-dedent"></i> 工作经历
+                                                    </a>
                                                     <a href="{:U('Resume/seeResumeDetail',array('id'=>$v['id']))}">
                                                         <i class="am-icon-dedent"></i> 查看
                                                     </a>

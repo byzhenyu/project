@@ -60,6 +60,8 @@ class ResumeEduModel extends Model {
     }
     //更新操作前的钩子操作
     protected function _before_update(&$data, $option){
+        $data['starttime'] = strtotime($data['starttime']);
+        $data['endtime'] = strtotime($data['endtime']);
     }
 
 }
