@@ -58,9 +58,9 @@
                                     <foreach name="list" item="v">
                                         <tr class="gradeX">
                                             <td class="align-center">{$v['id']}</td>
-                                            <td class="align-center">{$v['nickname']}</td>
+                                            <td class="align-center">{$v['nickname']|default='未设置昵称'}</td>
                                             <td class="align-center"><div style="width: 90%; text-align: left">{$v['answer_content']}</div></td>
-                                            <td class="align-center">{:time_format($v['add_time'])}</td>
+                                            <td class="align-center">{$v['add_time']}</td>
                                             <td class="align-center">{$v['like_number']}</td>
                                             <td class="align-center">{:show_disabled($v['disabled'])}</td>
                                             <td class="align-center">{:show_optimum($v['is_optimum'])}</td>
