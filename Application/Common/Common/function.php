@@ -1119,3 +1119,47 @@ function show_is_open($is_open){
     );
     return $arr[$is_open];
 }
+
+/**
+ * @desc 用户操作日志
+ * @param $operate_type
+ * @param $relate_id
+ * @param int|mixed $user_id
+ */
+function add_key_operation($operate_type, $relate_id, $user_id = UID){
+    $model = D('Admin/KeyOperation');
+    $data = array(
+        'user_id' => $user_id,
+        'operate_type' => $operate_type,
+        'relation_id' => $relate_id
+    );
+    $model->add($data);
+}
+
+/**
+ * @desc 黑白名单
+ * @param $type
+ * @return mixed
+ */
+function show_black_white($type){
+    $arr = array(
+        1 => '黑名单',
+        2 => '白名单'
+    );
+    return $arr[$type];
+}
+
+/**
+ * @desc 黑白名单添加值类型
+ * @param $dispose_type
+ * @return mixed
+ */
+function black_white_type($dispose_type = 0){
+    $arr = array(
+        1 => '手机号',
+        2 => '身份证',
+        3 => '电子邮箱'
+    );
+    if(!$dispose_type) return $arr;
+    return $arr[$dispose_type];
+}

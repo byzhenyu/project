@@ -190,6 +190,7 @@ class UserCenterApiController extends ApiUserCommonController{
                     $questionImgModel->add($data_img);
                 }
             }
+            add_key_operation(3, $question_id);
             $this->apiReturn(V(1, '问题发布成功！'));
         }
         else{
@@ -223,6 +224,7 @@ class UserCenterApiController extends ApiUserCommonController{
             }
             $incWhere = array('id' => $data['question_id']);
             D('Admin/Question')->setQuestionInc($incWhere, 'answer_number');//问题回答数
+            add_key_operation(4, $answer_id);
             $this->apiReturn(V(1, '回答成功！'));
         }
         else{
@@ -718,7 +720,7 @@ class UserCenterApiController extends ApiUserCommonController{
             }
         }
         if(!empty($_FILES['voice'])){
-            $img = app_upload_file('voice', '', '', 'Resume');
+            $img = app_upload_file('voice', '', 'Resume');
             if ($img === 0 || $img === -1) {
                 $this->apiReturn(V(0, '语音文件上传失败！'));
             }
@@ -802,7 +804,7 @@ class UserCenterApiController extends ApiUserCommonController{
             if (false !== $create){
                 $res = $model->add($data);
                 if($res > 0){
-                    $resumeAuth = array('resume_id' => $res, 'hr_name' => $hr_name, 'hr_mobile' => $hr_mobile, 'user_id' => UID);
+                    $resumeAuth = array('resume_id' => $data['resume_id'], 'hr_name' => $hr_name, 'hr_mobile' => $hr_mobile, 'user_id' => UID);
                     //简历验证
                     $auth_res = D('Admin/ResumeAuth')->changeResumeAuth($resumeAuth);
                     if(false !== $auth_res){
@@ -1059,6 +1061,7 @@ class UserCenterApiController extends ApiUserCommonController{
                     $task_id = 1;
                     $task_log_res = add_task_log(UID, $task_id);
                     if($task_log_res) D('Admin/User')->changeUserWithdrawAbleAmount(UID, 1, $task_id);
+                    add_key_operation(8, $resume_auth_info['resume_id']);
                     M()->commit();
                     $this->apiReturn(V(1, '认证操作成功！'));
                 }
@@ -1216,8 +1219,8 @@ class UserCenterApiController extends ApiUserCommonController{
         $data['hr_user_id'] = $hr_user_id;
         $data['recruit_hr_uid'] = $recruit_info['hr_user_id'];
         if(empty($_FILES['voice'])) $this->apiReturn(V(0, '推荐语不能为空'));
-        $voice_file = app_upload_file('voice', '', '', 'Resume');
-        if ($voice_file == 0 || $voice_file == -1) {
+        $voice_file = app_upload_file('voice', '', 'Resume');
+        if ($voice_file === 0 || $voice_file === -1) {
             $this->apiReturn(V(0, '语音文件上传失败！'));
         }
         else{
@@ -1234,7 +1237,10 @@ class UserCenterApiController extends ApiUserCommonController{
                 $addAllArr[] = $data;
             }
             $res = $recruitResumeModel->addAll($addAllArr);
-            if($res) $this->apiReturn(V(1, '推荐成功！'));
+            if($res){
+                add_key_operation(6, $data['recruit_id']);
+                $this->apiReturn(V(1, '推荐成功！'));
+            }
             $this->apiReturn(V(0, '推荐失败！'));
         }
         else{
@@ -1245,6 +1251,7 @@ class UserCenterApiController extends ApiUserCommonController{
             if(false !== $create){
                 $res = $recruitResumeModel->add($data);
                 if($res){
+                    add_key_operation(6, $data['recruit_id']);
                     $this->apiReturn(V(1, '推荐成功！'));
                 }
                 else{
@@ -1268,6 +1275,7 @@ class UserCenterApiController extends ApiUserCommonController{
         if(false !== $create){
             $res = $model->add($data);
             if($res){
+                add_key_operation(7, $res);
                 $this->apiReturn(V(1, '面试发起成功！'));
             }
             else{

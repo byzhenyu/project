@@ -16,8 +16,8 @@ class PublicApiController extends ApiCommonController
         $password = I('post.password', '');
         $userType = I('post.user_type', 0);//0、普通会员  1、HR
         $loginInfo = D('Admin/User')->dologin($user_name, $password, '', $userType);
-
         if ($loginInfo['status'] == 1) { //登录成功
+            add_key_operation(2, $loginInfo['data']['user_id'], $loginInfo['data']['user_id']);
             $this->apiReturn($loginInfo);
         } else {
             $this->apiReturn(V(0, $loginInfo['info']));
@@ -72,6 +72,7 @@ class PublicApiController extends ApiCommonController
             if ($user_id > 0) {
                 $loginInfo = $userModel->doLogin($mobile, $password, '', $user_type);
                 if ($loginInfo['status'] == 1) {
+                    add_key_operation(1, $user_id, $user_id);
                     if (1 == $user_type) D('Admin/ResumeAuth')->saveResumeAuthData(array('hr_mobile' => $mobile), array('hr_id' => $user_id));
                     $this->apiReturn($loginInfo);
                 } else {

@@ -77,6 +77,7 @@ class RecruitApiController extends ApiUserCommonController{
             $trans->rollback();
             $this->apiReturn($res);
         }
+        add_key_operation(5, $newId);
         $trans->commit();
         $this->apiReturn(V(1,'发布成功'));
 
