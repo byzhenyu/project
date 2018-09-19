@@ -106,8 +106,12 @@ class UserModel extends Model{
         if(!$user_id || !$type || !$item_id) return false;
         $res = false;
         if($type == 1){
+            $where['user_id'] = $user_id;
             $task_info = D('Admin/Task')->getTaskInfo(array('id' => $item_id));
-            $res = $this->where(array('user_id' => $user_id))->setInc('withdrawable_amount', $task_info['reward']);
+            $user_info = $this->getUserInfo($where, 'user_money, withdrawable_amount');
+            $data['user_money'] = $user_info['user_money'] + $task_info['reward'];
+            $data['withdrawable_amount'] = $user_info['withdrawable_amount'] + $task_info['reward'];
+            $res = $this->where($where)->save($data);
         }
         return $res;
     }
