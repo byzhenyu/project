@@ -1,10 +1,6 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: dulong
- * Date: 2017/6/26
- * Time: 10:18
- * 用户反馈控制器
+ * @desc 用户反馈控制器
  */
 
 namespace Admin\Controller;
