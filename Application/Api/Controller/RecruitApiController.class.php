@@ -44,7 +44,7 @@ class RecruitApiController extends ApiUserCommonController{
         $user_money = D('Admin/User')->getUserField(array('user_id'=>UID),'user_money');
 
         if ($data['commission'] > $user_money) {
-            $this->apiReturn(V(0, '可用余额不足'));
+            $this->apiReturn(V(0, '可用令牌不足'));
         }
         if (cmp_contraband($data['language_ability'])) {
             $this->apiReturn(V(0, '语言要求有违禁词'));
