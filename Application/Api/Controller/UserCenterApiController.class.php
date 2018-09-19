@@ -1034,7 +1034,6 @@ class UserCenterApiController extends ApiUserCommonController{
         if($resume_auth_info['auth_result'] != 0) $this->apiReturn(V(0, '该简历已经被认证过！'));
         $save_data['auth_result'] = $auth_result;
         $save_data['auth_time'] = NOW_TIME;
-        $save_data['recommend_label'] = $recommend_label;
         M()->startTrans();
         $res = $resumeAuthModel->saveResumeAuthData($resume_auth_where, $save_data);
         if(1 == $auth_result){
@@ -1052,6 +1051,7 @@ class UserCenterApiController extends ApiUserCommonController{
             $data = array();
             $data['hr_user_id'] = UID;
             $data['resume_id'] = $resume_auth_info['resume_id'];
+            $data['recommend_label'] = $recommend_label;
             $create = $hr_resume_model->create($data, 1);
             if(false !== $create){
                 $hr_resume_result = $hr_resume_model->add($data);
