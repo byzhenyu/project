@@ -1,0 +1,110 @@
+<extend name="Common/base"/>
+<block name="style">
+
+</block>
+
+<block name="body">
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                <div class="widget am-cf">
+                    <div class="widget-head am-cf">
+                        <div class="widget-title  am-cf">教育背景列表</div>
+
+                    </div>
+                    <div class="widget-body  am-fr">
+
+                        <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+                            <div class="am-form-group">
+                                <div class="am-btn-toolbar">
+                                    <div class="am-btn-group am-btn-group-xs">
+                                        <a type="button" class="am-btn am-btn-default am-btn-success" href="{:U('ResumeEdu/editResumeEdu', array('resume_id' => $resume_id))}"><span class="am-icon-plus"></span> 新增</a>
+                                        <button type="button" class="am-btn am-btn-default am-btn-danger" onclick="javascript:recycle('chkbId', '确认删除?! 删除后无法恢复!', true)">
+                                            <span class="am-icon-trash-o"></span> 批量删除
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <form action="__SELF__" method="get">
+                            <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
+                                <div class="am-form-group tpl-table-list-select">
+
+                                </div>
+                            </div>
+                            <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+                                <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                                    <input type="text" class="am-form-field" name="keywords" placeholder="请输入学校名称" value="{$keywords}">
+                                    <span class="am-input-group-btn">
+                                        <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="submit"></button>
+                                        <a class="am-btn  am-btn-default am-btn-danger tpl-table-list-field am-icon-refresh" type="button" href="__ACTION__"></a>
+                                    </span>
+                                </div>
+                            </div>
+                            <input name="p" value="1" type="hidden"/>
+                        </form>
+
+                        <div class="am-u-sm-12">
+                            <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                                <thead>
+                                    <tr>
+                                        <th><input class="check-all" type="checkbox"></th>
+                                        <th width="4%" class="align-center">序号</th>
+                                        <th width="11%" class="align-center">学校名称</th>
+                                        <th width="8%" class="align-center">学历</th>
+                                        <th width="11%" class="align-center">专业</th>
+                                        <th width="12%" class="align-center">开始时间</th>
+                                        <th width="12%" class="align-center">结束时间</th>
+                                        <th width="8%" class="align-center">描述</th>
+                                        <th class="align-center">操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <foreach name="list" item="v">
+                                        <tr class="gradeX">
+                                            <td><input class="ids" type="checkbox" name="chkbId" value="{$v['id']}"></td>
+                                            <td class="align-center">{$v['id']}</td>
+                                            <td class="align-center">{$v['school_name']}</td>
+                                            <td class="align-center">{$v['degree']}</td>
+                                            <td class="align-center">{$v['major']}</td>
+                                            <td class="align-center">{$v['starttime']|date='Y-m-d', ###}</td>
+                                            <td class="align-center">{$v['endtime']|date='Y-m-d', ###}</td>
+                                            <td class="align-center">{$v['describe']}</td>
+
+                                            <td class="f-14 align-center">
+                                                <div class="tpl-table-black-operation">
+                                                    <a href="{:U('ResumeEdu/editResumeEdu',array('id'=>$v['id'], 'resume_id' => $resume_id))}">
+                                                        <i class="am-icon-pencil"></i> 编辑
+                                                    </a>
+                                                    <a href="javascript:void(0)" onclick="javascript:recycle({$v['id']}, '确认删除?!此步骤无法恢复!', true)" class="tpl-table-black-operation-del">
+                                                        <i class="am-icon-trash"></i> 删除
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </foreach>
+                                </tbody>
+                            </table>
+                            <empty name="list">
+                                <h4>aOh! 没有相关内容!</h4>
+                            </empty>
+                        </div>
+                        <div class="am-u-lg-12 am-cf">
+
+                            <div class="am-fr">
+                                <div class="am-pagination tpl-pagination">
+                                    {$page}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+    </script>
+</block>

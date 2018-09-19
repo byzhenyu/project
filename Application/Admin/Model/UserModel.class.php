@@ -7,7 +7,7 @@ use Think\Model;
 use Common\Tools\Emchat;
 class UserModel extends Model{
     protected $insertFields = array('user_name','nickname','password','mobile','email', 'register_time', 'sex', 'status', 'user_type', 'is_auth');
-    protected $updateFields = array('user_id','user_name','nickname','password','mobile','email', 'sex', 'status', 'disabled', 'user_type', 'is_auth');
+    protected $updateFields = array('user_id','user_name','nickname','password','mobile','email', 'sex', 'status', 'disabled', 'user_type', 'is_auth', 'head_pic');
     protected $selectFields = array('user_id, user_name, nickname, password, mobile, email, sex, status, user_money,frozen_money,disabled,register_time,user_type,is_auth');
     protected $_validate = array(
         array('mobile', 'require', '会员手机/账号不能为空！', 1, 'regex', 3),
@@ -21,6 +21,12 @@ class UserModel extends Model{
         array('nickname', 'require', '姓名不能为空', 1, 'regex', 4),
         array('sex', array(0,1,2), '性别字段有误', 1, 'in', 4),
         array('head_pic', '1,255', '头像地址有误', 2, 'length', 4),
+
+
+        array('mobile', 'require', '会员手机/账号不能为空！', 1, 'regex', 5),
+        array('mobile','/^1[3|4|5|7|8|9][0-9]\d{8}$/','不是有效的手机号码',1,'regex', 5),
+        array('password', 'require', '密码不能为空！', 1, 'regex', 5),
+        array('password', '6,20', '密码长度有误', 1, 'length', 5),
 
     );
 
@@ -73,7 +79,7 @@ class UserModel extends Model{
         $where = array('user_name|mobile' => $user_name, 'status' => 1, 'user_type' => $user_type);
         $info = $this->where($where)->field($field)->find();
         if($info){
-            if(!$info['disabled']) return V(0, '用户已经被禁用！');
+            if(!$info['disabled']) return V(0, '用户已经被禁用');
             if(pwdHash($pwd, $info['password'], true) != true) return V(0, '密码输入不正确');
             $unArr = array('disabled', 'password');
             $info['pay_password'] = $info['pay_password'] ? 1 : 0;
@@ -82,10 +88,10 @@ class UserModel extends Model{
             $info['head_pic'] = strval($info['head_pic']);
             $info['nickname'] = strval($info['nickname']);
             $info['token'] = $this->updateUserToken($info['user_id']);
-            return V(1, '用户登录成功！', $info);
+            return V(1, '用户登录成功', $info);
         }
         else{
-            return V(0, '检查输入账号是否正确！');
+            return V(0, '账号不存在！');
         }
     }
 
@@ -190,6 +196,8 @@ class UserModel extends Model{
             unset($data['password']);
         else 
             $data['password'] = pwdHash($data['password']);
+        $data['last_login_ip'] = get_client_ip();
+        $data['last_login_time'] = NOW_TIME;
     }
 
     /**

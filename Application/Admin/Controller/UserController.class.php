@@ -20,7 +20,7 @@ class UserController extends CommonController {
         $this->userslist = $data['userslist'];
         $this->page = $data['page'];
         $this->keyword = $keyword;
-
+        $this->user_type = $type;
         $this->display('listUsers');
     }
 

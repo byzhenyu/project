@@ -1,0 +1,90 @@
+<extend name="Common/base"/>
+<block name="style">
+    <style>
+        body{
+            overflow: hidden;
+        }
+        .link-btn:hover{
+            background: #f4f4f4;
+        }
+    </style>
+</block>
+
+<block name="body">
+    <div class="am-g tpl-g">
+        <!-- 头部 -->
+        <header>
+            <!-- logo -->
+            <div class="am-fl tpl-header-logo">
+                <a href="javascript:;"><img src="__STATIC__/images/admin_logo.png"></a>
+            </div>
+            <!-- 右侧内容 -->
+            <div class="tpl-header-fluid">
+                <!-- 其它功能-->
+                <div class="am-fr tpl-header-navbar">
+                    <ul>
+                        <!-- 欢迎语 -->
+                        <li class="am-text-sm tpl-header-navbar-welcome">
+                            <a href="javascript:;">欢迎你, <span>{$Think.session.hr_auth.hr_name}</span> </a>
+                        </li>
+                        <!-- 退出 -->
+                        <li class="am-text-sm">
+                            <a href="{:U('Login/logout')}">
+                                <span class="am-icon-sign-out"></span> 退出
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </header>
+        <!-- 侧边导航栏 -->
+        <div class="left-sidebar" style="overflow: auto;">
+            <!-- 菜单 -->
+            <ul class="sidebar-nav">
+                <volist name="menu_list" id="menu">
+                    <li class="sidebar-nav-link">
+                        <a href="javascript:;" class="sidebar-nav-sub-title">
+                            <i class=""></i>{$menu.label}
+                            <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
+                        </a>
+                        <ul class="sidebar-nav sidebar-nav-sub">
+                            <volist name="menu.items" id="v">
+                                <li class="sidebar-nav-link">
+                                    <a href="{$v.action}" target="mainIframe">
+                                        <span class="am-icon-angle-right sidebar-nav-link-logo"></span>{$v.label}
+                                    </a>
+                                </li>
+                            </volist>
+                        </ul>
+                    </li>
+                </volist>
+            </ul>
+        </div>
+
+        <!-- 内容区域 -->
+          <div class="tpl-content-wrapper">
+            <iframe src="{:U('Hr/Index/welcome')}" name="mainIframe" id="mainIframe" style="height:100%; width:100%; border: 0px;" frameborder="0"></iframe>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+        function ResizeWindow(){
+            h = $(window).height();
+            w = $(window).width();
+            topHeight = $('header').outerHeight(true);
+            $('.left-sidebar, #mainIframe').height(h - topHeight);
+            $(' #mainIframe').width(w - $('.left-sidebar').outerWidth(true));
+        }
+
+        $(function(){
+            //定位
+            ResizeWindow();
+            $(window).resize(function(){
+                ResizeWindow();
+            })
+        })
+    </script>
+</block>

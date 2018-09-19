@@ -32,7 +32,6 @@ class SmsMessageModel extends Model
         $where['add_time'] = array('EGT', NOW_TIME - C('SMS_EXPIRE_TIME') * 60);
         $where['is_used'] = 0;
         $where['user_type'] = $user_type;
-        $where['type'] = $type;
         $smsInfo = $this->where($where)->find();
 
         if (count($smsInfo) > 0) {

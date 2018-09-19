@@ -1,0 +1,68 @@
+<extend name="Common/base"/>
+<block name="style">
+
+</block>
+
+<block name="body">
+    <div class="row-content am-cf">
+        <div class="row">
+           <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                <div class="widget am-cf">
+                    <div class="widget-head am-cf">
+                        <div class="widget-title am-fl">{$info['id'] ? '编辑' : '添加'}标签</div>
+                    </div>
+                    <div class="widget-body am-fr">
+
+                        <form action="__ACTION__" method="post" class="ajaxForm am-form tpl-form-border-form tpl-form-border-br">
+                            <div class="am-form-group">
+                                <label for="tags_name" class="am-u-sm-2 am-form-label">
+                                    标签名称 <span class="tpl-form-line-small-title must-input">*</span>
+                                </label>
+                                <div class="am-u-sm-10">
+                                    <input type="text" class="tpl-form-input" id="tags_name" name="tags_name" placeholder="请输入标签名称"  value="{$info['tags_name']}">
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <label for="tags_type" class="am-u-sm-2 am-form-label">
+                                    标签类型 <span class="tpl-form-line-small-title must-input">*</span>
+                                </label>
+                                <div class="am-u-sm-10">
+                                    <select name="tags_type" id="tags_type">
+                                        <foreach name="tags_type" item="v">
+                                            <option value="{$v['id']}">{$v['value']}</option>
+                                        </foreach>
+                                    </select>
+                                    <script type="text/javascript">
+                                        $(function(){
+                                            $('#tags_type').val({$info['tags_type']});
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <label for="tags_sort" class="am-u-sm-2 am-form-label">
+                                    标签排序 <span class="tpl-form-line-small-title must-input">*</span>
+                                </label>
+                                <div class="am-u-sm-10">
+                                    <input type="text" class="tpl-form-input" id="tags_sort" name="tags_sort" placeholder="请输入标签排序"  value="{$info['tags_sort']}">
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <div class="am-u-sm-10 am-u-sm-push-2">
+                                    <input type="hidden" name="id" value="{$info['id']}">
+                                    <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+                                    <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback();">返回</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+<script type="text/javascript">
+</script>
+</block>

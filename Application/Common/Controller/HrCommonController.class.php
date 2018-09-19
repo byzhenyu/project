@@ -1,30 +1,22 @@
 <?php
-
-/**
- * Created by PhpStorm.
- * User: jipingzhao
- * Date: 6/29/17
- * Time: 9:14 AM
- * 控制器基类
- */
 namespace Common\Controller;
 use Think\Controller;
-class AgentCommonController extends Controller
+class HrCommonController extends Controller
 {   
     public function __construct()
     {
         parent::__construct();
         //获取参数配置
         $this->get_global_config();
-        $agent_auth = session('agent_auth');
-        $agent_id = $agent_auth['agent_id'];
-        $agent_id = $agent_id ? $agent_id : 0;
-        $agentName = $agent_auth['agent_name'] ? $agent_auth['agent_name'] : 0;
-        define('AGENT_ID', $agent_id);
-        define('AGENT_NAME', $agentName);
+        $hr_auth = session('hr_auth');
+        $hr_id = $hr_auth['hr_id'];
+        $hr_id = $hr_id ? $hr_id : 0;
+        $hrName = $hr_auth['hr_name'] ? $hr_auth['hr_name'] : 0;
+        define('HR_ID', $hr_id);
+        define('HR_NAME', $hrName);
 
-        if(!$agent_id) {
-            redirect(U('/Agent/Login'));
+        if(!$hr_id) {
+            redirect(U('/Hr/Login'));
         } 
 
         

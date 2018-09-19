@@ -34,4 +34,16 @@ class RegionModel extends Model {
         return $res;
     }
 
+    /**
+     * @desc 获取地区列表
+     * @param $where
+     * @param bool $field
+     * @return mixed
+     */
+    public function getRegionList($where, $field = false){
+        if(!$field) $field = '*';
+        $list = $this->where($where)->field($field)->select();
+        return $list;
+    }
+
 }

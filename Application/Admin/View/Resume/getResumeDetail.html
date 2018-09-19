@@ -1,0 +1,212 @@
+<extend name="Common/base"/>
+<block name="style">
+	<style>
+		.am-table {
+			font-size: 1.3rem;
+			margin-bottom: 0;
+		}
+		.am-btn{
+			padding:5px 15px;font-size:12px
+		}
+	</style>
+</block>
+<block name="body">
+	<!-- 内容区域 -->
+	<div class="row-content am-cf">
+		<div class="row">
+			<div class="widget am-cf">
+				<div class="widget-head am-cf">
+					<div class="widget-title  am-cf">简历详情</div>
+				</div>
+				<div class="widget-body  am-fr">
+					<form id="orderForm" action="__ACTION__" method="post" class="ajaxForm">
+						<table width="100%" class="am-table am-table-bordered">
+							<thead>
+							<tr><th colspan="4">简历基本资料</th></tr>
+							</thead>
+							<tbody>
+							<tr>
+								<td style="width: 25%;;"><div align="right"><strong>真实姓名：</strong></div></td>
+								<td style="width: 25%;">{$info['detail']['true_name']}</td>
+								<td style="width: 25%;"><div align="right"><strong>首字母：</strong></div></td>
+								<td>{$info['detail']['initials']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>联系方式：</strong></div></td>
+								<td>{$info['detail']['mobile']}</td>
+								<td><div align="right"><strong>邮箱：</strong></div></td>
+								<td>{$info['detail']['email']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>性别：</strong></div></td>
+								<td>{:getSexInfo($info['detail']['sex'])}</td>
+								<td><div align="right"><strong>年龄：</strong></div></td>
+								<td>{$info['detail']['age']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>求职方向：</strong></div></td>
+								<td>{$info['detail']['job_intension']}</td>
+								<td><div align="right"><strong>求职地点：</strong></div></td>
+								<td>{$info['detail']['job_area']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>工作性质：</strong></div></td>
+								<td>{$info['detail']['post_nature']}</td>
+								<td><div align="right"><strong>第一学历：</strong></div></td>
+								<td>{$info['detail']['first_degree']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>第二学历：</strong></div></td>
+								<td>{$info['detail']['second_degree']}</td>
+								<td><div align="right"><strong>语言能力：</strong></div></td>
+								<td>{$info['detail']['language_ability']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>联系地址：</strong></div></td>
+								<td>{$info['detail']['address']}</td>
+								<td><div align="right"><strong>自我介绍：</strong></div></td>
+								<td>{$info['detail']['introduced']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>职业标签：</strong></div></td>
+								<td>{$info['detail']['career_label']}</td>
+								<td><div align="right"><strong>更新时间：</strong></div></td>
+								<td>{:time_format($info['detail']['update_time'])}</td>
+							</tr>
+						</table>
+						<table width="100%" class="am-table am-table-bordered">
+							<thead>
+							<tr><th colspan="4">教育经历</th></tr>
+							</thead>
+							<tbody>
+							<empty name="info.resume_edu">
+								<tr>
+									<td>
+										<div align="right"><strong>教育经历</strong></div>
+									</td>
+									<td colspan="3">
+										暂无
+									</td>
+								</tr>
+							</empty>
+							<notempty name="info.resume_edu">
+								<foreach name="info.resume_edu" item="v">
+									<tr>
+										<td style="width: 25%;"><div align="right"><strong>学校名称：</strong></div></td>
+										<td style="width: 25%;">{$v['school_name']}</td>
+										<td style="width: 25%"><div align="right"><strong>学历：</strong></div></td>
+										<td>{$v['degree']}</td>
+									</tr>
+									<tr>
+										<td><div align="right"><strong>专业：</strong></div></td>
+										<td>{$v['major']}</td>
+										<td><div align="right"><strong>描述：</strong></div></td>
+										<td>{$v['describe']}</td>
+									</tr>
+									<tr>
+										<td><div align="right"><strong>开始时间：</strong></div></td>
+										<td>{$v['starttime']}</td>
+										<td><div align="right"><strong>结束时间：</strong></div></td>
+										<td>{$v['endtime']}</td>
+									</tr>
+								</foreach>
+							</notempty>
+							</tbody>
+						</table>
+						<table width="100%" class="am-table am-table-bordered">
+							<thead>
+							<tr><th colspan="4">工作经历</th></tr>
+							</thead>
+							<tbody>
+							<empty name="info.resume_work">
+								<tr>
+									<td>
+										<div align="right"><strong>工作经历</strong></div>
+									</td>
+									<td colspan="3">
+										暂无
+									</td>
+								</tr>
+							</empty>
+							<notempty name="info.resume_work">
+								<foreach name="info.resume_work" item="v">
+									<tr>
+										<td style="width: 25%"><div align="right"><strong>公司名称：</strong></div></td>
+										<td style="width: 25%;">{$v['company_name']}</td>
+										<td style="width: 25%;"><div align="right"><strong>职位名称：</strong></div></td>
+										<td>{$v['position']}</td>
+									</tr>
+									<tr>
+										<td><div align="right"><strong>开始时间：</strong></div></td>
+										<td>{$v['starttime']}</td>
+										<td><div align="right"><strong>结束时间：</strong></div></td>
+										<td>{$v['endtime']}</td>
+									</tr>
+									<tr>
+										<td><div align="right"><strong>描述：</strong></div></td>
+										<td colspan="3">{$v['describe']}</td>
+									</tr>
+								</foreach>
+							</notempty>
+							</tbody>
+						</table>
+
+						<table width="100%" class="am-table am-table-bordered">
+							<thead>
+							<tr><th colspan="4">简历评价[平均分]</th></tr>
+							</thead>
+							<tbody>
+							<empty name="info.resume_evaluation">
+								<tr>
+									<td>
+										<div align="right"><strong>评价均分</strong></div>
+									</td>
+									<td colspan="3">
+										暂无评价
+									</td>
+								</tr>
+							</empty>
+							<notempty name="info.resume_evaluation">
+									<tr>
+										<td style="width: 25%;"><div align="right"><strong>技能评分：</strong></div></td>
+										<td style="width: 25%;">{$info['resume_evaluation']['skill_score']}</td>
+										<td style="width: 25%"><div align="right"><strong>专业得分：</strong></div></td>
+										<td>{$info['resume_evaluation']['major_score']}</td>
+									</tr>
+									<tr>
+										<td><div align="right"><strong>沟通得分：</strong></div></td>
+										<td>{$info['resume_evaluation']['chat_score']}</td>
+										<td><div align="right"><strong>仪容得分：</strong></div></td>
+										<td>{$info['resume_evaluation']['appearance_score']}</td>
+									</tr>
+									<tr>
+										<td><div align="right"><strong>创新得分：</strong></div></td>
+										<td>{$info['resume_evaluation']['innovate_score']}</td>
+										<td><div align="right"><strong>分析得分：</strong></div></td>
+										<td>{$info['resume_evaluation']['analysis_score']}</td>
+									</tr>
+									<tr>
+										<td><div align="right"><strong>平均得分：</strong></div></td>
+										<td colspan="3">{$info['evaluation_avg']}</td>
+									</tr>
+							</notempty>
+							</tbody>
+						</table>
+						<table width="100%" class="am-table">
+							<tbody>
+							<tr>
+								<td align="center">
+									<button type="button" class="am-btn am-btn-default tpl-btn-bg-color-default " onclick="goback()">返回</button>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</block>
+<block name="script">
+
+</block>

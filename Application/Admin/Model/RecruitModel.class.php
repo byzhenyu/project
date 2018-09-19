@@ -70,15 +70,10 @@ class RecruitModel extends Model {
         return array('info' => $list, 'page' => $page['page']);
     }
 
-    //添加操作前的钩子操作
     protected function _before_insert(&$data, $option) {
-
         $data['add_time'] = NOW_TIME;
-
     }
-    //更新操作前的钩子操作
     protected function _before_update(&$data, $option) {
-
     }
 
     /**

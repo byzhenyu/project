@@ -103,24 +103,23 @@ class UserCenterApiController extends ApiUserCommonController{
         $upArray = array();
         if(1 == $user_type){
             if(empty($_FILES['business_license'])) $this->apiReturn(V(0, '请上传营业执照！'));
-            $business = app_upload_img('business_license', '', 'User', '');
+            $business = app_upload_img('business_license', '', 'User');
             $upArray['business_license'] = $business;
+            if($business === 0 || $business === -1) $this->apiReturn(V(0, '营业执照上传失败！'));
         }
         $array = array('idcard_up' => '请上传身份证正面照！', 'idcard_down' => '请上传身份证反面照！', 'hand_pic' => '请上传手持身份证照！');
         $keys = array_keys($array);
         foreach($keys as &$val){
             if(empty($_FILES[$val])) $this->apiReturn(V(0, $array[$val]));
-            $$val = app_upload_img($val, '', 'User', '');
-            $upArray[$val] = $$val;
+            $img_url = app_upload_img($val, '', 'User');
+            $upArray[$val] = $img_url;
         }
         $upKeys = array_keys($upArray);
         foreach($upKeys as &$value){
-            if($upArray[$value] == 0 || $upArray[$value] == -1){
-                $tempUpload = '营业执照';
+            if($upArray[$value] === 0 || $upArray[$value] === -1){
                 $t = $array[$value];
                 $t = str_replace('请上传', '', $t);
                 $t = str_replace('！', '', $t);
-                if(!$array[$value]) $t = $tempUpload;
                 $this->apiReturn(V(0, $t.'上传失败！'));
             }
         }
@@ -720,7 +719,10 @@ class UserCenterApiController extends ApiUserCommonController{
                 $data['introduced_voice'] = $img;
             }
         }
-        if($data['id'] > 0){
+        $resume_where = array('user_id' => UID);
+        $resume_info = $model->getResumeInfo($resume_where);
+        if($resume_info){
+            $data['id'] = $resume_info['id'];
             $create = $model->create($data, 2);
             if(false !== $create){
                 $res = $model->save($data);
@@ -976,6 +978,16 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('resume_id' => $resume_id);
         $resumeWorkList = $resumeWorkModel->getResumeWorkList($where);
         $resumeEduList = $resumeEduModel->getResumeEduList($where);
+        foreach($resumeWorkList as &$wval){
+            $wval['starttime'] = time_format($wval['starttime'], 'Y-m-d');
+            $wval['endtime'] = time_format($wval['endtime'], 'Y-m-d');
+        }
+        unset($wval);
+        foreach($resumeEduList as &$eval){
+            $eval['starttime'] = time_format($eval['starttime'], 'Y-m-d');
+            $eval['endtime'] = time_format($eval['endtime'], 'Y-m-d');
+        }
+        unset($eval);
         $resumeEvaluation = $resumeEvaluationModel->getResumeEvaluationAvg($where);
         $sum = array_sum(array_values($resumeEvaluation));
         $avg = round($sum/(count($resumeEvaluation)), 2);

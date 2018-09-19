@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{:C('WEB_TITLE')}HR平台</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <link rel="stylesheet" type="text/css" href="__ADMIN__/ui/css/admin.css?v=1.1" media="all">
+    <link rel="stylesheet" type="text/css" href="__ADMIN__/ui/css/amazeui.min.css" media="all">
+    <link rel="stylesheet" type="text/css" href="__ADMIN__/ui/css/app.css?v=1.04" media="all">
+    <!--[if lt IE 9]-->
+    <script type="text/javascript" src="__PUBLIC__/jquery-1.10.2.min.js"></script>
+    <!--[endif]-->
+    <script type="text/javascript" src="__PUBLIC__/jquery-2.0.3.min.js"></script>
+    <block name="style"></block>
+</head>
+<body>
+    
+    <!-- 内容区 -->
+    <div id="content" style="overflow-x: hidden; width: 100%">
+        <block name="body"> </block>
+    </div>
+    <div class="align-center" style="margin-top: -20px; margin-bottom:15px;">
+        <!--<small>版权所有 &copy; <a href="javascript:void(0)" target="_blank" >海南广长美创世纪科技有限公司</a></small>-->
+    </div>
+    <!-- /内容区 -->
+    <script type="text/javascript" src="__ADMIN__/ui/js/theme.js"></script>
+    <script type="text/javascript" src="__ADMIN__/ui/js/amazeui.min.js"></script>
+    <script type="text/javascript" src="__ADMIN__/ui/js/amazeui.datatables.min.js"></script>
+    <script type="text/javascript" src="__ADMIN__/ui/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" src="__ADMIN__/ui/js/app.js?v=1.02"></script>
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+    <script type="text/javascript" src="__ADMIN__/js/common.js?v=1.01"></script>
+    <script type="text/javascript" src="__STATIC__/js/ajaxForm.js"></script>
+
+
+    <script>
+        // 定义全局变量
+        RECYCLE_URL = "{:U('recycle')}"; // 默认逻辑删除操作执行的地址
+        RESTORE_URL = "{:U('restore')}"; // 默认逻辑删除恢复执行的地址
+        DELETE_URL = "{:U('del')}"; // 默认删除操作执行的地址
+        UPLOAD_IMG_URL = "{:U('uploadImg')}"; // 默认上传图片地址
+        UPLOAD_FIELD_URL = "{:U('uploadField')}"; // 默认上传图片地址
+        DELETE_FILE_URL = "{:U('delFile')}"; // 默认删除图片执行的地址
+        CHANGE_STAUTS_URL = "{:U('changeDisabled')}"; // 修改数据的启用状态
+    </script>
+    <block name="script"></block>
+</body>
+</html>

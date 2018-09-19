@@ -1106,3 +1106,16 @@ function interview_state($state){
     );
     return $arr[$state];
 }
+
+/**
+ * @desc 是否获取联系方式
+ * @param $is_open
+ * @return mixed
+ */
+function show_is_open($is_open){
+    $arr = array(
+        0 => '未查看',
+        1 => '已获取'
+    );
+    return $arr[$is_open];
+}
