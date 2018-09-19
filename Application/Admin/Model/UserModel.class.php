@@ -76,7 +76,7 @@ class UserModel extends Model{
      */
     public function doLogin($user_name, $pwd, $field = '', $user_type){
         if(!$field) $field = 'user_id,user_name,password,pay_password,mobile,email,head_pic,nickname,sex,user_money,frozen_money,disabled,register_time,recommended_number,recruit_number,is_auth,user_type';
-        $where = array('user_name|mobile' => $user_name, 'status' => 1, 'user_type' => $user_type);
+        $where = array('user_name' => $user_name, 'status' => 1, 'user_type' => $user_type);
         $info = $this->where($where)->field($field)->find();
         if($info){
             if(!$info['disabled']) return V(0, '用户已经被禁用');

@@ -536,6 +536,13 @@ class UserCenterApiController extends ApiUserCommonController{
                 $field = 'id,nature_name as name';
                 $list = $model->getCompanyNatureList(array(), $field);
                 break;
+            case 3:
+                $work_nature = C('WORK_NATURE');
+                foreach ($work_nature as $key => $value) {
+                    $list[$key]['id'] = $key;
+                    $list[$key]['name'] = $value;
+                }
+                break;
             default:
                 $this->apiReturn(V(0, '不合法的数据类型！'));
         }
