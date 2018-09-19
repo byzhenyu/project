@@ -70,9 +70,9 @@ class PublicApiController extends ApiCommonController
         if ($userModel->create($data, 1) !== false) {
             $user_id = $userModel->add();
             if ($user_id > 0) {
-                $loginInfo = $userModel->dologin($mobile, $password, '', 0);
-                add_key_operation(1, $user_id, $user_id);
+                $loginInfo = $userModel->doLogin($mobile, $password, '', $user_type);
                 if ($loginInfo['status'] == 1) {
+                    add_key_operation(1, $user_id, $user_id);
                     if (1 == $user_type) D('Admin/ResumeAuth')->saveResumeAuthData(array('hr_mobile' => $mobile), array('hr_id' => $user_id));
                     $this->apiReturn($loginInfo);
                 } else {

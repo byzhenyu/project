@@ -173,12 +173,12 @@ class RecruitApiController extends ApiUserCommonController{
 
     /**
      * 擅长领域页面
-     * tags_type 4 擅长领域 5 求职方向
+     * tags_type 4 擅长领域 2 求职方向
      *
      */
     public function  getLikeTags() {
         $type = I('tags_type', 4, 'intval');
-        if (!in_array($type,[4,5])) {
+        if (!in_array($type,[4,2])) {
             $this->apiReturn(V(0, '类型字段不合法'));
         }
         $all = M('Tags')->where(array('tags_type'=>$type))->order('tags_sort')->select();
