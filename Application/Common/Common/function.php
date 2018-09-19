@@ -532,6 +532,18 @@ function accountState($type) {
 }
 
 /**
+ * @param $type
+ * @return mixed
+ */
+function user_account_type($type){
+    $arr = array(
+        0 => '充值',
+        1 => '提现'
+    );
+    return $arr[$type];
+}
+
+/**
  * 付款类型
  * @param int $type 类型
  */

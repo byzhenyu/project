@@ -64,7 +64,9 @@
                                             <td class="align-center">{:show_is_open($v['is_open'])}</td>
                                             <td class="f-14 align-center">
                                                 <div class="tpl-table-black-operation">
-
+                                                    <a href="{:U('Resume/getResumeDetail',array('resume_id'=>$v['resume_id']))}">
+                                                        <i class="am-icon-dedent"></i> 查看简历
+                                                    </a>
                                                 </div>
                                             </td>
                                         </tr>
