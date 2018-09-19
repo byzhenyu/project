@@ -1013,12 +1013,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('a.hr_id' => UID);
         $model = D('Admin/ResumeAuth');
         $list = $model->getResumeAuthList($where);
-        if($list['info']){
-            $this->apiReturn(V(1, '简历认证列表获取成功！', $list['info']));
-        }
-        else{
-            $this->apiReturn(V(0, '简历认证列表获取失败！'));
-        }
+        $this->apiReturn(V(1, '认证列表', $list['info']));
     }
 
     /**
