@@ -122,5 +122,10 @@ class RecruitResumeModel extends Model {
         $info['add_time'] = time_format($info['add_time']);
         return $info;
     }
-
+    /**
+     * 获取推荐数
+     */
+    public function getRecruitResumeNum($where) {
+        return $this->where($where)->count();
+    }
 }

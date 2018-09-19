@@ -56,16 +56,17 @@ class RecruitModel extends Model {
         if(!$field) $field = '*';
         if(!$isPage) return $this->where($where)->field($field)->order($order)->select();
         $count = $this->where($where)->count();
-
+        $recruitResumeModel = D('Admin/RecruitResume');
         $page = get_web_page($count);
         $list = $this->where($where)->limit($page['limit'])->field($field)->order($order)->select();
         foreach ($list as $k=>$v) {
+            $list[$k]['num'] = $recruitResumeModel->getRecruitResumeNum(array('recruit_id'=>$v['id']));
             $list[$k]['add_time'] = time_format($v['add_time']);
-            $list[$k]['commission'] = fen_to_yuan($v['commission']);
-            $list[$k]['last_token'] = fen_to_yuan($v['last_token']);
-            $list[$k]['get_resume_token'] = fen_to_yuan($v['get_resume_token']);
-            $list[$k]['entry_token'] = fen_to_yuan($v['entry_token']);
-            $list[$k]['sex'] = getSexInfo($v['sex']);
+            if(isset($list[$k]['commission'])) $list[$k]['commission'] = fen_to_yuan($v['commission']);
+            if(isset($list[$k]['last_token'])) $list[$k]['last_token'] = fen_to_yuan($v['last_token']);
+            if(isset($list[$k]['get_resume_token'])) $list[$k]['get_resume_token'] = fen_to_yuan($v['get_resume_token']);
+            if(isset($list[$k]['entry_token'])) $list[$k]['entry_token'] = fen_to_yuan($v['entry_token']);
+            if(isset($list[$k]['sex'])) $list[$k]['sex'] = getSexInfo($v['sex']);
         }
         return array('info' => $list, 'page' => $page['page']);
     }
