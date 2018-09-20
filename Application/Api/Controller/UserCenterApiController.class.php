@@ -1022,6 +1022,7 @@ class UserCenterApiController extends ApiUserCommonController{
     public function confirmResumeAuth(){
         $id = I('post.id');
         $auth_result = I('post.auth_result');
+        $recommend_label = I('post.recommend_label');
         if(!in_array($auth_result, array(1, 2))) $this->apiReturn(V(0, '认证状态有误！'));
         $user_where = array('user_id' => UID);
         $userModel = D('Admin/User');
@@ -1031,7 +1032,8 @@ class UserCenterApiController extends ApiUserCommonController{
         $resume_auth_info = $resumeAuthModel->getResumeAuthInfo($resume_auth_where);
         if(!$resume_auth_info || $resume_auth_info['hr_mobile'] != $user_info['mobile']) $this->apiReturn(V(0, '认证信息有误！'));
         if($resume_auth_info['auth_result'] != 0) $this->apiReturn(V(0, '该简历已经被认证过！'));
-        $save_data = array('auth_result' => $auth_result, 'auth_time' => NOW_TIME);
+        $save_data['auth_result'] = $auth_result;
+        $save_data['auth_time'] = NOW_TIME;
         M()->startTrans();
         $res = $resumeAuthModel->saveResumeAuthData($resume_auth_where, $save_data);
         if(1 == $auth_result){
@@ -1049,6 +1051,7 @@ class UserCenterApiController extends ApiUserCommonController{
             $data = array();
             $data['hr_user_id'] = UID;
             $data['resume_id'] = $resume_auth_info['resume_id'];
+            $data['recommend_label'] = $recommend_label;
             $create = $hr_resume_model->create($data, 1);
             if(false !== $create){
                 $hr_resume_result = $hr_resume_model->add($data);
