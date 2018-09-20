@@ -65,7 +65,7 @@ class InterviewModel extends Model {
         }
         $interview_where = array('hr_user_id' => $data['hr_user_id'], 'resume_id' => $data['resume_id']);
         $res = $this->getInterviewInfo($interview_where);
-        if(!$res){
+        if($res){
             $this->error = '该悬赏已经发送过面试信息！';
             return false;
         }
