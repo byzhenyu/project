@@ -45,7 +45,7 @@ class BlackWhiteModel extends Model{
     }
 
     protected function _before_insert(&$data, $option){
-        $black_where = array('type' => $data['type'], 'dispose_value' => $data['dispose_value'], 'dispose_type' => $data['dispose_type']);
+        $black_where = array('dispose_value' => $data['dispose_value'], 'dispose_type' => $data['dispose_type']);
         $res = $this->getBlackWhiteInfo($black_where);
         $valid = $this->validDisposeValue($data['dispose_type'], $data['dispose_value']);
         if(true !== $valid){
@@ -60,7 +60,7 @@ class BlackWhiteModel extends Model{
     }
 
     protected function _before_update(&$data, $option){
-        $black_where = array('type' => $data['type'], 'dispose_value' => $data['dispose_value'], 'dispose_type' => $data['dispose_type'], 'id' => array('neq' => $data['id']));
+        $black_where = array('dispose_value' => $data['dispose_value'], 'dispose_type' => $data['dispose_type'], 'id' => array('neq' => $data['id']));
         $res = $this->getBlackWhiteInfo($black_where);
         $valid = $this->validDisposeValue($data['dispose_type'], $data['dispose_value']);
         if(true !== $valid){
