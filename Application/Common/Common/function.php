@@ -928,11 +928,36 @@ function cmp_contraband($content){
 }
 
 /**
+ * @desc 比较黑/白名单
+ * @param $content
+ * @param int $type
+ * @return bool
+ */
+function cmp_black_white($content, $type = 1){
+    $arr = black_white_list($type);
+    $banner = generateRegularExpression($arr);
+    $valid = check_words($banner, $content);
+    $cmp_len = count($valid);
+    if($cmp_len > 0) return true;
+    return false;
+}
+
+/**
  * @desc 获取违禁词列表
  * @return mixed
  */
 function contraband_list(){
     $res = D('Admin/Contraband')->getContrabandCmpList();
+    return $res;
+}
+
+/**
+ * @desc 获取黑/白名单列表
+ * @param int $type
+ * @return mixed
+ */
+function black_white_list($type = 1){
+    $res = D('Admin/BlackWhite')->getBlackList($type);
     return $res;
 }
 

@@ -75,6 +75,19 @@ class BlackWhiteModel extends Model{
     }
 
     /**
+     * @desc 黑/白名单列表/比较用
+     * @param $type
+     * @return array
+     */
+    public function getBlackList($type = 1){
+        $where = array('type' => $type);
+        $list = $this->where($where)->select();
+        $black_white = array();
+        foreach($list as &$val) $black_white[] = $val['dispose_value']; unset($val);
+        return $black_white;
+    }
+
+    /**
      * @desc 验证类型下的配置值是否合法
      * @param $type
      * @param $value

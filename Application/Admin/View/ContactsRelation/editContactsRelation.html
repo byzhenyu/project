@@ -1,0 +1,71 @@
+<extend name="Common/base"/>
+<block name="style">
+
+</block>
+
+<block name="body">
+    <div class="row-content am-cf">
+        <div class="row">
+           <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                <div class="widget am-cf">
+                    <div class="widget-head am-cf">
+                        <div class="widget-title am-fl">{$info['id'] ? '编辑' : '添加'}联系关系</div>
+                    </div>
+                    <div class="widget-body am-fr">
+
+                        <form action="__ACTION__" method="post" class="ajaxForm am-form tpl-form-border-form tpl-form-border-br">
+                            <div class="am-form-group">
+                                <label for="relation_name" class="am-u-sm-2 am-form-label">
+                                    关系名称 <span class="tpl-form-line-small-title must-input">*</span>
+                                </label>
+                                <div class="am-u-sm-10">
+                                    <input type="text" class="tpl-form-input" id="relation_name" name="relation_name" placeholder="请输入关系名称"  value="{$info['relation_name']}">
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <label class="am-u-sm-2 am-form-label">关系图片</label>
+                                <div class="am-u-sm-10">
+                                    <div class="row">
+                                        <div class="am-u-sm-3">
+                                            <div class="am-form-group am-form-file">
+                                                <div class="tpl-form-file-img">
+                                                    <img src="{$info['relation_img']}" alt="" style="min-height:122px; width: 122px;" id="img_">
+                                                </div>
+                                                <input type="hidden" value="{$info['relation_img']}" name="relation_img" id="img" />
+                                                <button type="button" class="am-btn am-btn-success am-btn-sm" id="btnUpload">上传</button>
+                                                <button type="button" class="am-btn am-btn-danger am-btn-sm" onclick="delFile($('#img').val(), '')" id="btn_delete_">删除</button>
+                                                <if condition="$info['relation_img'] eq ''">
+                                                    <script>
+                                                        $("#img_, #btn_delete_").hide();
+                                                    </script>
+                                                </if>
+                                            </div>
+                                        </div>
+                                        <div class="am-u-sm-9"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <div class="am-u-sm-10 am-u-sm-push-2">
+                                    <input type="hidden" name="id" value="{$info['id']}">
+                                    <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+                                    <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback();">返回</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript" charset="utf-8" src="__PUBLIC__/ajaxupload/ajaxupload.js?v=1.0"></script>
+    <script type="text/javascript" charset="utf-8" src="__PUBLIC__/ajaxupload/imgupload.js?v=1.0"></script>
+    <script type="text/javascript">
+        $(function(){
+            ajaxUpload('#btnUpload', $("#img"), 'Relation', '');
+        })
+    </script>
+</block>

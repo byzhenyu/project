@@ -1,0 +1,92 @@
+<extend name="Common/base"/>
+<block name="style">
+
+</block>
+
+<block name="body">
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                <div class="widget am-cf">
+                    <div class="widget-head am-cf">
+                        <div class="widget-title  am-cf">紧急联系人列表</div>
+
+                    </div>
+                    <div class="widget-body  am-fr">
+
+                        <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+                            <div class="am-form-group">
+                                <div class="am-btn-toolbar">
+                                    <div class="am-btn-group am-btn-group-xs">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <form action="__SELF__" method="get">
+                            <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
+                                <div class="am-form-group tpl-table-list-select">
+
+                                </div>
+                            </div>
+                            <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+                                <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                                    <input type="text" class="am-form-field" name="keyword" placeholder="请输入用户手机号/用户昵称" value="{$keyword}">
+                                    <span class="am-input-group-btn">
+                                        <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="submit"></button>
+                                        <a class="am-btn  am-btn-default am-btn-danger tpl-table-list-field am-icon-refresh" type="button" href="__ACTION__"></a>
+                                    </span>
+                                </div>
+                            </div>
+                            <input name="p" value="1" type="hidden"/>
+                        </form>
+
+                        <div class="am-u-sm-12">
+                            <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                                <thead>
+                                    <tr>
+                                        <th width="5%" class="align-center">序号</th>
+                                        <th width="11%" class="align-center">用户名</th>
+                                        <th width="11%" class="align-center">手机号</th>
+                                        <th width="11%" class="align-center">联系人</th>
+                                        <th width="11%" class="align-center">联系关系</th>
+                                        <th width="11%" class="align-center">联系方式</th>
+                                        <th width="11%" class="align-center">联系邮箱</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <foreach name="list" item="v">
+                                        <tr class="gradeX">
+                                            <td class="align-center">{$v['id']}</td>
+                                            <td class="align-center">{$v['user_name']}</td>
+                                            <td class="align-center">{$v['mobile']}</td>
+                                            <td class="align-center">{$v['contact_name']}</td>
+                                            <td class="align-center">{$v['relation_name']}</td>
+                                            <td class="align-center">{$v['contact_mobile']}</td>
+                                            <td class="align-center">{$v['contact_email']}</td>
+                                        </tr>
+                                    </foreach>
+                                </tbody>
+                            </table>
+                            <empty name="list">
+                                <h4>aOh! 没有相关内容!</h4>
+                            </empty>
+                        </div>
+                        <div class="am-u-lg-12 am-cf">
+
+                            <div class="am-fr">
+                                <div class="am-pagination tpl-pagination">
+                                    {$page}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+    </script>
+</block>
