@@ -505,17 +505,25 @@ class UserCenterApiController extends ApiUserCommonController{
     public function getPositionIndustryList(){
         $type = I('type', 1, 'intval');
         $parent_id = I('parent_id', 0, 'intval');
-        $where = array('parent_id' => $parent_id);
+        $where = array('parent_id' => 0);
         switch ($type){
             case 1:
                 $model = D('Admin/Industry');
                 $field = 'id,industry_name as name,parent_id,sort';
                 $list = $model->getIndustryList($where, $field);
+                foreach($list as &$val){
+                    $val['children'] = $model->getIndustryList(array('parent_id' => $val['parent_id']), $field);
+                }
+                unset($val);
                 break;
             case 2:
                 $model = D('Admin/Position');
                 $field = 'id,position_name as name,parent_id,sort';
                 $list = $model->getPositionList($where, $field, '', false);
+                foreach($list as &$val){
+                    $val['children'] = $model->getPositionList(array('parent_id' => $val['parent_id']), $field, '', false);
+                }
+                unset($val);
                 break;
             default:
                 $this->apiReturn(V(0, '不合法的数据类型！'));
