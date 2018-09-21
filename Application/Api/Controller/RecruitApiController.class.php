@@ -96,8 +96,8 @@ class RecruitApiController extends ApiUserCommonController{
             $where['hr_user_id'] = array('eq', UID);
         }
 
-        $data = D('Admin/Recruit')->getRecruitList($where,'id,position_name,recruit_num,add_time');
-        $this->apiReturn(V(1, '悬赏列表', $data['info']));
+        $list = D('Admin/Recruit')->getRecruitList($where,'id, position_name, recruit_num, commission, add_time');
+        $this->apiReturn(V(1, '悬赏列表', $list['info']));
     }
 
 
