@@ -561,6 +561,10 @@ class UserCenterApiController extends ApiUserCommonController{
         $model = D('Admin/Tags');
         $where = array('tags_type' => $type);
         $list = $model->getTagsList($where);
+        foreach($list as &$val){
+            $val['sel'] = 0;
+        }
+        unset($val);
         $this->apiReturn(V(1, '标签列表获取成功！', $list));
     }
 

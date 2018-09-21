@@ -121,7 +121,7 @@ class UserController extends CommonController {
                 $this->ajaxReturn(V(0, '修改失败请稍后重试！'));
             }
             else{
-                $this->ajaxReturn(V(0, '参数有误'));
+                $this->ajaxReturn(V(0, '资料未上传！'));
             }
         } else {
             $result = D('Admin/UserAuth')->getAuthInfo($where);
