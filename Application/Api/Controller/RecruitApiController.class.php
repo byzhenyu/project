@@ -16,6 +16,10 @@ class RecruitApiController extends ApiUserCommonController{
         $data['experience'] = returnArrData(C('WORK_EXP')); //经验
         //地区单独接口
         $data['tags'] = D('Admin/Tags')->getTagsList(array('tags_type'=>3)); //福利标签
+        foreach($data['tags'] as &$val){
+            $val['sel'] = 0;
+        }
+        unset($val);
         $this->apiReturn(V(1 , '悬赏页面信息',$data));
     }
 
