@@ -4,6 +4,8 @@
  */
 namespace Admin\Controller;
 use Think\Controller;
+use Think\Verify;
+
 class UserController extends CommonController {
     //会员HR列表
     public function listUser(){
@@ -117,6 +119,9 @@ class UserController extends CommonController {
                 $result = D('Admin/User')->where($where)->save($data);
                 if(false !== $result) $this->ajaxReturn(V(1, '操作成功'));
                 $this->ajaxReturn(V(0, '修改失败请稍后重试！'));
+            }
+            else{
+                $this->ajaxReturn(V(0, '参数有误'));
             }
         } else {
             $result = D('Admin/UserAuth')->getAuthInfo($where);
