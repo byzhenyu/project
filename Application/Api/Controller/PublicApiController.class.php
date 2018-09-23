@@ -30,7 +30,7 @@ class PublicApiController extends ApiCommonController
     public function getHomeData()
     {
         $keywords = I('keywords', '', 'trim');
-        $city_id = I('city_id', 0, 'intval');
+        $city_id = I('city_id', '', 'trim');
         $where = array('city_name' => $city_id, 'a.disabled' => 1);
         if ($keywords) $where['question_title'] = array('like', '%' . $keywords . '%');
         $model = D('Admin/Question');
