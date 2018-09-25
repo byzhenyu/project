@@ -158,6 +158,23 @@ class UserCenterApiController extends ApiUserCommonController{
     }
 
     /**
+     * @desc 上传文件
+     */
+    public function uploadFile(){
+        $voice = $_FILES['voice'];
+        if(!empty($voice)){
+            $img = app_upload_file('voice', '', 'Resume');
+            if ($img === 0 || $img === -1) {
+                $this->apiReturn(V(0, '语音文件上传失败！'));
+            }
+            else{
+                $data['introduced_voice'] = $img;
+            }
+        }
+        $this->apiReturn(V(1, '', $img));
+    }
+
+    /**
      * @desc 上传凭证信息
      */
     public function getUserAuthInfo(){
