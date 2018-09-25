@@ -1,0 +1,92 @@
+<extend name="Common/base"/>
+<block name="style">
+	<style>
+		.am-table {
+			font-size: 1.3rem;
+			margin-bottom: 0;
+		}
+		.am-btn{
+			padding:5px 15px;font-size:12px
+		}
+	</style>
+</block>
+<block name="body">
+	<!-- 内容区域 -->
+	<div class="row-content am-cf">
+		<div class="row">
+			<div class="widget am-cf">
+				<div class="widget-head am-cf">
+					<div class="widget-title  am-cf">公司信息</div>
+				</div>
+				<div class="widget-body  am-fr">
+					<form id="orderForm" action="__ACTION__" method="post" class="ajaxForm">
+						<table width="100%" class="am-table am-table-bordered">
+							<thead>
+							<tr><th colspan="4">用户验证信息</th></tr>
+							</thead>
+							<tbody>
+							<notempty name="info">
+								<tr>
+									<td style="width: 35%;"><div align="right"><strong>公司名称：</strong></div></td>
+									<td>{$info['company_name']}</td>
+								</tr>
+								<tr>
+									<td><div align="right"><strong>公司规模：</strong></div></td>
+									<td>{$info['company_size']}</td>
+								</tr>
+								<tr>
+									<td><div align="right"><strong>公司性质：</strong></div></td>
+									<td>{$info['company_nature']}</td>
+								</tr>
+								<tr>
+									<td><div align="right"><strong>公司电话：</strong></div></td>
+									<td>{$info['company_mobile']}</td>
+								</tr>
+								<tr>
+									<td><div align="right"><strong>公司邮箱：</strong></div></td>
+									<td>{$info['company_email']}</td>
+								</tr>
+								<tr>
+									<td><div align="right"><strong>公司所属行业：</strong></div></td>
+									<td>{$info['company_industry']}</td>
+								</tr>
+								<tr>
+									<td><div align="right"><strong>公司地址：</strong></div></td>
+									<td>{$info['company_address']}</td>
+								</tr>
+								<tr>
+									<td><div align="right"><strong>环境照片：</strong></div></td>
+									<td>
+										<foreach name="info.company_pic" item="v">
+											<img src="{$v['value']}" alt="公司环境照片" height="100px" />
+										</foreach>
+									</td>
+								</tr>
+							</notempty>
+							<empty name="info">
+								<tr>
+									<td style="width: 35%;"><div align="right"><strong>公司资料：</strong></div></td>
+									<td>未上传</td>
+								</tr>
+							</empty>
+
+							</tbody>
+						</table>
+						<table width="100%" class="am-table">
+							<tbody>
+							<tr>
+								<td align="center">
+									<button type="button" class="am-btn am-btn-default tpl-btn-bg-color-default " onclick="goback()">返回</button>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</block>
+<block name="script">
+
+</block>

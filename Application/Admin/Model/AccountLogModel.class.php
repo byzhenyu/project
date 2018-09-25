@@ -14,15 +14,11 @@ class AccountLogModel extends Model {
 
     );
 
-    protected function _before_insert(&$data, $option){
-
-    }
-
     /**
-     * 资金变动记录
      * @param $where
      * @param string $field
      * @param string $order
+     * @return array
      */
     public function getAccountLogByPage($where,$field='',$order="log_id desc") {
         if (!$field) {
@@ -43,5 +39,8 @@ class AccountLogModel extends Model {
             'info'=>$info,
             'page'=>$page['page']
         );
+    }
+
+    protected function _before_insert(&$data, $option){
     }
 }

@@ -30,8 +30,8 @@ class PublicApiController extends ApiCommonController
     public function getHomeData()
     {
         $keywords = I('keywords', '', 'trim');
-        $city_id = I('city_id', 0, 'intval');
-        $where = array('city_id' => $city_id, 'a.disabled' => 1);
+        $city_id = I('city_id', '', 'trim');
+        $where = array('city_name' => $city_id, 'a.disabled' => 1);
         if ($keywords) $where['question_title'] = array('like', '%' . $keywords . '%');
         $model = D('Admin/Question');
         $field = 'u.nickname,u.head_pic,a.id,a.like_number,a.browse_number,a.answer_number,a.add_time,a.question_title';
@@ -60,6 +60,8 @@ class PublicApiController extends ApiCommonController
         $email = I('email', '', 'trim');
         $password = I('password', '', 'trim');
         $user_type = I('user_type', 0, 'intval');
+        if(cmp_black_white($mobile)) $this->apiReturn(V(0, '手机号在黑名单内！'));
+        if(cmp_black_white($email)) $this->apiReturn(V(0, '电子邮箱在黑名单内！'));
         $userModel = D('Admin/User');
         if (!isMobile($mobile)) $this->apiReturn(V(0, '请填写正确的手机格式！'));
         if (!is_email($email)) $this->apiReturn(V(0, '请输入正确的邮箱格式！'));

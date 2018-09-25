@@ -16,6 +16,10 @@ class RecruitApiController extends ApiUserCommonController{
         $data['experience'] = returnArrData(C('WORK_EXP')); //经验
         //地区单独接口
         $data['tags'] = D('Admin/Tags')->getTagsList(array('tags_type'=>3)); //福利标签
+        foreach($data['tags'] as &$val){
+            $val['sel'] = 0;
+        }
+        unset($val);
         $this->apiReturn(V(1 , '悬赏页面信息',$data));
     }
 
@@ -44,7 +48,7 @@ class RecruitApiController extends ApiUserCommonController{
         $user_money = D('Admin/User')->getUserField(array('user_id'=>UID),'user_money');
 
         if ($data['commission'] > $user_money) {
-            $this->apiReturn(V(0, '可用余额不足'));
+            $this->apiReturn(V(0, '可用令牌不足'));
         }
         if (cmp_contraband($data['language_ability'])) {
             $this->apiReturn(V(0, '语言要求有违禁词'));
@@ -96,8 +100,8 @@ class RecruitApiController extends ApiUserCommonController{
             $where['hr_user_id'] = array('eq', UID);
         }
 
-        $data = D('Admin/Recruit')->getRecruitList($where,'id,position_name,recruit_num,add_time');
-        $this->apiReturn(V(1, '悬赏列表', $data['info']));
+        $list = D('Admin/Recruit')->getRecruitList($where,'id, position_name, recruit_num, commission, add_time');
+        $this->apiReturn(V(1, '悬赏列表', $list['info']));
     }
 
 

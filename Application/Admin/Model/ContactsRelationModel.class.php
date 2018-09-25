@@ -6,8 +6,8 @@ namespace Admin\Model;
 use Think\Model;
 class ContactsRelationModel extends Model
 {
-    protected $insertFields = array();
-    protected $updateFields = array();
+    protected $insertFields = array('relation_name', 'relation_img');
+    protected $updateFields = array('id', 'relation_name', 'relation_img');
     protected $selectFields = array();
     protected $_validate = array(
         array('relation_name', 'require', '关联名称不能为空！', 1, 'regex', 1),

@@ -26,12 +26,12 @@ class ContactsModel extends Model
      */
     public function getContactsList($where, $field = false, $order = ''){
         if(!$field) $field = 'c.*,r.relation_name,r.relation_img';
-        $number = $this->alias('c')->where($where)->join('__CONTACTS_RELATION__ as r on c.relation_id = r.id', 'LEFT')->count();
+        $number = $this->alias('c')->where($where)->join('__CONTACTS_RELATION__ as r on c.relation_id = r.id', 'LEFT')->join('__USER__ as u on u.user_id = c.user_id')->count();
         $page = get_web_page($number);
-        $list = $this->alias('c')->where($where)->join('__CONTACTS_RELATION__ as r on c.relation_id = r.id', 'LEFT')->field($field)->order($order)->limit($page['limit'])->select();
+        $list = $this->alias('c')->where($where)->join('__CONTACTS_RELATION__ as r on c.relation_id = r.id', 'LEFT')->join('__USER__ as u on u.user_id = c.user_id')->field($field)->order($order)->limit($page['limit'])->select();
         foreach($list as &$val){
             $val['relation_name'] = strval($val['relation_name']);
-            $val['relation_img'] = strval($val['relation_img']);
+            if($val['relation_img']) $val['relation_img'] = strval($val['relation_img']);
         }
         return array(
             'info' => $list,

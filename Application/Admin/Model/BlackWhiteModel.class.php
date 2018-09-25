@@ -45,7 +45,7 @@ class BlackWhiteModel extends Model{
     }
 
     protected function _before_insert(&$data, $option){
-        $black_where = array('type' => $data['type'], 'dispose_value' => $data['dispose_value'], 'dispose_type' => $data['dispose_type']);
+        $black_where = array('dispose_value' => $data['dispose_value'], 'dispose_type' => $data['dispose_type']);
         $res = $this->getBlackWhiteInfo($black_where);
         $valid = $this->validDisposeValue($data['dispose_type'], $data['dispose_value']);
         if(true !== $valid){
@@ -60,7 +60,7 @@ class BlackWhiteModel extends Model{
     }
 
     protected function _before_update(&$data, $option){
-        $black_where = array('type' => $data['type'], 'dispose_value' => $data['dispose_value'], 'dispose_type' => $data['dispose_type'], 'id' => array('neq' => $data['id']));
+        $black_where = array('dispose_value' => $data['dispose_value'], 'dispose_type' => $data['dispose_type'], 'id' => array('neq' => $data['id']));
         $res = $this->getBlackWhiteInfo($black_where);
         $valid = $this->validDisposeValue($data['dispose_type'], $data['dispose_value']);
         if(true !== $valid){
@@ -72,6 +72,19 @@ class BlackWhiteModel extends Model{
             return false;
         }
         $data['update_time'] = NOW_TIME;
+    }
+
+    /**
+     * @desc 黑/白名单列表/比较用
+     * @param $type
+     * @return array
+     */
+    public function getBlackList($type = 1){
+        $where = array('type' => $type);
+        $list = $this->where($where)->select();
+        $black_white = array();
+        foreach($list as &$val) $black_white[] = $val['dispose_value']; unset($val);
+        return $black_white;
     }
 
     /**

@@ -52,13 +52,13 @@
                                 <thead>
                                     <tr>
                                         <th width="60">编号</th>
-                                        <th width="17%" >会员手机/账号</th>
-                                        <th width="12%" class="align-center">可用资金</th>
+                                        <th width="11%" >会员手机/账号</th>
+                                        <th width="9%" class="align-center">可用资金</th>
                                         <th width="12%" class="align-center">冻结资金</th>
                                         <th width="17%" class="align-center">注册时间</th>
                                         <th width="10%" class="align-center">验证状态</th>
                                         <th width="10%" class="align-center">状态</th>
-                                        <th width="15%">操作</th>
+                                        <th >操作</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -90,6 +90,7 @@
                                                     <a href="{:U('User/userDetail', array('user_id'=>$v['user_id']))}"> 用户详情 </a>
                                                     <if condition="$user_type eq 1">
                                                         <a href="{:U('Resume/listHrResume', array('user_id'=>$v['user_id']))}"> 人才库 </a>
+                                                        <a href="{:U('CompanyInfo/companyInfoDetail', array('user_id'=>$v['user_id']))}"> 公司详情 </a>
                                                         <else/>
                                                         <a href="{:U('Resume/getResumeDetail', array('user_id'=>$v['user_id']))}"> 简历详情 </a>
                                                     </if>

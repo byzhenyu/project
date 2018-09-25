@@ -12,6 +12,24 @@ class TaskLogModel extends Model {
     protected $_validate = array(
     );
 
+    /**
+     * @desc 任务完成日志
+     * @param $where
+     * @param bool $field
+     * @param string $order
+     * @return array
+     */
+    public function getTaskLogList($where, $field = false, $order = 'l.finish_time'){
+        if(!$field) $field = 'l.*,u.nickname,u.mobile,u.user_name';
+        $number = $this->alias('l')->join('__USER__ as u on l.user_id = u.user_id')->where($where)->count();
+        $page = get_web_page($number);
+        $list = $this->alias('l')->join('__USER__ as u on l.user_id = u.user_id')->where($where)->field($field)->limit($page['limit'])->order($order)->select();
+        return array(
+            'info' => $list,
+            'page' => $page['page']
+        );
+    }
+
     protected function _before_insert(&$data, $option){
         $data['finish_time'] = NOW_TIME;
         if(!$data['task_name']) $data['task_name'] = D('Admin/Task')->getTaskField(array('id' => $data['task_id']), 'task_name');

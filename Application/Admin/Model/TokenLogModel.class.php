@@ -21,10 +21,21 @@ class TokenLogModel extends Model {
     }
 
     /**
-     * 令牌获取记录
+     * @desc 获取悬赏赏金令牌列表
+     * @param $where
+     * @param string $field
+     * @param string $order
+     * @return array
      */
-    public function getTokenLogList($where,$field='',$order='id desc') {
-
+    public function getTokenLogList($where,$field='',$order='l.id desc') {
+        if(!$field) $field = 'l.*,u.user_name,u.nickname,u.mobile';
+        $number = $this->alias('l')->join('__USER__ as u on u.user_id = l.user_id')->count();
+        $page = get_web_page($number);
+        $list = $this->alias('l')->join('__USER__ as u on u.user_id = l.user_id')->where($where)->field($field)->limit($page['limit'])->order($order)->select();
+        return array(
+            'info' => $list,
+            'page' => $page['page']
+        );
     }
 
     /**

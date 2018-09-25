@@ -100,6 +100,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $authModel = D('Admin/UserAuth');
         $auth_info = $authModel->getAuthInfo($where);
         $data = I('post.');
+        if(1 == $data['cert_type'] && cmp_black_white($data['idcard_number'])) $this->apiReturn(V(0, '身份证号在黑名单内！'));
         $upArray = array();
         if(1 == $user_type){
             if(empty($_FILES['business_license'])) $this->apiReturn(V(0, '请上传营业执照！'));
@@ -504,17 +505,25 @@ class UserCenterApiController extends ApiUserCommonController{
     public function getPositionIndustryList(){
         $type = I('type', 1, 'intval');
         $parent_id = I('parent_id', 0, 'intval');
-        $where = array('parent_id' => $parent_id);
+        $where = array('parent_id' => 0);
         switch ($type){
             case 1:
                 $model = D('Admin/Industry');
                 $field = 'id,industry_name as name,parent_id,sort';
                 $list = $model->getIndustryList($where, $field);
+                foreach($list as &$val){
+                    $val['children'] = $model->getIndustryList(array('parent_id' => $val['id']), $field);
+                }
+                unset($val);
                 break;
             case 2:
                 $model = D('Admin/Position');
                 $field = 'id,position_name as name,parent_id,sort';
                 $list = $model->getPositionList($where, $field, '', false);
+                foreach($list as &$val){
+                    $val['children'] = $model->getPositionList(array('parent_id' => $val['id']), $field, '', false);
+                }
+                unset($val);
                 break;
             default:
                 $this->apiReturn(V(0, '不合法的数据类型！'));
@@ -560,6 +569,10 @@ class UserCenterApiController extends ApiUserCommonController{
         $model = D('Admin/Tags');
         $where = array('tags_type' => $type);
         $list = $model->getTagsList($where);
+        foreach($list as &$val){
+            $val['sel'] = 0;
+        }
+        unset($val);
         $this->apiReturn(V(1, '标签列表获取成功！', $list));
     }
 
@@ -1013,12 +1026,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('a.hr_id' => UID);
         $model = D('Admin/ResumeAuth');
         $list = $model->getResumeAuthList($where);
-        if($list['info']){
-            $this->apiReturn(V(1, '简历认证列表获取成功！', $list['info']));
-        }
-        else{
-            $this->apiReturn(V(0, '简历认证列表获取失败！'));
-        }
+        $this->apiReturn(V(1, '认证列表', $list['info']));
     }
 
     /**
@@ -1027,6 +1035,7 @@ class UserCenterApiController extends ApiUserCommonController{
     public function confirmResumeAuth(){
         $id = I('post.id');
         $auth_result = I('post.auth_result');
+        $recommend_label = I('post.recommend_label');
         if(!in_array($auth_result, array(1, 2))) $this->apiReturn(V(0, '认证状态有误！'));
         $user_where = array('user_id' => UID);
         $userModel = D('Admin/User');
@@ -1036,7 +1045,8 @@ class UserCenterApiController extends ApiUserCommonController{
         $resume_auth_info = $resumeAuthModel->getResumeAuthInfo($resume_auth_where);
         if(!$resume_auth_info || $resume_auth_info['hr_mobile'] != $user_info['mobile']) $this->apiReturn(V(0, '认证信息有误！'));
         if($resume_auth_info['auth_result'] != 0) $this->apiReturn(V(0, '该简历已经被认证过！'));
-        $save_data = array('auth_result' => $auth_result, 'auth_time' => NOW_TIME);
+        $save_data['auth_result'] = $auth_result;
+        $save_data['auth_time'] = NOW_TIME;
         M()->startTrans();
         $res = $resumeAuthModel->saveResumeAuthData($resume_auth_where, $save_data);
         if(1 == $auth_result){
@@ -1054,6 +1064,7 @@ class UserCenterApiController extends ApiUserCommonController{
             $data = array();
             $data['hr_user_id'] = UID;
             $data['resume_id'] = $resume_auth_info['resume_id'];
+            $data['recommend_label'] = $recommend_label;
             $create = $hr_resume_model->create($data, 1);
             if(false !== $create){
                 $hr_resume_result = $hr_resume_model->add($data);

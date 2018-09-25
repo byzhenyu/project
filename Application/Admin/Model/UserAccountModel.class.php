@@ -28,15 +28,17 @@ class UserAccountModel extends Model{
             'info' => $info,
             'page' => $page['page']
         );
-    }  
+    }
 
     /**
-     * 获取列表  
+     * @desc 用户账单
+     * @param $where
+     * @param null $field
+     * @param string $order
+     * @return array
      */
     public function getUserAccountList($where, $field = null, $order = 'ua.add_time desc'){
-        if ($field == null) {
-            $field = $this->selectFields;
-        }
+        if ($field == null)  $field = 'ua.*,u.user_name,u.nickname,u.mobile';
         $count = $this->alias('ua')
             ->join('__USER__ u on ua.user_id = u.user_id','left')
             ->where($where)

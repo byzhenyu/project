@@ -8,14 +8,14 @@ use Think\Model;
 
 class TaskModel extends Model {
     protected $insertFields = array('task_name', 'reward', 'task_desc', 'type', 'task_url', 'type_number');
-    protected $updateFields = array();
+    protected $updateFields = array('task_name', 'reward', 'task_desc', 'type', 'task_url', 'type_number', 'id');
     protected $_validate = array(
         array('task_name', 'require', '任务名称不能为空！', 1, 'regex', 3),
         array('task_name', '1,100', '任务名称长度不能超过100！', 1, 'length', 3),
         array('reward', 'require', '奖励令牌数量不能为空！', 1, 'regex', 3),
         array('task_desc', 'require', '任务描述不能为空！', 1, 'regex', 3),
-        array('task_desc', '1,100', '任务描述长度不能超过100！', 'length', 3),
-        array('task_url', 'require', '任务链接不能为空！', 1, 'regex', 3),
+        array('task_desc', '1,100', '任务描述长度不能超过100！', 1, 'length', 3),
+        //array('task_url', 'require', '任务链接不能为空！', 1, 'regex', 3),
         array('type_number', 'require', '可领任务数量不能为空！', 1, 'regex', 3)
     );
 
@@ -43,6 +43,11 @@ class TaskModel extends Model {
     }
 
     protected function _before_insert(&$data, $option){
+        $data['reward'] = yuan_to_fen($data['reward']);
+    }
+
+    protected function _before_update(&$data, $option){
+        $data['reward'] = yuan_to_fen($data['reward']);
     }
     /**
      *  获取任务列表及完成情况
