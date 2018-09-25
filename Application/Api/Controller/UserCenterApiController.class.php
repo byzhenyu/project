@@ -1164,6 +1164,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $list = $model->getHrResumeList($where);
         foreach($list['info'] as &$val){
             $val['add_time'] = time_format($val['add_time']);
+            $val['sel'] = 0;
         }
         if($list['info']){
             $this->apiReturn(V(1, '人才列表获取成功！', $list['info']));

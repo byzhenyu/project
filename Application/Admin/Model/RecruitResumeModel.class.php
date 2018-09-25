@@ -128,4 +128,14 @@ class RecruitResumeModel extends Model {
     public function getRecruitResumeNum($where) {
         return $this->where($where)->count();
     }
+
+    /**
+     * @desc 简历推荐统计
+     * @param $where
+     * @return mixed
+     */
+    public function recruitResumeStatistic($where){
+        $recruit_resume_count = $this->where($where)->field('id')->select();
+        return $recruit_resume_count;
+    }
 }

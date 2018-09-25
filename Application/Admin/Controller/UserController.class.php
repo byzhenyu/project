@@ -4,8 +4,6 @@
  */
 namespace Admin\Controller;
 use Think\Controller;
-use Think\Verify;
-
 class UserController extends CommonController {
     //会员HR列表
     public function listUser(){
@@ -93,7 +91,7 @@ class UserController extends CommonController {
     //会员提现列表
     public function withdrawAgentList(){
         $keyword  = I('keyword', '', 'trim');
-        $accountType = I('account_type', 0, 'intval');
+        //$accountType = I('account_type', 0, 'intval');
         $where['ua.account_type'] = 2;
         $where['ua.type'] = 1;
         $where['ua.status'] = 1;
