@@ -137,7 +137,7 @@ class RecruitModel extends Model {
         };
         $where['r.id'] = array('in', $recruit_ids);
 
-        $fields = array('r.id,r.hr_user_id,r.position_id,r.position_name,r.commission,r.add_time,u.head_pic,u.nickname');
+        $fields = array('r.id,r.hr_user_id,r.position_id,r.position_name,r.commission,r.add_time,u.head_pic,u.nickname,u.user_name');
         $count = $this->alias('r')->where($where)->count();
 
         $page = get_web_page($count);
@@ -152,6 +152,9 @@ class RecruitModel extends Model {
             $map['recruit_id'] = array('eq', $v['id']);
             $recruitInfo[$k]['total'] = $RecruitResumeModel->where($map)->count();
             $recruitInfo[$k]['add_time'] = time_format($v['add_time'],'Y-m-d');
+            if (empty($recruitInfo[$k]['nickname'])) {
+                $recruitInfo[$k]['nickname'] = $v['user_name'];
+            }
             $map['hr_user_id'] = array('eq', UID);
             $recruitInfo[$k]['my'] = $RecruitResumeModel->where($map)->count();
             $recruitInfo[$k]['commission'] = fen_to_yuan($v['commission']);
