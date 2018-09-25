@@ -171,7 +171,8 @@ class UserCenterApiController extends ApiUserCommonController{
                 $data['introduced_voice'] = $img;
             }
         }
-        $this->apiReturn(V(1, '', $img));
+        $array = array('file' => $img);
+        $this->apiReturn(V(1, '', $array));
     }
 
     /**
