@@ -135,14 +135,14 @@ class RecruitModel extends Model {
                 'page'=>''
             );
         };
-        $where['id'] = array('in', $recruit_ids);
+        $where['r.id'] = array('in', $recruit_ids);
 
-        $fields = array('id,hr_user_id,position_id,position_name,commission');
-        $count = $this->where($where)->count();
+        $fields = array('r.id,r.hr_user_id,r.position_id,r.position_name,r.commission,r.add_time,u.head_pic,u.nickname');
+        $count = $this->alias('r')->where($where)->count();
 
         $page = get_web_page($count);
 
-        $recruitInfo = $this->where($where)
+        $recruitInfo = $this->alias('r')->join('__USER__ u on r.hr_user_id = u.user_id')->where($where)
             ->field($fields)
             ->limit($page['limit'])
             ->order('id desc')
@@ -151,7 +151,7 @@ class RecruitModel extends Model {
         foreach ($recruitInfo as $k=>$v) {
             $map['recruit_id'] = array('eq', $v['id']);
             $recruitInfo[$k]['total'] = $RecruitResumeModel->where($map)->count();
-
+            $recruitInfo[$k]['add_time'] = time_format($v['add_time'],'Y-m-d');
             $map['hr_user_id'] = array('eq', UID);
             $recruitInfo[$k]['my'] = $RecruitResumeModel->where($map)->count();
             $recruitInfo[$k]['commission'] = fen_to_yuan($v['commission']);
