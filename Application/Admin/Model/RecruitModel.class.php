@@ -139,7 +139,7 @@ class RecruitModel extends Model {
 
         $fields = array('id,hr_user_id,position_id,position_name,commission');
         $count = $this->where($where)->count();
-        p($this->_sql());
+
         $page = get_web_page($count);
 
         $recruitInfo = $this->where($where)
