@@ -129,11 +129,17 @@ class RecruitModel extends Model {
     public function getMyRecruitByPage() {
         $RecruitResumeModel = M('RecruitResume');
         $recruit_ids = $RecruitResumeModel->where(array('hr_user_id'=>UID))->field('recruit_id')->distinct(true)->getField('recruit_id',true);
-
+        if(empty($recruit_ids)) {
+            return array(
+                'info'=>'',
+                'page'=>''
+            );
+        };
         $where['id'] = array('in', $recruit_ids);
 
         $fields = array('id,hr_user_id,position_id,position_name,commission');
         $count = $this->where($where)->count();
+        p($this->_sql());
         $page = get_web_page($count);
 
         $recruitInfo = $this->where($where)
