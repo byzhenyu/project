@@ -346,4 +346,24 @@ class RecruitApiController extends ApiUserCommonController{
         $this->apiReturn(V(0, '上传失败'));
 
     }
+
+    /**
+     * 上传图片通用
+     */
+    public function uploadPicture() {
+        if (!empty($_FILES['photo'])) {
+            $img = app_upload_img('photo', '', 'CompanyInfo');
+            if (0 === $img) {
+                $this->apiReturn(V(0, '上传失败'));
+            } else if (-1 === $img){
+                $this->apiReturn(V(0, '上传失败'));
+            } else {
+                thumb($img, 180, 240);
+                $this->apiReturn(V(1, '上传成功', $img));
+            }
+        }
+        else{
+            $this->apiReturn(V(0, '上传失败', $_FILES));
+        }
+    }
 }
