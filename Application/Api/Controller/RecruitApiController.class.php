@@ -239,6 +239,11 @@ class RecruitApiController extends ApiUserCommonController{
         $where['recruit_id'] = array('eq', $recruit_id);
         $where['hr_user_id'] = array('eq', UID);
         $data = D('Admin/RecruitResume')->getResumeListByPage($where);
+        $interviewModel = D('Admin/Interview');
+        foreach ($data['info'] as $k=>$v) {
+            $data['info'][$k]['state'] = $interviewModel->getInterviewStatus(array('recruit_resume_id'=>$v['id']));
+        }
+
         $this->apiReturn(V(1, '我的推荐推荐简历列表',$data['info']));
     }
     /**

@@ -75,4 +75,20 @@ class InterviewModel extends Model {
     protected function _before_update(&$data, $option){
         $data['update_time'] = NOW_TIME;
     }
+
+    /**
+     * 获取面试状态
+     * @param $where
+     * @return mixed
+     */
+    public function getInterviewStatus($where) {
+        $res = $this->where($where)->getField('state');
+
+        if (!is_null($res)) {
+            return $res;
+        } else {
+            return '3';
+        }
+
+    }
 }
