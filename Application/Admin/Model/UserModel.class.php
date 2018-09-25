@@ -353,7 +353,28 @@ class UserModel extends Model{
         } else {
             return V(0, $tokenLogModel->getError());
         }
+    }
 
+    /**
+     * @desc 普通用户注册量
+     * @param $where array where
+     * @param $field string|bool field
+     * @param $type int 1、用户注册量统计 2、城市分布统计
+     * @return mixed
+     */
+    public function userStatistic($where, $field = false, $type = 1){
+        switch($type){
+            case 1:
+                $where['user_type'] = 0;
+                $user_count = $this->where($where)->count();
+                return $user_count;
+                break;
+            case 2:
+                if(!$field) $field = 'city_name,count(1) as user_statistic';
+                $distribution = $this->group('city_name')->field($field)->select();
+                return $distribution;
+                break;
+        }
     }
 
 }
