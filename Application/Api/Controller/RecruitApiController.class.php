@@ -232,6 +232,16 @@ class RecruitApiController extends ApiUserCommonController{
     }
 
     /**
+     * 我的推荐 - 推荐简历
+     */
+    public function getMyRecommendResume() {
+        $recruit_id = I('recruit_id', 0,'intval');
+        $where['recruit_id'] = array('eq', $recruit_id);
+        $where['hr_user_id'] = array('eq', UID);
+        $data = D('Admin/RecruitResume')->getResumeListByPage($where);
+        $this->apiReturn(V(1, '我的推荐推荐简历列表',$data['info']));
+    }
+    /**
      * 编辑资料(hr)
      */
     public function editUserInfo() {
