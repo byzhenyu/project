@@ -10,10 +10,17 @@ class TaskLogController extends CommonController {
     //任务列表
     public function listTaskLog(){
         $keyword = I('keyword', '', 'trim');
+        $start = I('min', '', 'trim');
+        $end = I('max', '', 'trim');
         $model = D('Admin/TaskLog');
         $where = array();
         if($keyword){
             $where['l.task_name'] = array('like', '%'. $keyword .'%');
+        }
+        if($start && $end){
+            $start = strtotime($start.' 00:00:00');
+            $end = strtotime($end.' 23:59:59');
+            $where['l.finish_time'] = array('between', array($start, $end));
         }
         $list = $model->getTaskLogList($where);
         foreach($list['info'] as &$val){
@@ -27,6 +34,6 @@ class TaskLogController extends CommonController {
     }
 
     public function del(){
-        $this->_del('Task', 'id');
+        $this->_del('TaskLog', 'id');
     }
 }

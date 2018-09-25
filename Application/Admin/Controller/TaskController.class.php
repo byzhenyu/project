@@ -51,6 +51,9 @@ class TaskController extends CommonController {
     }
 
     public function del(){
+        $id = I('id');
+        $id = explode(',', $id);
+        if(in_array(1, $id) || in_array(2, $id) || in_array(3, $id)) $this->ajaxReturn(V(0, '删除任务中包含不可删除的任务！'));
         $this->_del('Task', 'id');
     }
 }

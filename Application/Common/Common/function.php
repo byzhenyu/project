@@ -1200,3 +1200,16 @@ function black_white_type($dispose_type = 0){
     if(!$dispose_type) return $arr;
     return $arr[$dispose_type];
 }
+
+/**
+ * @desc 赏金获取类型
+ * @param $type
+ * @return mixed
+ */
+function token_log_type($type){
+    $arr = array(
+        1 => '获取简历',
+        2 => '入职'
+    );
+    return $arr[$type];
+}

@@ -61,7 +61,7 @@
                                 <tbody>
                                     <foreach name="list" item="v">
                                         <tr class="gradeX">
-                                            <td><input class="ids" type="checkbox" name="chkbId" value="{$v['id']}"></td>
+                                            <td><if condition="$v['id'] neq 1 && $v['id'] neq 2 && $v['id'] neq 3"><input class="ids" type="checkbox" name="chkbId" value="{$v['id']}"></if></td>
                                             <td class="align-center">{$v['id']}</td>
                                             <td class="align-center">{$v['task_name']}</td>
                                             <td class="align-center">{$v['task_url']}</td>

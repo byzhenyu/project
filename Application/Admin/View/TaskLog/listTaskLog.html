@@ -23,13 +23,18 @@
                                 </div>
                             </div>
                         </div>
-                        <form action="__SELF__" method="get">
-                            <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
-                                <div class="am-form-group tpl-table-list-select">
-
-                                </div>
+                        <div class="am-u-sm-12 am-u-md-12 am-u-lg-2">
+                            <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                                <input name="min" type="text" value="{:I('min')}" class="am-form-field" placeholder="完成起始时间" data-am-datepicker="" readonly="">
                             </div>
-                            <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+                        </div>
+                        <div class="am-u-sm-12 am-u-md-12 am-u-lg-2">
+                            <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                                <input name="max" type="text" value="{:I('max')}" class="am-form-field" placeholder="完成终止时间" data-am-datepicker="" readonly="">
+                            </div>
+                        </div>
+                        <form action="__SELF__" method="get">
+                            <div class="am-u-sm-12 am-u-md-12 am-u-lg-2">
                                 <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
                                     <input type="text" class="am-form-field" name="keyword" placeholder="请输入任务名称" value="{$keyword}">
                                     <span class="am-input-group-btn">

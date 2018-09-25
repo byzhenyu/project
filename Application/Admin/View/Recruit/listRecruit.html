@@ -10,7 +10,6 @@
                 <div class="widget am-cf">
                     <div class="widget-head am-cf">
                         <div class="widget-title  am-cf">悬赏列表</div>
-
                     </div>
                     <div class="widget-body  am-fr">
 
@@ -78,6 +77,9 @@
                                                     </a>
                                                     <a href="{:U('Recruit/seeRecruitDetail',array('id'=>$v['id']))}">
                                                         <i class="am-icon-dedent"></i> 悬赏详情
+                                                    </a>
+                                                    <a href="{:U('TokenLog/listTokenLog',array('recruit_id'=>$v['id']))}">
+                                                        <i class="am-icon-money"></i> 赏金情况
                                                     </a>
                                                 </div>
                                             </td>
