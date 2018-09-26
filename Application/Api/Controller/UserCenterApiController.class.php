@@ -103,26 +103,14 @@ class UserCenterApiController extends ApiUserCommonController{
         if(1 == $data['cert_type'] && cmp_black_white($data['idcard_number'])) $this->apiReturn(V(0, '身份证号在黑名单内！'));
         $upArray = array();
         if(1 == $user_type){
-            if(empty($_FILES['business_license'])) $this->apiReturn(V(0, '请上传营业执照！'));
-            $business = app_upload_img('business_license', '', 'User');
-            $upArray['business_license'] = $business;
-            if($business === 0 || $business === -1) $this->apiReturn(V(0, '营业执照上传失败！'));
+            if(empty($data['business_license'])) $this->apiReturn(V(0, '请上传营业执照！'));
+            $upArray['business_license'] = $data['business_license'];
         }
         $array = array('idcard_up' => '请上传身份证正面照！', 'idcard_down' => '请上传身份证反面照！', 'hand_pic' => '请上传手持身份证照！');
         $keys = array_keys($array);
         foreach($keys as &$val){
-            if(empty($_FILES[$val])) $this->apiReturn(V(0, $array[$val]));
-            $img_url = app_upload_img($val, '', 'User');
-            $upArray[$val] = $img_url;
-        }
-        $upKeys = array_keys($upArray);
-        foreach($upKeys as &$value){
-            if($upArray[$value] === 0 || $upArray[$value] === -1){
-                $t = $array[$value];
-                $t = str_replace('请上传', '', $t);
-                $t = str_replace('！', '', $t);
-                $this->apiReturn(V(0, $t.'上传失败！'));
-            }
+            if(empty($data[$val])) $this->apiReturn(V(0, $array[$val]));
+            $upArray[$val] = $data[$val];
         }
         $data = array_merge($data, $upArray);
         if(!$auth_info){
@@ -748,24 +736,8 @@ class UserCenterApiController extends ApiUserCommonController{
         $data = I('post.');
         $data['user_id'] = UID;
         $model = D('Admin/Resume');
-        if(!empty($_FILES['photo'])) {
-            $img = app_upload_img('photo', '', 'User', UID);
-            if ($img === 0 || $img === -1) {
-                $this->apiReturn(V(0, '头像上传失败'));
-            }
-            else{
-                $data['head_pic'] = $img;
-            }
-        }
-        if(!empty($_FILES['voice'])){
-            $img = app_upload_file('voice', '', 'Resume');
-            if ($img === 0 || $img === -1) {
-                $this->apiReturn(V(0, '语音文件上传失败！'));
-            }
-            else{
-                $data['introduced_voice'] = $img;
-            }
-        }
+        $data['head_pic'] = $data['photo'];
+        $data['introduced_voice'] = $data['voice'];
         $resume_where = array('user_id' => UID);
         $resume_info = $model->getResumeInfo($resume_where);
         if($resume_info){
@@ -1011,6 +983,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $interview_id = I('interview_id', 0, 'intval');
         $resume_id = I('post.resume_id');
         $is_open = I('post.is_open', 0, 'intval');
+        $auth_id = I('auth_id', 0, 'intval');
         $resumeModel = D('Admin/Resume');
         if(!$resume_id) $resume_id = $resumeModel->getResumeField(array('user_id' => $user_id), 'id');
         $resumeWorkModel = D('Admin/ResumeWork');
@@ -1039,6 +1012,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $sum = array_sum(array_values($resumeEvaluation));
         $avg = round($sum/(count($resumeEvaluation)), 2);
         $recommend_info['interview_id'] = $interview_id;
+        $recommend_info['auth_id'] = $auth_id;
         $return = array('detail' => $resumeDetail, 'resume_work' => $resumeWorkList, 'resume_edu' => $resumeEduList, 'resume_evaluation' => $resumeEvaluation, 'evaluation_avg' => $avg, 'recruit_resume' => $recommend_info, 'is_open' => $is_open);
         $this->apiReturn(V(1, '简历获取成功！', $return));
     }
@@ -1255,14 +1229,8 @@ class UserCenterApiController extends ApiUserCommonController{
         if(!$resume_info) $this->apiReturn(V(0, '获取不到对应的简历详情！'));
         $data['hr_user_id'] = $hr_user_id;
         $data['recruit_hr_uid'] = $recruit_info['hr_user_id'];
-        if(empty($_FILES['voice'])) $this->apiReturn(V(0, '推荐语不能为空'));
-        $voice_file = app_upload_file('voice', '', 'Resume');
-        if ($voice_file === 0 || $voice_file === -1) {
-            $this->apiReturn(V(0, '语音文件上传失败！'));
-        }
-        else{
-            $data['recommend_voice'] = $voice_file;
-        }
+        if(empty($data['voice'])) $this->apiReturn(V(0, '推荐语不能为空'));
+        $data['recommend_voice'] = $data['voice'];
         if(false !== strpos(',', $data['resume_id'])){
             $addAllArr = array();
             $resume_arr = explode(',', $data['resume_id']);

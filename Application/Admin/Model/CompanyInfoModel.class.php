@@ -80,7 +80,7 @@ class CompanyInfoModel extends Model {
                 ->field($field)
                 ->where($where)
                 ->find();
-            $info['company_pic']  = explode(',', $info['company_pic']);
+            if($info) $info['company_pic']  = explode(',', $info['company_pic']);
             return $info;
         }
     }
