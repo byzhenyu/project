@@ -572,6 +572,13 @@ class UserCenterApiController extends ApiUserCommonController{
                     $list[$key]['name'] = $value;
                 }
                 break;
+            case 4:
+                $company_size = C('COMPANY_SIZE');
+                foreach ($company_size as $key => $value) {
+                    $list[$key]['id'] = $key;
+                    $list[$key]['name'] = $value;
+                }
+                break;
             default:
                 $this->apiReturn(V(0, '不合法的数据类型！'));
         }
