@@ -42,7 +42,7 @@ class StatisticController extends CommonController {
             $where['add_time'] = array('between', array($t_resume_time['start'], $t_resume_time['end']));
             $t_resume_statistic_select = $recruit_resume_model->recruitResumeStatistic($where);
             $t_sel_arr = array();
-            foreach($t_resume_statistic_select as &$sel) $t_sel_arr[] = $sel['id'];
+            foreach($t_resume_statistic_select as &$sel) $t_sel_arr[] = $sel['id']; unset($sel);
             if(count($t_sel_arr) > 0) {
                 $success_number = 1;
             }

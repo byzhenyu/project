@@ -976,6 +976,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $interview_id = I('interview_id', 0, 'intval');
         $resume_id = I('post.resume_id');
         $is_open = I('post.is_open', 0, 'intval');
+        $auth_id = I('auth_id', 0, 'intval');
         $resumeModel = D('Admin/Resume');
         if(!$resume_id) $resume_id = $resumeModel->getResumeField(array('user_id' => $user_id), 'id');
         $resumeWorkModel = D('Admin/ResumeWork');
@@ -1004,6 +1005,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $sum = array_sum(array_values($resumeEvaluation));
         $avg = round($sum/(count($resumeEvaluation)), 2);
         $recommend_info['interview_id'] = $interview_id;
+        $recommend_info['auth_id'] = $auth_id;
         $return = array('detail' => $resumeDetail, 'resume_work' => $resumeWorkList, 'resume_edu' => $resumeEduList, 'resume_evaluation' => $resumeEvaluation, 'evaluation_avg' => $avg, 'recruit_resume' => $recommend_info, 'is_open' => $is_open);
         $this->apiReturn(V(1, '简历获取成功！', $return));
     }
