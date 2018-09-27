@@ -1442,4 +1442,21 @@ class UserCenterApiController extends ApiUserCommonController{
         $user_account = fen_to_yuan($user_account);
         $this->apiReturn(V(1, '', array('account' => $user_account, 'list' => $list['info'])));
     }
+
+    /**
+     * @desc 城市选择回调
+     */
+    public function cityNameCallback(){
+        $user_id = UID;
+        $city_name = I('city_name', '', 'trim');
+        $where = array('user_id' => $user_id);
+        $save = array('city_name' => $city_name);
+        $res = D('Admin/User')->saveUserData($where, $save);
+        if(false !== $res){
+            $this->apiReturn(V(1, '保存成功！'));
+        }
+        else{
+            $this->apiReturn(V(0, '保存失败！'));
+        }
+    }
 }
