@@ -1419,4 +1419,25 @@ class UserCenterApiController extends ApiUserCommonController{
         $this->apiReturn(V(1, '微信参数返回成功', $doResult));
 
     }
+
+
+    /**
+     * @desc 充值提现列表
+     */
+    public function getWithRechargeList(){
+        $user_id = UID;
+        $model = D('Admin/UserAccount');
+        $type = I('type', -1, 'intval');
+        $where = array('user_id' => $user_id, 'status' => 1);
+        if(-1 != $type) $where['type'] = $type;
+        $field = 'type,money,add_time';
+        $list = $model->getAccountByPage($where, $field);
+        foreach($list['info'] as &$val){
+            $val['add_time'] = time_format($val['add_time']);
+            $val['type_string'] = $val['type'] ? '提现' : '充值';
+            $val['money'] = fen_to_yuan($val['money']);
+        }
+        unset($val);
+        $this->apiReturn(V(1, '', $list['info']));
+    }
 }
