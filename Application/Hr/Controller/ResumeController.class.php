@@ -10,6 +10,15 @@ class ResumeController extends HrCommonController {
         $resume_name = I('keywords', '', 'trim');
         $model = D('Admin/HrResume');
         $where = array('h.hr_user_id' => HR_ID);
+        //多功能检索处理
+        $true_name = I('true_name', '', 'trim');
+        $mobile = I('mobile', '', 'trim');
+        if($true_name) $resume_name = $true_name;
+        if($mobile) $resume_name = $mobile;
+        $email = I('email', '', 'trim');
+        if($email) $where['r.email'] = array('like', '%'.$email.'%');
+        $sex = I('sex', 0, 'intval');
+        if(in_array($sex, array(1, 2))) $where['r.sex'] = $sex;
         if($resume_name) $where['r.true_name|r.mobile'] = array('like', '%'.$resume_name.'%');
         $list = $model->getHrResumeList($where, 'h.id as hr_resume_id,h.hr_user_id,r.*');
         foreach($list['info'] as &$val){
@@ -154,6 +163,32 @@ class ResumeController extends HrCommonController {
      * @desc 检索条件
      */
     public function researchResume(){
+        $work_nature = C('WORK_NATURE');
+        $arr_values = array_values($work_nature);
+        $nature_arr = array();
+        $tags_where = array('tags_type' => array('in', array(1,2,5)));
+        $tagsModel = D('Admin/Tags');
+        $tags_info = $tagsModel->getTagsList($tags_where, 'id,tags_name,tags_type');
+        $tags_intension = array();
+        $tags_career = array();
+        $tags_recommend = array();
+        foreach($tags_info as &$val){
+            if(1 == $val['tags_type']) $tags_career[] = array('id' => $val['id'], 'name' => $val['tags_name']);
+            if(2 == $val['tags_type']) $tags_intension[] = array('id' => $val['id'], 'name' => $val['tags_name']);
+            if(5 == $val['tags_type']) $tags_recommend[] = array('id' => $val['id'], 'name' => $val['tags_name']);
+        }
+        unset($val);
+        foreach($arr_values as &$val){
+            $nature_arr[] = array('id' => $val, 'name' => $val);
+        }
+        unset($val);
+
+        $area = D('Admin/Region')->getRegionList(array('level' => 2), 'id,name');
+        $this->recommend = $tags_recommend;
+        $this->area = $area;
+        $this->intension = $tags_intension;
+        $this->career = $tags_career;
+        $this->nature = $nature_arr;
         $this->display();
     }
 }
