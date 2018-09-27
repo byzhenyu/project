@@ -1438,6 +1438,8 @@ class UserCenterApiController extends ApiUserCommonController{
             $val['money'] = fen_to_yuan($val['money']);
         }
         unset($val);
-        $this->apiReturn(V(1, '', $list['info']));
+        $user_account = D('Admin/User')->getUserField(array('user_id' => $user_id), 'user_money');
+        $user_account = fen_to_yuan($user_account);
+        $this->apiReturn(V(1, '', array('account' => $user_account, 'list' => $list['info'])));
     }
 }
