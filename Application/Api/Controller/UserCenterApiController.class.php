@@ -518,7 +518,10 @@ class UserCenterApiController extends ApiUserCommonController{
                 $field = 'id,industry_name as name,parent_id,sort';
                 $list = $model->getIndustryList($where, $field);
                 foreach($list as &$val){
-                    $val['children'] = $model->getIndustryList(array('parent_id' => $val['id']), $field);
+                    $children = $model->getIndustryList(array('parent_id' => $val['id']), $field);
+                    foreach ($children as &$c) $c['sel'] = 0; unset($c);
+                    $val['children'] = $children;
+                    $val['sel'] = 0;
                 }
                 unset($val);
                 break;
@@ -527,7 +530,10 @@ class UserCenterApiController extends ApiUserCommonController{
                 $field = 'id,position_name as name,parent_id,sort';
                 $list = $model->getPositionList($where, $field, '', false);
                 foreach($list as &$val){
-                    $val['children'] = $model->getPositionList(array('parent_id' => $val['id']), $field, '', false);
+                    $children = $model->getPositionList(array('parent_id' => $val['id']), $field, '', false);
+                    foreach ($children as &$c) $c['sel'] = 0; unset($c);
+                    $val['children'] = $children;
+                    $val['sel'] = 0;
                 }
                 unset($val);
                 break;
