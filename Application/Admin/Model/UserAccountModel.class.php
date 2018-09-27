@@ -22,7 +22,7 @@ class UserAccountModel extends Model{
             $field = $this->selectFields;
         }
         $count = $this->where($where)->count('id');
-        $page = get_page($count);
+        $page = get_web_page($count);
         $info = $this->field($field)->where($where)->limit($page['limit'])->order($order)->select();
         return array(
             'info' => $info,

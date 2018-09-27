@@ -579,11 +579,14 @@ class UserCenterApiController extends ApiUserCommonController{
     public function getTags(){
         $type = I('type', 0, 'intval');
         if(!in_array($type, array(1,2,3,4,5))) $this->apiReturn(V(0, '标签类型不合法！'));
+        $user_tags = D('Admin/User')->getUserField(array('user_id' => UID), 'like_tags');
+        $user_tags = explode(',', $user_tags);
         $model = D('Admin/Tags');
         $where = array('tags_type' => $type);
         $list = $model->getTagsList($where);
         foreach($list as &$val){
             $val['sel'] = 0;
+            if(in_array($val['id'], $user_tags)) $val['sel'] = 1;
         }
         unset($val);
         $this->apiReturn(V(1, '标签列表获取成功！', $list));
@@ -1419,5 +1422,45 @@ class UserCenterApiController extends ApiUserCommonController{
         $doResult = $wxPay->WxAppletPay($wxData);
         $this->apiReturn(V(1, '微信参数返回成功', $doResult));
 
+    }
+
+
+    /**
+     * @desc 充值提现列表
+     */
+    public function getWithRechargeList(){
+        $user_id = UID;
+        $model = D('Admin/UserAccount');
+        $type = I('type', '', 'trim');
+        $where = array('user_id' => $user_id, 'status' => 1);
+        if('' != $type) $where['type'] = $type;
+        $field = 'type,money,add_time';
+        $list = $model->getAccountByPage($where, $field);
+        foreach($list['info'] as &$val){
+            $val['add_time'] = time_format($val['add_time']);
+            $val['type_string'] = $val['type'] ? '提现' : '充值';
+            $val['money'] = fen_to_yuan($val['money']);
+        }
+        unset($val);
+        $user_account = D('Admin/User')->getUserField(array('user_id' => $user_id), 'user_money');
+        $user_account = fen_to_yuan($user_account);
+        $this->apiReturn(V(1, '', array('account' => $user_account, 'list' => $list['info'])));
+    }
+
+    /**
+     * @desc 城市选择回调
+     */
+    public function cityNameCallback(){
+        $user_id = UID;
+        $city_name = I('city_name', '', 'trim');
+        $where = array('user_id' => $user_id);
+        $save = array('city_name' => $city_name);
+        $res = D('Admin/User')->saveUserData($where, $save);
+        if(false !== $res){
+            $this->apiReturn(V(1, '保存成功！'));
+        }
+        else{
+            $this->apiReturn(V(0, '保存失败！'));
+        }
     }
 }
