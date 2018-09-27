@@ -119,49 +119,41 @@ class ResumeController extends HrCommonController {
     }
 
     /**
-     * @desc 获取简历详情
+     * 简历详情
      */
     public function seeResumeDetail(){
-        $resumeModel = D('Admin/Resume');
-        $hrModel = D('Admin/HrResume');
         $resume_id = I('id', 0, 'intval');
-        $hr_where = array('hr_user_id' => HR_ID, 'resume_id' => $resume_id);
+        $resumeModel = D('Admin/Resume');
+        $resumeWorkModel = D('Admin/ResumeWork');
+        $resumeEduModel = D('Admin/ResumeEdu');
+        $resumeEvaluationModel = D('Admin/ResumeEvaluation');
         $resume_where = array('id' => $resume_id);
-        $info = $resumeModel->getResumeInfo($resume_where, '*');
-        $hrResumeInfo = $hrModel->getHrResumeInfo($hr_where);
-        $info['recommend_label'] = $hrResumeInfo['recommend_label'];
-        $this->info = $info;
+        $resumeDetail = $resumeModel->getResumeInfo($resume_where);
+        $where = array('resume_id' => $resume_id);
+        $resumeWorkList = $resumeWorkModel->getResumeWorkList($where);
+        $resumeEduList = $resumeEduModel->getResumeEduList($where);
+        foreach($resumeWorkList as &$wval){
+            $wval['starttime'] = time_format($wval['starttime'], 'Y-m-d');
+            $wval['endtime'] = time_format($wval['endtime'], 'Y-m-d');
+        }
+        unset($wval);
+        foreach($resumeEduList as &$eval){
+            $eval['starttime'] = time_format($eval['starttime'], 'Y-m-d');
+            $eval['endtime'] = time_format($eval['endtime'], 'Y-m-d');
+        }
+        unset($eval);
+        $resumeEvaluation = $resumeEvaluationModel->getResumeEvaluationAvg($where);
+        $sum = array_sum(array_values($resumeEvaluation));
+        $avg = round($sum/(count($resumeEvaluation)), 2);
+        $return = array('detail' => $resumeDetail, 'resume_work' => $resumeWorkList, 'resume_edu' => $resumeEduList, 'resume_evaluation' => $resumeEvaluation, 'evaluation_avg' => $avg);
+        $this->info = $return;
         $this->display();
     }
 
     /**
-     * @desc 获取简历教育经历列表
+     * @desc 检索条件
      */
-    public function getResumeEduList()
-    {
-        $resume_id = I('resume_id', 0, 'intval');
-        $keywords = I('keywords', '', 'trim');
-        $resume_edu_where = array('resume_id' => $resume_id);
-        $resume_edu_model = D('Admin/ResumeEdu');
-        if ($keywords) $resume_edu_where['school_name'] = array('like', '%'.$keywords.'%');
-        $list = $resume_edu_model->getResumeEduList($resume_edu_where);
-        $this->list = $list;
-        $this->keywords = $keywords;
-        $this->display();
-    }
-
-    /**
-     * @desc 获取简历工作经历列表
-     */
-    public function getResumeWorkList(){
-        $resume_id = I('resume_id', 0, 'intval');
-        $keywords = I('keywords', '', 'trim');
-        $resume_work_where = array('resume_id' => $resume_id);
-        $resume_work_model = D('Admin/ResumeWork');
-        if($keywords) $resume_work_where['company_name'] = array('like', '%'.$keywords.'%');
-        $list = $resume_work_model->getResumeWorkList($resume_work_where);
-        $this->list = $list;
-        $this->keywords = $keywords;
+    public function researchResume(){
         $this->display();
     }
 }
