@@ -609,6 +609,9 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('user_id' => UID);
         $model = D('Admin/UserBank');
         $list = $model->getUserBankList($where);
+        foreach($list['info'] as &$val){
+            $val['num_string'] = substr($val['bank_num'], -4);
+        }
         $this->apiReturn(V(1, '银行卡号列表获取成功!', $list['info']));
     }
 

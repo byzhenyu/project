@@ -36,6 +36,7 @@ class StatisticController extends CommonController {
         p($recruit_statistic);
         echo '推荐统计<hr />';
         $recruit_resume_model = D('Admin/RecruitResume');
+        $interviewModel = D('Admin/Interview');
         $resume_statistic = array();
         foreach($user_statistic_keys as &$val){
             $t_resume_time = $this->mk_time($val);
@@ -44,12 +45,16 @@ class StatisticController extends CommonController {
             $t_sel_arr = array();
             foreach($t_resume_statistic_select as &$sel) $t_sel_arr[] = $sel['id']; unset($sel);
             if(count($t_sel_arr) > 0) {
-                $success_number = 1;
+                $interview_where = array('state' => 1, 'recruit_resume_id' => array('in', $t_sel_arr));
+                $success_number = $interviewModel->getInterviewCount($interview_where);
             }
             else{
                 $success_number = 0;
             }
-            $resume_statistic[$user_statistic_help[$val]] = count($t_resume_statistic_select);
+            $resume_statistic[] = array(
+                $user_statistic_help[$val] => count($t_resume_statistic_select),
+                'success_number' => $success_number
+            );
         }
         unset($val);
         unset($where);

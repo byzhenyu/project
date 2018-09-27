@@ -91,4 +91,14 @@ class InterviewModel extends Model {
         }
 
     }
+
+    /**
+     * @desc 面试统计
+     * @param $where
+     * @return mixed
+     */
+    public function getInterviewCount($where){
+        $number = $this->where($where)->count();
+        return $number;
+    }
 }
