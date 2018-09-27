@@ -1,0 +1,73 @@
+<extend name="Common/base"/>
+<block name="style">
+    <style>
+    </style>
+</block>
+
+<block name="body">
+    <!-- 内容区域 -->
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">悬赏统计</div>
+                </div>
+                <div class="widget-body  am-fr">
+                    <form action="__SELF__" method="get">
+                        <div class="am-u-sm-12 am-u-md-6 am-u-lg-7">&nbsp; </div>
+                        <div class="am-u-sm-12 am-u-md-9 am-u-lg-2">
+                            <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+                            <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                                &nbsp;
+                                <span class="am-input-group-btn">
+                                </span>
+                            </div>
+                        </div>
+                        <input name="p" value="1" type="hidden"/>
+                    </form>
+                    <div class="am-u-sm-12" style="margin-top: 50px">
+                        <div class="view-content">
+                            <div id="map" style="height: 500px; width:95%; padding:20px 0 0 40px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript" src="__PUBLIC__/echarts.common.min.js"></script>
+    <script type="text/javascript">
+        var result = {$result};
+        var myChart = echarts.init(document.getElementById('map'));
+        option = {
+            title : {
+                text: '悬赏地区统计',
+                x:'center'
+            },
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient : 'vertical',
+                x : 'left',
+                data:result.name
+            },
+            series : [
+                {
+                    name:'统计类型',
+                    type:'pie',
+                    radius : '55%',
+                    center: ['50%', '60%'],
+                    data:result.data
+                }
+            ]
+        };
+        myChart.setOption(option);
+    </script>
+</block>

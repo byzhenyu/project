@@ -1,0 +1,128 @@
+<extend name="Common/base"/>
+<block name="style">
+    <style>
+    </style>
+</block>
+
+<block name="body">
+    <!-- 内容区域 -->
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">悬赏推荐统计</div>
+                </div>
+                <div class="widget-body  am-fr">
+                    <form action="__SELF__" method="get">
+                        <div class="am-u-sm-12 am-u-md-6 am-u-lg-7">&nbsp; </div>
+                        <div class="am-u-sm-12 am-u-md-9 am-u-lg-2">
+                            <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+                            <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                                &nbsp;
+                                <span class="am-input-group-btn">
+                                </span>
+                            </div>
+                        </div>
+                        <input name="p" value="1" type="hidden"/>
+                    </form>
+                    <div class="am-u-sm-12" style="margin-top: 50px">
+                        <div class="view-content">
+                            <div id="map" style="height: 500px; width:95%; padding:20px 0 0 40px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript" src="__PUBLIC__/echarts.common.min.js"></script>
+    <script type="text/javascript">
+        var myChart = echarts.init(document.getElementById('map'));
+        var colors = ['#5793f3', '#d14a61'];
+
+        option = {
+            color: colors,
+
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross'
+                }
+            },
+            grid: {
+                right: '20%'
+            },
+            toolbox: {
+                feature: {
+                    dataView: {show: true, readOnly: false},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            legend: {
+                data:['成交量','推荐数']
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    axisTick: {
+                        alignWithLabel: true
+                    },
+                    data: {$statistic_name}
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '成交量',
+                    min: 0,
+                    max: {$max},
+                    position: 'right',
+                    axisLine: {
+                        lineStyle: {
+                            color: colors[0]
+                        }
+                    },
+                    axisLabel: {
+                        formatter: '{value} 份'
+                    }
+                },
+                {
+                    type: 'value',
+                    name: '推荐数',
+                    min: 0,
+                    max: {$max},
+                    position: 'right',
+                    offset: 80,
+                    axisLine: {
+                        lineStyle: {
+                            color: colors[1]
+                        }
+                    },
+                    axisLabel: {
+                        formatter: '{value} 份'
+                    }
+                }
+            ],
+            series: [
+                {
+                    name:'成交量',
+                    type:'bar',
+                    data:{$success_statistic}
+                },
+                {
+                    name:'推荐数',
+                    type:'bar',
+                    yAxisIndex: 1,
+                    data:{$total_statistic}
+                }
+            ]
+        };
+        myChart.setOption(option);
+    </script>
+</block>

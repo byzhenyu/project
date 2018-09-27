@@ -19,6 +19,26 @@ class ResumeController extends HrCommonController {
         if($email) $where['r.email'] = array('like', '%'.$email.'%');
         $sex = I('sex', 0, 'intval');
         if(in_array($sex, array(1, 2))) $where['r.sex'] = $sex;
+        $age_min = I('age_min', 0, 'intval');
+        $age_max = I('age_max', 0, 'intval');
+        if($age_min && $age_max){
+            $where['r.age'] = array('between', array($age_min, $age_max));
+        }
+        else if($age_min){
+            $where['r.age'] = array('egt', $age_min);
+        }
+        else if($age_max){
+            $where['r.age'] = array('elt', $age_max);
+        }
+        $post_nature = I('post_nature', '', 'trim');
+        if($post_nature) $where['r.post_nature'] = $post_nature;
+        $job_intension = I('job_intension', '', 'trim');
+        if($job_intension) $where['r.job_intension'] = array('like', '%'.$job_intension.'%');
+        $job_area = I('job_area', '', 'trim');
+        if($job_area) $where['r.job_area'] = array('like', '%'.$job_area.'%');
+        $career_label = I('career_label', '', 'trim');
+        if($career_label) $where['r.career_label'] = array('like', '%'.$career_label.'%');
+
         if($resume_name) $where['r.true_name|r.mobile'] = array('like', '%'.$resume_name.'%');
         $list = $model->getHrResumeList($where, 'h.id as hr_resume_id,h.hr_user_id,r.*');
         foreach($list['info'] as &$val){
