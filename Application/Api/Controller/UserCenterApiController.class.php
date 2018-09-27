@@ -1427,9 +1427,9 @@ class UserCenterApiController extends ApiUserCommonController{
     public function getWithRechargeList(){
         $user_id = UID;
         $model = D('Admin/UserAccount');
-        $type = I('type', -1, 'intval');
+        $type = I('type', '', 'trim');
         $where = array('user_id' => $user_id, 'status' => 1);
-        if(-1 != $type) $where['type'] = $type;
+        if('' != $type) $where['type'] = $type;
         $field = 'type,money,add_time';
         $list = $model->getAccountByPage($where, $field);
         foreach($list['info'] as &$val){
