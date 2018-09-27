@@ -663,7 +663,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $model = D('Admin/UserBank');
         $info = $model->getUserBankInfo($where);
         if($info){
-            $info['bank_num'] = substr($info['bank_num'], -4);
+            $info['string_num'] = substr($info['bank_num'], -4);
             $this->apiReturn(V(1, '银行卡信息获取成功！', $info));
         }
         else{
