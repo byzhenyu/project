@@ -377,4 +377,17 @@ class UserModel extends Model{
         }
     }
 
+    /**
+     * @desc 用户注册顺序排序
+     * @param $user_id
+     * @return mixed
+     */
+    public function getUserRankingInfo($user_id){
+        $model = M();
+        $sql = 'select rownumber from (select @rownumber:=@rownumber+1 as rownumber,user_id from (select @rownumber:=0) as r,(select user_id from ln_user order by register_time asc) as t) as sel where sel.user_id = ' . $user_id;
+        $query = $model->query($sql);
+        $number = $query[0]['rownumber'];
+        return $number;
+    }
+
 }

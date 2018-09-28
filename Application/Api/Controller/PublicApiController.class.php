@@ -253,23 +253,17 @@ class PublicApiController extends ApiCommonController
     }
 
     /**
-     * @desc 根据传入参数获取行政区划列表
-     * @param $keywords string 关键词 默认获取省列表
-     * @param $subDistrict int 0、不显示子行政区 1、显示一级 2、显示2级 3、 返回3级
-     * @param $filter int 精确查找
-     * @return array
+     * @desc 关于我们
+     * @param 1、关于我们 2、注册协议
      */
-    public function getDistrictListGD()
-    {
-        $keywords = I('keywords', '', 'trim');
-        $filter = I('filter', 0, 'intval');
-        $model = D('Core/Region');
-        $list = $model->getDistrictListBaseGD($keywords, $filter);
-        if ($list) {
-            $this->apiReturn(V(1, '行政区域列表', $list));
-        } else {
-            $this->apiReturn(V(0, '行政区域列表获取失败'));
-        }
+    public function getArticleInfo(){
+        $type = I('type', 1, 'intval');
+        $where = array('article_cat_id' => $type);
+        $model = D('Admin/Article');
+        $field = 'content';
+        $info = $model->getArticleInfo($where, $field);
+        $info['content'] = '<html><head><meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"><style> .content img{display:block;width:100%;height: auto;} html,body,p{border: 0;margin: 0;padding: 0;}</style></head><body class="content">' . htmlspecialchars_decode($info['content']) . '</body></html>';
+        $this->apiReturn(V(1, '', $info));
     }
 
 }

@@ -10,6 +10,35 @@ class ResumeController extends HrCommonController {
         $resume_name = I('keywords', '', 'trim');
         $model = D('Admin/HrResume');
         $where = array('h.hr_user_id' => HR_ID);
+        //多功能检索处理
+        $true_name = I('true_name', '', 'trim');
+        $mobile = I('mobile', '', 'trim');
+        if($true_name) $resume_name = $true_name;
+        if($mobile) $resume_name = $mobile;
+        $email = I('email', '', 'trim');
+        if($email) $where['r.email'] = array('like', '%'.$email.'%');
+        $sex = I('sex', 0, 'intval');
+        if(in_array($sex, array(1, 2))) $where['r.sex'] = $sex;
+        $age_min = I('age_min', 0, 'intval');
+        $age_max = I('age_max', 0, 'intval');
+        if($age_min && $age_max){
+            $where['r.age'] = array('between', array($age_min, $age_max));
+        }
+        else if($age_min){
+            $where['r.age'] = array('egt', $age_min);
+        }
+        else if($age_max){
+            $where['r.age'] = array('elt', $age_max);
+        }
+        $post_nature = I('post_nature', '', 'trim');
+        if($post_nature) $where['r.post_nature'] = $post_nature;
+        $job_intension = I('job_intension', '', 'trim');
+        if($job_intension) $where['r.job_intension'] = array('like', '%'.$job_intension.'%');
+        $job_area = I('job_area', '', 'trim');
+        if($job_area) $where['r.job_area'] = array('like', '%'.$job_area.'%');
+        $career_label = I('career_label', '', 'trim');
+        if($career_label) $where['r.career_label'] = array('like', '%'.$career_label.'%');
+
         if($resume_name) $where['r.true_name|r.mobile'] = array('like', '%'.$resume_name.'%');
         $list = $model->getHrResumeList($where, 'h.id as hr_resume_id,h.hr_user_id,r.*');
         foreach($list['info'] as &$val){
@@ -119,49 +148,67 @@ class ResumeController extends HrCommonController {
     }
 
     /**
-     * @desc 获取简历详情
+     * 简历详情
      */
     public function seeResumeDetail(){
-        $resumeModel = D('Admin/Resume');
-        $hrModel = D('Admin/HrResume');
         $resume_id = I('id', 0, 'intval');
-        $hr_where = array('hr_user_id' => HR_ID, 'resume_id' => $resume_id);
+        $resumeModel = D('Admin/Resume');
+        $resumeWorkModel = D('Admin/ResumeWork');
+        $resumeEduModel = D('Admin/ResumeEdu');
+        $resumeEvaluationModel = D('Admin/ResumeEvaluation');
         $resume_where = array('id' => $resume_id);
-        $info = $resumeModel->getResumeInfo($resume_where, '*');
-        $hrResumeInfo = $hrModel->getHrResumeInfo($hr_where);
-        $info['recommend_label'] = $hrResumeInfo['recommend_label'];
-        $this->info = $info;
+        $resumeDetail = $resumeModel->getResumeInfo($resume_where);
+        $where = array('resume_id' => $resume_id);
+        $resumeWorkList = $resumeWorkModel->getResumeWorkList($where);
+        $resumeEduList = $resumeEduModel->getResumeEduList($where);
+        foreach($resumeWorkList as &$wval){
+            $wval['starttime'] = time_format($wval['starttime'], 'Y-m-d');
+            $wval['endtime'] = time_format($wval['endtime'], 'Y-m-d');
+        }
+        unset($wval);
+        foreach($resumeEduList as &$eval){
+            $eval['starttime'] = time_format($eval['starttime'], 'Y-m-d');
+            $eval['endtime'] = time_format($eval['endtime'], 'Y-m-d');
+        }
+        unset($eval);
+        $resumeEvaluation = $resumeEvaluationModel->getResumeEvaluationAvg($where);
+        $sum = array_sum(array_values($resumeEvaluation));
+        $avg = round($sum/(count($resumeEvaluation)), 2);
+        $return = array('detail' => $resumeDetail, 'resume_work' => $resumeWorkList, 'resume_edu' => $resumeEduList, 'resume_evaluation' => $resumeEvaluation, 'evaluation_avg' => $avg);
+        $this->info = $return;
         $this->display();
     }
 
     /**
-     * @desc 获取简历教育经历列表
+     * @desc 检索条件
      */
-    public function getResumeEduList()
-    {
-        $resume_id = I('resume_id', 0, 'intval');
-        $keywords = I('keywords', '', 'trim');
-        $resume_edu_where = array('resume_id' => $resume_id);
-        $resume_edu_model = D('Admin/ResumeEdu');
-        if ($keywords) $resume_edu_where['school_name'] = array('like', '%'.$keywords.'%');
-        $list = $resume_edu_model->getResumeEduList($resume_edu_where);
-        $this->list = $list;
-        $this->keywords = $keywords;
-        $this->display();
-    }
+    public function researchResume(){
+        $work_nature = C('WORK_NATURE');
+        $arr_values = array_values($work_nature);
+        $nature_arr = array();
+        $tags_where = array('tags_type' => array('in', array(1,2,5)));
+        $tagsModel = D('Admin/Tags');
+        $tags_info = $tagsModel->getTagsList($tags_where, 'id,tags_name,tags_type');
+        $tags_intension = array();
+        $tags_career = array();
+        $tags_recommend = array();
+        foreach($tags_info as &$val){
+            if(1 == $val['tags_type']) $tags_career[] = array('id' => $val['id'], 'name' => $val['tags_name']);
+            if(2 == $val['tags_type']) $tags_intension[] = array('id' => $val['id'], 'name' => $val['tags_name']);
+            if(5 == $val['tags_type']) $tags_recommend[] = array('id' => $val['id'], 'name' => $val['tags_name']);
+        }
+        unset($val);
+        foreach($arr_values as &$val){
+            $nature_arr[] = array('id' => $val, 'name' => $val);
+        }
+        unset($val);
 
-    /**
-     * @desc 获取简历工作经历列表
-     */
-    public function getResumeWorkList(){
-        $resume_id = I('resume_id', 0, 'intval');
-        $keywords = I('keywords', '', 'trim');
-        $resume_work_where = array('resume_id' => $resume_id);
-        $resume_work_model = D('Admin/ResumeWork');
-        if($keywords) $resume_work_where['company_name'] = array('like', '%'.$keywords.'%');
-        $list = $resume_work_model->getResumeWorkList($resume_work_where);
-        $this->list = $list;
-        $this->keywords = $keywords;
+        $area = D('Admin/Region')->getRegionList(array('level' => 2), 'id,name');
+        $this->recommend = $tags_recommend;
+        $this->area = $area;
+        $this->intension = $tags_intension;
+        $this->career = $tags_career;
+        $this->nature = $nature_arr;
         $this->display();
     }
 }

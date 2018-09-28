@@ -44,7 +44,7 @@ class ArticleModel extends RelationModel {
     /**
      * 获取文章列表
      * @param
-     * @return Array    ['attrlist']文章列表 ['page']分页数据
+     * @return array    ['attrlist']文章列表 ['page']分页数据
      */
     public function getArticleList($where){
         $count = $this->where($where)->count();
@@ -70,6 +70,18 @@ class ArticleModel extends RelationModel {
     public function _before_delete($option){
         $images = $this->field('thumb_img')->find($option['where']['article_id']);
         deleteImage($images);
+    }
+
+    /**
+     * @desc 文章详情
+     * @param $where
+     * @param bool $field
+     * @return mixed
+     */
+    public function getArticleInfo($where, $field = false){
+        if(!$field) $field = '*';
+        $res = $this->where($where)->field($field)->find();
+        return $res;
     }
 
 }

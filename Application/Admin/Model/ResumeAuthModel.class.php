@@ -79,4 +79,14 @@ class ResumeAuthModel extends Model {
     protected function _before_update(&$data, $option){
     }
 
+    /**
+     * @desc 简历认证数量
+     * @param $where
+     * @return mixed
+     */
+    public function getResumeAuthCount($where){
+        $res = $this->where($where)->count();
+        return $res;
+    }
+
 }

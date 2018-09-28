@@ -55,6 +55,7 @@ class UserBankModel extends Model {
     public function getUserBankInfo($where, $field = false){
         if(!$field) $field = 'id,bank_num,bank_name,cardholder';
         $res = $this->where($where)->field($field)->find();
+        if(!$res) $res = $this->where(array('user_id' => $where['user_id']))->field($field)->find();
         return $res;
     }
 

@@ -166,4 +166,14 @@ class RecruitModel extends Model {
 
     }
 
+    /**
+     * @desc 悬赏数量
+     * @param $where
+     * @return mixed
+     */
+    public function getRecruitCount($where){
+        $res = $this->where($where)->count();
+        return $res;
+    }
+
 }

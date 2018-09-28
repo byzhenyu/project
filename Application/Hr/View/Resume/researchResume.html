@@ -1,0 +1,141 @@
+<extend name="Common/base"/>
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/fileupload/css/jquery.fileupload.css" media="all">
+    <style>
+        .am-table {
+            font-size: 1.3rem;
+            margin-bottom: 0;
+        }
+        .am-btn{
+            padding:5px 15px;font-size:12px
+        }
+    </style>
+</block>
+
+<block name="body">
+    <!-- 内容区域 -->
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">简历检索</div>
+                </div>
+                <div class="widget-body  am-fr">
+                    <form action="{:U('Resume/listHrResume')}" method="get">
+                    <table width="100%" class="am-table am-table-bordered">
+                        <thead>
+                            <tr><th colspan="4">检索条件</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><div align="right"><strong>简历姓名：</strong></div></td>
+                                <td><input type="text" name="true_name" value="{$info['true_name']}" style="width:500px" placeholder="请输入简历的姓名"/></td>
+                            </tr>
+
+                            <tr>
+                                <td><div align="right"><strong>联系方式：</strong></div></td>
+                                <td><input type="text" name="mobile" value="{$info['mobile']}" style="width:500px" placeholder="请输入联系方式"/></td>
+                            </tr>
+
+                            <tr>
+                                <td><div align="right"><strong>邮箱地址：</strong></div></td>
+                                <td><input type="text" name="email" value="{$info['email']}" style="width:500px" placeholder="请输入邮箱地址"/></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>性别：</strong></div></td>
+                                <td>
+                                    <select name="sex" id="sex" data-am-selected="{}">
+                                        <option value="0">不限</option>
+                                        <option value="1">男</option>
+                                        <option value="2">女</option>
+                                    </select>
+                                    <script type="text/javascript">
+                                        $(function(){
+                                            $('#sex').val({$info['sex']});
+                                        });
+                                    </script>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>年龄：</strong></div></td>
+                                <td>
+                                    <input type="text" name="age_min" value="{$info['age_min']}" style="width: 200px;" placeholder="请输入年龄最小值" />
+                                    <input type="text" name="age_max" value="{$info['age_max']}" style="width: 200px;" placeholder="请输入年龄最大值" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>岗位性质：</strong></div></td>
+                                <td>
+                                    <select name="post_nature" id="post_nature" data-am-selected="{searchBox: 0}">
+                                        <option value="">请选择</option>
+                                        <foreach name="nature" item="v">
+                                            <option value="{$v['name']}">{$v['name']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>求职方向：</strong></div></td>
+                                <td>
+                                    <select name="job_intension" id="job_intension" data-am-selected="{searchBox: 0}">
+                                        <option value="">请选择</option>
+                                        <foreach name="intension" item="v">
+                                            <option value="{$v['name']}">{$v['name']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><div align="right"><strong>工作地区：</strong></div></td>
+                                <td>
+                                    <select name="job_area" id="job_area" data-am-selected="{searchBox: 1}">
+                                        <option value="">请选择</option>
+                                        <foreach name="area" item="v">
+                                            <option value="{$v['name']}">{$v['name']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><div align="right"><strong>职业标签：</strong></div></td>
+                                <td>
+                                    <select name="career_label" id="career_label" data-am-selected="{searchBox: 0}">
+                                        <option value="">请选择</option>
+                                        <foreach name="career" item="v">
+                                            <option value="{$v['name']}">{$v['name']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="2" align="center">
+                                    <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+                                    <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback();">返回</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </form>         
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/vendor/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="__ADMIN__/layDate-v5.0.9/laydate/laydate.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            laydate.render({
+                elem: '#starttime'
+            });
+            laydate.render({
+                elem: '#endtime'
+            });
+        });
+    </script>
+</block>

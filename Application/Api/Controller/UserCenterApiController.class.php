@@ -518,7 +518,10 @@ class UserCenterApiController extends ApiUserCommonController{
                 $field = 'id,industry_name as name,parent_id,sort';
                 $list = $model->getIndustryList($where, $field);
                 foreach($list as &$val){
-                    $val['children'] = $model->getIndustryList(array('parent_id' => $val['id']), $field);
+                    $children = $model->getIndustryList(array('parent_id' => $val['id']), $field);
+                    foreach ($children as &$c) $c['sel'] = 0; unset($c);
+                    $val['children'] = $children;
+                    $val['sel'] = 0;
                 }
                 unset($val);
                 break;
@@ -527,7 +530,10 @@ class UserCenterApiController extends ApiUserCommonController{
                 $field = 'id,position_name as name,parent_id,sort';
                 $list = $model->getPositionList($where, $field, '', false);
                 foreach($list as &$val){
-                    $val['children'] = $model->getPositionList(array('parent_id' => $val['id']), $field, '', false);
+                    $children = $model->getPositionList(array('parent_id' => $val['id']), $field, '', false);
+                    foreach ($children as &$c) $c['sel'] = 0; unset($c);
+                    $val['children'] = $children;
+                    $val['sel'] = 0;
                 }
                 unset($val);
                 break;
@@ -609,6 +615,10 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('user_id' => UID);
         $model = D('Admin/UserBank');
         $list = $model->getUserBankList($where);
+        foreach($list['info'] as &$val){
+            $val['num_string'] = substr($val['bank_num'], -4);
+            $val['isTouchMove'] = 0;
+        }
         $this->apiReturn(V(1, '银行卡号列表获取成功!', $list['info']));
     }
 
@@ -659,6 +669,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $model = D('Admin/UserBank');
         $info = $model->getUserBankInfo($where);
         if($info){
+            $info['string_num'] = substr($info['bank_num'], -4);
             $this->apiReturn(V(1, '银行卡信息获取成功！', $info));
         }
         else{
@@ -1462,5 +1473,48 @@ class UserCenterApiController extends ApiUserCommonController{
         else{
             $this->apiReturn(V(0, '保存失败！'));
         }
+    }
+
+    /**
+     * @desc HR注册顺序排名/HR简历库数量排名
+     */
+    public function hrRanking(){
+        $user_id = UID;
+        $user_model = D('Admin/User');
+        $hr_resume = D('Admin/HrResume');
+        $userRanking = $user_model->getUserRankingInfo($user_id);
+        $hrResumeRanking = $hr_resume->getHrResumeRankingInfo($user_id);
+        if(!$hrResumeRanking) $hrResumeRanking = '999+';
+        $this->apiReturn(V(1, '', array('user_ranking' => $userRanking, 'resume_ranking' => $hrResumeRanking)));
+    }
+
+    /**
+     * @desc HR简历库页统计
+     */
+    public function hrResumeStatistic(){
+        $user_id = UID;
+        $hr_resume_where = array('hr_user_id' => $user_id);
+        $hr_resume_model = D('Admin/HrResume');
+        $hr_resume_count = $hr_resume_model->getHrResumeCount($hr_resume_where);
+
+        $add_time = mktime(0,0,0,date('m'),date('d'),date('Y'));
+        $recruit_where = array('add_time' => array('gt', $add_time));
+        $recruit_model = D('Admin/Recruit');
+        $recruit_count = $recruit_model->getRecruitCount($recruit_where);
+
+        $interview_where = array('r.hr_user_id' => $user_id, 'i.state' => 0);
+        $interview_model = D('Admin/Interview');
+        $interview_count = $interview_model->getInterviewCount($interview_where);
+
+        $auth_where = array('hr_id' => $user_id);
+        $auth_model = D('Admin/ResumeAuth');
+        $auth_count = $auth_model->getResumeAuthCount($auth_where);
+
+        $return_data = array();
+        $return_data['hr_resume'] = $hr_resume_count;
+        $return_data['recruit_num'] = $recruit_count;
+        $return_data['auth_num'] = $auth_count;
+        $return_data['interview_num'] = $interview_count;
+        $this->apiReturn(V(1, '', $return_data));
     }
 }

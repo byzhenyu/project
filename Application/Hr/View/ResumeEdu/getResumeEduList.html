@@ -18,6 +18,7 @@
                             <div class="am-form-group">
                                 <div class="am-btn-toolbar">
                                     <div class="am-btn-group am-btn-group-xs">
+                                        <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback();">返回</button>
                                         <a type="button" class="am-btn am-btn-default am-btn-success" href="{:U('ResumeEdu/editResumeEdu', array('resume_id' => $resume_id))}"><span class="am-icon-plus"></span> 新增</a>
                                         <button type="button" class="am-btn am-btn-default am-btn-danger" onclick="javascript:recycle('chkbId', '确认删除?! 删除后无法恢复!', true)">
                                             <span class="am-icon-trash-o"></span> 批量删除

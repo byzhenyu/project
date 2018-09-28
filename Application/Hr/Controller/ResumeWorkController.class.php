@@ -59,6 +59,8 @@ class ResumeWorkController extends HrCommonController {
         $where = array('id' => $id);
         $info = $model->getResumeWorkInfo($where);
         $info['resume_id'] = $data['resume_id'];
+        if(!$info['starttime']) $info['starttime'] = time();
+        if(!$info['endtime']) $info['endtime'] = time();
         $this->info = $info;
         $this->resume_id = $data['resume_id'];
         $this->display();

@@ -91,4 +91,14 @@ class InterviewModel extends Model {
         }
 
     }
+
+    /**
+     * @desc 面试统计
+     * @param $where
+     * @return mixed
+     */
+    public function getInterviewCount($where){
+        $number = $this->alias('i')->join('__HR_RESUME__ as r on i.resume_id = r.resume_id', 'LEFT')->where($where)->count();
+        return $number;
+    }
 }

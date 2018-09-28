@@ -297,7 +297,12 @@ class RecruitApiController extends ApiUserCommonController{
      *  编辑页面
      */
     public function getUserInfo() {
+        $array = array('id','user_id','company_name','company_size','company_nature','company_mobile','company_email','company_industry','company_address', 'head_pic', 'nickname', 'sex');
         $info = D('Admin/CompanyInfo')->getHrInfo(array('c.user_id'=>UID));
+        if(!$info) {
+            foreach($array as &$value) $info[$value] = '';
+            $info['company_pic'] = array();
+        }
         $this->apiReturn(V(1 ,'编辑个人资料',$info));
     }
 
