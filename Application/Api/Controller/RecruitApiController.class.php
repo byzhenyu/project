@@ -417,11 +417,12 @@ class RecruitApiController extends ApiUserCommonController{
         $signature = base64_encode(hash_hmac('sha1', $string_to_sign, $key, true));
 
         $response = array();
-        $response['SSAccessKeyId'] = $id;
+        $response['OSSAccessKeyId'] = $id;
+        $response['expire'] = $end;
         $response['host'] = $host;
         $response['policy'] = $base64_policy;
         $response['signature'] = $signature;
-        $response['expire'] = $end;
+
         //这个参数是设置用户上传指定的前缀
         //$response['dir'] = $dir;
         $response['key'] = $dir;
