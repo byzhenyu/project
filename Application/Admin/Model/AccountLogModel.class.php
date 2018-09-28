@@ -43,4 +43,26 @@ class AccountLogModel extends Model {
 
     protected function _before_insert(&$data, $option){
     }
+
+    /**
+     * @desc 资金总计
+     * @param $where
+     * @return mixed
+     */
+    public function getAccountLogSum($where){
+        $res = $this->where($where)->field('user_money,user_id,change_type')->select();
+        return $res;
+    }
+
+    /**
+     * @desc 资金统计
+     * @param $where
+     * @param bool $field
+     * @return mixed
+     */
+    public function getAccountLogMoneySum($where, $field = false){
+        if(!$field) $field = 'user_money';
+        $res = $this->where($where)->sum($field);
+        return $res;
+    }
 }

@@ -1,0 +1,171 @@
+<extend name="Common/base"/>
+<block name="style">
+    <style>
+    </style>
+</block>
+
+<block name="body">
+    <!-- 内容区域 -->
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">佣金统计</div>
+                </div>
+                <div class="widget-body  am-fr">
+                    <form action="__SELF__" method="get">
+                        <div class="am-u-sm-12 am-u-md-6 am-u-lg-7">
+                            <p>平台总佣金：￥<span style="color: red; font-weight: 600">{$total_statistic}</span></p>
+                        </div>
+                    </form>
+                    <div class="am-u-sm-12" style="margin-top: 20px">
+                        <p>已结算赏金</p>
+                        <div class="view-content">
+                            <div id="map" style="height: 500px; width:95%; padding:20px 0 0 40px;"></div>
+                        </div>
+                    </div>
+                    <div class="am-u-sm-12" style="margin-top: 20px">
+                        <p>发起中佣金</p>
+                        <div class="view-content">
+                            <div id="maps" style="height: 500px; width:95%; padding:20px 0 0 40px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript" src="__PUBLIC__/echarts.common.min.js"></script>
+    <script type="text/javascript">
+        var myChart = echarts.init(document.getElementById('map'));
+        var maps = echarts.init(document.getElementById('maps'));
+        option = {
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            legend: {
+                data: ['总计赏金', '分享方','平台佣金']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis:  {
+                type: 'value'
+            },
+            yAxis: {
+                type: 'category',
+                data: {$statistic_y}
+            },
+            series: [
+                {
+                    name: '总计赏金',
+                    type: 'bar',
+                    stack: '总量',
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'inside'
+                        }
+                    },
+                    data: {$total_s}
+                },
+                {
+                    name: '平台佣金',
+                    type: 'bar',
+                    stack: '总量',
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'inside'
+                        }
+                    },
+                    data: {$plat_s}
+                },
+                {
+                    name: '分享方',
+                    type: 'bar',
+                    stack: '总量',
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'inside'
+                        }
+                    },
+                    data: {$share_s}
+                }
+            ]
+        };
+
+        maps_option = {
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            legend: {
+                data: ['总计赏金', '分享方预期佣金','平台预期佣金']
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis:  {
+                type: 'value'
+            },
+            yAxis: {
+                type: 'category',
+                data: {$pending_y}
+            },
+            series: [
+                {
+                    name: '总计赏金',
+                    type: 'bar',
+                    stack: '总量',
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'inside'
+                        }
+                    },
+                    data: {$pending_total}
+                },
+                {
+                    name: '平台预期佣金',
+                    type: 'bar',
+                    stack: '总量',
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'inside'
+                        }
+                    },
+                    data: {$pending_plat}
+                },
+                {
+                    name: '分享方预期佣金',
+                    type: 'bar',
+                    stack: '总量',
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'inside'
+                        }
+                    },
+                    data: {$pending_share}
+                }
+            ]
+        };
+        myChart.setOption(option);
+        maps.setOption(maps_option);
+    </script>
+</block>
