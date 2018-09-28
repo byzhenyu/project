@@ -417,7 +417,7 @@ class RecruitApiController extends ApiUserCommonController{
         $signature = base64_encode(hash_hmac('sha1', $string_to_sign, $key, true));
 
         $response = array();
-        $response['accessid'] = $id;
+        $response['SSAccessKeyId'] = $id;
         $response['host'] = $host;
         $response['policy'] = $base64_policy;
         $response['signature'] = $signature;
