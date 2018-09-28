@@ -252,6 +252,10 @@ class PublicApiController extends ApiCommonController
         }
     }
 
+    /**
+     * @desc 关于我们
+     * @param 1、关于我们 2、注册协议
+     */
     public function getArticleInfo(){
         $type = I('type', 1, 'intval');
         $where = array('article_cat_id' => $type);
