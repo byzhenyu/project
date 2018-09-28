@@ -32,14 +32,14 @@
                     <div class="am-u-sm-12" style="margin-top: 50px">
                         <p>用户注册量统计</p>
                         <div class="view-content">
-                            <div id="map" style="height: 500px; width:95%; padding:20px 0 0 40px;"></div>
+                            <div id="map" style="height: 500px; width:60%; padding:20px 0 0 40px; margin: 0 auto;"></div>
                         </div>
                     </div>
 
                     <div class="am-u-sm-12" style="margin-top: 50px">
                         <p>用户注册量城市统计</p>
                         <div class="view-content">
-                            <div id="maps" style="height: 500px; width:95%; padding:20px 0 0 40px;"></div>
+                            <div id="maps" style="height: 700px; width:95%; padding:20px 0 0 40px; margin-bottom: 12%"></div>
                         </div>
                     </div>
                 </div>
@@ -57,8 +57,8 @@
             color: ['#3398DB'],
             tooltip : {
                 trigger: 'axis',
-                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                axisPointer : {
+                    type : 'shadow'
                 }
             },
             grid: {
@@ -108,7 +108,7 @@
                 {
                     name:'统计类型',
                     type:'pie',
-                    radius : '55%',
+                    radius : '75%',
                     center: ['50%', '60%'],
                     data:result.data
                 }

@@ -176,4 +176,15 @@ class RecruitModel extends Model {
         return $res;
     }
 
+    /**
+     * @desc 待结算
+     * @param $where
+     * @param $field
+     * @return mixed
+     */
+    public function getRecruitPendingSel($where, $field){
+        $list = $this->where($where)->field($field)->group('recruit_num')->select();
+        return $list;
+    }
+
 }

@@ -74,4 +74,14 @@ class HrResumeModel extends Model {
         $res = $this->where($where)->count();
         return $res;
     }
+
+    /**
+     * @desc 获取简历库数量
+     * @param $where
+     * @return mixed
+     */
+    public function getHrResumeSel($where){
+        $list = $this->where($where)->group('hr_user_id')->field('hr_user_id,count(1) as number')->select();
+        return $list;
+    }
 }
