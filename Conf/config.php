@@ -70,4 +70,11 @@
         'SMS_USERID' => '240',
         'SMS_USERNAME' => 'ln_sjxcx',
         'SMS_PASSWORD' => 'lnkj123',
+        /* 阿里oss */
+        'AliOss' => array(
+            'endpoint' => 'oss-cn-hangzhou.aliyuncs.com',
+            'accessKeyId' => 'LTAIz4aRXgMYzzLL',
+            'accessKeySecret' => '8GjW7timJQxNlyoLHzsd4ifDCuCCql',
+            'bucket' => 'shanjian',
+        ),
     );
