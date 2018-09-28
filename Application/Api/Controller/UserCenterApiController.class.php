@@ -1474,4 +1474,17 @@ class UserCenterApiController extends ApiUserCommonController{
             $this->apiReturn(V(0, '保存失败！'));
         }
     }
+
+    /**
+     * @desc HR注册顺序排名/HR简历库数量排名
+     */
+    public function hrRanking(){
+        $user_id = UID;
+        $user_model = D('Admin/User');
+        $hr_resume = D('Admin/HrResume');
+        $userRanking = $user_model->getUserRankingInfo($user_id);
+        $hrResumeRanking = $hr_resume->getHrResumeRankingInfo($user_id);
+        if(!$hrResumeRanking) $hrResumeRanking = '999+';
+        $this->apiReturn(V(1, '', array('user_ranking' => $userRanking, 'resume_ranking' => $hrResumeRanking)));
+    }
 }
