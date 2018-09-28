@@ -218,9 +218,12 @@ class RecruitApiController extends ApiUserCommonController{
      */
     public function getHrAccountLog() {
         $where['user_id'] = UID;
-        $data = D('Admin/AccountLog')->getAccountLogByPage($where);
+        $where['change_type'] = array('in', [2,3]);
+        $data = D('Admin/AccountLog')->getAccountLogByPage($where,'log_id,user_id,user_money,change_time,change_desc');
+        $info['list'] = $data['info'];
+        $info['statistics'] = D('Admin/AccountLog')->getAccountMsg($where);
 
-        $this->apiReturn(V(1, '收益明细', $data['info']));
+        $this->apiReturn(V(1, '收益明细', $info));
     }
     /**
      * 我的推荐(hr)

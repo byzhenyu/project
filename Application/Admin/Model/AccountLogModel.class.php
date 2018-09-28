@@ -40,7 +40,26 @@ class AccountLogModel extends Model {
             'page'=>$page['page']
         );
     }
+    //获取收益明细
+    public function getAccountMsg($where) {
 
+        $total = $this->where($where)->sum('user_money');
+        $data['total'] = $total ? fen_to_yuan($total) : '0';
+        $beginMonth=mktime(0,0,0,date('m'),1,date('Y'));
+        $endMonth=mktime(23,59,59,date('m'),date('t'),date('Y'));
+        $map2['change_time'] = array('between',[$beginMonth,$endMonth]);
+        $month = $this->where($where)->where($map2)->sum('user_money');
+
+        $data['month'] = $month ? fen_to_yuan($month) : '0';
+        $bweek = strtotime(date('Y-m-d', strtotime("this week Monday", NOW_TIME)));
+        $eweek = strtotime(date('Y-m-d', strtotime("this week Sunday", NOW_TIME))) + 24 * 3600 - 1;
+
+        $map3['change_time'] = array('between',[$bweek,$eweek]);
+        $week = $this->where($where)->where($map3)->sum('user_money');
+
+        $data['week'] = $week ? fen_to_yuan($week) : '0';
+        return $data;
+    }
     protected function _before_insert(&$data, $option){
     }
 }
