@@ -52,11 +52,26 @@ class HrResumeModel extends Model {
         }
     }
 
+    /**
+     * @desc HR简历拥有数量排名情况
+     * @param $user_id
+     * @return mixed
+     */
     public function getHrResumeRankingInfo($user_id){
         $model = M();
         $sql = 'select rownumber from (select @rownumber:=@rownumber+1 as rownumber,hr_user_id from (select @rownumber:=0) as r,(select hr_user_id,count(1) as number from ln_hr_resume group by hr_user_id order by number desc) as t) as sel where sel.hr_user_id = ' . $user_id;
         $query = $model->query($sql);
         $number = $query[0]['rownumber'];
         return $number;
+    }
+
+    /**
+     * @desc 简历拥有数量统计
+     * @param $where
+     * @return mixed
+     */
+    public function getHrResumeCount($where){
+        $res = $this->where($where)->count();
+        return $res;
     }
 }

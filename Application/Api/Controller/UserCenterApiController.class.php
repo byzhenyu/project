@@ -1487,4 +1487,34 @@ class UserCenterApiController extends ApiUserCommonController{
         if(!$hrResumeRanking) $hrResumeRanking = '999+';
         $this->apiReturn(V(1, '', array('user_ranking' => $userRanking, 'resume_ranking' => $hrResumeRanking)));
     }
+
+    /**
+     * @desc HR简历库页统计
+     */
+    public function hrResumeStatistic(){
+        $user_id = UID;
+        $hr_resume_where = array('hr_user_id' => $user_id);
+        $hr_resume_model = D('Admin/HrResume');
+        $hr_resume_count = $hr_resume_model->getHrResumeCount($hr_resume_where);
+
+        $add_time = mktime(0,0,0,date('m'),date('d'),date('Y'));
+        $recruit_where = array('add_time' => array('gt', $add_time));
+        $recruit_model = D('Admin/Recruit');
+        $recruit_count = $recruit_model->getRecruitCount($recruit_where);
+
+        $interview_where = array('r.hr_user_id' => $user_id, 'i.state' => 0);
+        $interview_model = D('Admin/Interview');
+        $interview_count = $interview_model->getInterviewCount($interview_where);
+
+        $auth_where = array('hr_id' => $user_id);
+        $auth_model = D('Admin/ResumeAuth');
+        $auth_count = $auth_model->getResumeAuthCount($auth_where);
+
+        $return_data = array();
+        $return_data['hr_resume'] = $hr_resume_count;
+        $return_data['recruit_num'] = $recruit_count;
+        $return_data['auth_num'] = $auth_count;
+        $return_data['interview_num'] = $interview_count;
+        $this->apiReturn(V(1, '', $return_data));
+    }
 }

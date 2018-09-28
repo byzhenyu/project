@@ -98,7 +98,7 @@ class StatisticController extends CommonController {
                 $t_sel_arr = array();
                 foreach($t_resume_statistic_select as &$sel) $t_sel_arr[] = $sel['id']; unset($sel);
                 if(count($t_sel_arr) > 0) {
-                    $interview_where = array('state' => 1, 'recruit_resume_id' => array('in', $t_sel_arr));
+                    $interview_where = array('i.state' => 1, 'i.recruit_resume_id' => array('in', $t_sel_arr));
                     $success_number = $interviewModel->getInterviewCount($interview_where);
                 }
                 else{

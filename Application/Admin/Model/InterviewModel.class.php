@@ -98,7 +98,7 @@ class InterviewModel extends Model {
      * @return mixed
      */
     public function getInterviewCount($where){
-        $number = $this->where($where)->count();
+        $number = $this->alias('i')->join('__HR_RESUME__ as r on i.resume_id = r.resume_id', 'LEFT')->where($where)->count();
         return $number;
     }
 }
