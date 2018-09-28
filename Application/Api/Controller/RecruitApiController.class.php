@@ -387,9 +387,10 @@ class RecruitApiController extends ApiUserCommonController{
     //oss签名
     public function getOssSign() {
         date_default_timezone_set("Asia/Shanghai");
-        $id= 'LTAIG6YYgdQ66fps';
-        $key= '79h44HsxGoK3fNj51aloh94tTOL1AZ';
-        $host = 'http://goryua.oss-cn-beijing.aliyuncs.com';
+        $config = C('AliOss');
+        $id= $config['accessKeyId'];
+        $key= $config['accessKeySecret'];
+        $host = 'http://'.$config["bucket"].'.'.$config["endpoint"];
 
         $now = time();
         $expire = 30; //设置该policy超时时间是10s. 即这个policy过了这个有效时间，将不能访问
