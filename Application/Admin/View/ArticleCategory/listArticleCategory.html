@@ -54,7 +54,7 @@
                                 <tbody>
                                     <foreach name="catlist" item="v">
                                         <tr class="gradeX">
-                                            <td><input class="ids" type="checkbox" name="chkbId" value="{$v['article_cat_id']}"></td>
+                                            <td><if condition="$v['article_cat_id'] neq 1 && $v['article_cat_id'] neq 2"><input class="ids" type="checkbox" name="chkbId" value="{$v['article_cat_id']}"></if></td>
                                             <td>{$v['article_cat_id']}</td>
                                             <td style="text-align:left; width: 40%;">
                                                 {$v['cat_name']}
@@ -69,9 +69,12 @@
                                                     <a href="{:U('ArticleCategory/editArticleCategory',array('article_cat_id'=>$v['article_cat_id']))}">
                                                         <i class="am-icon-pencil"></i> 编辑
                                                     </a>
-                                                    <a href="javascript:void(0)" onclick="javascript:recycle({$v['article_cat_id']}, '确认删除?!此步骤无法恢复!', true)" class="tpl-table-black-operation-del">
-                                                        <i class="am-icon-trash"></i> 删除
-                                                    </a>
+                                                    <if condition="$v['article_cat_id'] neq 1 && $v['article_cat_id'] neq 2">
+
+                                                        <a href="javascript:void(0)" onclick="javascript:recycle({$v['article_cat_id']}, '确认删除?!此步骤无法恢复!', true)" class="tpl-table-black-operation-del">
+                                                            <i class="am-icon-trash"></i> 删除
+                                                        </a>
+                                                    </if>
                                                 </div>
                                             </td>
                                         </tr>
