@@ -265,21 +265,5 @@ class PublicApiController extends ApiCommonController
         $info['content'] = '<html><head><meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"><style> .content img{display:block;width:100%;height: auto;} html,body,p{border: 0;margin: 0;padding: 0;}</style></head><body class="content">' . htmlspecialchars_decode($info['content']) . '</body></html>';
         $this->apiReturn(V(1, '', $info));
     }
-    public function test(){
-        $array = array(
-            array(
-                'letter' => 'A',
-                'children' => array(
-                    'name' => '北京'
-                )
-            ),
-            array(
-                'letter' => 'B',
-                'children' => array(
-                    'name' => '临沂'
-                )
-            )
-        );
-    }
 
 }
