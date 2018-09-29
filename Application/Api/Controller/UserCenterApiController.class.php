@@ -171,7 +171,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $model = D('Admin/UserAuth');
         $auth_info = $model->getAuthInfo($where);
         if($auth_info){
-            $auth_info['cert_name'] = C('CERT_TYPE')[$auth_info['cert_type']];
+            $auth_info['cert_name'] = strval(C('CERT_TYPE')[$auth_info['cert_type']]);
             $this->apiReturn(V(1, '', $auth_info));
         }
         $auth_field = M('UserAuth')->getDbFields();
