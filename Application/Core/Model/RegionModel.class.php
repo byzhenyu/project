@@ -73,7 +73,7 @@ class RegionModel extends Model {
      */
     public function getRegionInfo() {
 
-        $return = false;
+        $return = S('return_citys');
         if (!$return) {
             $data = M('Region')->field('id, name, level, first_code')->where(array('level'=>2))->order('first_code, id asc')->select();
             $citys = array();
@@ -84,6 +84,7 @@ class RegionModel extends Model {
             foreach($citys as $k => $val){
                 $return[] = array('letter' => $k, 'children' => $val);
             }
+            S('return_citys', $return);
         }
 
         return $return;
