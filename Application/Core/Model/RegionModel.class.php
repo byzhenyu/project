@@ -73,20 +73,13 @@ class RegionModel extends Model {
      */
     public function getRegionInfo() {
 
-        $citys = S('all_citys');
-        if (!$citys) {
+        $return = S('all_citys');
+        if (!$return) {
             $data = M('Region')->field('id, name, level, first_code')->where(array('level'=>2))->order('first_code, id asc')->select();
             $citys = array();
             foreach ($data as $key => $value) {
                 $citys[$value['first_code']][] = $value;
             }
-            $return = array();
-            foreach($citys as $k => $val){
-                $return[] = array('letter' => $k, 'children' => $val);
-            }
-            S('all_citys', $return);
-        }
-        else{
             $return = array();
             foreach($citys as $k => $val){
                 $return[] = array('letter' => $k, 'children' => $val);
