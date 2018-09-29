@@ -47,6 +47,7 @@ class UserAuthModel extends Model {
         $uid = UID;
         $data['add_time'] = NOW_TIME;
         $where = array('user_id' => $uid);
+        $data['user_id'] = $uid;
         $res = $this->where($where)->find();
         if($res) $this->where($where)->delete();
     }

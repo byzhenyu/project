@@ -72,12 +72,13 @@ class RegionModel extends Model {
      * 获取按照abc排序的城市列表
      */
     public function getRegionInfo() {
+
+        $return = S('return_citys');
         $keyword = I('keyword', '');
         if ($keyword) {
             $where['name'] = array('like', '%'.$keyword.'%');
         }
         $where['level'] =array('eq', 2);
-        $return = false;
         if (!$return) {
             $data = M('Region')->field('id, name, level, first_code')->where($where)->order('first_code, id asc')->select();
             $citys = array();
@@ -88,6 +89,7 @@ class RegionModel extends Model {
             foreach($citys as $k => $val){
                 $return[] = array('letter' => $k, 'children' => $val);
             }
+            S('return_citys', $return);
         }
 
         return $return;

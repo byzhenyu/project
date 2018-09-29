@@ -171,7 +171,12 @@ class UserCenterApiController extends ApiUserCommonController{
         $model = D('Admin/UserAuth');
         $auth_info = $model->getAuthInfo($where);
         if($auth_info) $this->apiReturn(V(1, '', $auth_info));
-        $this->apiReturn(V(0, '获取凭证上传信息失败！'));
+        $auth_field = M('UserAuth')->getDbFields();
+        $return = array();
+        foreach($auth_field as &$val){
+            $return[$val] = '';
+        }
+        $this->apiReturn(V(1, '获取凭证上传信息失败！', $return));
     }
 
     /**
