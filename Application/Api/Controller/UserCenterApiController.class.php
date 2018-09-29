@@ -573,6 +573,13 @@ class UserCenterApiController extends ApiUserCommonController{
                     $list[$key]['name'] = $value;
                 }
                 break;
+            case 5:
+                $cert_type = C('CERT_TYPE');
+                foreach ($cert_type as $key => $value) {
+                    $list[$key]['id'] = $key;
+                    $list[$key]['name'] = $value;
+                }
+                break;
             default:
                 $this->apiReturn(V(0, '不合法的数据类型！'));
         }
