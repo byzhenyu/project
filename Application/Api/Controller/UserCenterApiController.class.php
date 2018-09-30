@@ -432,7 +432,7 @@ class UserCenterApiController extends ApiUserCommonController{
      * @desc 获取联系人列表
      */
     public function getContactsList(){
-        $where = array('user_id' => UID);
+        $where = array('c.user_id' => UID);
         $model = D('Admin/Contacts');
         $list = $model->getContactsList($where);
         if($list){
