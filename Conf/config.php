@@ -76,7 +76,7 @@
             'accessKeyId' => 'LTAIz4aRXgMYzzLL',
             'accessKeySecret' => '8GjW7timJQxNlyoLHzsd4ifDCuCCql',
             'bucket' => 'shanjian',
-            'callbackUrl' => "http://shanjian.host5.liuniukeji.com/Api/AliyunCallback" //上传回调
+            'callbackUrl' => "https://shanjian.host5.liuniukeji.com/Api/AliyunCallback" //上传回调
             //上传回调中有返回图片路径写死
         ),
     );
