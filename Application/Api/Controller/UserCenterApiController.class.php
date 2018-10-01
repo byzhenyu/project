@@ -421,6 +421,9 @@ class UserCenterApiController extends ApiUserCommonController{
         $model = D('Admin/ContactsRelation');
         $list = $model->getContactsRelationList();
         if($list){
+            foreach ($list['info'] as $key => $value) {
+                $value['relation_img'] = C('IMG_SERVER').$value['relation_img'];
+            }
             $this->apiReturn(V(1, '联系人关系列表获取成功！', $list['info']));
         }
         else{
