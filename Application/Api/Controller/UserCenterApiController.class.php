@@ -815,7 +815,12 @@ class UserCenterApiController extends ApiUserCommonController{
         $model = D('Admin/Resume');
         $res = $model->getResumeInfo($where);
         if($res) $this->apiReturn(V(1, '简历获取成功！', $res));
-        $this->apiReturn(V(0, '简历获取失败！'));
+        $auth_field = M('Resume')->getDbFields();
+        $return = array();
+        foreach($auth_field as &$val){
+            $return[$val] = '';
+        }
+        $this->apiReturn(V(1, '获取资料失败！', $return));
     }
 
     /**
