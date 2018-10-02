@@ -51,11 +51,11 @@ class ResumeModel extends Model {
         if($resumeInfo && !$user_info){
             $this->error = '您已经创建过简历！';
             return false;
-        }*/
+        }
         if(!check_is_auth($data['user_id'])){
             $this->error = '请先通过实名认证！';
             return false;
-        }
+        }*/
         $data['initials'] = rev_pinyin($data['true_name']);
     }
 
