@@ -100,7 +100,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $authModel = D('Admin/UserAuth');
         $auth_info = $authModel->getAuthInfo($where);
         $data = I('post.');
-        if(1 == $data['cert_type'] && cmp_black_white($data['idcard_number'])) $this->apiReturn(V(0, '身份证号在黑名单内！'));
+        if(0 == $data['cert_type'] && cmp_black_white($data['idcard_number'])) $this->apiReturn(V(0, '身份证号在黑名单内！'));
         $upArray = array();
         if(1 == $user_type){
             if(empty($data['business_license'])) $this->apiReturn(V(0, '请上传营业执照！'));
