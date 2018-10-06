@@ -1547,12 +1547,15 @@ class UserCenterApiController extends ApiUserCommonController{
     public function getJobAreaList() {
         $where['user_id'] = array('eq', UID);
         $info = D('Admin/Resume')->getResumeInfo($where, 'job_area');
-        $area = explode(',', $info['job_area']);
         $data = [];
-        foreach ($area as $k=>$v) {
-            $data[$k]['id'] = $k;
-            $data[$k]['tags_name'] = $v;
+        if (!empty($info['job_area'])) {
+            $area = explode(',', $info['job_area']);
+            foreach ($area as $k=>$v) {
+                $data[$k]['id'] = $k;
+                $data[$k]['tags_name'] = $v;
+            }
         }
+
         $this->apiReturn(V(1, '工作地区', $data));
     }
     public function saveJobArea() {
