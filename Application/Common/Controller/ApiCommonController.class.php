@@ -10,6 +10,7 @@ class ApiCommonController extends CommonController {
     public function __construct(){
         parent::__construct();
 
+        define('DEFAULT_IMG', 'https://shanjian.oss-cn-hangzhou.aliyuncs.com/nopic.png');
         $code = $_POST['code'];
         if ($code != '') {
             if (C('APP_DATA_ENCODE') === true) {

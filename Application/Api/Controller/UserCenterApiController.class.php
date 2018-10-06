@@ -259,7 +259,7 @@ class UserCenterApiController extends ApiUserCommonController{
         if(!$questionDetail) $this->apiReturn(V(0, '问题详情获取失败！'));
         $releaseInfo = D('Admin/User')->getUserInfo(array('user_id' => $questionDetail['user_id']));
         $questionDetail['add_time'] = time_format($questionDetail['add_time']);
-        $questionDetail['head_pic'] = strval($releaseInfo['head_pic']);
+        $questionDetail['head_pic'] = !empty($releaseInfo['head_pic']) ? strval($releaseInfo['head_pic']) : DEFAULT_IMG;
         $questionDetail['nickname'] = strval($releaseInfo['nickname']);
         $ques_img_where = array('type' => 1, 'item_id' => $question_id);
         $questionImg = D('Admin/QuestionImg')->getQuestionImgList($ques_img_where);
@@ -383,7 +383,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $question_list = $question['info'];
         foreach($question_list as &$val){
             $val['nickname'] = strval($val['nickname']);
-            $val['head_pic'] = strval($val['head_pic']);
+            $val['head_pic'] = !empty($val['head_pic']) ? strval($val['head_pic']) : DEFAULT_IMG;
             $val['add_time'] = time_format($val['add_time'], 'Y-m-d');
             $img_where = array('type' => 1, 'item_id' => $val['id']);
             $val['question_img'] = D('Admin/QuestionImg')->getQuestionImgList($img_where);
@@ -814,6 +814,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('user_id' => UID);
         $model = D('Admin/Resume');
         $res = $model->getResumeInfo($where);
+        $res['head_pic'] = $res['head_pic'] ? $res['head_pic'] : DEFAULT_IMG;
         if($res) $this->apiReturn(V(1, '简历获取成功！', $res));
         $auth_field = M('Resume')->getDbFields();
         $return = array();
