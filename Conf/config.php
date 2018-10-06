@@ -79,4 +79,17 @@
             'callbackUrl' => "https://shanjian.host5.liuniukeji.com/Api/AliyunCallback" //上传回调
             //上传回调中有返回图片路径写死
         ),
+        /* 微信支付相关配置 */
+        'WxPay' => array(
+            #微信商户平台应用APPID
+            'app_id' => 'wxb7221179eaa2ade7',
+            #商户号
+            'mch_id' => '1514704521',
+            //api密钥
+            'key' => 'shanjian2018SJ1006liuniuKe00jikk',
+            #异步回调地址
+            'notify_url' =>'https://shanjian.host5.liuniukeji.com/index.php/Payment/WxPay/wxNotify',
+            //公众帐号secert（仅JSAPI支付的时候需要配置)
+            'appsecret' => '29c96b25eb3ff6cd545f47c1e2f6ad49',
+        ),
     );

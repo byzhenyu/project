@@ -1462,6 +1462,7 @@ class UserCenterApiController extends ApiUserCommonController{
         if ($recharge_money == '') {
             $this->apiReturn(V(0, '请输入充值金额'));
         }
+        require_once("Plugins/WxPay/example/WxPay.JsApiPay.php");
         require_once("Plugins/WxPay/WxPay.php");
         $tools = new \JsApiPay();
         $openId = $tools->GetOpenid();
