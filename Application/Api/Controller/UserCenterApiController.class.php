@@ -770,8 +770,6 @@ class UserCenterApiController extends ApiUserCommonController{
         $data = I('post.');
         $data['user_id'] = UID;
         $model = D('Admin/Resume');
-        $data['head_pic'] = $data['photo'];
-        $data['introduced_voice'] = $data['voice'];
         $resume_where = array('user_id' => UID);
         $resume_info = $model->getResumeInfo($resume_where);
         if($resume_info){
