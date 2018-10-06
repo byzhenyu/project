@@ -29,9 +29,10 @@ class ContactsModel extends Model
         $number = $this->alias('c')->where($where)->join('__CONTACTS_RELATION__ as r on c.relation_id = r.id', 'LEFT')->join('__USER__ as u on u.user_id = c.user_id')->count();
         $page = get_web_page($number);
         $list = $this->alias('c')->where($where)->join('__CONTACTS_RELATION__ as r on c.relation_id = r.id', 'LEFT')->join('__USER__ as u on u.user_id = c.user_id')->field($field)->order($order)->limit($page['limit'])->select();
+        $img_url = C('IMG_SERVER');
         foreach($list as &$val){
             $val['relation_name'] = strval($val['relation_name']);
-            if($val['relation_img']) $val['relation_img'] = strval($val['relation_img']);
+            if($val['relation_img']) $val['relation_img'] = $img_url.strval($val['relation_img']);
         }
         return array(
             'info' => $list,

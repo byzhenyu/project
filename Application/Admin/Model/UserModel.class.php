@@ -85,7 +85,7 @@ class UserModel extends Model{
             $info['pay_password'] = $info['pay_password'] ? 1 : 0;
             $info['register_time'] = time_format($info['register_time']);
             foreach($unArr as &$val) unset($info[$val]); unset($val);
-            $info['head_pic'] = strval($info['head_pic']);
+            $info['head_pic'] = !empty($info['head_pic']) ? strval($info['head_pic']) : DEFAULT_IMG;
             $info['nickname'] = strval($info['nickname']);
             $info['token'] = $this->updateUserToken($info['user_id']);
             return V(1, '用户登录成功', $info);

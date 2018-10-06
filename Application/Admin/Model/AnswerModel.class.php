@@ -29,7 +29,7 @@ class AnswerModel extends Model {
         $list = $this->alias('a')->where($where)->field($field)->limit($page['limit'])->join('__USER__ as u on u.user_id = a.user_id')->order($order)->select();
         foreach($list as &$val){
             $val['add_time'] = time_format($val['add_time'], 'Y-m-d');
-            $val['head_pic'] = strval($val['head_pic']);
+            $val['head_pic'] = $val['head_pic'] ? strval($val['head_pic']) : DEFAULT_IMG;
             if(!$val['is_anonymous']) $val['nickname'] = '匿名用户';
             $imgWhere = array('type' => 2, 'item_id' => $val['id']);
             $val['answer_img'] = D('Admin/QuestionImg')->getQuestionImgList($imgWhere);
