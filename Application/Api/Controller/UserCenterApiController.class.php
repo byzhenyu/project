@@ -1525,8 +1525,19 @@ class UserCenterApiController extends ApiUserCommonController{
         $hr_resume = D('Admin/HrResume');
         $userRanking = $user_model->getUserRankingInfo($user_id);
         $hrResumeRanking = $hr_resume->getHrResumeRankingInfo($user_id);
+        $userFields = $user_model->getUserInfo(array('user_id'=>UID), 'head_pic,nickname,user_name');
+        if($userFields['head_pic']) {
+            $head_pic = $userFields['head_pic'];
+        } else {
+            $head_pic = 'https://shanjian.oss-cn-hangzhou.aliyuncs.com/nopic.png';
+        };
+        if(!empty($userFields['nickname'])) {
+            $nickname = $userFields['nickname'];
+        } else {
+            $nickname = $userFields['user_name'];
+        }
         if(!$hrResumeRanking) $hrResumeRanking = '999+';
-        $this->apiReturn(V(1, '', array('user_ranking' => $userRanking, 'resume_ranking' => $hrResumeRanking)));
+        $this->apiReturn(V(1, '', array('user_ranking' => $userRanking, 'resume_ranking' => $hrResumeRanking,'head_pic'=>$head_pic,'nickname'=>$nickname)));
     }
 
     /**
