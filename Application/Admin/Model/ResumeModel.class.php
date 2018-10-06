@@ -26,7 +26,7 @@ class ResumeModel extends Model {
     public function getResumeInfo($where, $field = false){
         if(!$field) $field = '*';
         $res = $this->where($where)->field($field)->find();
-        if(!$res['head_pic']) $res['head_pic'] = C('IMG_SERVER').'/Static/images/null_cart.png';
+        if(!$res['head_pic']) $res['head_pic'] = 'https://shanjian.oss-cn-hangzhou.aliyuncs.com/nopic.png';
         return $res;
     }
 
