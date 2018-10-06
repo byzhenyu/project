@@ -7,8 +7,8 @@ namespace Admin\Model;
 use Think\Model;
 
 class ResumeModel extends Model {
-    protected $insertFields = array('user_id', 'initials', 'true_name', 'mobile', 'email', 'head_pic', 'sex', 'age', 'job_intension', 'job_area', 'post_nature', 'first_degree', 'second_degree', 'language_ability', 'address', 'introduced', 'introduced_voice', 'career_label', 'hr_id');
-    protected $updateFields = array('user_id', 'initials', 'true_name', 'mobile', 'email', 'head_pic', 'sex', 'age', 'job_intension', 'job_area', 'post_nature', 'first_degree', 'second_degree', 'language_ability', 'address', 'introduced', 'introduced_voice', 'career_label', 'hr_id', 'update_time', 'id');
+    protected $insertFields = array('user_id', 'initials', 'true_name', 'mobile', 'email', 'head_pic', 'sex', 'age', 'job_intension', 'job_area', 'post_nature', 'first_degree', 'second_degree', 'language_ability', 'address', 'introduced', 'introduced_voice', 'career_label', 'hr_id', 'introduced_time');
+    protected $updateFields = array('user_id', 'initials', 'true_name', 'mobile', 'email', 'head_pic', 'sex', 'age', 'job_intension', 'job_area', 'post_nature', 'first_degree', 'second_degree', 'language_ability', 'address', 'introduced', 'introduced_voice', 'career_label', 'hr_id', 'update_time', 'id', 'introduced_time');
     protected $_validate = array(
         array('true_name', 'require', '真实姓名不能为空！', 1,'regex',3),
         array('true_name', '1,50', '真实姓名控制在50个字以内！',1,'length',3),
