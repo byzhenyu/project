@@ -399,7 +399,7 @@ class RecruitApiController extends ApiUserCommonController{
         $config = C('AliOss');
         $id= $config['accessKeyId'];
         $key= $config['accessKeySecret'];
-        $host = 'http://'.$config["bucket"].'.'.$config["endpoint"];
+        $host = 'https://'.$config["bucket"].'.'.$config["endpoint"];
         $callbackUrl = $config['callbackUrl'];
 
         $callback_param = array('callbackUrl' => $callbackUrl,
