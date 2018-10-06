@@ -1569,6 +1569,7 @@ class UserCenterApiController extends ApiUserCommonController{
             foreach ($area as $k=>$v) {
                 $data[$k]['id'] = $k;
                 $data[$k]['tags_name'] = $v;
+                $data[$k]['sel'] = 1;
             }
         }
 
