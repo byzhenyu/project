@@ -684,7 +684,8 @@ class UserCenterApiController extends ApiUserCommonController{
      */
     public function getUserBankInfo(){
         $id = I('post.id', 0, 'intval');
-        $where = array('id' => $id, 'user_id' => UID);
+        $where = array('user_id' => UID);
+        if($id) $where['id'] = $id;
         $model = D('Admin/UserBank');
         $info = $model->getUserBankInfo($where);
         if($info){
