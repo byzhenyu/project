@@ -1543,4 +1543,20 @@ class UserCenterApiController extends ApiUserCommonController{
         $return_data['interview_num'] = $interview_count;
         $this->apiReturn(V(1, '', $return_data));
     }
+    //获取工作地区
+    public function getJobAreaList() {
+        $where['user_id'] = array('eq', UID);
+        $info = D('Admin/Resume')->getResumeInfo($where, 'job_area');
+
+        $this->apiReturn(V(1, '工作地区', $info['job_area']));
+    }
+    public function saveJobArea() {
+        $job_area = I('job_area', '');
+        $res = M('Resume')->where(array('user_id'=>UID))->setField('job_area', $job_area);
+        if ($res ===false) {
+            $this->apiReturn(V(0, '保存失败'));
+        }else {
+            $this->apiReturn(V(1, '保存成功'));
+        }
+    }
 }
