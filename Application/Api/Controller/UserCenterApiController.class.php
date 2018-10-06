@@ -196,13 +196,13 @@ class UserCenterApiController extends ApiUserCommonController{
             $question_id = $model->add($data);
             if(!$question_id) $this->apiReturn(V(0, $model->getError()));
             //评论图片处理
-            $photo = $_FILES['photo'];
+            $photo = $data['photo'];
             $questionImgModel = D('Admin/QuestionImg');
             if ($photo) {
-                foreach ($photo['name'] as $key => $value) {
-                    $img_url = app_upload_more_img('photo', '', 'Comment', UID, $key);
+                $photo = explode(',', $photo);
+                foreach ($photo as &$value) {
                     $data_img['item_id'] = $question_id;
-                    $data_img['img_path'] = $img_url;
+                    $data_img['img_path'] = $value;
                     $questionImgModel->add($data_img);
                 }
             }
@@ -227,13 +227,12 @@ class UserCenterApiController extends ApiUserCommonController{
             $answer_id = $model->add($data);
             if(!$answer_id)$this->apiReturn(V(0, $model->getError()));
             //评论图片处理
-            $photo = $_FILES['photo'];
+            $photo = $data['photo'];
             $questionImgModel = D('Admin/QuestionImg');
             if ($photo) {
-                foreach ($photo['name'] as $key => $value) {
-                    $img_url = app_upload_more_img('photo', '', 'Comment', UID, $key);
+                foreach ($photo as &$value) {
                     $data_img['item_id'] = $answer_id;
-                    $data_img['img_path'] = $img_url;
+                    $data_img['img_path'] = $value;
                     $data_img['type'] = 2;
                     $questionImgModel->add($data_img);
                 }
