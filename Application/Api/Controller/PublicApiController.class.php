@@ -257,14 +257,27 @@ class PublicApiController extends ApiCommonController
      * @desc 关于我们
      * @param 1、关于我们 2、注册协议 4新手指南
      */
+//    public function getArticleInfo(){
+//        $type = I('type', 1, 'intval');
+//        $where = array('article_cat_id' => $type);
+//        $model = D('Admin/Article');
+//        $field = 'content';
+//        $info = $model->getArticleInfo($where, $field);
+//        $info['content'] = '<html><head><meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"><style> .content img{display:block;width:100%;height: auto;} html,body,p{border: 0;margin: 0;padding: 0;}</style></head><body class="content">' . htmlspecialchars_decode($info['content']) . '</body></html>';
+//        $this->apiReturn(V(1, '', $info));
+//    }
+    /**
+     * @desc 关于我们
+     * @param 1、关于我们 2、注册协议 4新手指南
+     */
     public function getArticleInfo(){
         $type = I('type', 1, 'intval');
         $where = array('article_cat_id' => $type);
         $model = D('Admin/Article');
-        $field = 'content';
+        $field = 'title,content,thumb_img';
         $info = $model->getArticleInfo($where, $field);
-        $info['content'] = '<html><head><meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"><style> .content img{display:block;width:100%;height: auto;} html,body,p{border: 0;margin: 0;padding: 0;}</style></head><body class="content">' . htmlspecialchars_decode($info['content']) . '</body></html>';
-        $this->apiReturn(V(1, '', $info));
+        $this->assign('data', $info);
+        $this->display();
     }
 
 }

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+   
+   <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+
+	<title></title>
+
+	<style type="text/css">
+		*{
+			padding: 0px;
+			margin: 0px;
+		}
+		.mian {
+			width: 100%;
+			border-radius: 3%;
+		}
+		#title{
+			width: 90%;
+			text-align: center;
+			font-size: 28px;
+			color: #3281E0;
+			padding-top: 10px;
+			padding-bottom: 10px;
+			margin: 0 auto; 
+		}
+		#content{
+			width: 90%;
+			margin: 0 auto; 
+		}
+	</style>
+</head>
+<body>
+	<div ><if condition="$data.thumb_img neq ''"><img class ="mian" src="{$data.thumb_img}"></if></div>
+	<div id="title">
+		{$data.title}
+	</div>
+	<div id="content">
+		{$data.content}
+	</div>
+
+</body>
+</html>
