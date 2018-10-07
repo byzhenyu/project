@@ -1085,7 +1085,7 @@ class UserCenterApiController extends ApiUserCommonController{
     /**
      * @desc 保存职业标签
      */
-    public function save_career_label(){
+    public function saveCareerLabel(){
         $data = I('post.', '');
         $where = array('user_id' => UID);
         $model = D('Admin/Resume');
