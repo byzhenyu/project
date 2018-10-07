@@ -693,7 +693,7 @@ class UserCenterApiController extends ApiUserCommonController{
             $this->apiReturn(V(1, '银行卡信息获取成功！', $info));
         }
         else{
-            $this->apiReturn(V(0, '银行卡信息获取失败！'));
+            $this->apiReturn(V(1, '至少添加一张银行卡！', array()));
         }
     }
 
