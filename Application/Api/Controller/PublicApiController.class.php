@@ -270,7 +270,7 @@ class PublicApiController extends ApiCommonController
      * @desc 关于我们
      * @param 1、关于我们 2、注册协议 4新手指南
      */
-    public function getArticleInfo(){
+    public function articleInfo(){
         $type = I('type', 1, 'intval');
         $where = array('article_cat_id' => $type);
         $model = D('Admin/Article');
@@ -280,4 +280,9 @@ class PublicApiController extends ApiCommonController
         $this->display('getarticleinfo');
     }
 
+    public function getArticleInfo() {
+        $type = I('type', 1, 'intval');
+        $content = C('IMG_SERVER').'/index.php/Api/PublicApi/articleInfo/type/'.$type;
+        $this->apiReturn(V(1,'',$content));
+    }
 }
