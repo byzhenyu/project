@@ -277,7 +277,7 @@ class PublicApiController extends ApiCommonController
         $field = 'title,content,thumb_img';
         $info = $model->getArticleInfo($where, $field);
         $this->assign('data', $info);
-        $this->display();
+        $this->display('getarticleinfo');
     }
 
 }
