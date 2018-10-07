@@ -263,6 +263,8 @@ class PublicApiController extends ApiCommonController
         $model = D('Admin/Article');
         $field = 'content';
         $info = $model->getArticleInfo($where, $field);
+        $this->fetch('');
+        p($info);die();
         $info['content'] = '<html><head><meta name="viewport" content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"><style> .content img{display:block;width:100%;height: auto;} html,body,p{border: 0;margin: 0;padding: 0;}</style></head><body class="content">' . htmlspecialchars_decode($info['content']) . '</body></html>';
         $this->apiReturn(V(1, '', $info));
     }
