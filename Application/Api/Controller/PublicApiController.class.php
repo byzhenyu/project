@@ -18,6 +18,7 @@ class PublicApiController extends ApiCommonController
         $loginInfo = D('Admin/User')->dologin($user_name, $password, '', $userType);
         if ($loginInfo['status'] == 1) { //登录成功
             add_key_operation(2, $loginInfo['data']['user_id'], $loginInfo['data']['user_id']);
+            M('User')->where(array('user_id'=>$loginInfo['data']['user_id']))->setInc('log_count');
             $this->apiReturn($loginInfo);
         } else {
             $this->apiReturn(V(0, $loginInfo['info']));
