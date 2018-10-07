@@ -255,7 +255,7 @@ class PublicApiController extends ApiCommonController
 
     /**
      * @desc 关于我们
-     * @param 1、关于我们 2、注册协议
+     * @param 1、关于我们 2、注册协议 4新手指南
      */
     public function getArticleInfo(){
         $type = I('type', 1, 'intval');
