@@ -114,7 +114,7 @@ class UserController extends CommonController {
         if (IS_POST) {
             if ($id > 0) {
                 $data['is_auth'] = I('state', 0, 'intval');
-                $result = D('Admin/User')->where($where)->save($data);
+                $result = M('User')->where($where)->save($data);
                 if(false !== $result) $this->ajaxReturn(V(1, '操作成功'));
                 $this->ajaxReturn(V(0, '修改失败请稍后重试！'));
             }
