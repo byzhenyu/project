@@ -125,11 +125,9 @@ class WxPay {
         $data ["trade_type"] = "JSAPI";
         $s = $this->getSign($data);
         $data ["sign"] = $s;
-        p($data);
         $xml = $this->arrayToXml($data);
         $url = 'https://api.mch.weixin.qq.com/pay/unifiedorder';
         $response = $this->postXmlCurl($xml, $url);
-        p($response);die();
         $array = $this->xmlstr_to_array($response);
 
         if ($array['return_code'] =='FAIL') {
@@ -141,10 +139,10 @@ class WxPay {
             $tmp['nonceStr'] = $nonce_str;
             $tmp['package'] = 'prepay_id=' . $array['PREPAY_ID'];
             $tmp['signType'] = 'MD5';
-            $tmp['timeStamp'] = $time;
+            $tmp['timeStamp'] = "$time";
 
             $data2['status'] = 1;
-            $data2['timeStamp'] = $time; //时间戳
+            $data2['timeStamp'] = "$time"; //时间戳
             $data2['nonceStr'] = $nonce_str; //随机字符串
             $data2['signType'] = 'MD5'; //签名算法，暂支持 MD5
             $data2['package'] = 'prepay_id=' . $array['PREPAY_ID']; //统一下单接口返回的 prepay_id 参数值，提交格式如：prepay_id=*
@@ -385,18 +383,8 @@ class WxPay {
     public function GetOpenidFromMp($code)
     {
         $url = $this->__CreateOauthUrlForOpenid($code);
-        //初始化curl
-        $ch = curl_init();
-        //设置超时
-        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER,FALSE);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,FALSE);
-        curl_setopt($ch, CURLOPT_HEADER, FALSE);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        //运行curl，结果以jason形式返回
-        $res = curl_exec($ch);
-        curl_close($ch);
+
+        $res = file_get_contents($url);
         //取出openid
         $data = json_decode($res,true);
         $this->data = $data;
@@ -417,6 +405,6 @@ class WxPay {
         $urlObj["js_code"] = $code;
         $urlObj["grant_type"] = "authorization_code";
         $bizString = $this->ToUrlParams($urlObj);
-        return "https://api.weixin.qq.com/sns/jscode2session".$bizString;
+        return "https://api.weixin.qq.com/sns/jscode2session?".$bizString;
     }
 }
