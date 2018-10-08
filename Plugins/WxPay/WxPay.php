@@ -125,7 +125,6 @@ class WxPay {
         $data ["trade_type"] = "JSAPI";
         $s = $this->getSign($data);
         $data ["sign"] = $s;
-
         $xml = $this->arrayToXml($data);
         $url = 'https://api.mch.weixin.qq.com/pay/unifiedorder';
         $response = $this->postXmlCurl($xml, $url);
@@ -140,10 +139,10 @@ class WxPay {
             $tmp['nonceStr'] = $nonce_str;
             $tmp['package'] = 'prepay_id=' . $array['PREPAY_ID'];
             $tmp['signType'] = 'MD5';
-            $tmp['timeStamp'] = $time;
+            $tmp['timeStamp'] = "$time";
 
             $data2['status'] = 1;
-            $data2['timeStamp'] = $time; //时间戳
+            $data2['timeStamp'] = "$time"; //时间戳
             $data2['nonceStr'] = $nonce_str; //随机字符串
             $data2['signType'] = 'MD5'; //签名算法，暂支持 MD5
             $data2['package'] = 'prepay_id=' . $array['PREPAY_ID']; //统一下单接口返回的 prepay_id 参数值，提交格式如：prepay_id=*
