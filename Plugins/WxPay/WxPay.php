@@ -125,10 +125,11 @@ class WxPay {
         $data ["trade_type"] = "JSAPI";
         $s = $this->getSign($data);
         $data ["sign"] = $s;
+        p($data);
         $xml = $this->arrayToXml($data);
         $url = 'https://api.mch.weixin.qq.com/pay/unifiedorder';
         $response = $this->postXmlCurl($xml, $url);
-
+        p($response);die();
         $array = $this->xmlstr_to_array($response);
 
         if ($array['return_code'] =='FAIL') {
