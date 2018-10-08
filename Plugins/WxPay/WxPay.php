@@ -358,31 +358,6 @@ class WxPay {
     }
     /**
      *
-     * 通过跳转获取用户的openid，跳转流程如下：
-     * 1、设置自己需要调回的url及其其他参数，跳转到微信服务器https://open.weixin.qq.com/connect/oauth2/authorize
-     * 2、微信服务处理完成之后会跳转回用户redirect_uri地址，此时会带上一些参数，如：code
-     *
-     * @return 用户的openid
-     */
-    public function GetOpenid()
-    {
-        //通过code获得openid
-        if (!isset($_GET['code'])){
-            //触发微信返回code码
-            $baseUrl = urlencode('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'].$_SERVER['QUERY_STRING']);
-            $url = $this->__CreateOauthUrlForCode($baseUrl);
-            Header("Location: $url");
-            exit();
-        } else {
-            //获取code码，以获取openid
-            $code = $_GET['code'];
-            $openid = $this->getOpenidFromMp($code);
-            return $openid;
-        }
-    }
-
-    /**
-     *
      * 构造获取code的url连接
      * @param string $redirectUrl 微信服务器回跳的url，需要url编码
      *
@@ -437,11 +412,11 @@ class WxPay {
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,FALSE);
         curl_setopt($ch, CURLOPT_HEADER, FALSE);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-//        if(WxPayConfig::CURL_PROXY_HOST != "0.0.0.0"
-//            && WxPayConfig::CURL_PROXY_PORT != 0){
-//            curl_setopt($ch,CURLOPT_PROXY, WxPayConfig::CURL_PROXY_HOST);
-//            curl_setopt($ch,CURLOPT_PROXYPORT, WxPayConfig::CURL_PROXY_PORT);
-//        }
+        if(WxPayConfig::CURL_PROXY_HOST != "0.0.0.0"
+            && WxPayConfig::CURL_PROXY_PORT != 0){
+            curl_setopt($ch,CURLOPT_PROXY, WxPayConfig::CURL_PROXY_HOST);
+            curl_setopt($ch,CURLOPT_PROXYPORT, WxPayConfig::CURL_PROXY_PORT);
+        }
         //运行curl，结果以jason形式返回
         $res = curl_exec($ch);
         curl_close($ch);
