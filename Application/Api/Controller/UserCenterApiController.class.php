@@ -1489,11 +1489,48 @@ class UserCenterApiController extends ApiUserCommonController{
         $wxData['body'] = '余额充值';
         $wxData['out_trade_no'] = $rechargeSn;
         $wxData['total_fee'] = $recharge_money;
-        $wxData['code'] = $code;
+        $wxData['openId'] = $this->getOpenid($code);
         $wxPay = new \WxPay();
         $doResult = $wxPay->WxAppletPay($wxData);
         $this->apiReturn($doResult);
 
+    }
+    /**
+     * @return openid
+     */
+    protected function getOpenid($code)
+    {
+        $wxConfig = C('WxPay');
+        $appid = $wxConfig['app_id'];
+        $secret = $wxConfig['appsecret'];
+        $userModel= M('User');
+        $openid = $userModel->where(array('user_id'=>UID))->getField('open_id');
+        if ($openid) {
+            return $openid;
+        } else {
+            $url = "https://api.weixin.qq.com/sns/jscode2session?appid={$appid}&secret={$secret}&js_code={$code}&grant_type=authorization_code";
+
+            $res = $this->_httpGet($url);
+            //取出openid
+            $data = json_decode($res,true);
+            $this->data = $data;
+            $openid = $data['openid'];
+            $userModel->where(array('user_id'=>UID))->setField('open_id',$openid);
+            return $openid;
+        }
+
+    }
+
+    protected function _httpGet($url){
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_TIMEOUT,500);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_SSL_VERIFYHOST , false);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        $res = curl_exec($curl);
+        curl_close($curl);
+        return $res;
     }
     /**
      * @desc 充值提现列表
