@@ -1412,7 +1412,7 @@ class UserCenterApiController extends ApiUserCommonController{
     }
 
     /**
-     * @desc 获取面试授权二维码内容
+     * @desc 生成二维码
      */
     public function getInterviewCodeDetail(){
         $hr_user_id = I('hr_id', 0, 'intval');
