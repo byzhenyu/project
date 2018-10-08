@@ -405,6 +405,7 @@ class WxPay {
         curl_close($ch);
         //取出openid
         $data = json_decode($res,true);
+        p($data);die();
         $this->data = $data;
         $openid = $data['openid'];
         return $openid;
