@@ -1480,9 +1480,9 @@ class UserCenterApiController extends ApiUserCommonController{
         if ($recharge_money == '') {
             $this->apiReturn(V(0, '请输入充值金额'));
         }
-        $code = I('code', '');
+        $code = I('wx_code', '');
         if (!$code) {
-            $this->apiReturn(V(0,'code不能为空'));
+            $this->apiReturn(V(0,'wx_code不能为空'));
         }
         require_once("Plugins/WxPay/WxPay.php");
         $rechargeSn = 'C' . date('YmdHis', time()) . '-' . UID;
