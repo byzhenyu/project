@@ -1415,7 +1415,7 @@ class UserCenterApiController extends ApiUserCommonController{
      * @desc 生成二维码
      */
     public function getInterviewCodeDetail(){
-        $hr_user_id = I('hr_id', 0, 'intval');
+        $hr_user_id = UID;
         $resume_id = I('resume_id', 0, 'intval');
         if(!$hr_user_id || !$resume_id) $this->apiReturn(V(0, '传入合法的参数！'));
         $resume_model = D('Admin/Resume');
