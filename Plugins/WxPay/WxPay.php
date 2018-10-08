@@ -139,21 +139,21 @@ class WxPay {
             $tmp['signType'] = 'MD5';
             $tmp['timeStamp'] = $time;
 
-            $data['status'] = 1;
-            $data['timeStamp'] = $time; //时间戳
-            $data['nonceStr'] = $nonce_str; //随机字符串
-            $data['signType'] = 'MD5'; //签名算法，暂支持 MD5
-            $data['package'] = 'prepay_id=' . $array['PREPAY_ID']; //统一下单接口返回的 prepay_id 参数值，提交格式如：prepay_id=*
-            $data['paySign'] = $this->getSign($tmp); //签名,具体签名方案参见微信公众号支付帮助文档;
-            $data['out_trade_no'] = $out_trade_no;
+            $data2['status'] = 1;
+            $data2['timeStamp'] = $time; //时间戳
+            $data2['nonceStr'] = $nonce_str; //随机字符串
+            $data2['signType'] = 'MD5'; //签名算法，暂支持 MD5
+            $data2['package'] = 'prepay_id=' . $array['PREPAY_ID']; //统一下单接口返回的 prepay_id 参数值，提交格式如：prepay_id=*
+            $data2['paySign'] = $this->getSign($tmp); //签名,具体签名方案参见微信公众号支付帮助文档;
+            $data2['out_trade_no'] = $out_trade_no;
 
         } else {
-            $data['status'] = 0;
-            $data['text'] = "错误";
-            $data['RETURN_CODE'] = $array['RETURN_CODE'];
-            $data['RETURN_MSG'] = $array['RETURN_MSG'];
+            $data2['status'] = 0;
+            $data2['text'] = "错误";
+            $data2['RETURN_CODE'] = $array['RETURN_CODE'];
+            $data2['RETURN_MSG'] = $array['RETURN_MSG'];
         }
-        return $data;
+        return $data2;
     }
 
     /**
@@ -355,23 +355,6 @@ class WxPay {
                 break;
         }
         return $output;
-    }
-    /**
-     *
-     * 构造获取code的url连接
-     * @param string $redirectUrl 微信服务器回跳的url，需要url编码
-     *
-     * @return 返回构造好的url
-     */
-    private function __CreateOauthUrlForCode($redirectUrl)
-    {
-        $urlObj["appid"] = $this->config['app_id'];
-        $urlObj["redirect_uri"] = "$redirectUrl";
-        $urlObj["response_type"] = "code";
-        $urlObj["scope"] = "snsapi_base";
-        $urlObj["state"] = "STATE"."#wechat_redirect";
-        $bizString = $this->ToUrlParams($urlObj);
-        return "https://open.weixin.qq.com/connect/oauth2/authorize?".$bizString;
     }
     /**
      *
