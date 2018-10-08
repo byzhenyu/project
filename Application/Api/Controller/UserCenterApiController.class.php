@@ -1488,11 +1488,16 @@ class UserCenterApiController extends ApiUserCommonController{
         if ($recharge_money == '') {
             $this->apiReturn(V(0, '请输入充值金额'));
         }
+        $code = I('code', '');
+        if (!$code) {
+            $this->apiReturn(V(0,'code不能为空'));
+        }
         require_once("Plugins/WxPay/WxPay.php");
         $rechargeSn = 'C' . date('YmdHis', time()) . '-' . UID;
         $wxData['body'] = '余额充值';
         $wxData['out_trade_no'] = $rechargeSn;
         $wxData['total_fee'] = $recharge_money;
+        $wxData['code'] = $code;
         $wxPay = new \WxPay();
         $doResult = $wxPay->WxAppletPay($wxData);
         $this->apiReturn(V(1, '微信参数返回成功', $doResult));
