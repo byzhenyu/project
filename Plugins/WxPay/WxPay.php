@@ -416,7 +416,7 @@ class WxPay {
     {
         $urlObj["appid"] = $this->config['app_id'];
         $urlObj["secret"] = $this->config['appsecret'];
-        $urlObj["code"] = $code;
+        $urlObj["js_code"] = $code;
         $urlObj["grant_type"] = "authorization_code";
         $bizString = $this->ToUrlParams($urlObj);
         return "https://api.weixin.qq.com/sns/jscode2session".$bizString;
