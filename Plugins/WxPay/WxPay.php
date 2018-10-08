@@ -384,7 +384,6 @@ class WxPay {
     public function GetOpenidFromMp($code)
     {
         $url = $this->__CreateOauthUrlForOpenid($code);
-        p($url);
         //初始化curl
         $ch = curl_init();
         //设置超时
@@ -396,11 +395,9 @@ class WxPay {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         //运行curl，结果以jason形式返回
         $res = curl_exec($ch);
-        p($res);
         curl_close($ch);
         //取出openid
         $data = json_decode($res,true);
-        p($data);die();
         $this->data = $data;
         $openid = $data['openid'];
         return $openid;
