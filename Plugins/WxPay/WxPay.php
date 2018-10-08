@@ -129,8 +129,9 @@ class WxPay {
         $xml = $this->arrayToXml($data);
         $url = 'https://api.mch.weixin.qq.com/pay/unifiedorder';
         $response = $this->postXmlCurl($xml, $url);
-        p($response);die();
+
         $array = $this->xmlstr_to_array($response);
+        p($array);die();
         if ($array['RETURN_CODE'] == 'SUCCESS' && $array['RESULT_CODE'] == 'SUCCESS') {
             $time = time();
             $tmp = ''; //临时数组用于签名
