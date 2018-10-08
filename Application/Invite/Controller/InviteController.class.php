@@ -8,7 +8,7 @@ class InviteController extends CommonController {
         $hr_id = I('hr_id', 0, 'intval');
         $resume_id = I('resume_id', 0, 'intval');
         $true_name = I('true_name', '', 'trim');
-        $company_name = I('company_name', '', 'intval');
+        $company_name = I('company_name', '', 'trim');
         $return_arr = array(
             'hr_id' => $hr_id,
             'resume_id' => $resume_id,

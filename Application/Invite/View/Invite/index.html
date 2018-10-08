@@ -103,7 +103,7 @@
     $(function(){
         $('.btn1').click(function(){
             $.post(
-                'https://shanjian.host5.liuniukeji.com/index.php/Api/UserCenterApi/authHrAheadResume', {hr_id: {$info['hr_id']}, resume_id: {$info['resume_id']}, state: 0}, function(data){
+                'https://shanjian.host5.liuniukeji.com/index.php/Api/PublicApi/authHrAheadResume', {hr_id: {$info['hr_id']}, resume_id: {$info['resume_id']}, state: 0}, function(data){
                     if(data.status == 1){
                         alert(data.info);
                     }
@@ -115,7 +115,7 @@
         });
         $('.btn2').click(function(){
             $.post(
-                'https://shanjian.host5.liuniukeji.com/index.php/Api/UserCenterApi/authHrAheadResume', {hr_id: {$info['hr_id']}, resume_id: {$info['resume_id']}, state: 1}, function(data){
+                'https://shanjian.host5.liuniukeji.com/index.php/Api/PublicApi/authHrAheadResume', {hr_id: {$info['hr_id']}, resume_id: {$info['resume_id']}, state: 1}, function(data){
                     if(data.status == 1){
                         alert(data.info);
                     }
