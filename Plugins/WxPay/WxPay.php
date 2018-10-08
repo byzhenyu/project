@@ -129,6 +129,7 @@ class WxPay {
         $xml = $this->arrayToXml($data);
         $url = 'https://api.mch.weixin.qq.com/pay/unifiedorder';
         $response = $this->postXmlCurl($xml, $url);
+        p($response);die();
         $array = $this->xmlstr_to_array($response);
         if ($array['RETURN_CODE'] == 'SUCCESS' && $array['RESULT_CODE'] == 'SUCCESS') {
             $time = time();
@@ -403,6 +404,7 @@ class WxPay {
         curl_close($ch);
         //取出openid
         $data = json_decode($res,true);
+        p($data);
         $this->data = $data;
         $openid = $data['openid'];
         return $openid;
