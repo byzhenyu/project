@@ -105,7 +105,6 @@ class WxPay {
      * 小程序
      */
     public function WxAppletPay($d) {
-        p($d);
         $wxConfig = $this->config;
         $out_trade_no = $d['out_trade_no'];
         $total_fee = abs(floatval($d['total_fee'])) * 100;// 微信支付 单位为分
@@ -124,7 +123,6 @@ class WxPay {
         $data ["spbill_create_ip"] = $ip;
         $data ["total_fee"] = $total_fee;
         $data ["trade_type"] = "JSAPI";
-        p($data);die();
         $s = $this->getSign($data);
         $data ["sign"] = $s;
         $xml = $this->arrayToXml($data);
@@ -136,7 +134,6 @@ class WxPay {
         if ($array['return_code'] =='FAIL') {
             return V(0, $array['return_msg']);
         }
-
             $time = time();
             $tmp = ''; //临时数组用于签名
             $tmp['appId'] = $wxConfig["app_id"];
@@ -401,7 +398,6 @@ class WxPay {
         curl_close($ch);
         //取出openid
         $data = json_decode($res,true);
-        p($data);die();
         $this->data = $data;
         $openid = $data['openid'];
         return $openid;
