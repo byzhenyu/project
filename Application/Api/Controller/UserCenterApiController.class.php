@@ -1467,7 +1467,7 @@ class UserCenterApiController extends ApiUserCommonController{
 
         fread ( $file_temp, filesize ( $file_path ) );
         fclose ( $file_temp );
-        $this->apiReturn(V(1, '二维码内容获取成功！', array('url' => $fileName)));
+        $this->apiReturn(V(1, '二维码内容获取成功！', array('url' => C('IMG_SERVER').'/'.$fileName)));
     }
 
 
