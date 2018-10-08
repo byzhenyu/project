@@ -285,4 +285,36 @@ class PublicApiController extends ApiCommonController
         $content = C('IMG_SERVER').'/index.php/Api/PublicApi/articleInfo/type/'.$type;
         $this->apiReturn(V(1,'',$content));
     }
+
+    /**
+     * @desc 扫描二维码授权hr获得简历
+     * @extra $state int 0、放弃授权 1、同意授权
+     */
+    public function authHrAheadResume(){
+        $hr_user_id = I('hr_id', 0, 'intval');
+        $resume_id = I('resume_id', 0, 'intval');
+        $state = I('post.state', 0, 'intval');
+        if(!$state) $this->apiReturn(V(1, '操作成功！'));
+        $interviewModel = D('Admin/Interview');
+        $hrResumeModel = D('Admin/HrResume');
+        $where = array('hr_user_id' => $hr_user_id, 'resume_id' => $resume_id);
+        $interview_info = $interviewModel->getInterviewInfo($where);
+        if(!$interview_info) $this->apiReturn(V(0, '获取不到相关的面试信息！'));
+        $hr_resume = $hrResumeModel->getHrResumeInfo($where);
+        if($hr_resume) $this->apiReturn(V(0, '您的简历已经存在于该hr简历库中！'));
+        $data = array('hr_user_id' => $hr_user_id, 'resume_id' => $resume_id);
+        $create = $hrResumeModel->create($data);
+        if(false !== $create){
+            $res = $hrResumeModel->add($data);
+            if($res){
+                $this->apiReturn(V(1, '授权成功！'));
+            }
+            else{
+                $this->apiReturn(V(0, $hrResumeModel->getError()));
+            }
+        }
+        else{
+            $this->apiReturn(V(0, $hrResumeModel->getError()));
+        }
+    }
 }

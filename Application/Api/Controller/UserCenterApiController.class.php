@@ -1412,19 +1412,6 @@ class UserCenterApiController extends ApiUserCommonController{
     }
 
     /**
-     * @desc 生成二维码获取数据
-     */
-    public function generateInterviewCode(){
-        $id = I('post.id', 0, 'intval');
-        if(!$id) $this->apiReturn(V(0, '传入正确的面试id'));
-        $interview_where = array('id' => $id);
-        $interviewModel = D('Admin/Interview');
-        $interview_info = $interviewModel->getInterviewInfo($interview_where);
-        $return = array('hr_user_id' => $interview_info['hr_user_id'], 'resume_id' => $interview_info['resume_id']);
-        $this->apiReturn(V(1, '数据获取成功！', $return));
-    }
-
-    /**
      * @desc 获取面试授权二维码内容
      */
     public function getInterviewCodeDetail(){
@@ -1441,44 +1428,49 @@ class UserCenterApiController extends ApiUserCommonController{
         if(!$company_info) $this->apiReturn(V(0, '获取不到相关的公司信息！'));
         $company_name = $company_info['company_name'];
         $true_name = $resume_info['true_name'];
-        $return = array(
-            'true_name' => $true_name,
-            'company_name' => $company_name
-        );
-        $this->apiReturn(V(1, '数据获取成功！', $return));
+
+        header("Content-Type: text/html;charset=utf-8");
+        //引入二维码生成插件
+        vendor("phpqrcode.phpqrcode");
+
+        // 生成的二维码所在目录+文件名
+        $path = "Uploads/Picture/QRcode/";//生成的二维码所在目录
+        if(!file_exists($path)){
+            mkdir($path, 0700,true);
+        }
+        $time = time().'.png';//生成的二维码文件名
+        $fileName = $path.$time;//1.拼装生成的二维码文件路径
+
+        $data = 'https://shanjian.host5.liuniukeji.com/index.php/Invite/Invite/index/true_name/'.$true_name.'/company_name/'.$company_name.'/hr_id/'.$hr_user_id.'/resume_id/'.$resume_id;//2.生成二维码的数据(扫码显示该数据)
+
+        $level = 'L';  //3.纠错级别：L、M、Q、H
+
+        $size = 10;//4.点的大小：1到10,用于手机端4就可以了
+
+        ob_end_clean();//清空缓冲区
+        \QRcode::png($data, $fileName, $level, $size);//生成二维码
+        //文件名转码
+        $file_name = iconv("utf-8","gb2312",$time);
+        $file_path = $_SERVER['DOCUMENT_ROOT'].'/'.$fileName;
+        //获取下载文件的大小
+        $file_size = filesize($file_path);
+        //
+        $file_temp = fopen ( $file_path, "r" );
+        //返回的文件
+        header("Content-type:application/octet-stream");
+        //按照字节大小返回
+        header("Accept-Ranges:bytes");
+        //返回文件大小
+        header("Accept-Length:".$file_size);
+        //这里客户端的弹出对话框
+        header("Content-Disposition:attachment;filename=".$time);
+
+        fread ( $file_temp, filesize ( $file_path ) );
+        fclose ( $file_temp );
+        $this->apiReturn(V(1, '二维码内容获取成功！', array('url' => $fileName)));
     }
 
-    /**
-     * @desc 扫描二维码授权hr获得简历
-     * @extra $state int 0、放弃授权 1、同意授权
-     */
-    public function authHrAheadResume(){
-        $hr_user_id = I('hr_id', 0, 'intval');
-        $resume_id = I('resume_id', 0, 'intval');
-        $state = I('post.state', 0, 'intval');
-        if(!$state) $this->apiReturn(V(1, '操作成功！'));
-        $interviewModel = D('Admin/Interview');
-        $hrResumeModel = D('Admin/HrResume');
-        $where = array('hr_user_id' => $hr_user_id, 'resume_id' => $resume_id);
-        $interview_info = $interviewModel->getInterviewInfo($where);
-        if(!$interview_info) $this->apiReturn(V(0, '获取不到相关的面试信息！'));
-        $hr_resume = $hrResumeModel->getHrResumeInfo($where);
-        if($hr_resume) $this->apiReturn(V(0, '您的简历已经存在于该hr简历库中！'));
-        $data = array('hr_user_id' => $hr_user_id, 'resume_id' => $resume_id);
-        $create = $hrResumeModel->create($data);
-        if(false !== $create){
-            $res = $hrResumeModel->add($data);
-            if($res){
-                $this->apiReturn(V(1, '授权成功！'));
-            }
-            else{
-                $this->apiReturn(V(0, $hrResumeModel->getError()));
-            }
-        }
-        else{
-            $this->apiReturn(V(0, $hrResumeModel->getError()));
-        }
-    }
+
 
     /**
      * 会员充值
@@ -1615,50 +1607,5 @@ class UserCenterApiController extends ApiUserCommonController{
         }else {
             $this->apiReturn(V(1, '保存成功'));
         }
-    }
-
-    /**
-     * @desc 生成二维码
-     */
-    public function qrcode1(){
-        header("Content-Type: text/html;charset=utf-8");
-        //引入二维码生成插件
-        vendor("phpqrcode.phpqrcode");
-
-        // 生成的二维码所在目录+文件名
-        $path = "Uploads/Picture/QRcode/";//生成的二维码所在目录
-        if(!file_exists($path)){
-            mkdir($path, 0700,true);
-        }
-        $time = time().'.png';//生成的二维码文件名
-        $fileName = $path.$time;//1.拼装生成的二维码文件路径
-
-        $data = 'https://www.baidu.com';//2.生成二维码的数据(扫码显示该数据)
-
-        $level = 'L';  //3.纠错级别：L、M、Q、H
-
-        $size = 10;//4.点的大小：1到10,用于手机端4就可以了
-
-        ob_end_clean();//清空缓冲区
-        \QRcode::png($data, $fileName, $level, $size);//生成二维码
-        //文件名转码
-        $file_name = iconv("utf-8","gb2312",$time);
-        $file_path = $_SERVER['DOCUMENT_ROOT'].'/'.$fileName;
-        //获取下载文件的大小
-        $file_size = filesize($file_path);
-        //
-        $file_temp = fopen ( $file_path, "r" );
-        //返回的文件
-        header("Content-type:application/octet-stream");
-        //按照字节大小返回
-        header("Accept-Ranges:bytes");
-        //返回文件大小
-        header("Accept-Length:".$file_size);
-        //这里客户端的弹出对话框
-        header("Content-Disposition:attachment;filename=".$time);
-
-        fread ( $file_temp, filesize ( $file_path ) );
-        fclose ( $file_temp );
-        p($file_path);exit;
     }
 }
