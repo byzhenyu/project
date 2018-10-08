@@ -105,6 +105,7 @@ class WxPay {
      * 小程序
      */
     public function WxAppletPay($d) {
+        p($d);
         $wxConfig = $this->config;
         $out_trade_no = $d['out_trade_no'];
         $total_fee = abs(floatval($d['total_fee'])) * 100;// 微信支付 单位为分
@@ -386,7 +387,6 @@ class WxPay {
     public function GetOpenidFromMp($code)
     {
         $url = $this->__CreateOauthUrlForOpenid($code);
-        p($url);die();
         //初始化curl
         $ch = curl_init();
         //设置超时
@@ -396,16 +396,12 @@ class WxPay {
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST,FALSE);
         curl_setopt($ch, CURLOPT_HEADER, FALSE);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-//        if(WxPayConfig::CURL_PROXY_HOST != "0.0.0.0"
-//            && WxPayConfig::CURL_PROXY_PORT != 0){
-//            curl_setopt($ch,CURLOPT_PROXY, WxPayConfig::CURL_PROXY_HOST);
-//            curl_setopt($ch,CURLOPT_PROXYPORT, WxPayConfig::CURL_PROXY_PORT);
-//        }
         //运行curl，结果以jason形式返回
         $res = curl_exec($ch);
         curl_close($ch);
         //取出openid
         $data = json_decode($res,true);
+        p($data);die();
         $this->data = $data;
         $openid = $data['openid'];
         return $openid;
