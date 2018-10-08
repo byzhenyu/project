@@ -131,8 +131,11 @@ class WxPay {
         $response = $this->postXmlCurl($xml, $url);
 
         $array = $this->xmlstr_to_array($response);
-        p($array);die();
-        if ($array['RETURN_CODE'] == 'SUCCESS' && $array['RESULT_CODE'] == 'SUCCESS') {
+
+        if ($array['return_code'] =='FAIL') {
+            return V(0, $array['return_msg']);
+        }
+
             $time = time();
             $tmp = ''; //临时数组用于签名
             $tmp['appId'] = $wxConfig["app_id"];
@@ -149,10 +152,7 @@ class WxPay {
             $data2['paySign'] = $this->getSign($tmp); //签名,具体签名方案参见微信公众号支付帮助文档;
             $data2['out_trade_no'] = $out_trade_no;
             return V(1,'参数返回成功',$data2);
-        } else {
 
-            return V(0, $array['RETURN_MSG']);
-        }
 
     }
 
