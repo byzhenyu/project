@@ -1495,7 +1495,13 @@ class UserCenterApiController extends ApiUserCommonController{
         $this->apiReturn($doResult);
 
     }
-
+    public function getOpenIdTest() {
+        $code = I('wx_code','');
+        require_once("Plugins/WxPay/WxPay.php");
+        $wxPay = new \WxPay();
+        $doResult = $wxPay->GetOpenidFromMp($code);
+        p($doResult);die();
+    }
     /**
      * @desc 充值提现列表
      */
