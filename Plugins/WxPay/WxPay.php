@@ -419,6 +419,6 @@ class WxPay {
         $urlObj["code"] = $code;
         $urlObj["grant_type"] = "authorization_code";
         $bizString = $this->ToUrlParams($urlObj);
-        return "https://api.weixin.qq.com/sns/oauth2/access_token?".$bizString;
+        return "https://api.weixin.qq.com/sns/jscode2session".$bizString;
     }
 }
