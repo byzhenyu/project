@@ -1492,7 +1492,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $wxData['code'] = $code;
         $wxPay = new \WxPay();
         $doResult = $wxPay->WxAppletPay($wxData);
-        $this->apiReturn(V(1, '微信参数返回成功', $doResult));
+        $this->apiReturn($doResult);
 
     }
 

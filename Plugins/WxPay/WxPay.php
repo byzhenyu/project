@@ -146,14 +146,12 @@ class WxPay {
             $data2['package'] = 'prepay_id=' . $array['PREPAY_ID']; //统一下单接口返回的 prepay_id 参数值，提交格式如：prepay_id=*
             $data2['paySign'] = $this->getSign($tmp); //签名,具体签名方案参见微信公众号支付帮助文档;
             $data2['out_trade_no'] = $out_trade_no;
-
+            return V(1,'参数返回成功',$data2);
         } else {
-            $data2['status'] = 0;
-            $data2['text'] = "错误";
-            $data2['RETURN_CODE'] = $array['RETURN_CODE'];
-            $data2['RETURN_MSG'] = $array['RETURN_MSG'];
+
+            return V(0, $array['RETURN_MSG']);
         }
-        return $data2;
+
     }
 
     /**
