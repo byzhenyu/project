@@ -19,9 +19,6 @@
                                 <div class="am-btn-toolbar">
                                     <div class="am-btn-group am-btn-group-xs">
                                         <a type="button" class="am-btn am-btn-default am-btn-success" href="{:U('Task/editTask')}"><span class="am-icon-plus"></span> 新增</a>
-                                        <button type="button" class="am-btn am-btn-default am-btn-danger" onclick="javascript:recycle('chkbId', '确认删除?! 删除后无法恢复!', true)">
-                                            <span class="am-icon-trash-o"></span> 批量删除
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -48,26 +45,22 @@
                             <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
                                 <thead>
                                     <tr>
-                                        <th width="2%"><input class="check-all" type="checkbox"></th>
-                                        <th width="7%" class="align-center">序号</th>
+                                        <th width="50" class="align-center">序号</th>
                                         <th width="12%" class="align-center">任务名称</th>
-                                        <th width="12%" class="align-center">跳转链接</th>
                                         <th width="12%" class="align-center">奖励令牌</th>
                                         <th width="12%" class="align-center">限制数量</th>
-                                        <th width="12%" class="align-center">任务描述</th>
-                                        <th class="align-center">操作</th>
+                                        <th >任务描述</th>
+                                        <th width="12%" class="align-center">操作</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <foreach name="list" item="v">
                                         <tr class="gradeX">
-                                            <td><if condition="$v['id'] neq 1 && $v['id'] neq 2 && $v['id'] neq 3"><input class="ids" type="checkbox" name="chkbId" value="{$v['id']}"></if></td>
                                             <td class="align-center">{$v['id']}</td>
                                             <td class="align-center">{$v['task_name']}</td>
-                                            <td class="align-center">{$v['task_url']}</td>
                                             <td class="align-center">{$v['reward']}</td>
                                             <td class="align-center">{$v['type_number']}</td>
-                                            <td class="align-center">{$v['task_desc']}</td>
+                                            <td >{$v['task_desc']}</td>
                                             <td class="f-14 align-center">
                                                 <div class="tpl-table-black-operation">
                                                     <a href="{:U('Task/editTask',array('id'=>$v['id']))}">
