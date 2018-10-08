@@ -445,4 +445,12 @@ class RecruitApiController extends ApiUserCommonController{
         //echo json_encode($response);
         $this->apiReturn(V(1, 'aliyun oss sign', $response));
     }
+    //悬赏分享
+    public function getShareInfo() {
+        $recruit_id = I('recruit_id',0,'intval');
+        $info = D('Admin/Recruit')->getRecruitInfo(array('id'=>$recruit_id),'id,position_id,position_name,recruit_num,commission,hr_user_id');
+        $info['commission'] = fen_to_yuan($info['commission']);
+        $info['company_name'] = M('CompanyInfo')->where(array('user_id'=>$info['hr_user_id']))->getField('company_name');
+        $this->apiReturn(V(1,'悬赏分享',$info));
+    }
 }
