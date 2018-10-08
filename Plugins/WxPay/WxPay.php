@@ -118,7 +118,7 @@ class WxPay {
         $data ["nonce_str"] = $nonce_str;
         $data ["notify_url"] = $wxConfig["notify_url"];
         //$data ['openid'] = $d['openId'];
-        $data['openid'] = $this->GetOpenid();
+        $data['openid'] = $this->getOpenidFromMp($d['code']);
         $data ["out_trade_no"] = $out_trade_no;
         $data ["spbill_create_ip"] = $ip;
         $data ["total_fee"] = $total_fee;
