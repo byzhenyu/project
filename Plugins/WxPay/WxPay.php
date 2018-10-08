@@ -123,7 +123,7 @@ class WxPay {
         $data ["spbill_create_ip"] = $ip;
         $data ["total_fee"] = $total_fee;
         $data ["trade_type"] = "JSAPI";
-
+        p($data);die();
         $s = $this->getSign($data);
         $data ["sign"] = $s;
         $xml = $this->arrayToXml($data);
