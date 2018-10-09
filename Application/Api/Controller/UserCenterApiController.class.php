@@ -627,6 +627,22 @@ class UserCenterApiController extends ApiUserCommonController{
         $this->apiReturn(V(1, '公司列表获取成功！', $list['info']));
     }
 
+     /**
+     * @desc 增加公司
+     */
+    public function saveCompany(){
+        $name = I('name', '', 'trim');
+        $compay_model = M('company');
+        $where['company_name'] = $name;
+        $info = $compay_model->where($where)->find();
+        if (empty($info)) {
+            $data['company_name'] = $name;
+            $compay_model->add($data);
+        }
+        $this->apiReturn(V(1, '操作成功'));
+    }
+
+
     /**
      * @desc 获取用户银行卡号列表
      */
