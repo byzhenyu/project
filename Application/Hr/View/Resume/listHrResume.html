@@ -1,6 +1,40 @@
 <extend name="Common/base"/>
 <block name="style">
-
+    <style type="text/css">
+        .more-dropdown-menu {
+            background-clip: padding-box;
+            background-color: #fff;
+            border: 1px solid;
+            border-radius: 4px;
+            box-shadow: 0 6px 12px #aaa;
+            display: none;
+            font-size: 14px;
+            right: 30%;
+            min-width: 80px;
+            padding: 5px;
+            position: absolute;
+            text-align: left;
+            top: 100%;
+            z-index: 1000;
+        }
+        .more-dropdown-menu li{
+            margin: 3px 0;
+        }
+        .dropdown-button {
+            display: inline-block;
+            padding: 5px 6px;
+            font-size: 12px;
+            line-height: 12px;
+            border: 1px solid #36c6d3;
+            background-color: #fff;
+            color: #36c6d3;
+        }
+        .shop-name{
+            font-size: 12px;
+            padding-top: 5px;
+            color: #36c6d3;
+        }
+    </style>
 </block>
 
 <block name="body">
@@ -10,82 +44,77 @@
                 <div class="widget am-cf">
                     <div class="widget-head am-cf">
                         <div class="widget-title  am-cf">简历库列表</div>
-
                     </div>
                     <div class="widget-body  am-fr">
 
-                        <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+                        <div class="am-u-sm-12 am-u-md-12 am-u-lg-8">
                             <div class="am-form-group">
                                 <div class="am-btn-toolbar">
                                     <div class="am-btn-group am-btn-group-xs">
-                                        <a type="button" class="am-btn am-btn-default am-btn-success" href="{:U('Resume/editResume')}"><span class="am-icon-plus"></span> 新增</a>
+                                        <a type="button" class="am-btn am-btn-default am-btn-success" href="{:U('Resume/editResume')}"><span class="am-icon-plus"></span> 创建简历</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <form action="__SELF__" method="get">
-                            <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
+                            <div class="am-u-sm-12 am-u-md-6 am-u-lg-4">
                                 <div class="am-form-group tpl-table-list-select">
                                     <div class="tpl-table-black-operation">
                                         <a href="{:U('Resume/researchResume')}"><i class="am-icon-search"></i> 多功能检索</a>
                                     </div>
                                 </div>
                             </div>
-                            <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
-                                <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                                    <input type="text" class="am-form-field" name="keywords" placeholder="请输入简历人员名称/手机号" value="{$keywords}">
-                                    <span class="am-input-group-btn">
-                                        <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="submit"></button>
-                                        <a class="am-btn  am-btn-default am-btn-danger tpl-table-list-field am-icon-refresh" type="button" href="__ACTION__"></a>
-                                    </span>
-                                </div>
-                            </div>
-                            <input name="p" value="1" type="hidden"/>
                         </form>
 
                         <div class="am-u-sm-12">
                             <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
                                 <thead>
                                     <tr>
-                                        <th width="4%" class="align-center">序号</th>
-                                        <th width="11%" class="align-center">真实姓名</th>
-                                        <th width="12%" class="align-center">手机号</th>
-                                        <th width="11%" class="align-center">邮箱</th>
+                                        <th width="80">序号</th>
+                                        <th width="10%" >姓名</th>
+                                        <th >联系方式</th>
                                         <th width="12%" class="align-center">求职方向</th>
-                                        <th width="8%" class="align-center">求职区域</th>
-                                        <th width="8%" class="align-center">工作性质</th>
-                                        <th width="12%" class="align-center">更新时间</th>
-                                        <th class="align-center">操作</th>
+                                        <th width="10%" class="align-center">工作性质</th>
+                                        <th width="15%" class="align-center">更新时间</th>
+                                        <th width="15%" class="align-center">操作</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <foreach name="info" item="v">
+                                    <foreach name="info" item="v" key="k">
                                         <tr class="gradeX">
-                                            <td class="align-center">{$v['hr_resume_id']}</td>
-                                            <td class="align-center">{$v['true_name']}</td>
-                                            <td class="align-center">{$v['mobile']}</td>
-                                            <td class="align-center">{$v['email']}</td>
+                                            <td>{:pageNumber(10, $k+1)}</td>
+                                            <td >{$v['true_name']}</td>
+                                            <td>
+                                                手机号：{$v['mobile']}<br/>
+                                                邮箱：{$v['email']}
+                                            </td>
                                             <td class="align-center">{$v['job_intension']}</td>
-                                            <td class="align-center">{$v['job_area']}</td>
                                             <td class="align-center">{$v['post_nature']}</td>
                                             <td class="align-center">{:time_format($v['update_time'])}</td>
 
                                             <td class="f-14 align-center">
                                                 <div class="tpl-table-black-operation">
-                                                    <if condition="$v['is_edit'] eq 1">
-                                                        <a href="{:U('Resume/editResume',array('resume_id'=>$v['id']))}">
-                                                            <i class="am-icon-pencil"></i> 编辑
-                                                        </a>
-                                                    </if>
-                                                    <a href="{:U('ResumeEdu/getResumeEduList',array('resume_id'=>$v['id']))}">
-                                                        <i class="am-icon-dedent"></i> 教育经历
-                                                    </a>
-                                                    <a href="{:U('ResumeWork/getResumeWorkList',array('resume_id'=>$v['id']))}">
-                                                        <i class="am-icon-dedent"></i> 工作经历
-                                                    </a>
-                                                    <a href="{:U('Resume/seeResumeDetail',array('id'=>$v['id']))}">
-                                                        <i class="am-icon-dedent"></i> 查看
-                                                    </a>
+                                                    <div class="tw-dropdown-toggle" style="position:relative;display: inline; ">
+                                                        <button class="tw-tool-btn-add dropdown-button">更多操作<i class="am-selected-icon am-icon-caret-down"></i></button>
+                                                        <ul class="more-dropdown-menu" style="width:100px">
+                                                            <li>
+                                                                <a href="{:U('ResumeEdu/getResumeEduList',array('resume_id'=>$v['id']))}">完善教育经历
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="{:U('ResumeWork/getResumeWorkList',array('resume_id'=>$v['id']))}">完善工作经历
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="{:U('Resume/editResume',array('resume_id'=>$v['id']))}">编辑简历
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="{:U('Resume/seeResumeDetail',array('id'=>$v['id']))}">简历详情
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
                                                 </div>
                                             </td>
                                         </tr>
@@ -113,24 +142,15 @@
 
 <block name="script">
     <script type="text/javascript">
-        function changeDisabled(question_id){
-            $.ajax({
-                url : "{:U('Question/changeQuestionDisabled')}",
-                type : "POST",
-                dataType : "json",
-                data : {
-                    "question_id" : question_id,
-                },
-                success : function(data){
-                    toastr(data.info);
-                    if(data.status == 1){
-                        setInterval('reload()', 2000);
-                    }
-                }
-            });
-        }
-        function reload() {
-            location.reload();
-        }
+       //更多的弹窗
+        $('.dropdown-button').click(function(event){
+            $(".more-dropdown-menu").hide();
+            $(this).siblings('.more-dropdown-menu').show();
+            event.stopPropagation();
+        });
+
+        $(document).click(function(){
+            $(".more-dropdown-menu").hide();
+        });
     </script>
 </block>

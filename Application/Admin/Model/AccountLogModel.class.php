@@ -61,6 +61,7 @@ class AccountLogModel extends Model {
         return $data;
     }
     protected function _before_insert(&$data, $option){
+        $data['change_time'] = NOW_TIME;
     }
 
     /**

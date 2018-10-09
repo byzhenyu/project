@@ -33,7 +33,7 @@
                             </div>
                             <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
                                 <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                                    <input type="text" class="am-form-field" name="keyword" placeholder="请输入公司名称关键字" value="{$keyword}">
+                                    <input type="text" class="am-form-field" name="keyword" placeholder="请输入公司名称" value="{$keyword}">
                                     <span class="am-input-group-btn">
                                         <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="submit"></button>
                                         <a class="am-btn  am-btn-default am-btn-danger tpl-table-list-field am-icon-refresh" type="button" href="__ACTION__"></a>
@@ -47,10 +47,10 @@
                             <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
                                 <thead>
                                     <tr>
-                                        <th width="2%"><input class="check-all" type="checkbox"></th>
-                                        <th width="7%" class="align-center">序号</th>
-                                        <th width="45%" class="align-center">公司名称</th>
-                                        <th class="align-center">操作</th>
+                                        <th width="20"><input class="check-all" type="checkbox"></th>
+                                        <th width="80" class="align-center">序号</th>
+                                        <th>公司名称</th>
+                                        <th width="15%" class="align-center">操作</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -58,7 +58,7 @@
                                         <tr class="gradeX">
                                             <td><input class="ids" type="checkbox" name="chkbId" value="{$v['id']}"></td>
                                             <td class="align-center">{$v['id']}</td>
-                                            <td class="align-center">{$v['company_name']}</td>
+                                            <td >{$v['company_name']}</td>
                                             <td class="f-14 align-center">
                                                 <div class="tpl-table-black-operation">
                                                     <a href="javascript:void(0)" onclick="javascript:recycle({$v['id']}, '确认删除?!此步骤无法恢复!', true)" class="tpl-table-black-operation-del">

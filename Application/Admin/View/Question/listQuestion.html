@@ -14,7 +14,7 @@
                     </div>
                     <div class="widget-body  am-fr">
 
-                        <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+                        <div class="am-u-sm-12 am-u-md-12 am-u-lg-8">
                             <div class="am-form-group">
                                 <div class="am-btn-toolbar">
                                     <div class="am-btn-group am-btn-group-xs">
@@ -24,14 +24,9 @@
                             </div>
                         </div>
                         <form action="__SELF__" method="get">
-                            <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
-                                <div class="am-form-group tpl-table-list-select">
-
-                                </div>
-                            </div>
-                            <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+                            <div class="am-u-sm-12 am-u-md-12 am-u-lg-4">
                                 <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                                    <input type="text" class="am-form-field" name="keyword" placeholder="请输入问题标题/问题类型" value="{$keyword}">
+                                    <input type="text" class="am-form-field" name="keyword" placeholder="请输入问题标题" value="{$keyword}">
                                     <span class="am-input-group-btn">
                                         <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="submit"></button>
                                         <a class="am-btn  am-btn-default am-btn-danger tpl-table-list-field am-icon-refresh" type="button" href="__ACTION__"></a>
@@ -45,22 +40,20 @@
                             <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
                                 <thead>
                                     <tr>
-                                        <th width="4%" class="align-center">序号</th>
+                                        <th width="50" class="align-center">序号</th>
+                                        <th>问题标题</th>
                                         <th width="13%" class="align-center">发布人</th>
-                                        <th width="20%" class="align-center">问题标题</th>
-                                        <th width="15%" class="align-center">问题类型</th>
-                                        <th width="15%" class="align-center">添加时间</th>
+                                        <th width="15%" class="align-center">发布时间</th>
                                         <th width="8%" class="align-center">状态</th>
-                                        <th class="align-center">操作</th>
+                                        <th width="20%"  class="align-center">操作</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <foreach name="list" item="v">
                                         <tr class="gradeX">
                                             <td class="align-center">{$v['id']}</td>
+                                            <td >{$v['question_title']}</td>
                                             <td class="align-center">{$v['nickname']|default='未设置'}</td>
-                                            <td class="align-center"><div style="text-align: left; width: 90%">{$v['question_title']}</div></td>
-                                            <td class="align-center">{$v['question_type']|default='未设置'}</td>
                                             <td class="align-center">{:time_format($v['add_time'])}</td>
                                             <td class="align-center">
                                                 {:show_disabled($v['disabled'])}
@@ -78,10 +71,10 @@
                                                         </a>
                                                     </if>
                                                     <a href="{:U('Question/listAnswer',array('id'=>$v['id']))}">
-                                                        <i class="am-icon-pencil"></i> 答案列表
+                                                        答案列表
                                                     </a>
                                                     <a href="{:U('Question/seeQuestionDetail',array('id'=>$v['id']))}">
-                                                        <i class="am-icon-trash"></i> 问题详情
+                                                        问题详情
                                                     </a>
                                                 </div>
                                             </td>
