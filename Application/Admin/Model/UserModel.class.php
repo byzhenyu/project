@@ -238,6 +238,30 @@ class UserModel extends Model{
     }
 
     /**
+     * @desc 字段增加
+     * @param $user_id
+     * @param string $field
+     * @param int $step
+     * @return bool
+     */
+    public function increaseUserFieldNum($user_id, $field = 'user_money', $step = 100){
+        $res = $this->where(array('user_id' => $user_id))->setInc($field, $step);
+        return $res;
+    }
+
+    /**
+     * @desc 字段减少
+     * @param $user_id
+     * @param string $field
+     * @param int $step
+     * @return bool
+     */
+    public function decreaseUserFieldNum($user_id, $field = 'user_money', $step = 100){
+        $res = $this->where(array('user_id' => $user_id))->setDec($field, $step);
+        return $res;
+    }
+
+    /**
      * @desc 修改用户信息
      * @param $where
      * @param array $saveData
