@@ -1049,14 +1049,12 @@ class UserCenterApiController extends ApiUserCommonController{
         $resume_where = array('id' => $resume_id);
         $resumeDetail = $resumeModel->getResumeInfo($resume_where);
         if(!$resumeDetail && $user_id == $resumeDetail['user_id']) $this->apiReturn(V(0, '您还没有填写简历！'));
-        $introduced_detail = array('introduced_voice' => $resumeDetail['introduced_voice'], 'introduced_time' => $resumeDetail['introduced_time'], 'introduced' => $resumeDetail['introduced']);
+        $introduced_detail = array('introduced_voice' => $resumeDetail['introduced_voice'], 'introduced_time' => strval($resumeDetail['introduced_time']), 'introduced' => $resumeDetail['introduced']);
         $resume_career = explode(',', $resumeDetail['career_label']);
-        $tagsList = $tagsModel->getTagsList(array('tags_type' => 1));
+        $resume_career = array_filter($resume_career);
         $tags = array();
-        foreach($tagsList as &$val) $tags[] = array('tags_name' => $val['tags_name']); unset($val);
-        foreach($tags as &$val){
-            $val['sel'] = 0;
-            if(in_array($val['tags_name'] ,$resume_career)) $val['sel'] = 1;
+        foreach($resume_career as &$val){
+            $tags[] = array('tags_name' => $val, 'sel' => 1);
         }
         unset($val);
         $where = array('resume_id' => $resume_id);
