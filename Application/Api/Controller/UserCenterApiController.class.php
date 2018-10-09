@@ -1051,6 +1051,7 @@ class UserCenterApiController extends ApiUserCommonController{
         if(!$resumeDetail && $user_id == $resumeDetail['user_id']) $this->apiReturn(V(0, '您还没有填写简历！'));
         $introduced_detail = array('introduced_voice' => $resumeDetail['introduced_voice'], 'introduced_time' => strval($resumeDetail['introduced_time']), 'introduced' => $resumeDetail['introduced']);
         $resume_career = explode(',', $resumeDetail['career_label']);
+        $resume_career = array_filter($resume_career);
         $tags = array();
         foreach($resume_career as &$val){
             $tags[] = array('tags_name' => $val, 'sel' => 1);
