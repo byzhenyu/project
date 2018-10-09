@@ -20,11 +20,11 @@ class ResumeAuthModel extends Model {
      * @param string $order
      * @return array
      */
-    public function getResumeAuthList($where, $field = false, $order = ''){
+    public function getResumeAuthList($where, $field = false, $order = 'a.add_time desc'){
         if(!$field) $field = 'a.add_time,a.auth_result,r.head_pic,r.true_name,a.resume_id,a.id,r.age,r.sex,r.update_time';
-        $number = $this->alias('a')->join('__RESUME__ as r on a.resume_id = r.id')->where($where)->count();
+        $number = $this->alias('a')->join('__RESUME__ as r on a.resume_id = r.id')->join('__USER__ as u on hr_id = u.user_id', 'LEFT')->where($where)->count();
         $page = get_web_page($number);
-        $res = $this->alias('a')->join('__RESUME__ as r on a.resume_id = r.id')->where($where)->field($field)->limit($page['limit'])->order($order)->select();
+        $res = $this->alias('a')->join('__RESUME__ as r on a.resume_id = r.id')->join('__USER__ as u on hr_id = u.user_id', 'LEFT')->where($where)->field($field)->limit($page['limit'])->order($order)->select();
         foreach($res as &$val){
             $val['add_time'] = time_format($val['add_time']);
             $val['update_time'] = time_format($val['update_time']);

@@ -269,8 +269,10 @@ class StatisticController extends CommonController {
                 $end = mktime(23,59,59,date('m'),date('d'),date('Y'));
                 break;
             case 2://本周
-                $start = mktime(0,0,0,date('m'),date('d')-date('w')+1,date('Y'));
-                $end = mktime(23,59,59,date('m'),date('d')-date('w')+7,date('Y'));
+                $date_w = date('w');
+                if($date_w == 0) $date_w = 7;
+                $start = mktime(0,0,0,date('m'),date('d')-$date_w+1,date('Y'));
+                $end = mktime(23,59,59,date('m'),date('d')-$date_w+7,date('Y'));
                 break;
             case 3://本月
                 $start = mktime(0,0,0,date('m'),1,date('Y'));
