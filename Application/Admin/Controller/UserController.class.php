@@ -123,6 +123,7 @@ class UserController extends CommonController {
             }
         } else {
             $result = D('Admin/UserAuth')->getAuthInfo($where);
+            $result['cert_type'] = C('CERT_TYPE')[$result['cert_type']];
             $this->assign('info', $result);
             $this->display();
         }
