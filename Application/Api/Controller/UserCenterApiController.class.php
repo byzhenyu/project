@@ -771,7 +771,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $data['user_id'] = UID;
         $model = D('Admin/Resume');
         $resume_where = array('user_id' => UID);
-        $resume_info = $model->where($resume_where)->find();
+        $resume_info = $model->getResumeInfo($resume_where);
         if($resume_info){
             $data['id'] = $resume_info['id'];
             $create = $model->create($data, 2);
@@ -1484,19 +1484,17 @@ class UserCenterApiController extends ApiUserCommonController{
         if (!$code) {
             $this->apiReturn(V(0,'wx_code不能为空'));
         }
-        require_once("Plugins/WxPay2/example/jsapi.php");
+        require_once("Plugins/WxPay/WxPay.php");
         $rechargeSn = 'C' . date('YmdHis', time()) . '-' . UID;
-
-        $wxData['order_no'] = $rechargeSn;
-        $wxData['payment_money'] = $recharge_money;
-        $wxData['notify_url'] = C('Wxpay')['notify_url'];
-        $open_id = $this->getOpenid($code);
-        $wxPay = new \WXPay();
-        $doResult = $wxPay->index($open_id,$wxData);
-        $this->apiReturn(V(1,'支付信息',json_decode($doResult)));
+        $wxData['body'] = '余额充值';
+        $wxData['out_trade_no'] = $rechargeSn;
+        $wxData['total_fee'] = $recharge_money;
+        $wxData['openId'] = $this->getOpenid($code);
+        $wxPay = new \WxPay();
+        $doResult = $wxPay->WxAppletPay($wxData);
+        $this->apiReturn($doResult);
 
     }
-
     /**
      * @return openid
      */
