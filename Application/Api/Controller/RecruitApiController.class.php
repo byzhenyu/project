@@ -261,6 +261,17 @@ class RecruitApiController extends ApiUserCommonController{
     public function editUserInfo() {
         $id = I('id', 0, 'intval');
         $data = I('post.', '');
+        // $data = array(
+        //         'nickname' => '李富强',
+        //         'company_name' => '山东六牛网络科技有限公司',
+        //         'company_nature' => '有限责任公司',
+        //         'company_mobile' => '15098913873',
+        //         'company_email' => '772486847@qq.com',
+        //         'company_industry' => '互联网类',
+        //         'company_address' => '沃尔沃路',
+        //         'sex' => 2,
+        //         'company_size' => '50-100人'
+        //     );
         $data['user_id'] = UID;
         $userData['user_id'] = UID;
         $userData['nickname'] = $data['nickname'];
@@ -278,18 +289,15 @@ class RecruitApiController extends ApiUserCommonController{
             $trans->rollback();
             $this->apiReturn(V(0, '个人信息保存失败'));
         }
-
         //公司信息
         if ($companyInfoModel->create($data) ===false) {
-
             $trans->rollback();
             $this->apiReturn(V(0, $companyInfoModel->getError()));
         }
         if ($id > 0) {
             $infoRes = $companyInfoModel->save();
-
         } else {
-            $infoRes = $companyInfoModel->add();
+            $infoRes = $companyInfoModel->add($data);
         }
 
         if ($infoRes ===false) {
