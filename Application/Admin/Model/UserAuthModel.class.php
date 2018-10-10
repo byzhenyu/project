@@ -7,8 +7,8 @@ namespace Admin\Model;
 use Think\Model;
 
 class UserAuthModel extends Model {
-    protected $insertFields = array('true_name', 'cert_type', 'idcard_number', 'idcard_down', 'hand_pic', 'add_time', 'idcard_up', 'business_license', 'user_id');
-    protected $updateFields = array('true_name', 'cert_type', 'idcard_number', 'idcard_down', 'hand_pic', 'add_time', 'idcard_up', 'business_license', 'user_id');
+    protected $insertFields = array('true_name', 'cert_type', 'idcard_number', 'idcard_down', 'hand_pic', 'add_time', 'idcard_up', 'business_license', 'user_id', 'audit_status');
+    protected $updateFields = array('true_name', 'cert_type', 'idcard_number', 'idcard_down', 'hand_pic', 'add_time', 'idcard_up', 'business_license', 'user_id', 'audit_status');
     protected $_validate = array(
         array('true_name', 'require', '真实姓名不能为空！', 1, 'regex', 3),
         array('true_name', 'checkTypeLength', '真实姓名不能超过18字！', 2, 'callback', 3),
