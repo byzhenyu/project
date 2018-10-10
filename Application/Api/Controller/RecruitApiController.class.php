@@ -298,16 +298,17 @@ class RecruitApiController extends ApiUserCommonController{
             $infoRes = $companyInfoModel->save();
         } else {
             $infoRes = $companyInfoModel->add($data);
-            echo $companyInfoModel->getLastSql();
+            
         }
+        $this->apiReturn(V(1, '保存成功', $companyInfoModel->getLastSql()));
 
-        if ($infoRes ===false) {
-            //$trans->rollback();
-            $this->apiReturn(V(0, '公司信息保存失败'));
-        }
+        // if ($infoRes ===false) {
+        //     //$trans->rollback();
+        //     $this->apiReturn(V(0, '公司信息保存失败'));
+        // }
 
         //$trans->commit();
-        $this->apiReturn(V(1, '保存成功'));
+       // $this->apiReturn(V(1, '保存成功'));
 
     }
 
