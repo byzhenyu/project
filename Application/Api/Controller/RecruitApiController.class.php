@@ -298,6 +298,7 @@ class RecruitApiController extends ApiUserCommonController{
             $infoRes = $companyInfoModel->save();
         } else {
             $infoRes = $companyInfoModel->add($data);
+            echo $companyInfoModel->getLastSql();
         }
 
         if ($infoRes ===false) {
