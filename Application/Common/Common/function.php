@@ -1213,3 +1213,56 @@ function token_log_type($type){
     );
     return $arr[$type];
 }
+
+function hideMobile($mobile){
+    $time = time();
+    $ts = date('Y-m-d H:i:s');
+    $app_key = C('MOBILE_APP_KEY');
+    $unit_id = C('UNIT_ID');
+    $secret = C('SECRET');
+    $request = array(
+        'ver' => '2.0',
+        'msgid' => $time,
+        'ts' => urlencode($ts),
+        'service' => 'SafeNumber',
+        'msgtype' => 'binding_Relation',
+        'appkey' => $app_key,
+        'unitID' => $unit_id,
+        'prtms' => $mobile,
+        'uidType' => 0,
+    );
+    $a_keys = array_keys($request);
+    sort($a_keys);
+    $s_h = '';
+    foreach($a_keys as &$val){
+        if($val == 'ts'){
+            $s_h .= $val.urldecode($request[$val]);
+            continue;
+        }
+        $s_h .= $val.$request[$val];
+    }
+    unset($val);
+    $s_h = $secret.$s_h.$secret;
+    $md5_s_h = md5($s_h);
+    $hex = $md5_s_h;
+    $param = '';
+    foreach($a_keys as &$val){
+        $param .= $val.'='.$request[$val].'&';
+    }
+    $request['sid'] = $hex;
+    $param .= 'sid='.$hex;
+    $url = 'http://123.127.33.35:8089/safenumberservicessm/api/manage/dataManage?'.$param;
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_URL, $url);
+    curl_setopt($curl, CURLOPT_HEADER, 1);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    $data = curl_exec($curl);
+    curl_close($curl);
+    $data = json_decode(strstr($data, '{'), true);
+    if($data['binding_Relation_response']['result'] == 0){
+        return $data['binding_Relation_response']['smbms'];
+    }
+    else{
+        return false;
+    }
+}

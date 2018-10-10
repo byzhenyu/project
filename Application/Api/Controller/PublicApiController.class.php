@@ -300,4 +300,50 @@ class PublicApiController extends ApiCommonController
             $this->apiReturn(V(0, $hrResumeModel->getError()));
         }
     }
+
+    public function hideMobile(){
+        $time = time();
+        $ts = date('Y-m-d H:i:s');
+        $request = array(
+            'ver' => '2.0',
+            'msgid' => $time,
+            'ts' => urlencode($ts),
+            'service' => 'SafeNumber',
+            'msgtype' => 'binding_Relation',
+            'appkey' => 'nR0PMcWCFPkeBKaNjdkTmCUZZlmMirRn1AmNZ0C44w6oR6qng4Q1Q5oTjQ0NkZBO',
+            'unitID' => 10000000074,
+            'prtms' => 14717691050,
+            'uidType' => 0,
+        );
+        $secret = 'm7ubdSX8LUdT';
+        $a_keys = array_keys($request);
+        sort($a_keys);
+        $s_h = '';
+        foreach($a_keys as &$val){
+            if($val == 'ts'){
+                $s_h .= $val.urldecode($request[$val]);
+                continue;
+            }
+            $s_h .= $val.$request[$val];
+        }
+        unset($val);
+        $s_h = $secret.$s_h.$secret;
+        $md5_s_h = md5($s_h);
+        $hex = $md5_s_h;
+        $param = '';
+        foreach($a_keys as &$val){
+            $param .= $val.'='.$request[$val].'&';
+        }
+        $request['sid'] = $hex;
+        $param .= 'sid='.$hex;
+        $url = 'http://123.127.33.35:8089/safenumberservicessm/api/manage/dataManage?'.$param;
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HEADER, 1);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        $data = curl_exec($curl);
+        curl_close($curl);
+        $data = json_decode(strstr($data, '{'), true);
+        print_r($data);
+    }
 }

@@ -1064,7 +1064,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $resume_where = array('id' => $resume_id);
         $resumeDetail = $resumeModel->getResumeInfo($resume_where);
         if(!$resumeDetail && $user_id == $resumeDetail['user_id']) $this->apiReturn(V(0, '您还没有填写简历！'));
-        $introduced_detail = array('introduced_voice' => $resumeDetail['introduced_voice'], 'introduced_time' => $resumeDetail['introduced_time'], 'introduced' => $resumeDetail['introduced']);
+        $introduced_detail = array('introduced_voice' => $resumeDetail['introduced_voice'], 'introduced_time' => strval($resumeDetail['introduced_time']), 'introduced' => $resumeDetail['introduced']);
         $resume_career = explode(',', $resumeDetail['career_label']);
         $resume_career = array_filter($resume_career);
         $tags = array();
@@ -1091,6 +1091,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $recommend_info['interview_id'] = $interview_id;
         $recommend_info['auth_id'] = $auth_id;
         if(!$is_open) $resumeDetail['mobile'] = '****';
+        if($is_open) $resumeDetail['mobile'] = $resumeDetail['hide_mobile'];
         $return = array('detail' => $resumeDetail, 'resume_work' => $resumeWorkList, 'resume_edu' => $resumeEduList, 'resume_evaluation' => $resumeEvaluation, 'evaluation_avg' => $avg, 'recruit_resume' => $recommend_info, 'is_open' => $is_open, 'introduce' => $introduced_detail, 'career_label' => $tags);
         $this->apiReturn(V(1, '简历获取成功！', $return));
     }

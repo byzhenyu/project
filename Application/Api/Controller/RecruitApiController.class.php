@@ -160,6 +160,10 @@ class RecruitApiController extends ApiUserCommonController{
         } else {
             //修改状态字段
             M('RecruitResume')->where(array('id'=>$recruit_resume_id))->setField('is_open', 1);
+            $recruitResume = D('Admin/RecruitResume')->getRecruitResumeField(array('id' => $recruit_resume_id), 'resume_id');
+            $resume_info = D('Admin/Resume')->getResumeField(array('id' => $recruitResume['resume_id']), 'mobile');
+            $hideMobile = hideMobile($resume_info);
+            if(false !== $hideMobile) M('Resume')->where(array('id' => $recruitResume['resume_id']))->setField('hide_mobile', $hideMobile);
             $this->apiReturn(V(1, '获取联系方式成功'));
         }
 
