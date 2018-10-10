@@ -279,19 +279,19 @@ class RecruitApiController extends ApiUserCommonController{
         $userData['head_pic'] = $data['head_pic'];
         $userModel = D('Admin/User');
         $companyInfoModel = D('Admin/CompanyInfo');
-        $trans = M();
+        //$trans = M();
         if ($userModel->create($userData,4) ===false) {
-            $trans->rollback();
+            //$trans->rollback();
             $this->apiReturn(V(0, $userModel->getError()));
         }
         $res = $userModel->save();
         if ($res ===false) {
-            $trans->rollback();
+            //$trans->rollback();
             $this->apiReturn(V(0, '个人信息保存失败'));
         }
         //公司信息
         if ($companyInfoModel->create($data) ===false) {
-            $trans->rollback();
+            //$trans->rollback();
             $this->apiReturn(V(0, $companyInfoModel->getError()));
         }
         if ($id > 0) {
@@ -301,11 +301,11 @@ class RecruitApiController extends ApiUserCommonController{
         }
 
         if ($infoRes ===false) {
-            $trans->rollback();
+            //$trans->rollback();
             $this->apiReturn(V(0, '公司信息保存失败'));
         }
 
-        $trans->commit();
+        //$trans->commit();
         $this->apiReturn(V(1, '保存成功'));
 
     }
