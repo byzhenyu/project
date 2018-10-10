@@ -1259,12 +1259,7 @@ class UserCenterApiController extends ApiUserCommonController{
             $val['add_time'] = time_format($val['add_time']);
             $val['sel'] = 0;
         }
-        if($list['info']){
-            $this->apiReturn(V(1, '人才列表获取成功！', $list['info']));
-        }
-        else{
-            $this->apiReturn(V(0, '没有符合条件的人选！'));
-        }
+        $this->apiReturn(V(1, '人才列表获取成功！', $list['info']));
     }
 
     /**
