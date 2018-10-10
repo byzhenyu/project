@@ -29,6 +29,9 @@ class ResumeAuthModel extends Model {
             $val['add_time'] = time_format($val['add_time']);
             $val['update_time'] = time_format($val['update_time']);
             $val['auth_result_string'] = show_resume_auth_result($val['auth_result']);
+            if ($val['head_pic'] == '') {
+                $val['head_pic'] = 'https://shanjian.oss-cn-hangzhou.aliyuncs.com/nopic.png';
+            }
         }
         return array(
             'info' => $res,
