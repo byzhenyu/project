@@ -265,6 +265,7 @@ class RecruitApiController extends ApiUserCommonController{
     public function editUserInfo() {
         $id = I('id', 0, 'intval');
         $data = I('post.', '');
+
         $data['user_id'] = UID;
         $userData['user_id'] = UID;
         $userData['nickname'] = $data['nickname'];
