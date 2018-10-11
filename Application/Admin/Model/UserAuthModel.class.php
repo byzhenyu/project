@@ -46,6 +46,7 @@ class UserAuthModel extends Model {
     protected function _before_insert(&$data, $option){
         $uid = UID;
         $data['add_time'] = NOW_TIME;
+        $data['audit_status'] = 0;
         $where = array('user_id' => $uid);
         $data['user_id'] = $uid;
         $res = $this->where($where)->find();
