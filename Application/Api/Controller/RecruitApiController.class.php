@@ -34,10 +34,14 @@ class RecruitApiController extends ApiUserCommonController{
     //发布接口
     public function publish() {
         if(!check_is_auth(UID)) {
-            $this->apiReturn(V(0, '发布悬赏需要实名认证'));
-        };
+            $this->apiReturn(V(0, '清先完成实名认证'));
+        }
+        $companyInfoModel = D('Admin/CompanyInfo');
+        $checkCompanyInfo = $companyInfoModel->checkCompanyInfo(UID);
+        if ($checkCompanyInfo == 0) {
+            $this->apiReturn(V(0, '请先完善个人资料'));
+        }
         $data = I('post.', '');
-
         $model = D('Admin/Recruit');
         $position_name = M('Position')->where(array('id'=>$data['position_id']))->getField('position_name');
         $data['position_name'] = $position_name;

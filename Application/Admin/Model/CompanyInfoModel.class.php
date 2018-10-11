@@ -84,4 +84,11 @@ class CompanyInfoModel extends Model {
             return $info;
         }
     }
+
+    //验证是否完善公司资料
+    public function checkCompanyInfo($user_id) {
+        $where['user_id'] = $user_id;
+        $count = $this->where($where)->count('id');
+        return $count;
+    }
 }
