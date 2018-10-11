@@ -178,8 +178,8 @@ class UserCenterApiController extends ApiUserCommonController{
         $return = array();
         foreach($auth_field as &$val){
             $return[$val] = '';
-            if ($val['audit_status'] == "") $return[$val]['audit_status'] = '-1';
         }
+        $return['audit_status'] = '-1';
         $return['cert_name'] = '';
         $this->apiReturn(V(1, '获取凭证上传信息失败！', $return));
     }
