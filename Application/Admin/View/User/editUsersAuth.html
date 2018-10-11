@@ -66,6 +66,16 @@
 											<input type="radio" name="state" id="disable" value="2" data-am-ucheck> 不通过
 										</label>
 									</div>
+									<script type="text/javascript">
+										$(function(){
+										    if({$info['audit_status']} == 1){
+										        $('#able').attr('checked', true);
+											}
+											else{
+										        $('#disable').attr('checked', true);
+											}
+										});
+									</script>
 								</td>
 							</tr>
 

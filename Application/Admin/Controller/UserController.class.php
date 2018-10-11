@@ -34,6 +34,8 @@ class UserController extends CommonController {
         $authModel = D('Admin/UserAuth');
         $userInfo = $userModel->getUserInfo($where);
         $auth = $authModel->getAuthInfo($where);
+
+        $auth['cert_type'] = C('CERT_TYPE')[$auth['cert_type']];
         $this->userInfo = $userInfo;
         $this->info = $auth;
 

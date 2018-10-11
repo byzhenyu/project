@@ -257,9 +257,9 @@ class UserCenterApiController extends ApiUserCommonController{
         $quesModel = D('Admin/Question');
         $questionDetail = $quesModel->getQuestionDetail($where);
         if(!$questionDetail) $this->apiReturn(V(0, '问题详情获取失败！'));
-        $releaseInfo = D('Admin/User')->getUserInfo(array('user_id' => $questionDetail['user_id']));
+        $releaseInfo = D('Admin/User')->getUserInfo(array('user_id' => $questionDetail['user_id']), 'nickname,head_pic');
         $questionDetail['add_time'] = time_format($questionDetail['add_time']);
-        $questionDetail['head_pic'] = !empty($releaseInfo['head_pic']) ? strval($releaseInfo['head_pic']) : DEFAULT_IMG;
+        $questionDetail['head_pic'] = $releaseInfo['head_pic'] ? strval($releaseInfo['head_pic']) : DEFAULT_IMG;
         $questionDetail['nickname'] = strval($releaseInfo['nickname']);
         $ques_img_where = array('type' => 1, 'item_id' => $question_id);
         $questionImg = D('Admin/QuestionImg')->getQuestionImgList($ques_img_where);

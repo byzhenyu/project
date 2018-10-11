@@ -19,7 +19,7 @@ class TaskLogModel extends Model {
      * @param string $order
      * @return array
      */
-    public function getTaskLogList($where, $field = false, $order = 'l.finish_time'){
+    public function getTaskLogList($where, $field = false, $order = 'l.finish_time desc'){
         if(!$field) $field = 'l.*,u.nickname,u.mobile,u.user_name';
         $number = $this->alias('l')->join('__USER__ as u on l.user_id = u.user_id')->where($where)->count();
         $page = get_web_page($number);

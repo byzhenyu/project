@@ -53,8 +53,8 @@
                                     <tr>
                                         <th width="60">编号</th>
                                         <th width="11%" >会员手机/账号</th>
-                                        <th width="9%" class="align-center">可用资金</th>
-                                        <th width="12%" class="align-center">冻结资金</th>
+                                        <if condition="$user_type eq 1"><th width="9%" class="align-center">可用资金</th>
+                                        <th width="12%" class="align-center">冻结资金</th></if>
                                         <th width="17%" class="align-center">注册时间</th>
                                         <th width="10%" class="align-center">验证状态</th>
                                         <th width="10%" class="align-center">状态</th>
@@ -66,8 +66,8 @@
                                         <tr class="gradeX">
                                             <td>{:pageNumber(15, $k+1)}</td>
                                             <td>{$v['mobile']}</td>
-                                            <td class="align-center">￥{:fen_to_yuan($v['user_money'])}</td>
-                                            <td class="align-center">￥{:fen_to_yuan($v['frozen_money'])}</td>
+                                            <if condition="$user_type eq 1"><td class="align-center">￥{:fen_to_yuan($v['user_money'])}</td>
+                                            <td class="align-center">￥{:fen_to_yuan($v['frozen_money'])}</td></if>
                                             <td class="align-center">{:time_format($v['register_time'])}</td>
                                             <td class="align-center">
                                                 <if condition="$v['is_auth'] eq 1">已验证<else/><div class="tpl-table-black-operation"><a href="{:U('User/editUsersAuth', array('user_id'=>$v['user_id']))}"> 验证 </a></div></if>
