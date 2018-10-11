@@ -1111,8 +1111,7 @@ class UserCenterApiController extends ApiUserCommonController{
     public function saveCareerLabel(){
         $data = I('post.', '');
         $where = array('user_id' => UID);
-        $model = D('Admin/Resume');
-        $res = $model->where($where)->save($data);
+        $res = M('resume')->where($where)->save($data);
         if(false !== $res){
             $this->apiReturn(V(1, '保存成功！'));
         }
