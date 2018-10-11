@@ -938,8 +938,8 @@ class UserCenterApiController extends ApiUserCommonController{
         if($res){
             $res['starttime'] = time_format($res['starttime']);
             $res['endtime'] = time_format($res['endtime']);
-            $res['mobile'] = $res['work_mobile'];
-            $res['hr_name'] = $res['work_hr_name'];
+            $res['mobile'] = strval($res['work_mobile']);
+            $res['hr_name'] = strval($res['work_hr_name']);
             $this->apiReturn(V(1, '经历详情获取成功！', $res));
         }
         else{
