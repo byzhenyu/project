@@ -875,6 +875,9 @@ class UserCenterApiController extends ApiUserCommonController{
                     $this->apiReturn(V(0, $model->getError()));
                 }
             }
+            else{
+                $this->apiReturn(V(0, $model->getError()));
+            }
         }
         else{
             if(!isMobile($hr_mobile)) $this->apiReturn(V(0, '请输入合法的hr手机号！'));
