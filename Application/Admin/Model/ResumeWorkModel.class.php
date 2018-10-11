@@ -7,7 +7,7 @@ namespace Admin\Model;
 use Think\Model;
 
 class ResumeWorkModel extends Model {
-    protected $insertFields = array('resume_id', 'company_name', 'position', 'starttime', 'endtime', 'describe');
+    protected $insertFields = array('resume_id', 'company_name', 'position', 'starttime', 'endtime', 'describe', 'work_mobile', 'work_hr_name');
     protected $updateFields = array('resume_id', 'company_name', 'position', 'starttime', 'endtime', 'describe', 'id');
     protected $_validate = array(
         array('company_name', 'require', '公司名称不能为空！', 1, 'regex', 3),

@@ -878,6 +878,8 @@ class UserCenterApiController extends ApiUserCommonController{
         else{
             if(!isMobile($hr_mobile)) $this->apiReturn(V(0, '请输入合法的hr手机号！'));
             if(!$hr_name) $this->apiReturn(V(0, '请输入hr姓名！'));
+            $data['work_mobile'] = $hr_mobile;
+            $data['work_hr_name'] = $hr_name;
             M()->startTrans();
             $create = $model->create($data, 1);
             if (false !== $create){
@@ -928,9 +930,11 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('id' => $id, 'user_id' => UID);
         $model = D('Admin/ResumeWork');
         $res = $model->getResumeWorkInfo($where);
-        $res['starttime'] = time_format($res['starttime']);
-        $res['endtime'] = time_format($res['endtime']);
         if($res){
+            $res['starttime'] = time_format($res['starttime']);
+            $res['endtime'] = time_format($res['endtime']);
+            $res['mobile'] = $res['work_mobile'];
+            $res['hr_name'] = $res['work_hr_name'];
             $this->apiReturn(V(1, '经历详情获取成功！', $res));
         }
         else{
