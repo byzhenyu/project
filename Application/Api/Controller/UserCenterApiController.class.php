@@ -1496,8 +1496,8 @@ class UserCenterApiController extends ApiUserCommonController{
      */
     public function recharge() {
         $recharge_money = I('recharge_money', '');
-        if ($recharge_money == '') {
-            $this->apiReturn(V(0, '请输入充值金额'));
+        if (!$recharge_money || $recharge_money < 500) {
+            $this->apiReturn(V(0, '充值金额不能小于500！'));
         }
         $code = I('wx_code', '');
         if (!$code) {

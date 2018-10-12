@@ -1279,6 +1279,7 @@ function company_auth($user_id = UID){
 }
 
 function getOpenId($code){
+    if(!$code) return false;
     $wxConfig = C('WxPay');
     $app_id = $wxConfig['app_id'];
     $secret = $wxConfig['appsecret'];
