@@ -6,9 +6,9 @@ namespace Admin\Model;
 use Think\Model;
 use Common\Tools\Emchat;
 class UserModel extends Model{
-    protected $insertFields = array('user_name','nickname','password','mobile','email', 'register_time', 'sex', 'status', 'user_type', 'is_auth','log_count');
-    protected $updateFields = array('user_id','user_name','nickname','password','mobile','email', 'sex', 'status', 'disabled', 'user_type', 'is_auth', 'head_pic','log_count');
-    protected $selectFields = array('user_id, user_name, nickname, password, mobile, email, sex, status, user_money,frozen_money,disabled,register_time,user_type,is_auth','log_count');
+    protected $insertFields = array('user_name','nickname','password','mobile','email', 'register_time', 'sex', 'status', 'user_type', 'is_auth','log_count', 'wx');
+    protected $updateFields = array('user_id','user_name','nickname','password','mobile','email', 'sex', 'status', 'disabled', 'user_type', 'is_auth', 'head_pic','log_count', 'wx');
+    protected $selectFields = array('user_id, user_name, nickname, password, mobile, email, sex, status, user_money,frozen_money,disabled,register_time,user_type,is_auth','log_count', 'wx');
     protected $_validate = array(
         array('mobile', 'require', '会员手机/账号不能为空！', 1, 'regex', 3),
         array('mobile','/^1[3|4|5|7|8|9][0-9]\d{8}$/','不是有效的手机号码',1,'regex', 3),
@@ -399,6 +399,28 @@ class UserModel extends Model{
                 return $distribution;
                 break;
         }
+    }
+
+    public function updateWeixinData($user){
+        $this->updateLogin($user['user_id']);
+        $token = randNumber(18); // 18位纯数字
+        $where['user_id'] = $user['user_id'];
+        D('Home/UserToken')->where($where)->save(array('token' => $token));
+        return $token;
+    }
+
+    /**
+     * 更新用户登录信息
+     * @param  integer $uid 用户ID
+     */
+    protected function updateLogin($uid){
+        $data = array(
+            'user_id'              => $uid,
+            'login_count'     => 'login_count+1',
+            'last_login_time' => NOW_TIME,
+            'last_login_ip'   => get_client_ip(1),
+        );
+        $this->save($data);
     }
 
     /**

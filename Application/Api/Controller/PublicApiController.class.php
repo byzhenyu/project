@@ -197,16 +197,13 @@ class PublicApiController extends ApiCommonController
      */
     public function thirdLogin()
     {
-        $thirdType = I('third_type', 'wx', 'trim');
-        $open_id = I('open_id');
-        if ($thirdType && !in_array($thirdType, array('wx', 'qq'))) $this->apiReturn(V(0, '第三方登录类型有误'));
+        $wx_code = I('wx_code', '', 'trim');
+        $open_id = getOpenId($wx_code);
+        $thirdType = 'wx';
         if ('wx' == $thirdType) {
-            $where['weixin'] = $map['weixin'] = $open_id;
+            $where['wx'] = $map['wx'] = $open_id;
         }
-        if ('qq' == $thirdType) {
-            $where['qq'] = $map['qq'] = $open_id;
-        }
-        if (!$thirdType) $where['qq|weixin'] = $map['weixin'] = $open_id;
+        if (!$thirdType) $where['wx'] = $map['wx'] = $open_id;
         $map['head_pic'] = I('head_pic', '');
         $map['nickname'] = I('nickname', '');
         if (!$open_id) {
@@ -214,15 +211,13 @@ class PublicApiController extends ApiCommonController
         }
 
         $memberModel = M('User');
-        $code = D('Home/User')->getInvitationCode();
-        $findFields = array('user_id', 'user_name', 'mobile', 'password', 'pay_password', 'email', 'head_pic', 'disabled', 'qq', 'weixin', 'rank_id', 'nickname', 'sex', 'user_money', 'frozen_money', 'shop_id', 'register_time', 'points', 'user_type', 'invitation_code');
+        $findFields = array('user_id,user_name,password,pay_password,mobile,email,head_pic,nickname,sex,user_money,frozen_money,disabled,register_time,recommended_number,recruit_number,is_auth,user_type,log_count');
         $user = $memberModel->where($where)->field($findFields)->find();
         if (!$user) {
             $map['user_name'] = $map['nickname'];
-            $map['register_time'] = time();
-            $map['last_login_time'] = time();
+            $map['register_time'] = NOW_TIME;
+            $map['last_login_time'] = NOW_TIME;
             $map['last_login_ip'] = get_client_ip();
-            $map['invitation_code'] = $code;
             $row_id = $memberModel->add($map);
             if ($row_id) {
                 $token = randNumber(18);
@@ -230,25 +225,18 @@ class PublicApiController extends ApiCommonController
                 $user = $memberModel->where($where)->field($findFields)->find();
                 $user['nickname'] = $user['nickname'] != '' ? $user['nickname'] : $user['mobile'];
                 $user['token'] = $token;
-                $user['shop_id'] = (int)$user['shop_id'];
                 $user['register_time'] = time_format($user['register_time'], 'Y-m-d');
-                $user['user_level'] = 'VIP1';
-                $user['pay_password'] = $user['pay_password'] != '' ? 1 : 0;
 
-                //unset($user['password']);
+                unset($user['password']);
                 $this->apiReturn(V(1, '登录成功', $user));
             } else {
                 $this->apiReturn(V(0, '登录失败'));
             }
 
         } else {
-            $token = D('Home/User')->updateWeixinData($user);
+            $token = D('Admin/User')->updateWeixinData($user);
             $user['token'] = $token;
-            $user['shop_id'] = (int)$user['shop_id'];
             $user['register_time'] = time_format($user['register_time'], 'Y-m-d');
-            $user['user_level'] = 'VIP1';
-            $user['pay_password'] = $user['pay_password'] != '' ? 1 : 0;
-            //unset($user['password']);
             $this->apiReturn(V(1, '登录成功', $user));
         }
     }

@@ -1277,3 +1277,26 @@ function company_auth($user_id = UID){
     if($res) return true;
     return false;
 }
+
+function getOpenId($code){
+    $wxConfig = C('WxPay');
+    $app_id = $wxConfig['app_id'];
+    $secret = $wxConfig['appsecret'];
+    $url = "https://api.weixin.qq.com/sns/jscode2session?appid={$app_id}&secret={$secret}&js_code={$code}&grant_type=authorization_code";
+    $res = _httpGet($url);
+    $data = json_decode($res,true);
+    $openid = $data['openid'];
+    return $openid;
+}
+
+function _httpGet($url){
+    $curl = curl_init();
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($curl, CURLOPT_TIMEOUT,500);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST , false);
+    curl_setopt($curl, CURLOPT_URL, $url);
+    $res = curl_exec($curl);
+    curl_close($curl);
+    return $res;
+}
