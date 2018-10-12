@@ -78,7 +78,7 @@ class ResumeAuthModel extends Model {
         if(isMobile($data['mobile'])) return false;
         $hr_info = D('Admin/User')->getUserInfo(array('mobile' => $data['hr_mobile'], 'user_type' => 1));
         if($hr_info) $data['hr_id'] = $hr_info['user_id'];
-        $res = $this->getResumeAuthInfo(array('user_id' => $data['user_od'], 'hr_id' => $data['hr_id']));
+        $res = $this->getResumeAuthInfo(array('user_id' => $data['user_id'], 'hr_id' => $data['hr_id']));
         if($res){
             return false;
         }
