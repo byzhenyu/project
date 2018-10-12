@@ -122,7 +122,8 @@ class PublicApiController extends ApiCommonController
         } elseif ($result == false && $type == 4) {
             $this->apiReturn(V(0, '手机号码已存在'));
         }
-        $sms_code = randCode(C('SMS_CODE_LEN'), 1);
+        //$sms_code = randCode(C('SMS_CODE_LEN'), 1);
+        $sms_code = 1234;
         switch ($type) {
             case 1:
                 $msg = '注册验证码';
@@ -345,5 +346,16 @@ class PublicApiController extends ApiCommonController
         curl_close($curl);
         $data = json_decode(strstr($data, '{'), true);
         print_r($data);
+    }
+
+    public function regexMatch(){
+        $data['commission'] = 1;
+        $regex = '/^\d+(\.\d{1,2})?$/';
+        if(!preg_match($regex, $data['commission'])){
+            $this->apiReturn(V(0, '不匹配'));
+        }
+        else{
+            $this->apiReturn(V(1, '匹配'));
+        }
     }
 }
