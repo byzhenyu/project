@@ -88,7 +88,10 @@ class QuestionModel extends Model {
             $data['city_name'] = $region_info['name'];
         }
         if(!check_is_auth($data['user_id'])){
-            $this->error = '请先通过实名认证！';
+            $string = auth_string();
+            $error = '请先通过实名认证！';
+            if(false !== $string) $error = $string;
+            $this->error = $error;
             return false;
         }
     }

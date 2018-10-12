@@ -121,7 +121,10 @@ class AnswerModel extends Model {
             return false;
         }
         if(!check_is_auth($data['user_id'])){
-            $this->error = '请先通过身份认证！';
+            $string = auth_string();
+            $error = '请先通过实名认证！';
+            if(false !== $string) $error = $string;
+            $this->error = $error;
             return false;
         }
     }

@@ -994,6 +994,15 @@ function check_is_auth($user_id){
     if($is_auth) return true;
     return false;
 }
+
+function auth_string($user_id = UID){
+    if(!$user_id) return false;
+    $auth_info = D('Admin/UserAuth')->getAuthInfo(array('user_id' => $user_id));
+    if(!$auth_info) return false;
+    if($auth_info['audit_status'] == 0) return '身份认证待审核状态！';
+    if($auth_info['audit_status'] == 2) return '身份认证审核未通过';
+}
+
 /**
  * 数组转换
  * @param $array

@@ -34,7 +34,9 @@ class RecruitApiController extends ApiUserCommonController{
     //发布接口
     public function publish() {
         if(!check_is_auth(UID)) {
-            $this->apiReturn(V(0, '清先完成实名认证'));
+            $string = auth_string();
+            if(false !== $string) $this->apiReturn(V(0, $string));
+            $this->apiReturn(V(0, '请先完成实名认证'));
         }
         $companyInfoModel = D('Admin/CompanyInfo');
         $checkCompanyInfo = $companyInfoModel->checkCompanyInfo(UID);
