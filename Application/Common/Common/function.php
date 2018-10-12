@@ -1266,3 +1266,14 @@ function hideMobile($mobile){
         return false;
     }
 }
+
+/**
+ * @desc 用户是否上传公司资料
+ * @param int|mixed $user_id
+ * @return bool
+ */
+function company_auth($user_id = UID){
+    $res = D('Admin/CompanyInfo')->getCompanyInfoInfo(array('user_id' => $user_id));
+    if($res) return true;
+    return false;
+}

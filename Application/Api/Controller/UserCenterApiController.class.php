@@ -881,7 +881,7 @@ class UserCenterApiController extends ApiUserCommonController{
             }
         }
         else{
-            if(!isMobile($hr_mobile)) $this->apiReturn(V(0, '请输入合法的hr手机号！'));
+            if(!isMobile($hr_mobile)) $this->apiReturn(V(0, '请输入合法的HR联系方式！'));
             if(!$hr_name) $this->apiReturn(V(0, '请输入hr姓名！'));
             $data['work_mobile'] = $hr_mobile;
             $data['work_hr_name'] = $hr_name;
