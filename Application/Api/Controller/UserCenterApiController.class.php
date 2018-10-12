@@ -1101,7 +1101,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $recommend_info['auth_id'] = $auth_id;
         if(UID != $resumeDetail['user_id']){
             if(!$is_open) $resumeDetail['mobile'] = '****';
-            if($is_open) $resumeDetail['mobile'] = $resumeDetail['hide_mobile'];
+            if($is_open) $resumeDetail['mobile'] = strval($resumeDetail['hide_mobile']);
         }
         $return = array('detail' => $resumeDetail, 'resume_work' => $resumeWorkList, 'resume_edu' => $resumeEduList, 'resume_evaluation' => $resumeEvaluation, 'evaluation_avg' => $avg, 'recruit_resume' => $recommend_info, 'is_open' => $is_open, 'introduce' => $introduced_detail, 'career_label' => $tags);
         $this->apiReturn(V(1, '简历获取成功！', $return));
