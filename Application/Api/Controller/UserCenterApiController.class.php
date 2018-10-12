@@ -862,7 +862,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $data['user_id'] = UID;
         $model = D('Admin/ResumeWork');
         if(!$data['resume_id']) $data['resume_id'] = D('Admin/Resume')->getResumeField(array('user_id' => UID), 'id');
-        if(!$data['resume_id']) $this->apiReturn(V(0, '简历信息获取失败！'));
+        if(!$data['resume_id']) $this->apiReturn(V(0, '请先添加简历！'));
         $hr_mobile = $data['mobile'];
         $hr_name = $data['hr_name'];
         if($data['id'] > 0){
