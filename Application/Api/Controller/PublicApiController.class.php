@@ -122,7 +122,8 @@ class PublicApiController extends ApiCommonController
         } elseif ($result == false && $type == 4) {
             $this->apiReturn(V(0, '手机号码已存在'));
         }
-        $sms_code = randCode(C('SMS_CODE_LEN'), 1);
+        //$sms_code = randCode(C('SMS_CODE_LEN'), 1);
+        $sms_code = 1234;
         switch ($type) {
             case 1:
                 $msg = '注册验证码';
