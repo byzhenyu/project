@@ -30,7 +30,10 @@ class AnswerModel extends Model {
         foreach($list as &$val){
             $val['add_time'] = time_format($val['add_time'], 'Y-m-d');
             $val['head_pic'] = $val['head_pic'] ? strval($val['head_pic']) : DEFAULT_IMG;
-            if(!$val['is_anonymous']) $val['nickname'] = '匿名用户';
+            if(!$val['is_anonymous']){
+                $val['nickname'] = '匿名用户';
+                $val['head_pic'] = DEFAULT_IMG;
+            }
             $imgWhere = array('type' => 2, 'item_id' => $val['id']);
             $val['answer_img'] = D('Admin/QuestionImg')->getQuestionImgList($imgWhere);
         }
