@@ -1670,4 +1670,26 @@ class UserCenterApiController extends ApiUserCommonController{
             $this->apiReturn(V(1, '保存成功'));
         }
     }
+
+    /**
+     * 绑定手机
+     */
+    public function bindMobile() {
+        $mobile = I('mobile', '');
+        $sms_code = I('sms_code', '');
+        $password = I('password', '', 'trim');
+        $userModel = D('Admin/User');
+        $userInfo = $userModel->getUserInfo(array('user_id' => UID));
+
+        $result = D('Admin/SmsMessage')->checkSmsMessage($sms_code, $mobile, $userInfo['user_type'], 4);
+        if ($result['status'] == 1) {
+            $save = array('mobile' => $mobile, 'password' => $password);
+            $res = $userModel->saveUserData(array('user_id' => UID), $save);
+            if(false !== $res) $this->apiReturn(V(1, '手机号码绑定成功'));
+            $this->apiReturn(V(0, '绑定失败！'));
+        }
+        else{
+            $this->apiReturn(V(0, '验证码错误'));
+        }
+    }
 }

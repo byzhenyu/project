@@ -101,7 +101,7 @@
                             <tr>
                                 <td><div align="right"><strong>工作地区[多选]：</strong></div></td>
                                 <td>
-                                    <select name="job_area[]" id="job_area" data-am-selected="{searchBox: 1}" multiple="multiple">
+                                    <select name="job_area[]" id="job_area" data-am-selected="{maxHeight: '200px', searchBox: 1}" multiple="multiple">
                                         <foreach name="area" item="v">
                                             <option value="{$v['name']}">{$v['name']}</option>
                                         </foreach>
