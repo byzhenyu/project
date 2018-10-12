@@ -76,7 +76,7 @@ class ResumeAuthModel extends Model {
     protected function _before_insert(&$data, $option){
         $data['add_time'] = NOW_TIME;
         if(isMobile($data['mobile'])) return false;
-        $hr_info = D('Admin/User')->getUserInfo(array('mobile' => $data['hr_mobile']));
+        $hr_info = D('Admin/User')->getUserInfo(array('mobile' => $data['hr_mobile'], 'user_type' => 1));
         if($hr_info) $data['hr_id'] = $hr_info['user_id'];
     }
     protected function _before_update(&$data, $option){
