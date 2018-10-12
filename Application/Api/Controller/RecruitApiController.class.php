@@ -54,6 +54,10 @@ class RecruitApiController extends ApiUserCommonController{
         if ($data['commission'] > $user_money) {
             $this->apiReturn(V(0, '可用令牌不足'));
         }
+        $regex = '/^\d+(\.\d{1,2})?$/';
+        if(!preg_match($regex, $data['commission'])){
+            $this->apiReturn(V(0, '悬赏令牌小数点最多两位！'));
+        }
         if (cmp_contraband($data['language_ability'])) {
             $this->apiReturn(V(0, '语言要求有违禁词'));
         }

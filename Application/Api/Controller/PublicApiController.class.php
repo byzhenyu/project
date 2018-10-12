@@ -346,4 +346,15 @@ class PublicApiController extends ApiCommonController
         $data = json_decode(strstr($data, '{'), true);
         print_r($data);
     }
+
+    public function regexMatch(){
+        $data['commission'] = 1;
+        $regex = '/^\d+(\.\d{1,2})?$/';
+        if(!preg_match($regex, $data['commission'])){
+            $this->apiReturn(V(0, '不匹配'));
+        }
+        else{
+            $this->apiReturn(V(1, '匹配'));
+        }
+    }
 }
