@@ -1501,17 +1501,19 @@ class UserCenterApiController extends ApiUserCommonController{
         if (!$code) {
             $this->apiReturn(V(0,'wx_code不能为空'));
         }
-        require_once("Plugins/WxPay/WxPay.php");
+        require_once("Plugins/WxPay2/example/jsapi.php");
         $rechargeSn = 'C' . date('YmdHis', time()) . '-' . UID;
-        $wxData['body'] = '余额充值';
-        $wxData['out_trade_no'] = $rechargeSn;
-        $wxData['total_fee'] = $recharge_money;
-        $wxData['openId'] = $this->getOpenid($code);
-        $wxPay = new \WxPay();
-        $doResult = $wxPay->WxAppletPay($wxData);
-        $this->apiReturn($doResult);
+
+        $wxData['order_no'] = $rechargeSn;
+        $wxData['payment_money'] = $recharge_money;
+        $wxData['notify_url'] = C('Wxpay')['notify_url'];
+        $open_id = $this->getOpenid($code);
+        $wxPay = new \WXPay();
+        $doResult = $wxPay->index($open_id,$wxData);
+        $this->apiReturn(V(1,'支付信息',json_decode($doResult)));
 
     }
+
     /**
      * @return openid
      */
