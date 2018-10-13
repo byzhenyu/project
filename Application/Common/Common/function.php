@@ -1310,3 +1310,16 @@ function _httpGet($url){
     curl_close($curl);
     return $res;
 }
+
+function string_data($data){
+    $array_keys = array_keys($data);
+    foreach($array_keys as &$val){
+        if(is_array($data[$val])){
+            $data[$val] = string_data($data[$val]);
+            continue;
+        }
+        if(!is_int($data[$val])) $data[$val] = strval($data[$val]);
+    }
+    unset($val);
+    return $data;
+}

@@ -348,4 +348,12 @@ class PublicApiController extends ApiCommonController
             $this->apiReturn(V(1, '匹配'));
         }
     }
+
+    public function to_string_test(){
+        $data = array(
+            NULL, null, 0, 'string', 'nihao', array(null, 'string2', 'string3', 0, 1111, 'caonima')
+        );
+        $data = string_data($data);
+        $this->apiReturn(V(0, '', $data));
+    }
 }

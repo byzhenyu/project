@@ -124,6 +124,7 @@ class RecruitApiController extends ApiUserCommonController{
     public function getRecruitListDetail() {
         $id = I('id', 0,'intval');
         $info = D('Admin/Recruit')->getDetail(array('r.id'=>$id));
+        $info = string_data($info);
         $this->apiReturn(V(1,'详情', $info));
     }
 
