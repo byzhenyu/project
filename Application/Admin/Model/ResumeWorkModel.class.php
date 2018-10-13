@@ -24,7 +24,7 @@ class ResumeWorkModel extends Model {
      * @param string $order
      * @return mixed
      */
-    public function getResumeWorkList($where, $field = false, $order = ''){
+    public function getResumeWorkList($where, $field = false, $order = 'endtime desc'){
         if(!$field) $field = '*';
         $res = $this->where($where)->field($field)->order($order)->select();
         return $res;
@@ -54,23 +54,11 @@ class ResumeWorkModel extends Model {
 
     //添加操作前的钩子操作
     protected function _before_insert(&$data, $option){
-        $data['starttime'] = strtotime($data['starttime']);
-        $data['endtime'] = strtotime($data['endtime']);
-        if($data['starttime'] > $data['endtime']){
-            $this->error = '结束时间不能小于开始时间！';
-            return false;
-        }
         $c_data = array('company_name' => $data['company_name']);
         D('Admin/Company')->add($c_data);
     }
     //更新操作前的钩子操作
     protected function _before_update(&$data, $option){
-        $data['starttime'] = strtotime($data['starttime']);
-        $data['endtime'] = strtotime($data['endtime']);
-        if($data['starttime'] > $data['endtime']){
-            $this->error = '结束时间不能小于开始时间！';
-            return false;
-        }
     }
 
 }

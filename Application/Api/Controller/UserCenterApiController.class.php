@@ -865,6 +865,11 @@ class UserCenterApiController extends ApiUserCommonController{
         if(!$data['resume_id']) $this->apiReturn(V(0, '请先添加简历！'));
         $hr_mobile = $data['mobile'];
         $hr_name = $data['hr_name'];
+        $data['starttime'] = strtotime($data['starttime']);
+        $data['endtime'] = strtotime($data['endtime']);
+        if($data['starttime'] > $data['endtime']){
+            $this->apiReturn(V(0, '结束时间不能小于开始时间！'));
+        }
         if($data['id'] > 0){
             $create = $model->create($data, 2);
             if(false !== $create){
@@ -952,8 +957,14 @@ class UserCenterApiController extends ApiUserCommonController{
      */
     public function writeResumeEdu(){
         $data = I('post.');
+        p($data);
         if(!$data['resume_id']) $data['resume_id'] = D('Admin/Resume')->getResumeField(array('user_id' => UID), 'id');
         $model = D('Admin/ResumeEdu');
+        $data['starttime'] = strtotime($data['starttime']);
+        $data['endtime'] = strtotime($data['endtime']);
+        if($data['starttime'] > $data['endtime']){
+            $this->apiReturn(V(0, '结束时间不能小于开始时间！'));
+        }
         if($data['id'] > 0){
             $create = $model->create($data, 2);
             if(false !== $create){

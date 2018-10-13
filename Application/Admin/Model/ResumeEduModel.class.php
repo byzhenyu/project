@@ -55,21 +55,10 @@ class ResumeEduModel extends Model {
 
     //添加操作前的钩子操作
     protected function _before_insert(&$data, $option){
-        $data['starttime'] = strtotime($data['starttime']);
-        $data['endtime'] = strtotime($data['endtime']);
-        if($data['starttime'] > $data['endtime']){
-            $this->error = '结束时间不能小于开始时间！';
-            return false;
-        }
+
     }
     //更新操作前的钩子操作
     protected function _before_update(&$data, $option){
-        $data['starttime'] = strtotime($data['starttime']);
-        $data['endtime'] = strtotime($data['endtime']);
-        if($data['starttime'] > $data['endtime']){
-            $this->error = '结束时间不能小于开始时间！';
-            return false;
-        }
     }
 
 }
