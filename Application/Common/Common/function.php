@@ -1319,6 +1319,7 @@ function string_data($data){
             continue;
         }
         if(!is_int($data[$val])) $data[$val] = strval($data[$val]);
+        if($data[$val] == 'undefined') $data[$val] = '';
     }
     unset($val);
     return $data;
