@@ -199,11 +199,13 @@ class PublicApiController extends ApiCommonController
     {
         $wx_code = I('wx_code', '', 'trim');
         $open_id = getOpenId($wx_code);
+        $user_type = I('user_type', 0, 'intval');
         $thirdType = 'wx';
         if ('wx' == $thirdType) {
             $where['wx'] = $map['wx'] = $open_id;
         }
         if (!$thirdType) $where['wx'] = $map['wx'] = $open_id;
+        $where['user_type'] = $map['user_type'] = $user_type;
         $map['head_pic'] = I('head_pic', '');
         $map['nickname'] = I('nickname', '');
         if (!$open_id) {
