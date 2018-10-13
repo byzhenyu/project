@@ -1311,6 +1311,11 @@ function _httpGet($url){
     return $res;
 }
 
+/**
+ * @desc null问题
+ * @param $data
+ * @return mixed
+ */
 function string_data($data){
     $array_keys = array_keys($data);
     foreach($array_keys as &$val){
