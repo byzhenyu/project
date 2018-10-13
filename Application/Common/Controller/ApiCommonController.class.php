@@ -43,6 +43,7 @@ class ApiCommonController extends CommonController {
         }
 
         if (is_null($data) || empty($data)) $data = array();
+            $data = string_data($data);
             $this->ajaxReturn(V($result['status'], $result['info'], $data));
 
     }
