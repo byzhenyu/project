@@ -55,6 +55,11 @@ class ResumeEduModel extends Model {
 
     //添加操作前的钩子操作
     protected function _before_insert(&$data, $option){
+        $res = $this->getResumeEduInfo(array('resume_id' => $data['resume_id'], 'school_name' => $data['school_name']));
+        if($res){
+            $this->error = '学历信息已经存在！';
+            return false;
+        }
 
     }
     //更新操作前的钩子操作

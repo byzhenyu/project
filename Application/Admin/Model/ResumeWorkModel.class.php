@@ -56,6 +56,11 @@ class ResumeWorkModel extends Model {
     protected function _before_insert(&$data, $option){
         $c_data = array('company_name' => $data['company_name']);
         D('Admin/Company')->add($c_data);
+        $res = $this->getResumeWorkInfo(array('resume_id' => $data['resume_id'], 'company_name' => $data['company_name']));
+        if($res){
+            $this->error = '该公司已经有工作经历！';
+            return false;
+        }
     }
     //更新操作前的钩子操作
     protected function _before_update(&$data, $option){
