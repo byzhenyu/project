@@ -592,9 +592,10 @@ class UserCenterApiController extends ApiUserCommonController{
                 break;
             case 5:
                 $cert_type = C('CERT_TYPE');
+                $m = 0;
                 foreach ($cert_type as $key => $value) {
-                    $list[$key]['id'] = $key;
-                    $list[$key]['name'] = $value;
+                    $list[$m]['id'] = $key;
+                    $list[$m]['name'] = $value;
                 }
                 break;
             default:
