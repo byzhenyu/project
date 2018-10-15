@@ -416,7 +416,6 @@ class UserModel extends Model{
     public function updateLogin($uid){
         $data = array(
             'user_id'              => $uid,
-            'log_count'     => 'log_count+1',
             'last_login_time' => NOW_TIME,
             'last_login_ip'   => get_client_ip(1),
         );

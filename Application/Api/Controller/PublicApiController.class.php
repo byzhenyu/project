@@ -200,6 +200,8 @@ class PublicApiController extends ApiCommonController
     {
         $wx_code = I('wx_code', '', 'trim');
         $open_id = getOpenId($wx_code);
+        $t_open_id = I('open_id', '', 'trim');
+        if($t_open_id) $open_id = $t_open_id;
         $user_type = I('user_type', 0, 'intval');
         $thirdType = 'wx';
         if ('wx' == $thirdType) {
@@ -230,6 +232,7 @@ class PublicApiController extends ApiCommonController
                 $user['token'] = $token;
                 $user['register_time'] = time_format($user['register_time'], 'Y-m-d');
                 D('Admin/User')->increaseUserFieldNum($row_id, 'log_count', 1);
+                $user['log_count']++;
                 unset($user['password']);
                 $this->apiReturn(V(1, '登录成功', $user));
             } else {
@@ -240,6 +243,7 @@ class PublicApiController extends ApiCommonController
             $token = D('Admin/User')->updateWeixinData($user);
             D('Admin/User')->increaseUserFieldNum($user['user_id'], 'log_count', 1);
             $user['token'] = $token;
+            $user['log_count']++;
             $user['register_time'] = time_format($user['register_time'], 'Y-m-d');
             $this->apiReturn(V(1, '登录成功', $user));
         }
