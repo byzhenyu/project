@@ -229,7 +229,7 @@ class PublicApiController extends ApiCommonController
                 $user['nickname'] = $user['nickname'] != '' ? $user['nickname'] : $user['mobile'];
                 $user['token'] = $token;
                 $user['register_time'] = time_format($user['register_time'], 'Y-m-d');
-
+                D('Admin/User')->updateLogin($row_id);
                 unset($user['password']);
                 $this->apiReturn(V(1, '登录成功', $user));
             } else {
