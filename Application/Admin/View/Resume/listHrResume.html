@@ -45,21 +45,21 @@
                             <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
                                 <thead>
                                     <tr>
-                                        <th width="4%" class="align-center">序号</th>
-                                        <th width="6%" class="align-center">真实姓名</th>
-                                        <th width="12%" class="align-center">性别</th>
-                                        <th width="6%" class="align-center">年龄</th>
+                                        <th width="50" class="align-center">序号</th>
+                                        <th >真实姓名</th>
+                                        <th width="10%" class="align-center">性别</th>
+                                        <th width="10%" class="align-center">年龄</th>
                                         <th width="12%" class="align-center">求职方向</th>
                                         <th width="12%" class="align-center">求职地区</th>
                                         <th width="12%" class="align-center">职业标签</th>
-                                        <th class="align-center">操作</th>
+                                        <th width="12%" class="align-center">操作</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <foreach name="list" item="v">
                                         <tr class="gradeX">
                                             <td class="align-center">{$v['resume_id']}</td>
-                                            <td class="align-center">{$v['true_name']}</td>
+                                            <td >{$v['true_name']}</td>
                                             <td class="align-center">{:getSexInfo($v['sex'])}</td>
                                             <td class="align-center">{$v['age']}</td>
                                             <td class="align-center">{$v['job_intension']}</td>
