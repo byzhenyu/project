@@ -413,7 +413,7 @@ class UserModel extends Model{
      * 更新用户登录信息
      * @param  integer $uid 用户ID
      */
-    protected function updateLogin($uid){
+    public function updateLogin($uid){
         $data = array(
             'user_id'              => $uid,
             'login_count'     => 'login_count+1',
