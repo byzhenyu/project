@@ -957,7 +957,6 @@ class UserCenterApiController extends ApiUserCommonController{
      */
     public function writeResumeEdu(){
         $data = I('post.');
-        p($data);
         if(!$data['resume_id']) $data['resume_id'] = D('Admin/Resume')->getResumeField(array('user_id' => UID), 'id');
         $model = D('Admin/ResumeEdu');
         $data['starttime'] = strtotime($data['starttime']);
