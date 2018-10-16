@@ -7,8 +7,8 @@ namespace Admin\Model;
 use Think\Model;
 
 class CompanyNatureModel extends Model {
-    protected $insertFields = array('nature_name');
-    protected $updateFields = array('nature_name', 'id');
+    protected $insertFields = array('nature_name', 'sort');
+    protected $updateFields = array('nature_name', 'sort', 'id');
     protected $_validate = array(
         array('nature_name', 'require', '公司性质名称不能为空！', 1, 'regex', 3),
         array('nature_name', '1,50', '公司性质名称保持在1-100字！', 1, 'length', 3)
@@ -21,7 +21,7 @@ class CompanyNatureModel extends Model {
      * @param string $order
      * @return mixed
      */
-    public function getCompanyNatureList($where, $field = false, $order = ''){
+    public function getCompanyNatureList($where, $field = false, $order = 'sort desc'){
         if(!$field) $field = '*';
         $list = $this->where($where)->field($field)->order($order)->select();
         return $list;

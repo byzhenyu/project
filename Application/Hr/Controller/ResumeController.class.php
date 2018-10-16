@@ -211,4 +211,29 @@ class ResumeController extends HrCommonController {
         $this->nature = $nature_arr;
         $this->display();
     }
+
+    /**
+     * @desc 意见反馈
+     */
+    public function editFeedBack(){
+        $data = I('post.', '');
+        $data['user_id'] = HR_ID;
+        if(IS_POST){
+            $model = D('Admin/FeedBack');
+            $create = $model->create($data, 1);
+            if(false !== $create){
+                $res = $model->add($data);
+                if($res){
+                    $this->ajaxReturn(V(1, '反馈成功！'));
+                }
+                else{
+                    $this->ajaxReturn(V(0, $model->getError()));
+                }
+            }
+            else{
+                $this->ajaxReturn(V(0, $model->getError()));
+            }
+        }
+        $this->display();
+    }
 }

@@ -1,0 +1,58 @@
+<extend name="Common/base"/>
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/fileupload/css/jquery.fileupload.css" media="all">
+    <style>
+        .am-table {
+            font-size: 1.3rem;
+            margin-bottom: 0;
+        }
+        .am-btn{
+            padding:5px 15px;font-size:12px
+        }
+    </style>
+</block>
+
+<block name="body">
+    <!-- 内容区域 -->
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">意见反馈</div>
+                </div>
+                <div class="widget-body  am-fr">
+                    <form id="orderForm" action="__ACTION__" method="post" class="ajaxForm">
+                    <table width="100%" class="am-table am-table-bordered">
+                        <tbody>
+                            <tr>
+                                <td><div align="right"><em class="must-input">*</em><strong>联系方式：</strong></div></td>
+                                <td><input type="text" id="mobile" name="mobile" value="{$info['mobile']}" style="width:500px" placeholder="联系方式"/></td>
+                            </tr>
+
+                            <tr>
+                                <td><div align="right"><em class="must-input">*</em><strong>反馈意见：</strong></div></td>
+                                <td>
+                                    <textarea name="comment" id="" cols="80" rows="6" placeholder="请填写反馈意见">{$info['comment']}</textarea>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="2" align="center">
+                                    <input type="hidden" name="id" value="{$info['id']}">
+                                    <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </form>         
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/vendor/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.fileupload.js"></script>
+    <script type="text/javascript" charset="utf-8" src="__SHOP__/js/shop.js?v=1.9"></script>
+</block>

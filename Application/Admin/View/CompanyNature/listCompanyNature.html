@@ -51,6 +51,7 @@
                                         <th width="2%"><input class="check-all" type="checkbox"></th>
                                         <th width="7%" class="align-center">序号</th>
                                         <th width="15%" class="align-center">性质名称</th>
+                                        <th width="8%" class="align-center">排序序号</th>
                                         <th class="align-center">操作</th>
                                     </tr>
                                 </thead>
@@ -60,6 +61,7 @@
                                             <td><input class="ids" type="checkbox" name="chkbId" value="{$v['id']}"></td>
                                             <td class="align-center">{$v['id']}</td>
                                             <td class="align-center">{$v['nature_name']}</td>
+                                            <td class="align-center">{$v['sort']}</td>
                                             <td class="f-14 align-center">
                                                 <div class="tpl-table-black-operation">
                                                     <a href="{:U('CompanyNature/editCompanyNature',array('id'=>$v['id']))}">

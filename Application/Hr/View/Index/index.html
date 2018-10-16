@@ -43,22 +43,22 @@
             <!-- 菜单 -->
             <ul class="sidebar-nav">
                 <volist name="menu_list" id="menu">
-                    <li class="sidebar-nav-link">
-                        <a href="javascript:;" class="sidebar-nav-sub-title">
-                            <i class=""></i>{$menu.label}
-                            <span class="am-icon-chevron-down am-fr am-margin-right-sm sidebar-nav-sub-ico"></span>
-                        </a>
-                        <ul class="sidebar-nav sidebar-nav-sub">
-                            <volist name="menu.items" id="v">
-                                <li class="sidebar-nav-link">
-                                    <a href="{$v.action}" target="mainIframe">
-                                        <span class="am-icon-angle-right sidebar-nav-link-logo"></span>{$v.label}
-                                    </a>
-                                </li>
-                            </volist>
-                        </ul>
-                    </li>
+                    <volist name="menu.items" id="v">
+                        <li class="sidebar-nav-link">
+                            <a href="{$v.action}" target="mainIframe">
+                                <span class="sidebar-nav-link-logo"></span>{$v.label}
+                            </a>
+                        </li>
+                    </volist>
                 </volist>
+                <li style="padding-left: 10%; margin-top: 40px; font-size: 13px; word-break: break-all; word-wrap: normal; padding-right: 20px">
+                    <div>
+                        <p>联系方式：<?php echo C('CONTACTS_MOBILE'); ?></p>
+                        <p>联系地址：<?php echo C('COMPANY_ADDRESS'); ?></p>
+                        <p>二维码：</p>
+                        <p><img src="https://www.liuniukeji.com/images/ln-code.png" alt="" width="180px"></p>
+                    </div>
+                </li>
             </ul>
         </div>
 

@@ -14,9 +14,18 @@ use Think\Model;
 class FeedBackModel extends Model
 {
     protected $selectFields = array('id', 'comment', 'user_id', 'mobile', 'create_time');
+
+    protected $_validate = array(
+        array('comment', 'require', '反馈内容不能为空！', 1, 'regex', 3),
+        array('comment', '5,1000', '反馈内容必须大于5个字！', 1, 'length', 3),
+        array('mobile', 'require', '联系方式不能为空！', 1, 'regex', 3),
+        array('mobile', '1,50', '联系方式长度不能大于50', 1, 'length', 3)
+    );
+
     /**
-     * 意见反馈分页数据
      * @param $where
+     * @param null $field
+     * @param string $order
      * @return array
      */
     public function getFeedBackByPage($where, $field = null, $order = 'create_time desc'){
@@ -34,5 +43,9 @@ class FeedBackModel extends Model
             'info' => $info,
             'page' => $page['page'],
         );
+    }
+
+    public function _before_insert(&$data, $option){
+        $data['create_time'] = NOW_TIME;
     }
 }
