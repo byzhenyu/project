@@ -361,4 +361,12 @@ class PublicApiController extends ApiCommonController
         $data = string_data($data);
         $this->apiReturn(V(0, '', $data));
     }
+    public function add_all(){
+        $array = array(
+            array('position_name' => '高端职位', 'parent_id' => 1, 'industry_id' => 1),
+            array('position_name' => '产品经理', 'parent_id' => 2, 'industry_id' => 1),
+        );
+        $res = D('Admin/Position')->addAll($array);
+        $this->apiReturn(V(1, 'fnioushfioshfoishdiof', $array));
+    }
 }

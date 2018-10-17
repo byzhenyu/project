@@ -1329,3 +1329,85 @@ function string_data($data){
     unset($val);
     return $data;
 }
+
+/**
+ * 数组转xls格式的excel文件
+ * @param  array  $data      需要生成excel文件的数组
+ * @param  string $filename  生成的excel文件名
+ *      示例数据：
+$data = array(
+array(NULL, 2010, 2011, 2012),
+array('Q1',   12,   15,   21),
+array('Q2',   56,   73,   86),
+array('Q3',   52,   61,   69),
+array('Q4',   30,   32,    0),
+);
+ * @param  string  $subject    excel主题
+ * @param  string  $title    excel标题
+ * @param  array  $sheet    需要处理的单元格样式
+ * @param  int  $count    excel数据行
+ */
+function create_xls($data,$filename='闪荐科技.xls',$subject='闪荐科技',$title='闪荐科技',$sheet=array(), $count = 0){
+    ini_set('max_execution_time', '0');
+    Vendor('PHPExcel.PHPExcel');
+    $filename=str_replace('.xls', '', $filename);
+    $phpexcel = new PHPExcel();
+    $phpexcel->getProperties()
+        ->setCreator("admin")
+        ->setLastModifiedBy("admin")
+        ->setTitle("闪荐科技")
+        ->setSubject($subject)
+        ->setDescription('')
+        ->setKeywords($subject)
+        ->setCategory("");
+    $phpexcel->setActiveSheetIndex(0);
+    $phpexcel->getActiveSheet()->freezePane('A2');//冻结首行
+    foreach ($sheet as $key => $value) {
+        //设置单元格宽度
+        $phpexcel->getActiveSheet()->getColumnDimension($value)->setWidth(20);
+        //设置标题行字体样式
+        $phpexcel->getActiveSheet()->getStyle($value.'1')->getFont()->setName('微软雅黑');
+        $phpexcel->getActiveSheet()->getStyle($value.'1')->getFont()->setSize(12);
+        $phpexcel->getActiveSheet()->getStyle($value.'1')->getFont()->setBold(true);
+    }
+    $maxrow = $sheet[count($sheet)-1];
+    //设置居中
+    $phpexcel->getActiveSheet()->getStyle('A1:'.$maxrow.$count)->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+    //所有垂直居中
+    $phpexcel->getActiveSheet()->getStyle('A1:'.$maxrow.$count)->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+    //设置单元格边框
+    $phpexcel->getActiveSheet()->getStyle('A1:'.$maxrow.$count)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+    //设置单元格格式为文本
+    $phpexcel->getActiveSheet()->getStyle('A1:'.$maxrow.$count)->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_TEXT);
+    //设置自动换行
+    $phpexcel->getActiveSheet()->getStyle('A1:'.$maxrow.$count)->getAlignment()->setWrapText(true);
+
+    $phpexcel->getActiveSheet()->fromArray($data);
+    $phpexcel->getActiveSheet()->setTitle($title);
+    $phpexcel->setActiveSheetIndex(0);
+    ob_end_clean();//清除缓冲区,避免乱码
+    header('Content-Type: application/vnd.ms-excel; charset=utf-8');
+    //多浏览器下兼容中文标题
+    $encoded_filename =  urlencode($filename);
+    $ua = $_SERVER["HTTP_USER_AGENT"];
+    if (preg_match("/IE/", $ua)) {
+        header('Content-Disposition: attachment; filename="' . $encoded_filename . '.xls"');
+
+    } else if (preg_match("/Firefox/", $ua)) {
+        header('Content-Disposition: attachment; filename*="utf8\'\'' . $filename . '.xls"');
+    } else {
+        header('Content-Disposition: attachment; filename="' . $encoded_filename . '.xls"');
+
+    }
+    header('Cache-Control: max-age=0');
+    header('Cache-Control: max-age=1');
+    header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+    header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+    header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+    header ('Pragma: public'); // HTTP/1.0
+    $objwriter = PHPExcel_IOFactory::createWriter($phpexcel, 'Excel5');
+    $objwriter->save('php://output');
+    exit;
+}

@@ -262,6 +262,11 @@ class StatisticController extends CommonController {
         $this->display($tpl[$type]);
     }
 
+    /**
+     * @desc 时间生成
+     * @param $type 1、本日 2、本周 3、本月 4、本年
+     * @return array
+     */
     public function mk_time($type){
         switch($type){
             case 1://本日
@@ -283,10 +288,17 @@ class StatisticController extends CommonController {
                 $end = mktime(0,0,0,12,31,date('Y'));
                 break;
             default:
-                $start = mktime(0,0,0,date('m'), date('d'), date('Y'));
-                $end = mktime(23,59,59,date('m'),date('d'),date('Y'));
+                $t = $this->mk_time(1);
+                $start = $t['start'];
+                $end = $t['end'];
                 break;
         }
         return array('start' => $start, 'end' => $end);
     }
+
+    /**
+     * @desc 统计下载
+     * @extra TODO
+     */
+    public function statisticExport(){}
 }

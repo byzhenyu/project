@@ -54,7 +54,7 @@ class RecruitApiController extends ApiUserCommonController{
         $user_money = D('Admin/User')->getUserField(array('user_id'=>UID),'user_money');
 
         if ($data['commission'] > $user_money) {
-            $this->apiReturn(V(0, '可用令牌不足'));
+            $this->apiReturn(V(0, '悄悄的告诉你，你的令牌不足喽。马上充值令牌，快速发布悬赏。'));
         }
         $regex = '/^\d+(\.\d{1,2})?$/';
         if(!preg_match($regex, $data['commission'])){

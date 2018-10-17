@@ -59,6 +59,8 @@ class UserModel extends Model{
         $userslist = $this->field($field)->where($where)->limit($usersData['limit'])->order($sort)->select();
         foreach($userslist as &$val){
             if(($val['weixin'] || $val['qq']) && !$val['mobile']) $val['mobile'] = '三方登录未绑定';
+            $res = D('Admin/UserAuth')->getAuthInfo(array('user_id' => $val['user_id']));
+            if($val['is_auth'] != 1) $val['is_auth'] = $res ? $val['is_auth'] : 2;
         }
         return array(
             'userslist'=>$userslist,

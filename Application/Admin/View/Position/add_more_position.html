@@ -1,0 +1,128 @@
+<extend name="Common/base"/>
+<block name="style">
+
+</block>
+<block name="body">
+
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                <div class="widget am-cf">
+                    <div class="widget-head am-cf">
+                        <div class="widget-title am-fl">导入职业信息</div>
+                    </div>
+                    <div class="widget-body am-fr">
+
+                        <form action="__ACTION__" method="post" class="ajaxForm am-form tpl-form-border-form tpl-form-border-br">
+                            <div class="am-form-group">
+                                <label class="am-u-sm-3 am-form-label">
+                                </label>
+                                <div class="am-u-sm-7 am-u-sm-pull-2">
+                                    <a href="__PUBLIC__/export_position.xls">下载文件模板</a>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <label for="attach_path" class="am-u-sm-3 am-form-label">
+                                    上传Excel文件
+                                </label>
+                                <div class="am-u-sm-7 am-u-sm-pull-2">
+                                    <div class="am-form-group am-form-file">
+                                        <span class="am-btn am-btn-success am-btn-sm">
+                                                    <span class="am-icon-plus"></span> 选择文件...
+                                        </span>
+                                        <input id="fileupload" type="file" name="files">
+                                    </div>
+                                    <div id="files" class="files">
+                                    </div>
+                                    <input type="hidden" name="attach_path" id="attach_path" value="">
+                                    <small></small>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <div class="am-u-sm-9 am-u-sm-push-3">
+                                    <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+                                    <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback();">返回</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</block>
+
+<block name="script">
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/load-image.all.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/vendor/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/cors/jquery.xdr-transport.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/cors/jquery.postmessage-transport.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.fileupload.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.fileupload-process.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.fileupload-image.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.fileupload-audio.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.fileupload-video.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.fileupload-validate.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            var url = "{:U('Upload/uploadFile')}";
+
+            $('#fileupload').fileupload({
+                url: url,
+                dataType: 'json',
+                autoUpload: true,
+                acceptFileTypes: /.*/i,
+                maxFileSize: 20 * 1024 * 1024,
+                // Enable image resizing, except for Android and Opera,
+                // which actually support image resizing, but fail to
+                // send Blob objects via XHR requests:
+                disableImageResize: /Android(?!.*Chrome)|Opera/
+                    .test(window.navigator.userAgent),
+                previewMaxWidth: 100,
+                previewMaxHeight: 100,
+                previewCrop: true
+            }).on('fileuploadadd', function(e, data) {
+                console.log(data);
+                data.context = $('<div/>');
+                var node = $('</p>').append($('<span>' + data.originalFiles[0].name + '<span/>'));;
+                node.appendTo(data.context);
+                $('#files').html('').html(data.context);
+            }).on('fileuploadprocessalways', function(e, data) {
+                var index = data.index,
+                    file = data.files[index],
+                    node = $(data.context.children()[index]);
+                if (file.preview) {
+                    node
+                        .prepend('<br>')
+                        .prepend(file.preview);
+                }
+                if (file.error) {
+                    node
+                        .append('<br>')
+                        .append($('<span class="text-danger"/>').text(file.error));
+                }
+                if (index + 1 === data.files.length) {
+                    data.context.find('button')
+                        .text('Upload')
+                        .prop('disabled', !!data.files.error);
+                }
+            }).on('fileuploaddone', function(e, data) {
+                if (data.result.data) {
+                    $('#attach_path').val(data.result.data.name);
+                } else {
+                    toastr(data.result.info);
+                }
+            }).on('fileuploadfail', function(e, data) {
+                $.each(data.files, function(index) {
+                    var error = $('<span class="text-danger"/>').text('File upload failed.');
+                    $(data.context.children()[index])
+                        .append('<br>')
+                        .append(error);
+                });
+            }).prop('disabled', !$.support.fileInput)
+                .parent().addClass($.support.fileInput ? undefined : 'disabled');
+        });
+    </script>
+</block>

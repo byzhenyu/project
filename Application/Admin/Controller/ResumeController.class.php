@@ -41,12 +41,12 @@ class ResumeController extends CommonController {
         $resumeEduList = $resumeEduModel->getResumeEduList($where);
         foreach($resumeWorkList as &$wval){
             $wval['starttime'] = time_format($wval['starttime'], 'Y-m-d');
-            $wval['endtime'] = time_format($wval['endtime'], 'Y-m-d');
+            $wval['endtime'] = $wval['endtime'] ? time_format($wval['endtime'], 'Y-m-d') : '至今';
         }
         unset($wval);
         foreach($resumeEduList as &$eval){
             $eval['starttime'] = time_format($eval['starttime'], 'Y-m-d');
-            $eval['endtime'] = time_format($eval['endtime'], 'Y-m-d');
+            $eval['endtime'] = $eval['endtime'] ? time_format($eval['endtime'], 'Y-m-d') : '至今';
         }
         unset($eval);
         $resumeEvaluation = $resumeEvaluationModel->getResumeEvaluationAvg($where);

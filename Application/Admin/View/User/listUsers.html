@@ -28,9 +28,14 @@
                         <form action="__SELF__" method="get">
                             <div class="am-u-sm-12 am-u-md-6 am-u-lg-3">
                                 <div class="am-form-group tpl-table-list-select">
-                                    <if condition="rank_id neq -1">
+                                    <select name="is_auth" id="is_auth" data-am-selected="{}">
+                                        <option value="-1">请选择</option>
+                                        <option value="0">未通过</option>
+                                        <option value="1">已通过</option>
+                                    </select>
+                                    <if condition="is_auth neq -1">
                                         <script>
-                                            $('#rank_id').val('{$rank_id}');
+                                            $('#is_auth').val('{$is_auth}');
                                         </script>
                                     </if>
                                 </div>
@@ -70,7 +75,7 @@
                                             <td class="align-center">￥{:fen_to_yuan($v['frozen_money'])}</td></if>
                                             <td class="align-center">{:time_format($v['register_time'])}</td>
                                             <td class="align-center">
-                                                <if condition="$v['is_auth'] eq 1">已验证<else/><div class="tpl-table-black-operation"><a href="{:U('User/editUsersAuth', array('user_id'=>$v['user_id']))}"> 验证 </a></div></if>
+                                                <if condition="$v['is_auth'] eq 1">已验证<elseif condition="$v['is_auth'] eq 2" />未上传<else/><div class="tpl-table-black-operation"><a href="{:U('User/editUsersAuth', array('user_id'=>$v['user_id']))}"> 验证 </a></div></if>
                                             </td>
                                             <td class="align-center">
                                                 {:show_disabled($v['disabled'])}

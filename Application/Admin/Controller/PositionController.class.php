@@ -17,43 +17,77 @@ class PositionController extends CommonController {
                     if ($model->where(array('id' => $id))->save() !== false) {
                         $this->ajaxReturn(V(1, '修改成功!'));
                     }
+                    else{
+                        $this->ajaxReturn(V(0, $model->getError()));
+                    }
                 }
             } else {
                 if($model->create($data, 1)){
                     if ($model->add() !== false) {
                         $this->ajaxReturn(V(1, '保存成功!'));
                     }
+                    else{
+                        $this->ajaxReturn(V(0, $model->getError()));
+                    }
                 }
             }
 
             $this->ajaxReturn(V(0, $model->getError()));
-        } 
-        $contraband = M('Position')->find($id);
-        $this->assign('info', $contraband);
+        }
+        $industryModel = D('Admin/Industry');
+        $industryList = $industryModel->getIndustryList();
+        $position = M('Position')->find($id);
+        $this->info = $position;
+        $this->industry = $industryList;
         $this->display();
     }
 
     //显示职位列表
     public function listPosition(){
         $keyword = I('keyword', '', 'trim');
-
+        $industry_id = I('industry_id', 0, 'intval');
         $model = D('Admin/Position');
-        $where = array();
+        if(!$industry_id) $industry_id = 1;
+        $where = array('industry_id' => $industry_id);
         //关键字查询
         if($keyword){
             $where['position_name'] = array('like', '%'. $keyword .'%');
         }
-        $list = $model->getPositionList($where);
-
-
+        if($industry_id) $where['industry_id'] = $industry_id;
+        $list = $model->getTree($where);
+        $industryModel = D('Admin/Industry');
+        $industryList = $industryModel->getIndustryList();
         $this->keyword = $keyword;
-        $this->assign('list', $list['info']);
-        $this->assign('page', $list['page']);
+        $this->industry = $industryList;
+        $this->list = $list;
+        $this->industry = $industryList;
+        $this->industry_id = $industry_id;
         $this->display();
+    }
+
+    /**
+     * @desc 联动-获取职位信息列表
+     */
+    public function getPositionList(){
+        $industry_id = I('industry_id', 0, 'intval');
+        $position_list = D('Admin/Position')->getIndustryPositionList(array('industry_id' => $industry_id));
+        $this->ajaxReturn(V(1, '', $position_list));
+    }
+
+    /**
+     * @desc 职业信息导入
+     */
+    public function add_more_position(){
+        if(IS_POST){
+            $excelController = A('Excel');
+            $upload = $excelController->uploadPosition();
+            $this->ajaxReturn($upload);
+        }
+        $this->display('add_more_position');
     }
 
     // 放入回收站
     public function del(){
-        $this->_del('Position');//调用父类的方法
+        $this->_del('Position', 'id');//调用父类的方法
     }
 }

@@ -54,6 +54,6 @@ class QuestionTypeController extends CommonController {
 
     // 放入回收站
     public function del(){
-        $this->_del('QuestionType');  //调用父类的方法
+        $this->_del('QuestionType', 'id');  //调用父类的方法
     }
 }

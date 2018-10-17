@@ -7,8 +7,8 @@ namespace Admin\Model;
 use Think\Model;
 
 class QuestionTypeModel extends Model {
-    protected $insertFields = array('type_name');
-    protected $updateFields = array('type_name', 'id');
+    protected $insertFields = array('type_name', 'sort');
+    protected $updateFields = array('type_name', 'sort', 'id');
     protected $_validate = array(
         array('type_name', 'require', '问题类型不能为空！', 1, 'regex', 3),
         array('type_name', 'checkTypeLength', '问题类型不能超过18字！', 2, 'callback', 3),
@@ -32,7 +32,7 @@ class QuestionTypeModel extends Model {
     public function getQuestionTypeList($where){
         $count = $this->where($where)->count();
         $page = get_web_page($count);
-        $list = $this->where($where)->limit($page['limit'])->order('id desc')->select();
+        $list = $this->where($where)->limit($page['limit'])->order('sort desc')->select();
 
         return array('info' => $list, 'page' => $page['page']);
     }

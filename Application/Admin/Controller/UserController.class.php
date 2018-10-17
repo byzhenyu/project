@@ -9,8 +9,10 @@ class UserController extends CommonController {
     public function listUser(){
         $keyword = I('keyword', '');
         $type = I('type', 0, 'intval');
+        $is_auth = I('is_auth', -1, 'intval');
         $userModel = D('Admin/User');
-        $where = array('user_type' => $type, 'rank_id' => 1);
+        $where = array('user_type' => $type);
+        if($is_auth != -1) $where['is_auth'] = $is_auth;
         if ($keyword) {
             $where['mobile|user_name'] = array('like','%'.$keyword.'%');
         }
@@ -21,6 +23,7 @@ class UserController extends CommonController {
         $this->page = $data['page'];
         $this->keyword = $keyword;
         $this->user_type = $type;
+        $this->is_auth = $is_auth;
         $this->display('listUsers');
     }
 

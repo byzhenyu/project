@@ -26,6 +26,17 @@ class IndustryModel extends Model {
         return $list;
     }
 
+    /**
+     * @desc 获取行业信息
+     * @param $where
+     * @param bool $field
+     * @return mixed
+     */
+    public function getIndustryInfo($where, $field = false){
+        $res = $this->where($where)->field($field)->find();
+        return $res;
+    }
+
     //提取全部权限并作排序
     public function getTree(){
         $data = $this->order('sort asc')->select();

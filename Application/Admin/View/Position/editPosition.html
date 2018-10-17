@@ -14,6 +14,37 @@
                     <div class="widget-body am-fr">
 
                         <form action="__ACTION__" method="post" class="ajaxForm am-form tpl-form-border-form tpl-form-border-br">
+
+                            <div class="am-form-group">
+                                <label for="industry_id" class="am-u-sm-2 am-form-label">
+                                    选择行业 <span class="tpl-form-line-small-title must-input">*</span>
+                                </label>
+                                <div class="am-u-sm-10">
+                                    <select name="industry_id" id="industry_id" data-am-selected="">
+                                        <option value="">请选择行业</option>
+                                        <foreach name="industry" item="v">
+                                            <option value="{$v['id']}">{$v['industry_name']}</option>
+                                        </foreach>
+                                    </select>
+                                    <script type="text/javascript">
+                                        $(function(){
+                                            if({$info['industry_id']} > 0){
+                                                $('#industry_id').val({$info['industry_id']});
+                                            }
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <label for="parent_id" class="am-u-sm-2 am-form-label">
+                                    上级职位 <span class="tpl-form-line-small-title must-input">*</span>
+                                </label>
+                                <div class="am-u-sm-10">
+                                    <select data-am-selected="{searchBox: 1}" style="display: none;" name="parent_id" id="parent_id">
+                                    </select>
+                                </div>
+                            </div>
+
                             <div class="am-form-group">
                                 <label for="position_name" class="am-u-sm-2 am-form-label">
                                     职位名称 <span class="tpl-form-line-small-title must-input">*</span>
@@ -50,5 +81,22 @@
 
 <block name="script">
 <script type="text/javascript">
+    $(function(){
+        initPosition({$info['industry_id']});
+        $('#industry_id').change(function(){
+            initPosition($(this).val());
+        });
+        function initPosition(industry_id){
+            $.post("/index.php/Admin/Position/getPositionList", {industry_id: industry_id}, function (data) {
+                $('#parent_id').html('<option data-id="0" value="0">一级菜单</option>');
+                for (var i = 0; i < data.data.length; i++) {
+                    $('#parent_id').append('<option data-id="' + data.data[i].id
+                        + '" value="' + data.data[i].id + '">'
+                        + data.data[i].position_name + '</option>');
+                }
+                $('#parent_id').val({$info['parent_id']});
+            });
+        }
+    });
 </script>
 </block>

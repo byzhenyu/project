@@ -30,38 +30,53 @@
                             <tr>
                                 <td><div align="right"><strong>名称：</strong></div></td>
                                 <td>{$info['user_name']}</td>
-                            </tr>
-
-                            <tr>
                                 <td><div align="right"><em class="must-input">*</em><strong>手机号：</strong></div></td>
                                 <td><input type="text" maxlength="11" id="mobile" name="mobile" value="{$info['mobile']}" style="width:500px" /></td>
                             </tr>
                             <tr>
-                                <td><div align="right"><em class="must-input">*</em><strong>登录密码：</strong></div></td>
-                                <td><input type="password" id="password" name="password" value="" style="width:500px" /></td>
+                                <td><div align="right"><strong>昵称：</strong></div></td>
+                                <td>{$info['nickname']}</td>
+                                <td><div align="right"><em class="must-input">*</em><strong>所在城市：</strong></div></td>
+                                <td>{$info['city_name']}</td>
                             </tr>
                             <tr>
+                                <td><div align="right"><strong>邮箱：</strong></div></td>
+                                <td>{$info['email']}</td>
+                                <td><div align="right"><em class="must-input">*</em><strong>可提现金额：</strong></div></td>
+                                <td>{:fen_to_yuan($info['withdrawable_amount'])}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>推荐人数：</strong></div></td>
+                                <td>{$info['recommended_number']}</td>
+                                <td><div align="right"><em class="must-input">*</em><strong>招揽人数：</strong></div></td>
+                                <td>{$info['recruit_number']}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>是否完成认证：</strong></div></td>
+                                <td><if condition="$info.is_auth eq 1">已完成<else/>未完成</if></td>
+                                <td><div align="right"><em class="must-input">*</em><strong>擅长领域：</strong></div></td>
+                                <td>{$info['like_tags']}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><em class="must-input">*</em><strong>登录密码：</strong></div></td>
+                                <td><input type="password" id="password" name="password" value="" style="width:500px" placeholder="请输入新的登录密码,不修改请勿填写" /></td>
                                 <td><div align="right"><em class="must-input">*</em><strong>确认密码：</strong></div></td>
-                                <td><input type="password" id="new_password" name="new_password" value="" style="width:500px" /></td>
+                                <td><input type="password" id="new_password" name="new_password" value="" style="width:500px" placeholder="请再次输入新的登录密码" /></td>
                             </tr>
                             <tr>
                                 <td><div align="right"><strong>账户金额：</strong></div></td>
                                 <td>{:fen_to_yuan($info['user_money'])}</td>
-                            </tr>
-                            <tr>
-                                <td><div align="right"><strong>创建时间：</strong></div></td>
+                                <td><div align="right"><strong>注册时间：</strong></div></td>
                                 <td>{:time_format($info['register_time'])}</td>
                             </tr>
                             <tr>
-                                <td><div align="right"><strong>上次登录：</strong></div></td>
+                                <td><div align="right"><strong>上次登录时间：</strong></div></td>
                                 <td>{:time_format($info['last_login_time'])}</td>
-                            </tr>
-                            <tr>
-                                <td><div align="right"><strong>上次登录：</strong></div></td>
+                                <td><div align="right"><strong>上次登录IP：</strong></div></td>
                                 <td>{$info['last_login_ip']}</td>
                             </tr>
                             <tr>
-                                <td colspan="2" align="center">
+                                <td colspan="4" align="center">
                                     <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
                                 </td>
                             </tr>

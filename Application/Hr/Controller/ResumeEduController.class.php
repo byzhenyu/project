@@ -28,6 +28,9 @@ class ResumeEduController extends HrCommonController {
         $data['resume_id'] = I('resume_id', 0, 'intval');
         $id = I('id', 0, 'intval');
         $model = D('Admin/ResumeEdu');
+        $is_c = I('is_current', 0, 'intval');
+        $data['starttime'] = strtotime($data['starttime']);
+        $data['endtime'] = $is_c ? 0 : strtotime($data['endtime']);
         if(IS_POST){
             if($id > 0){
                 $create = $model->create($data, 2);

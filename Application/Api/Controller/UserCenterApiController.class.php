@@ -218,6 +218,15 @@ class UserCenterApiController extends ApiUserCommonController{
     }
 
     /**
+     * @desc 问题类型列表
+     */
+    public function getQuestionTypeList(){
+        $model = D('Admin/QuestionType');
+        $list = $model->getQuesionTypeList();
+        $this->apiReturn(V(1, '问题类型列表获取成功！', $list));
+    }
+
+    /**
      * @desc 发布答案
      */
     public function releaseAnswer(){
@@ -535,9 +544,9 @@ class UserCenterApiController extends ApiUserCommonController{
                 $field = 'id,industry_name as name,parent_id,sort';
                 $list = $model->getIndustryList($where, $field);
                 foreach($list as &$val){
-                    $children = $model->getIndustryList(array('parent_id' => $val['id']), $field);
-                    foreach ($children as &$c) $c['sel'] = 0; unset($c);
-                    $val['children'] = $children;
+                    //$children = $model->getIndustryList(array('parent_id' => $val['id']), $field);
+                    //foreach ($children as &$c) $c['sel'] = 0; unset($c);
+                    //$val['children'] = $children;
                     $val['sel'] = 0;
                 }
                 unset($val);
@@ -593,9 +602,11 @@ class UserCenterApiController extends ApiUserCommonController{
             case 5:
                 $cert_type = C('CERT_TYPE');
                 $m = 0;
+                $list = array();
                 foreach ($cert_type as $key => $value) {
                     $list[$m]['id'] = $key;
                     $list[$m]['name'] = $value;
+                    $m++;
                 }
                 break;
             default:
@@ -739,6 +750,12 @@ class UserCenterApiController extends ApiUserCommonController{
      * @desc 用户提现
      */
     public function userWithdraw(){
+        if(!check_is_auth(UID)){
+            $string = auth_string();
+            $error = '请先通过实名认证！';
+            if(false !== $string) $error = $string;
+            $this->apiReturn(V(0, $error));
+        }
         $user_id = UID;
         $amount = I('amount', 0, 'intval');
         $bank_id = I('bank_id', 0, 'intval');
@@ -872,7 +889,8 @@ class UserCenterApiController extends ApiUserCommonController{
         $hr_name = $data['hr_name'];
         $data['starttime'] = strtotime($data['starttime']);
         $data['endtime'] = strtotime($data['endtime']);
-        if($data['starttime'] > $data['endtime']){
+        if($data['is_current'] == 1) $data['endtime'] = 0;
+        if($data['endtime'] && $data['starttime'] > $data['endtime']){
             $this->apiReturn(V(0, '结束时间不能小于开始时间！'));
         }
         if($data['id'] > 0){
@@ -966,7 +984,8 @@ class UserCenterApiController extends ApiUserCommonController{
         $model = D('Admin/ResumeEdu');
         $data['starttime'] = strtotime($data['starttime']);
         $data['endtime'] = strtotime($data['endtime']);
-        if($data['starttime'] > $data['endtime']){
+        if($data['is_current'] == 1) $data['endtime'] = 0;
+        if($data['endtime'] && $data['starttime'] > $data['endtime']){
             $this->apiReturn(V(0, '结束时间不能小于开始时间！'));
         }
         if($data['id'] > 0){
@@ -1101,12 +1120,12 @@ class UserCenterApiController extends ApiUserCommonController{
         $resumeEduList = $resumeEduModel->getResumeEduList($where);
         foreach($resumeWorkList as &$wval){
             $wval['starttime'] = time_format($wval['starttime'], 'Y-m-d');
-            $wval['endtime'] = time_format($wval['endtime'], 'Y-m-d');
+            $wval['endtime'] = $wval['endtime'] ? time_format($wval['endtime'], 'Y-m-d') : '至今';
         }
         unset($wval);
         foreach($resumeEduList as &$eval){
             $eval['starttime'] = time_format($eval['starttime'], 'Y-m-d');
-            $eval['endtime'] = time_format($eval['endtime'], 'Y-m-d');
+            $eval['endtime'] = $eval['endtime'] ? time_format($eval['endtime'], 'Y-m-d') : '至今';
         }
         unset($eval);
         $resumeEvaluation = $resumeEvaluationModel->getResumeEvaluationAvg($where);
@@ -1152,6 +1171,12 @@ class UserCenterApiController extends ApiUserCommonController{
      * @desc 简历认证确认/放弃
      */
     public function confirmResumeAuth(){
+        if(!check_is_auth(UID)){
+            $string = auth_string();
+            $error = '请先通过实名认证！';
+            if(false !== $string) $error = $string;
+            $this->apiReturn(V(0, $error));
+        }
         $id = I('post.id');
         $auth_result = I('post.auth_result');
         $recommend_label = I('post.recommend_label');

@@ -115,7 +115,7 @@ class RecruitModel extends Model {
         $degreeArr = M('Education')->getField('id,education_name', true);
 
         $experience = C('WORK_EXP');
-        $info['degree'] = $degreeArr[$info['degree']];
+        $info['degree'] = $degreeArr[$info['degree']].'或'.$degreeArr[$info['degree']].'以上';
         $info['sex'] = $sexArr[$info['sex']];
         $info['experience'] = $experience[$info['experience']];
         $info['commission'] = fen_to_yuan($info['commission']);

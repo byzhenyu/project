@@ -7,8 +7,8 @@ namespace Admin\Model;
 use Think\Model;
 
 class QuestionModel extends Model {
-    protected $insertFields = array('question_title', 'question_type', 'question_content', 'add_time', 'user_id', 'city_id', 'city_name');
-    protected $updateFields = array('question_title', 'question_type', 'question_content', 'user_id', 'browse_number', 'like_number', 'answer_number', 'disabled');
+    protected $insertFields = array('question_title', 'question_type', 'question_content', 'add_time', 'user_id', 'city_id', 'city_name', 'question_type');
+    protected $updateFields = array('question_title', 'question_type', 'question_content', 'user_id', 'browse_number', 'like_number', 'answer_number', 'disabled', 'question_type');
     protected $_validate = array(
         array('question_title', 'require', '问题标题不能为空！', 1, 'regex', 3),
         array('question_content', 'require', '问题内容不能为空！', 1, 'regex', 3),

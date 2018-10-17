@@ -22,11 +22,12 @@ class ResumeWorkModel extends Model {
      * @param $where
      * @param bool $field
      * @param string $order
+     * @param $limit
      * @return mixed
      */
-    public function getResumeWorkList($where, $field = false, $order = 'endtime desc'){
+    public function getResumeWorkList($where, $field = false, $order = 'endtime desc', $limit = 5){
         if(!$field) $field = '*';
-        $res = $this->where($where)->field($field)->order($order)->select();
+        $res = $this->where($where)->field($field)->order($order)->limit($limit)->select();
         return $res;
     }
 
