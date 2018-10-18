@@ -85,6 +85,17 @@ class CompanyInfoModel extends Model {
         }
     }
 
+    /**
+     * @desc 公司字段
+     * @param $where
+     * @param $field
+     * @return mixed
+     */
+    public function getCompanyInfoField($where, $field){
+        $res = $this->where($where)->getField($field);
+        return $res;
+    }
+
     //验证是否完善公司资料
     public function checkCompanyInfo($user_id) {
         $where['user_id'] = $user_id;

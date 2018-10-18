@@ -26,32 +26,6 @@ class PublicApiController extends ApiCommonController
     }
 
     /**
-     * @desc 首页数据
-     */
-    public function getHomeData()
-    {
-        $keywords = I('keywords', '', 'trim');
-        $city_id = I('city_id', '', 'trim');
-        $where = array('a.city_name' => $city_id, 'a.disabled' => 1);
-        if ($keywords) $where['question_title'] = array('like', '%' . $keywords . '%');
-        $model = D('Admin/Question');
-        $field = 'u.nickname,u.head_pic,a.id,a.like_number,a.browse_number,a.answer_number,a.add_time,a.question_title';
-        $question = $model->getQuestionList($where, $field);
-        $question_list = $question['info'];
-        foreach ($question_list as &$val) {
-            $val['nickname'] = strval($val['nickname']);
-            $val['head_pic'] = strval($val['head_pic']);
-            $val['add_time'] = time_format($val['add_time'], 'Y-m-d');
-            $img_where = array('type' => 1, 'item_id' => $val['id']);
-            $val['question_img'] = D('Admin/QuestionImg')->getQuestionImgList($img_where);
-        }
-        unset($val);
-        $array = array();
-        $array['question_list'] = $question_list;
-        $this->apiReturn(V(1, '获取成功！', $array));
-    }
-
-    /**
      * @desc 注册接口
      */
     public function register()

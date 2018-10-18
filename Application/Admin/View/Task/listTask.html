@@ -58,7 +58,7 @@
                                         <tr class="gradeX">
                                             <td class="align-center">{$v['id']}</td>
                                             <td class="align-center">{$v['task_name']}</td>
-                                            <td class="align-center">{$v['reward']}</td>
+                                            <td class="align-center">{:fen_to_yuan($v['reward'])}</td>
                                             <td class="align-center">{$v['type_number']}</td>
                                             <td >{$v['task_desc']}</td>
                                             <td class="f-14 align-center">
@@ -66,7 +66,7 @@
                                                     <a href="{:U('Task/editTask',array('id'=>$v['id']))}">
                                                         <i class="am-icon-pencil"></i> 编辑
                                                     </a>
-                                                    <if condition="$v['id'] neq 1 && $v['id'] neq 2 && $v['id'] neq 3">
+                                                    <if condition="$v['id'] neq 1 && $v['id'] neq 2 && $v['id'] neq 3 && $v['id'] neq 5">
                                                         <a href="javascript:void(0)" onclick="javascript:recycle({$v['id']}, '确认删除?!此步骤无法恢复!', true)" class="tpl-table-black-operation-del">
                                                             <i class="am-icon-trash"></i> 删除
                                                         </a>

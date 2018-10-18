@@ -53,7 +53,7 @@ class RecruitApiController extends ApiUserCommonController{
         $data['entry_token'] = yuan_to_fen(C('GET_ENTRY_MONEY'));
         $user_money = D('Admin/User')->getUserField(array('user_id'=>UID),'user_money');
 
-        if ($data['commission'] > $user_money) {
+        if (($data['commission'] * $data['recruit_num']) > $user_money) {
             $this->apiReturn(V(0, '悄悄的告诉你，你的令牌不足喽。马上充值令牌，快速发布悬赏。'));
         }
         $regex = '/^\d+(\.\d{1,2})?$/';
@@ -86,7 +86,7 @@ class RecruitApiController extends ApiUserCommonController{
         }
 
         //修改金额
-        $res = D('Admin/User')->recruitUserMoney($data['commission']);
+        $res = D('Admin/User')->recruitUserMoney($data['commission'] * $data['recruit_num']);
         if ($res['status'] ==0) {
             $trans->rollback();
             $this->apiReturn($res);
@@ -125,6 +125,8 @@ class RecruitApiController extends ApiUserCommonController{
         $id = I('id', 0,'intval');
         $info = D('Admin/Recruit')->getDetail(array('r.id'=>$id));
         $info = string_data($info);
+        $info['company_name'] = D('Admin/CompanyInfo')->getCompanyInfoField(array('user_id' => $info['hr_user_id']), 'company_name');
+        if(!$info['company_name']) $info['company_name'] = '暂未填写';
         $this->apiReturn(V(1,'详情', $info));
     }
 
@@ -189,6 +191,9 @@ class RecruitApiController extends ApiUserCommonController{
      */
     public function getTaskList() {
         $info = D('Admin/Task')->getTaskList();
+        foreach($info as &$val){
+            $val['reward'] = fen_to_yuan($val['reward']);
+        }
 
         $this->apiReturn(V(1, '每日任务', $info));
     }
@@ -464,6 +469,7 @@ class RecruitApiController extends ApiUserCommonController{
         //echo json_encode($response);
         $this->apiReturn(V(1, 'aliyun oss sign', $response));
     }
+
     //悬赏分享
     public function getShareInfo() {
         $recruit_id = I('recruit_id',0,'intval');
@@ -471,5 +477,95 @@ class RecruitApiController extends ApiUserCommonController{
         $info['commission'] = fen_to_yuan($info['commission']);
         $info['company_name'] = M('CompanyInfo')->where(array('user_id'=>$info['hr_user_id']))->getField('company_name');
         $this->apiReturn(V(1,'悬赏分享',$info));
+    }
+
+    /**
+     * @desc 删除悬赏/有推荐不可删除
+     */
+    public function delRecruit(){
+        $id = I('id', 0, 'intval');
+        $model = D('Admin/Recruit');
+        $info = $model->getRecruitInfo(array('id' => $id, 'hr_user_id' => UID));
+        if(!$info) $this->apiReturn(V(0, '获取不到对应的悬赏信息！'));
+        $recruit_resume = D('Admin/RecruitResume')->getRecruitResumeNum(array('recruit_id' => $id));
+        if($recruit_resume > 0) $this->apiReturn(V(0, '该悬赏下有推荐简历,不可删除！'));
+        $res = $model->where(array('id' => $id))->delete();
+        if(false !== $res){
+            $this->apiReturn(V(1, '悬赏信息删除成功！'));
+        }
+        else{
+            $this->apiReturn(V(0, '悬赏信息删除失败！'));
+        }
+    }
+
+    /**
+     * @desc 编辑悬赏职位信息
+     */
+    public function editRecruit(){
+        $data = I('post.');
+        $model = D('Admin/Recruit');
+        $info = $model->getRecruitInfo(array('id' => $data['id'], 'hr_user_id' => UID));
+        if(!$info) $this->apiReturn(V(0, '获取不到对应的悬赏信息！'));
+        $create = $model->create($data, 4);
+        if(false !== $create){
+            $res = $model->where(array('id' => $data['id']))->save($data);
+            if(false !== $res){
+                $this->apiReturn(V(1, '保存成功！'));
+            }
+            else{
+                $this->apiReturn(V(0, $model->getError()));
+            }
+        }
+        else{
+            $this->apiReturn(V(0, $model->getError()));
+        }
+    }
+
+    /**
+     * @desc 数据暂存
+     */
+    public function cacheRecruit(){
+        $data = I('post.', '');
+        $model = D('Admin/RecruitCache');
+        $field = $model->getDbFields();
+        unset($field[0]);
+        unset($field[1]);
+        $add = array();
+        $count_num = 0;
+        foreach($field as &$val){
+            $add[$val] = $data[$val];
+            if(!empty($data[$val])) $count_num++;
+        }
+        unset($val);
+        $add['hr_user_id'] = UID;
+        if($count_num > 0){
+            $res = $model->add($add);
+            if($res)$this->apiReturn(V(1, '暂存成功！'));
+            $this->apiReturn(V(0, '暂存失败'));
+        }
+        else{
+            $this->apiReturn(V(0, '没有可暂存数据！'));
+
+        }
+    }
+
+    public function getRecruitCacheInfo(){
+        $where = array('hr_user_id' => UID);
+        $model = D('Admin/RecruitCache');
+        $cache = $model->getRecruitCacheInfo($where);
+        if(!$cache){
+            $field = $model->getDbFields();
+            unset($field[0]);
+            unset($field[1]);
+            $data = array();
+            foreach($field as &$val){
+                $data[$val] = '';
+            }
+            unset($val);
+        }
+        else{
+            $data = $cache;
+        }
+        $this->apiReturn(V(1, '', $data));
     }
 }
