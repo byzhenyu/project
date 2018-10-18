@@ -223,7 +223,7 @@ class UserCenterApiController extends ApiUserCommonController{
     public function getQuestionTypeList(){
         $model = D('Admin/QuestionType');
         $list = $model->getQuestionTypeList();
-        $this->apiReturn(V(1, '问题类型列表获取成功！', $list));
+        $this->apiReturn(V(1, '问题类型列表获取成功！', $list['info']));
     }
 
     /**
