@@ -56,6 +56,26 @@
                                 </div>
                             </div>
                             <div class="am-form-group">
+                                <label for="type" class="am-u-sm-2 am-form-label">
+                                    任务限制 <span class="tpl-form-line-small-title must-input">*</span>
+                                </label>
+                                <div class="am-u-sm-10">
+                                    <select name="type" id="type" data-am-selected="">
+                                        <option value="">请选择任务类型</option>
+                                        <foreach name="type" item="v">
+                                            <option value="{$v['id']}">{$v['name']}</option>
+                                        </foreach>
+                                    </select>
+                                    <script type="text/javascript">
+                                        $(function(){
+                                            if({$info['type']} >= 0){
+                                                $('#type').val({$info['type']});
+                                            }
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
                                 <div class="am-u-sm-10 am-u-sm-push-2">
                                     <input type="hidden" name="id" value="{$info['id']}">
                                     <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>

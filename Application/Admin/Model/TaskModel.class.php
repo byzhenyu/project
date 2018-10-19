@@ -16,7 +16,8 @@ class TaskModel extends Model {
         array('task_desc', 'require', '任务描述不能为空！', 1, 'regex', 3),
         array('task_desc', '1,100', '任务描述长度不能超过100！', 1, 'length', 3),
         //array('task_url', 'require', '任务链接不能为空！', 1, 'regex', 3),
-        array('type_number', 'require', '可领任务数量不能为空！', 1, 'regex', 3)
+        array('type_number', 'require', '可领任务数量不能为空！', 1, 'regex', 3),
+        array('type', 'require', '请选择任务类型', 1, 'regex', 3)
     );
 
     /**

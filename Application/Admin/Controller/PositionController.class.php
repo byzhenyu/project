@@ -73,6 +73,14 @@ class PositionController extends CommonController {
         $position_list = D('Admin/Position')->getIndustryPositionList(array('industry_id' => $industry_id));
         $this->ajaxReturn(V(1, '', $position_list));
     }
+    public function getPositionChildrenList(){
+        $position_id = I('position_id', 0, 'intval');
+        if($position_id > 0){
+            $where = array('parent_id' => $position_id);
+            $position_list = D('Admin/Position')->getPositionList($where, false, 'sort', false);
+            $this->ajaxReturn(V(1, '', $position_list));
+        }
+    }
 
     /**
      * @desc 职业信息导入

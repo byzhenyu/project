@@ -8,7 +8,7 @@ use Think\Model;
 
 class RecruitModel extends Model {
 //    protected $insertFields = array('hr_user_id', 'position_id','position_name','recruit_num','','');
-    protected $updateFields = array('age', 'nature', 'sex', 'degree', 'language_ability', 'experience', 'job_area', 'base_pay', 'merit_pay', 'welfare', 'description', 'id');
+    protected $updateFields = array('age', 'nature', 'sex', 'degree', 'language_ability', 'experience', 'job_area', 'base_pay', 'merit_pay', 'welfare', 'description', 'id', 'status', 'is_pos');
     protected $selectFields = array('*');
     protected $_validate = array(
         array('hr_user_id', 'require', '发布人不能为空', 1, 'regex', 3),

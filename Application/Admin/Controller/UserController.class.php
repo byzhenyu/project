@@ -119,8 +119,10 @@ class UserController extends CommonController {
         if (IS_POST) {
             if ($id > 0) {
                 $auth_data['audit_status'] = I('state', 2, 'intval');
+                $auth_data['audit_desc'] = I('audit_desc', '', 'trim');
                 $data['is_auth'] = 0;
                 if($auth_data['audit_status'] == 1) $data['is_auth'] = 1;
+                if($auth_data['audit_status'] == 2 && !$auth_data['audit_desc']) $this->ajaxReturn(V(0, '审核意见不能为空！'));
                 $result = M('User')->where($where)->save($data);
                 $auth_res = M('UserAuth')->where($where)->save($auth_data);
                 if(false !== $result && false !== $auth_res) $this->ajaxReturn(V(1, '操作成功'));
@@ -132,6 +134,14 @@ class UserController extends CommonController {
         } else {
             $result = D('Admin/UserAuth')->getAuthInfo($where);
             $result['cert_type'] = C('CERT_TYPE')[$result['cert_type']];
+            $audit_desc = C('AUDIT_DESC');
+            $audit_arr = array();
+            $val = array_values($audit_desc);
+            foreach($val as &$v) {
+                $audit_arr[] = array('id' => $v, 'name' => $v);
+            }
+            unset($v);
+            $this->audit_desc = $audit_arr;
             $this->assign('info', $result);
             $this->display();
         }

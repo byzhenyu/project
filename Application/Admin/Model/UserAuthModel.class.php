@@ -7,8 +7,8 @@ namespace Admin\Model;
 use Think\Model;
 
 class UserAuthModel extends Model {
-    protected $insertFields = array('true_name', 'cert_type', 'idcard_number', 'idcard_down', 'hand_pic', 'add_time', 'idcard_up', 'business_license', 'user_id', 'audit_status');
-    protected $updateFields = array('true_name', 'cert_type', 'idcard_number', 'idcard_down', 'hand_pic', 'add_time', 'idcard_up', 'business_license', 'user_id', 'audit_status');
+    protected $insertFields = array('true_name', 'cert_type', 'idcard_number', 'idcard_down', 'hand_pic', 'add_time', 'idcard_up', 'business_license', 'user_id', 'audit_status', 'audit_desc');
+    protected $updateFields = array('true_name', 'cert_type', 'idcard_number', 'idcard_down', 'hand_pic', 'add_time', 'idcard_up', 'business_license', 'user_id', 'audit_status', 'audit_desc');
     protected $_validate = array(
         array('true_name', 'require', '真实姓名不能为空！', 1, 'regex', 3),
         array('true_name', 'checkTypeLength', '真实姓名不能超过18字！', 2, 'callback', 3),
@@ -17,7 +17,7 @@ class UserAuthModel extends Model {
         array('idcard_number', 'isCard', '不是合法的身份证', 1, 'function', 3),
         array('idcard_up', 'require', '身份证正面照不能为空！', 1, 'regex', 3),
         array('idcard_down', 'require', '身份证反面照不能为空！', 1, 'regex', 3),
-        array('hand_pic', 'require', '手持身份证不能为空!', 1, 'regex', 3)
+        array('hand_pic', 'require', '手持身份证不能为空!', 1, 'regex', 3),
     );
 
     /**

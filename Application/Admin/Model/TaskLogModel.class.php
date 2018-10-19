@@ -46,13 +46,24 @@ class TaskLogModel extends Model {
     public function validTaskNumber($task_id){
         $task_info = D('Admin/Task')->getTaskInfo(array('id' => $task_id));
         switch($task_info['type']){
-            case 1:
+            case 1://本日
                 $start_time = mktime(0,0,0,date('m'), date('d'), date('Y'));
                 $end_time = mktime(23,59,59,date('m'),date('d'),date('Y'));
+                break;
+            case 2://本周
+                $date_w = date('w');
+                if($date_w == 0) $date_w = 7;
+                $start_time = mktime(0,0,0,date('m'),date('d')-$date_w+1,date('Y'));
+                $end_time = mktime(23,59,59,date('m'),date('d')-$date_w+7,date('Y'));
+                break;
+            case 3://本月
+                $start_time = mktime(0,0,0,date('m'),1,date('Y'));
+                $end_time = mktime(23,59,59,date('m'),date('t'),date('Y'));
                 break;
             default: return true;
         }
         $where = array('finish_time' => array('between', array($start_time, $end_time)), 'task_id' => $task_id);
+        if($task_info['type'] == 0) unset($where['finish_time']);//永久限制任务
         $log_number = $this->where($where)->count();
         if($log_number >= $task_info['type_number']) return false;
         return true;

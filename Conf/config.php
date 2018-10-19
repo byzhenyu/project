@@ -94,5 +94,11 @@
         ),
         'MOBILE_APP_KEY' => 'nR0PMcWCFPkeBKaNjdkTmCUZZlmMirRn1AmNZ0C44w6oR6qng4Q1Q5oTjQ0NkZBO',
         'UNIT_ID' => 10000000074,
-        'SECRET' => 'm7ubdSX8LUdT'
+        'SECRET' => 'm7ubdSX8LUdT',
+        'TASK_TYPE' => array(
+            0 => '永久任务',
+            1 => '日限制',
+            2 => '周限制',
+            3 => '月限制'
+        )
     );

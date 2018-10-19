@@ -92,6 +92,8 @@ class RecruitApiController extends ApiUserCommonController{
             $this->apiReturn($res);
         }
         add_key_operation(5, $newId);
+        $task_id = 4;
+        add_task_log(UID, $task_id);
         $trans->commit();
         $this->apiReturn(V(1,'发布成功'));
 
@@ -489,7 +491,7 @@ class RecruitApiController extends ApiUserCommonController{
         if(!$info) $this->apiReturn(V(0, '获取不到对应的悬赏信息！'));
         $recruit_resume = D('Admin/RecruitResume')->getRecruitResumeNum(array('recruit_id' => $id));
         if($recruit_resume > 0) $this->apiReturn(V(0, '该悬赏下有推荐简历,不可删除！'));
-        $res = $model->where(array('id' => $id))->delete();
+        $res = $model->where(array('id' => $id))->save(array('status' => 0));
         if(false !== $res){
             $this->apiReturn(V(1, '悬赏信息删除成功！'));
         }
@@ -549,6 +551,9 @@ class RecruitApiController extends ApiUserCommonController{
         }
     }
 
+    /**
+     * @desc 悬赏暂存数据
+     */
     public function getRecruitCacheInfo(){
         $where = array('hr_user_id' => UID);
         $model = D('Admin/RecruitCache');

@@ -79,6 +79,25 @@
 								</td>
 							</tr>
 
+							<tr>
+								<td><div align="right"><strong>审核意见：</strong></div></td>
+								<td>
+									<select name="audit_desc" id="audit_desc" data-am-selected="">
+										<option value="">请选择审核意见</option>
+										<foreach name="audit_desc" item="v">
+											<option value="{$v['name']}">{$v['name']}</option>
+										</foreach>
+									</select>
+									<script type="text/javascript">
+										$(function(){
+										    if({$info['audit_desc']}){
+										        $('#audit_desc').val({$info['audit_desc']});
+											}
+										});
+									</script>
+								</td>
+							</tr>
+
 							</tbody>
 						</table>
 						<table width="100%" class="am-table">

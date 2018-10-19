@@ -7,11 +7,10 @@ namespace Admin\Model;
 use Think\Model;
 
 class AccountLogModel extends Model {
-    protected $insertFields = array('user_id', 'user_money', 'frozen_money', 'pay_points','change_time','change_desc','change_type','order_sn');
-    protected $updateFields = array('user_id', 'user_money', 'frozen_money', 'pay_points','change_time','change_desc','change_type','order_sn');
-    protected $selectFields = array('log_id','user_id', 'user_money', 'frozen_money', 'pay_points','change_time','change_desc','change_type','order_sn');
+    protected $insertFields = array('user_id', 'user_money', 'frozen_money', 'pay_points','change_time','change_desc','change_type','order_sn', 'diss');
+    protected $updateFields = array('user_id', 'user_money', 'frozen_money', 'pay_points','change_time','change_desc','change_type','order_sn', 'diss');
+    protected $selectFields = array('log_id','user_id', 'user_money', 'frozen_money', 'pay_points','change_time','change_desc','change_type','order_sn', 'diss');
     protected $_validate = array(
-
     );
 
     /**
@@ -83,6 +82,17 @@ class AccountLogModel extends Model {
     public function getAccountLogMoneySum($where, $field = false){
         if(!$field) $field = 'user_money';
         $res = $this->where($where)->sum($field);
+        return $res;
+    }
+
+    /**
+     * @desc 资金管理解冻状态
+     * @param $where
+     * @param bool $field
+     * @return mixed
+     */
+    public function getAccountLogFrozenList($where, $field = false){
+        $res = $this->where($where)->field($field)->select();
         return $res;
     }
 }

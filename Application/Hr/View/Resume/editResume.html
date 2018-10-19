@@ -33,15 +33,15 @@
                             </tr>
                             <tr>
                                 <td><div align="right"><em class="must-input">*</em><strong>手机号：</strong></div></td>
-                                <td><input type="text" maxlength="11" id="mobile" name="mobile" value="{$info['mobile']}" style="width:500px" placeholder="请输入手机号" /></td>
+                                <td><input type='tel' maxlength="11" id="mobile" name="mobile" value="{$info['mobile']}" style="width:500px" placeholder="请输入手机号" /></td>
                             </tr>
                             <tr>
                                 <td><div align="right"><em class="must-input">*</em><strong>电子邮箱：</strong></div></td>
-                                <td><input type="text" id="email" name="email" value="{$info['email']}" style="width:500px" placeholder="请输入电子邮箱" /></td>
+                                <td><input type="email" id="email" name="email" value="{$info['email']}" style="width:500px" placeholder="请输入电子邮箱" /></td>
                             </tr>
                             <tr>
                                 <td><div align="right"><em class="must-input">*</em><strong>年龄：</strong></div></td>
-                                <td><input type="text" id="age" name="age" value="{$info['age']}" style="width:500px" placeholder="请输入年龄" /></td>
+                                <td><input type="text" id="age" name="age" value="{$info['age']|date='Y-m-d', ###}" style="width:500px" placeholder="请选择年龄" /></td>
                             </tr>
                             <tr>
                                 <td><div align="right"><em class="must-input">*</em><strong>性别：</strong></div></td>
@@ -62,15 +62,36 @@
                             </tr>
                             <tr>
                                 <td><div align="right"><strong>第一学历：</strong></div></td>
-                                <td><input type="text" id="first_degree" name="first_degree" value="{$info['first_degree']}" style="width:500px" placeholder="请填写第一学历" /></td>
+                                <td>
+                                    <select name="first_degree" id="first_degree" data-am-selected="">
+                                        <option value="">请选择第一学历</option>
+                                        <foreach name="edu_list" item="v">
+                                            <option value="$v['education_name']">{$v['education_name']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
                             </tr>
                             <tr>
                                 <td><div align="right"><strong>第二学历：</strong></div></td>
-                                <td><input type="text" id="second_degree" name="second_degree" value="{$info['second_degree']}" style="width:500px" placeholder="请填写第二学历" /></td>
+                                <td>
+                                    <select name="second_degree" id="second_degree" data-am-selected="">
+                                        <option value="">请选择第二学历</option>
+                                        <foreach name="edu_list" item="v">
+                                            <option value="$v['education_name']">{$v['education_name']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
                             </tr>
                             <tr>
-                                <td><div align="right"><strong>语言能力：</strong></div></td>
-                                <td><input type="text" id="language_ability" name="language_ability" value="{$info['language_ability']}" style="width:500px" placeholder="请填写语言能力" /></td>
+                                <td><div align="right"><strong>语言能力[多选]：</strong></div></td>
+                                <td>
+                                    <select name="language_ability" id="language_ability" data-am-selected="" multiple="multiple">
+                                        <option value="">请选择语言能力</option>
+                                        <foreach name="lang" item="v">
+                                            <option value="$v['name']">{$v['name']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
                             </tr>
                             <tr>
                                 <td><div align="right"><strong>详细地址：</strong></div></td>
@@ -87,24 +108,33 @@
                                     </select>
                                 </td>
                             </tr>
+
                             <tr>
-                                <td><div align="right"><strong>求职方向[多选]：</strong></div></td>
+                                <td><div align="right"><em class="must-input">*</em><strong>工作地区：</strong></div></td>
+                                <td><div class="am-form-group" id="start_address">
+                                    <select name="province" data-am-selected=""></select>
+                                    <select name="job_area" data-am-selected=""></select>
+                                    <select name="county" data-am-selected=""></select>
+                                </div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div align="right"><strong>行业属性：</strong></div></td>
                                 <td>
-                                    <select name="job_intension[]" id="job_intension" data-am-selected="{searchBox: 0}" multiple="multiple">
-                                        <foreach name="intension" item="v">
-                                            <option value="{$v['name']}">{$v['name']}</option>
+                                    <select name="industry_id" id="industry_id" data-am-selected="{searchBox: 0}" >
+                                        <option value="">请选择行业</option>
+                                        <foreach name="industry" item="v">
+                                            <option value="{$v['id']}">{$v['industry_name']}</option>
                                         </foreach>
                                     </select>
                                 </td>
                             </tr>
-
                             <tr>
-                                <td><div align="right"><strong>工作地区[多选]：</strong></div></td>
+                                <td><div align="right"><strong>求职方向：</strong></div></td>
                                 <td>
-                                    <select name="job_area[]" id="job_area" data-am-selected="{maxHeight: '200px', searchBox: 1}" multiple="multiple">
-                                        <foreach name="area" item="v">
-                                            <option value="{$v['name']}">{$v['name']}</option>
-                                        </foreach>
+                                    <select data-am-selected="{searchBox: 1, maxHeight: '180px'}" style="display: none;" name="parent_id" id="parent_id">
+                                    </select>
+                                    <select data-am-selected="{searchBox: 1, maxHeight: '180px'}" style="display: none;" name="job_intension" id="job_intension">
                                     </select>
                                 </td>
                             </tr>
@@ -157,5 +187,41 @@
     <script type="text/javascript" src="__PUBLIC__/fileupload/js/vendor/jquery.ui.widget.js"></script>
     <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.iframe-transport.js"></script>
     <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.fileupload.js"></script>
-    <script type="text/javascript" charset="utf-8" src="__SHOP__/js/shop.js?v=1.9"></script>
+    <script type="text/javascript" src="__ADMIN__/layDate-v5.0.9/laydate/laydate.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/address.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            initAddress('#start_address',"", "", "", 1);
+            laydate.render({
+                elem: '#age'
+            });
+            initPosition({$info['industry_id']});
+            $('#industry_id').change(function(){
+                initPosition($(this).val());
+            });
+            function initPosition(industry_id){
+                $.post("/index.php/Admin/Position/getPositionList", {industry_id: industry_id}, function (data) {
+                    $('#parent_id').html('<option data-id="0" value="0">一级菜单</option>');
+                    for (var i = 0; i < data.data.length; i++) {
+                        $('#parent_id').append('<option data-id="' + data.data[i].id
+                            + '" value="' + data.data[i].id + '">'
+                            + data.data[i].position_name + '</option>');
+                    }
+                    $('#parent_id').val({$info['parent_id']});
+                });
+            }
+            $('#parent_id').change(function(){
+                var position_id = $(this).val();
+                $.post("/index.php/Admin/Position/getPositionChildrenList", {position_id: position_id}, function (data) {
+                    $('#job_intension').html('<option data-id="0" value="">请选择</option>');
+                    for (var i = 0; i < data.data.length; i++) {
+                        $('#job_intension').append('<option data-id="' + data.data[i].id
+                            + '" value="' + data.data[i].id + '">'
+                            + data.data[i].position_name + '</option>');
+                    }
+                    $('#job_intension').val({$info['position_id']});
+                });
+            });
+        });
+    </script>
 </block>

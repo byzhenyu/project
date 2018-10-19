@@ -1123,6 +1123,11 @@ function add_task_log($user_id, $task_id, $task_name = ''){
         'task_name' => $task_name
     );
     $res = $model->add($data);
+    if(false !== $res){
+        $task_reward = D('Admin/Task')->getTaskField(array('id' => $task_id), 'reward');
+        account_log($user_id, $task_reward, 6, '任务所得', $res);
+        D('Admin/User')->increaseUserFieldNum($user_id, 'frozen_money', $task_reward);//暂冻结
+    }
     return $res;
 }
 
@@ -1410,4 +1415,45 @@ function create_xls($data,$filename='闪荐科技.xls',$subject='闪荐科技',$
     $objwriter = PHPExcel_IOFactory::createWriter($phpexcel, 'Excel5');
     $objwriter->save('php://output');
     exit;
+}
+
+/**
+ * @desc 计算年龄
+ * @param $time
+ * @return false|int|string
+ */
+function time_to_age($time){
+    return date('Y') - date('Y', $time) + 1;
+}
+
+/**
+ * @desc 计算两个日期间的工作日
+ * @param $start_date int 时间戳
+ * @param $end_date int 时间戳
+ * @param int $weekend_days 1、单休 2、双休
+ * @return float|int
+ */
+function get_days($start_date, $end_date, $weekend_days=2){
+    $data = array();
+    if ($start_date > $end_date) list($start_date, $end_date) = array($end_date, $start_date);
+    $start_reduce = $end_add = 0;
+    $start_N      = date('N',$start_date);
+    $start_reduce = ($start_N == 7) ? 1 : 0;
+
+    $end_N = date('N',$end_date);
+    $weekend_days = intval($weekend_days);
+    switch ($weekend_days)
+    {
+        case 1:
+            $end_add = ($end_N == 7) ? 1 : 0;
+            break;
+        case 2:
+        default:
+            in_array($end_N,array(6,7)) && $end_add = ($end_N == 7) ? 2 : 1;
+            break;
+    }
+    $days = round(abs($end_date - $start_date)/86400) + 1;
+    $data['total_days'] = $days;
+    $data['total_relax'] = floor(($days + $start_N - 1 - $end_N) / 7) * $weekend_days - $start_reduce + $end_add;
+    return $data['total_days'] - $data['total_relax'];
 }

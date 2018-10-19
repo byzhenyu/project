@@ -19,15 +19,19 @@ class ResumeController extends HrCommonController {
         if($email) $where['r.email'] = array('like', '%'.$email.'%');
         $sex = I('sex', 0, 'intval');
         if(in_array($sex, array(1, 2))) $where['r.sex'] = $sex;
-        $age_min = I('age_min', 0, 'intval');
-        $age_max = I('age_max', 0, 'intval');
+        $age_min = I('age_min', '', 'trim');
+        $age_max = I('age_max', '', 'trim');
         if($age_min && $age_max){
+            $age_min = strtotime($age_min);
+            $age_max = strtotime($age_max);
             $where['r.age'] = array('between', array($age_min, $age_max));
         }
         else if($age_min){
+            $age_min = strtotime($age_min);
             $where['r.age'] = array('egt', $age_min);
         }
         else if($age_max){
+            $age_max = strtotime($age_max);
             $where['r.age'] = array('elt', $age_max);
         }
         $post_nature = I('post_nature', '', 'trim');
@@ -58,11 +62,12 @@ class ResumeController extends HrCommonController {
         $resume_id = I('resume_id', 0, 'intval');
         $data = I('post.');
         if(IS_POST){
-            $op_arr = array('job_intension', 'job_area', 'career_label');
+            $op_arr = array('job_intension', 'career_label', 'language_ability');
             foreach($op_arr as &$op){
                 if($data[$op]) $data[$op] = implode(',', $data[$op]);
             }
             $data['user_id'] = HR_ID;
+            $data['age'] = strtotime($data['age']);
             if($resume_id){
                 $create = $model->create($data, 1);
                 if(false !== $create){
@@ -117,17 +122,18 @@ class ResumeController extends HrCommonController {
             }
         }
         $work_nature = C('WORK_NATURE');
+        $language = C('SHAN_LANGUAGE');
         $arr_values = array_values($work_nature);
+        $lang_values = array_values($language);
         $nature_arr = array();
+        $language_arr = array();
         $tags_where = array('tags_type' => array('in', array(1,2,5)));
         $tagsModel = D('Admin/Tags');
         $tags_info = $tagsModel->getTagsList($tags_where, 'id,tags_name,tags_type');
-        $tags_intension = array();
         $tags_career = array();
         $tags_recommend = array();
         foreach($tags_info as &$val){
             if(1 == $val['tags_type']) $tags_career[] = array('id' => $val['id'], 'name' => $val['tags_name']);
-            if(2 == $val['tags_type']) $tags_intension[] = array('id' => $val['id'], 'name' => $val['tags_name']);
             if(5 == $val['tags_type']) $tags_recommend[] = array('id' => $val['id'], 'name' => $val['tags_name']);
         }
         unset($val);
@@ -135,13 +141,21 @@ class ResumeController extends HrCommonController {
             $nature_arr[] = array('id' => $val, 'name' => $val);
         }
         unset($val);
+        foreach($lang_values as &$val){
+            $language_arr[] = array('id' => $val, 'name' => $val);
+        }
+        unset($val);
         $area = D('Admin/Region')->getRegionList(array('level' => 2), 'id,name');
         $resume_where = array('id' => $resume_id);
+        $edu_list = D('Admin/Education')->getEducationList();
         $info = $model->getResumeInfo($resume_where);
+        $industry = D('Admin/Industry')->getIndustryList();
+        $this->industry = $industry;
         $this->info = $info;
+        $this->lang = $language_arr;
+        $this->edu_list = $edu_list;
         $this->recommend = $tags_recommend;
         $this->area = $area;
-        $this->intension = $tags_intension;
         $this->career = $tags_career;
         $this->nature = $nature_arr;
         $this->display();
@@ -158,6 +172,7 @@ class ResumeController extends HrCommonController {
         $resumeEvaluationModel = D('Admin/ResumeEvaluation');
         $resume_where = array('id' => $resume_id);
         $resumeDetail = $resumeModel->getResumeInfo($resume_where);
+        $resumeDetail['age'] = time_to_age($resumeDetail['age']);
         $where = array('resume_id' => $resume_id);
         $resumeWorkList = $resumeWorkModel->getResumeWorkList($where);
         $resumeEduList = $resumeEduModel->getResumeEduList($where);

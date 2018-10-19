@@ -118,6 +118,8 @@ class UserCenterApiController extends ApiUserCommonController{
             if(false !== $create){
                 $res = $authModel->add($data);
                 if(false !== $res){
+                    $task_id = 1;
+                    add_task_log(UID, $task_id);
                     $this->apiReturn(V(1, '身份验证凭据上传成功！'));
                 }
                 else{
@@ -1114,10 +1116,7 @@ class UserCenterApiController extends ApiUserCommonController{
                 //非本人评价简历额外获得令牌完成任务
                 if($resume_info['user_id'] != UID){
                     $task_id = 2;
-                    $tsk_log_res = add_task_log(UID, $task_id);
-                    if($tsk_log_res){
-                        D('Admin/User')->changeUserWithdrawAbleAmount(UID, 1, $task_id);
-                    }
+                    add_task_log(UID, $task_id);
                 }
                 $this->apiReturn(V(1, '评价成功！'));
             }
@@ -1262,9 +1261,8 @@ class UserCenterApiController extends ApiUserCommonController{
             if(false !== $create){
                 $hr_resume_result = $hr_resume_model->add($data);
                 if(false !== $hr_resume_result && false !== $res){
-                    $task_id = 1;
-                    $task_log_res = add_task_log(UID, $task_id);
-                    if($task_log_res) D('Admin/User')->changeUserWithdrawAbleAmount(UID, 1, $task_id);
+                    $task_id = 5;
+                    add_task_log(UID, $task_id);
                     add_key_operation(8, $resume_auth_info['resume_id']);
                     M()->commit();
                     $this->apiReturn(V(1, '认证操作成功！'));
