@@ -86,6 +86,17 @@ class RecruitResumeModel extends Model {
         return $res;
     }
 
+    /**
+     * @desc 获取简历推荐详情
+     * @param $where
+     * @param bool $field
+     * @return mixed
+     */
+    public function getRecruitResumeInfo($where, $field = false){
+        $res = $this->where($where)->field($field)->find();
+        return $res;
+    }
+
     //添加操作前的钩子操作
     protected function _before_insert(&$data, $option){
         $data['hr_user_id'] = UID;

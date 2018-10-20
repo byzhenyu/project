@@ -50,7 +50,7 @@ class RecruitApiController extends ApiUserCommonController{
         //判断余额
         $data['last_token'] = $data['commission'] = yuan_to_fen($data['commission']);
         $data['get_resume_token'] = yuan_to_fen(C('GET_RESUME_MONEY'));
-        $data['entry_token'] = yuan_to_fen(C('GET_ENTRY_MONEY'));
+        $data['entry_token'] = $data['commission'] - $data['get_resume_token'];//入职获取令牌
         $user_money = D('Admin/User')->getUserField(array('user_id'=>UID),'user_money');
 
         if (($data['commission'] * $data['recruit_num']) > $user_money) {
@@ -60,17 +60,8 @@ class RecruitApiController extends ApiUserCommonController{
         if(!preg_match($regex, $data['commission'])){
             $this->apiReturn(V(0, '悬赏令牌小数点最多两位！'));
         }
-        if (cmp_contraband($data['language_ability'])) {
-            $this->apiReturn(V(0, '语言要求有违禁词'));
-        }
         if (cmp_contraband($data['description'])) {
-            $this->apiReturn(V(0, '详情描述有违禁词'));
-        }
-        if (cmp_contraband($data['base_pay'])) {
-            $this->apiReturn(V(0, '基本工资有违禁词'));
-        }
-        if (cmp_contraband($data['merit_pay'])) {
-            $this->apiReturn(V(0, '绩效工资有违禁词'));
+            $this->apiReturn(V(0, '悬赏工作描述中有违禁词！'));
         }
         $trans = M();
         $data['hr_user_id'] = UID;

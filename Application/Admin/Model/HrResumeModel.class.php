@@ -7,8 +7,8 @@ namespace Admin\Model;
 use Think\Model;
 
 class HrResumeModel extends Model {
-    protected $insertFields = array('hr_user_id', 'resume_id', 'recommend_label', 'add_time');
-    protected $updateFields = array();
+    protected $insertFields = array('hr_user_id', 'resume_id', 'recommend_label', 'add_time', 'recommend_voice');
+    protected $updateFields = array('hr_user_id', 'resume_id', 'recommend_label', 'add_time', 'recommend_voice');
     protected $_validate = array(
         array('resume_id', 'require', '简历不能为空！', 1, 'regex', 3),
     );

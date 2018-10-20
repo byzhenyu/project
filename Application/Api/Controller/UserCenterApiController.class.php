@@ -1416,8 +1416,6 @@ class UserCenterApiController extends ApiUserCommonController{
         if(!$resume_info) $this->apiReturn(V(0, '获取不到对应的简历详情！'));
         $data['hr_user_id'] = $hr_user_id;
         $data['recruit_hr_uid'] = $recruit_info['hr_user_id'];
-        if(empty($data['voice'])) $this->apiReturn(V(0, '推荐语不能为空'));
-        $data['recommend_voice'] = $data['voice'];
         if(false !== strpos(',', $data['resume_id'])){
             $addAllArr = array();
             $resume_arr = explode(',', $data['resume_id']);
@@ -1453,6 +1451,22 @@ class UserCenterApiController extends ApiUserCommonController{
             else{
                 $this->apiReturn(V(0, $recruitResumeModel->getError()));
             }
+        }
+    }
+
+    public function entryResumeRecommend(){
+        $resume_id = I('resume_id', 0, 'intval');
+        $model = D('Admin/HrResume');
+        $user_id = UID;
+        $data['recommend_voice'] = I('post.recommend_voice', '', 'trim');
+        if(empty($data['recommend_voice'])) $this->apiReturn(V(0, '推荐语不能为空'));
+        $data['recommend_label'] = I('post.recommend_label', '', 'trim');
+        $res = $model->where(array('hr_user_id' => $user_id, 'resume_id' => $resume_id))->save($data);
+        if(false !== $res){
+            $this->apiReturn(V(1, '推荐语录入成功！'));
+        }
+        else{
+            $this->apiReturn(V(0, '推荐语录入失败！'));
         }
     }
 

@@ -197,4 +197,48 @@ class RecruitModel extends Model {
         return $list;
     }
 
+    /**
+     * @desc 获取简历联系方式/简历入职
+     * @param $recruit_resume_id int 悬赏推荐表主键id
+     * @param $operate_type int 1、获取简历联系方式 2、入职获取简历
+     * @return bool
+     */
+    public function recruitPayOff($recruit_resume_id, $operate_type = 1){
+        $accountLogModel = D('Admin/AccountLog');
+        $userModel = D('Admin/User');
+        $recruitResumeModel = D('Admin/RecruitResume');
+        $type_arr = array(1 => 2, 2 => 3);
+        $type_string = array(1 => '获取简历令牌', 2 => '入职简历令牌');
+        $type_token = array(1 => 'get_resume_token', 2 => 'entry_token');
+        $recruit_resume_info = $recruitResumeModel->getRecruitResumeInfo(array('id' => $recruit_resume_id));
+        if(!$recruit_resume_info) return false;
+        $recruit_id = $recruit_resume_info['recruit_id'];
+        M()->startTrans();
+        //减少悬赏发布人冻结资金
+        $recruit_where = array('id' => $recruit_id);
+        $recruit_info = $this->getRecruitInfo($recruit_where);
+        $release_res = $userModel->decreaseUserFieldNum($recruit_info['hr_user_id'], 'frozen_money', $recruit_info[$type_token[$operate_type]]);
+        //增加用户资金/暂冻结金额资金
+        $token_log_res = $userModel->increaseUserFieldNum($recruit_resume_info['hr_user_id'], 'user_money', $recruit_info[$type_token[$operate_type]]);
+        $token_log_res2 = $userModel->increaseUserFieldNum($recruit_resume_info['hr_user_id'], 'frozen_money', $recruit_info[$type_token[$operate_type]]);
+        $token_account_data = array(
+            'user_id' => $recruit_resume_info['hr_user_id'],
+            'user_money' => $recruit_info[$type_token[$operate_type]],
+            'change_desc' => $type_string[$operate_type],
+            'change_type' => $type_arr[$operate_type],
+            'order_sn' => $recruit_resume_id,
+            'change_time' => NOW_TIME
+        );
+        //增加资金记录
+        $token_account_res = $accountLogModel->add($token_account_data);
+        if(false !== $release_res && false !== $token_log_res && false !== $token_log_res2 && false !== $token_account_res){
+            M()->commit();
+            return true;
+        }
+        else{
+            M()->rollback();
+            return false;
+        }
+    }
+
 }
