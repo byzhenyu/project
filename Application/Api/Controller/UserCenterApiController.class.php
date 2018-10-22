@@ -574,9 +574,10 @@ class UserCenterApiController extends ApiUserCommonController{
     public function getPositionIndustryList(){
         $type = I('type', 1, 'intval');
         $parent_id = I('parent_id', 0, 'intval');
-        $where = array('parent_id' => 0);
+        $industry_id = I('industry_id', 1, 'intval');
         switch ($type){
             case 1:
+                $where = array('parent_id' => 0);
                 $model = D('Admin/Industry');
                 $field = 'id,industry_name as name,parent_id,sort';
                 $list = $model->getIndustryList($where, $field);
@@ -589,15 +590,11 @@ class UserCenterApiController extends ApiUserCommonController{
                 unset($val);
                 break;
             case 2:
+                $where = array('parent_id' => $parent_id);
+                if($industry_id) $where['industry_id'] = $industry_id;
                 $model = D('Admin/Position');
                 $field = 'id,position_name as name,parent_id,sort';
                 $list = $model->getPositionList($where, $field, '', false);
-                foreach($list as &$val){
-                    $children = $model->getPositionList(array('parent_id' => $val['id']), $field, '', false);
-                    foreach ($children as &$c) $c['sel'] = 0; unset($c);
-                    $val['children'] = $children;
-                    $val['sel'] = 0;
-                }
                 unset($val);
                 break;
             default:
