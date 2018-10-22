@@ -7,15 +7,16 @@ namespace Admin\Model;
 use Think\Model;
 
 class ResumeModel extends Model {
-    protected $insertFields = array('user_id', 'initials', 'true_name', 'mobile', 'email', 'head_pic', 'sex', 'age', 'job_intension', 'job_area', 'post_nature', 'first_degree', 'second_degree', 'language_ability', 'address', 'introduced', 'introduced_voice', 'career_label', 'hr_id', 'industry_id');
-    protected $updateFields = array('user_id', 'initials', 'true_name', 'mobile', 'email', 'head_pic', 'sex', 'age', 'job_intension', 'job_area', 'post_nature', 'first_degree', 'second_degree', 'language_ability', 'address', 'introduced', 'introduced_voice', 'career_label', 'hr_id', 'update_time', 'id', 'hide_mobile', 'industry_id');
+    protected $insertFields = array('user_id', 'initials', 'true_name', 'mobile', 'email', 'head_pic', 'sex', 'age', 'job_intension', 'job_area', 'post_nature', 'first_degree', 'second_degree', 'language_ability', 'address', 'introduced', 'introduced_voice', 'career_label', 'hr_id', 'industry_id', 'position_id');
+    protected $updateFields = array('user_id', 'initials', 'true_name', 'mobile', 'email', 'head_pic', 'sex', 'age', 'job_intension', 'job_area', 'post_nature', 'first_degree', 'second_degree', 'language_ability', 'address', 'introduced', 'introduced_voice', 'career_label', 'hr_id', 'update_time', 'id', 'hide_mobile', 'industry_id', 'position_id');
     protected $_validate = array(
         array('true_name', 'require', '真实姓名不能为空！', 1,'regex',3),
         array('true_name', '1,12', '真实姓名控制在12个字以内！',1,'length',3),
         array('email', 'is_email', '请输入正确的邮箱格式！', 1, 'function', 3),
         array('mobile', 'isMobile', '请输入正确的手机号格式！',1,'function',3),
         array('sex', array(0,1,2), '性别值范围不正确！',1,'in',3),
-        array('industry_id', 'require', '请选择行业', 1, 'regex', 3)
+        array('industry_id', 'require', '请选择行业', 1, 'regex', 3),
+        array('position_id', 'require', '请选择职业', 1, 'regex', 3)
     );
 
     /**

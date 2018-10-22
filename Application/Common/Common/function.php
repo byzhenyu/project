@@ -1460,4 +1460,20 @@ function get_days($start_date, $end_date, $weekend_days=2){
     return $data['total_days'] - $data['total_relax'];
 }
 
-function refreshUserTags(){}
+/**
+ * @desc 更新HR简历工作地区/职位相关信息
+ * @param $hr_id int|bool HR id
+ * @param bool $resume_id 简历id
+ * @param array $resume_info 简历信息
+ * @return  mixed
+ */
+function refreshUserTags($hr_id = false, $resume_id = false, $resume_info = array()){
+    $model = D('Admin/UserTags');
+    $resume_model = D('Admin/Resume');
+    if($hr_id && $resume_id){
+        $resume_job = $resume_model->getResumeInfo(array('id' => $resume_id));
+        $model->refreshJobArgs($hr_id, $resume_job);
+    }
+    if(count($resume_info) > 0 && $resume_id){}
+    return true;
+}

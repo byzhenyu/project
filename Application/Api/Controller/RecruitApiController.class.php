@@ -1,6 +1,7 @@
 <?php
 namespace Api\Controller;
 use Common\Controller\ApiUserCommonController;
+use Think\Verify;
 
 class RecruitApiController extends ApiUserCommonController{
     //发布悬赏页面
@@ -45,6 +46,7 @@ class RecruitApiController extends ApiUserCommonController{
         $data = I('post.', '');
         $model = D('Admin/Recruit');
         $position_name = M('Position')->where(array('id'=>$data['position_id']))->getField('position_name');
+        if(!$position_name) $this->apiReturn(V(0, '获取不到职位名称！'));
         $data['position_name'] = $position_name;
         //判断余额
         $data['last_token'] = $data['commission'] = yuan_to_fen($data['commission']);
