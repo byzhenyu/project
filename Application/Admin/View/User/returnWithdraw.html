@@ -1,0 +1,133 @@
+<extend name="Common/base"/>
+<block name="style">
+    <style>
+        .am-table {
+            font-size: 1.3rem;
+            margin-bottom: 0;
+        }
+        .am-btn{
+            padding:5px 15px;font-size:12px
+        }
+    </style>
+</block>
+
+<block name="body">
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">闪荐-提现确认打款</div>
+                </div>
+                <div class="widget-body  am-fr">
+                    <form id="orderForm" action="{:U('returnWithdraw')}" method="post" class="ajaxForm">
+                    <table width="100%" class="am-table am-table-bordered">
+                        <thead>
+                            <tr><th colspan="4">提现信息</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td width="18%"><div align="right"><strong>会员账号：</strong></div></td>
+                                <td>{$info.mobile}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>提现方式：</strong></div></td>
+                                <td>{:paymentType($info['payment'])}</td>
+                            </tr>
+                            	<tr>
+	                                <td><div align="right"><strong>银行卡号：</strong></div></td>
+	                                <td>{$info.brank_no}</td>
+	                            </tr>
+	                            <tr>
+	                                <td><div align="right"><strong>银行卡姓名：</strong></div></td>
+	                                <td>{$info.brank_name}</td>
+	                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>提现金额：</strong></div></td>
+                                <td>￥{:fen_to_yuan($info['money'])}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>申请时间：</strong></div></td>
+                                <td>{:time_format($info['add_time'])}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>用户备注：</strong></div></td>
+                                <td>{$info['user_note']}</td>
+                            </tr>
+                        </tbody>
+                    </table>     
+                    <table width="100%" class="am-table am-table-bordered">
+                        <thead>
+                            <tr><th colspan="5">管理员操作</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><div align="right"><strong>银行回执单号：</strong></div></td>
+                                <td>
+                                	<if condition="$info.state eq 1">
+                                		<textarea class="tpl-form-input" name="return_number" rows="4" cols="80"></textarea>
+                                	<else/>
+                                		{$info.return_number}
+                                	</if>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>备注信息：</strong></div></td>
+                                <td>
+                                    <if condition="$info.state eq 1">
+                                        <textarea class="tpl-form-input" name="return_desc" rows="4" cols="80"></textarea>
+                                        <else/>
+                                        {$info.return_desc}
+                                    </if>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="18%"><div align="right"><strong>状态：</strong></div></td>
+                                <td>
+                                	<if condition="$info.state eq 1">
+	                                	<div class="am-form-group">
+											<label class="am-radio-inline">
+												<input type="radio" name="return_state" id="return_state" value="1" data-am-ucheck checked> 已打款
+											</label>
+											<label class="am-radio-inline">
+												<input type="radio" name="return_state" id="return_state" value="0" data-am-ucheck> 未打款
+											</label>
+										</div>
+									<else/>
+                                		{:accountState($info['state'])}
+                                	</if>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>          
+                    <table width="100%" class="am-table">
+                        <tbody>
+                            <tr>
+                                <td align="center">
+                                	<input type="hidden" value="{$info['id']}" name="id">
+                                	<if condition="$info.state eq 1">
+	                                    <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+	                                </if>
+                                    <button type="button" class="am-btn am-btn-default tpl-btn-bg-color-default " onclick="goback()">返回</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>  
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        function callback(data) {
+        	toastr(data.info);
+            if (data.status == 1) {
+                location.href = '__URL__/returnWithdraw?id='+data.data;
+            }
+        }
+        function goback() {
+            location.href = '__URL__/withdrawList/type/1';
+        }
+    </script>
+</block>
