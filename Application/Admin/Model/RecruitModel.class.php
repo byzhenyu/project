@@ -240,5 +240,4 @@ class RecruitModel extends Model {
             return false;
         }
     }
-
 }

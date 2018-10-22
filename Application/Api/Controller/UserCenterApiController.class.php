@@ -1454,6 +1454,9 @@ class UserCenterApiController extends ApiUserCommonController{
         }
     }
 
+    /**
+     * @desc HR录入推荐语
+     */
     public function entryResumeRecommend(){
         $resume_id = I('resume_id', 0, 'intval');
         $model = D('Admin/HrResume');
@@ -1523,7 +1526,7 @@ class UserCenterApiController extends ApiUserCommonController{
         if(!$interviewInfo || $interviewInfo['state'] != 0) $this->apiReturn(V(0, '面试状态不对！'));
         $res = $model->saveInterviewData($where, $save_data);
         if(false !== $res){
-            if($state == 1) D('Admin/User')->changeUserMoney($interviewInfo['recruit_resume_id'], 2);
+            if($state == 1) D('Admin/Recruit')->recruitPayOff($interviewInfo['recruit_resume_id'], 2);
             $this->apiReturn(V(1, '操作成功！'));
         }
         else{

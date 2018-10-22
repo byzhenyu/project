@@ -1,7 +1,6 @@
 <?php
 namespace Api\Controller;
 use Common\Controller\ApiUserCommonController;
-use Think\Verify;
 
 class RecruitApiController extends ApiUserCommonController{
     //发布悬赏页面
@@ -151,29 +150,50 @@ class RecruitApiController extends ApiUserCommonController{
     /**
      *  获取联系方式
      *  recruit_id 悬赏id
-     * recruit_resume_id 悬赏简历id
+     * recruit_resume_id 悬赏推荐id
      *
      */
     public function getResumePhoneNumber() {
         $recruit_id = I('recruit_id', 0, 'intval');
         $recruit_resume_id = I('recruit_resume_id', 0, 'intval');
-        //判断次数
-        $where['recruit_id'] = $recruit_id;
-        $result = D('Admin/TokenLog')->getResumeCountRes($where);
-        if ($result['status'] ==0) {
-            $this->apiReturn($result);
+        $recruit_model = D('Admin/Recruit');
+        $recruit_resume_model = D('Admin/RecruitResume');
+        $resume_model = D('Admin/Resume');
+        $user_model = D('Admin/User');
+        $recruit_info = $recruit_model->getRecruitInfo(array('id' => $recruit_id));
+        $recruit_num = $recruit_info['recruit_num'];
+        $recruit_resume_count = $recruit_resume_model->getRecruitResumeNum(array('recruit_id' => $recruit_id, 'is_open' => 1));
+        $get_resume_money = C('GET_RESUME_MONEY');
+        $recruit_get_money = yuan_to_fen($get_resume_money);
+        if($recruit_resume_count >= $recruit_num){
+            $user_money = $user_model->getUserField(array('user_id' => UID), 'user_money');
+            if($user_money < $recruit_get_money) $this->apiReturn(V(0, '您的余额不足，请前往充值页面充值。'));
+            M()->startTrans();
+            $user_money_res = $user_model->decreaseUserFieldNum(UID, 'user_money', $recruit_get_money);//冻结资金
+            $account_res = account_log(UID, $recruit_get_money, 7, '补缴下载简历金额！', $recruit_resume_id);
+            $user_frozen_res = $user_model->increaseUserFieldNum(UID, 'frozen_money', $recruit_get_money);
+            if(false !== $user_money_res && false !== $account_res && false !== $user_frozen_res){
+                M()->commit();
+            }
+            else{
+                M()->rollback();
+                $this->apiReturn(V(0, '冻结补缴金额发生错误！'));
+            }
         }
-        $info = D('Admin/User')->changeUserMoney($recruit_resume_id, 1);
-        if ($info['status'] ==0) {
-            $this->apiReturn($info);
-        } else {
-            //修改状态字段
-            M('RecruitResume')->where(array('id'=>$recruit_resume_id))->setField('is_open', 1);
-            $recruitResume = D('Admin/RecruitResume')->getRecruitResumeField(array('id' => $recruit_resume_id), 'resume_id');
-            $resume_info = D('Admin/Resume')->getResumeField(array('id' => $recruitResume['resume_id']), 'mobile');
+        M()->startTrans();
+        $recruit_res = $recruit_model->recruitPayOff($recruit_resume_id);
+        $recruit_resume_res = M('RecruitResume')->where(array('id' => $recruit_resume_id))->setField('is_open', 1);
+        if(false !== $recruit_res && false !== $recruit_resume_res){
+            $recruitResume = $recruit_resume_model->getRecruitResumeField(array('id' => $recruit_resume_id), 'resume_id');
+            $resume_info = $resume_model->getResumeField(array('id' => $recruitResume['resume_id']), 'mobile');
             $hideMobile = hideMobile($resume_info);
             if(false !== $hideMobile) M('Resume')->where(array('id' => $recruitResume['resume_id']))->setField('hide_mobile', $hideMobile);
-            $this->apiReturn(V(1, '获取联系方式成功'));
+            M()->commit();
+            $this->apiReturn(V(1, '恭喜你悬赏到了一个人才线索，我们将为你扣除'.$get_resume_money.'令牌用来打赏！'));
+        }
+        else{
+            M()->rollback();
+            $this->apiReturn(V(0, '简历联系方式获取错误！'));
         }
 
     }
@@ -187,7 +207,6 @@ class RecruitApiController extends ApiUserCommonController{
         foreach($info as &$val){
             $val['reward'] = fen_to_yuan($val['reward']);
         }
-
         $this->apiReturn(V(1, '每日任务', $info));
     }
 
