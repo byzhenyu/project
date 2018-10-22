@@ -79,35 +79,17 @@ class UserController extends CommonController {
         if ($keyword) {
             $where['u.mobile'] = array('like','%'.$keyword.'%');
         }
-        if ($accountType == 0) {
-            $field = 'ua.id, ua.money, ua.add_time, ua.state, u.user_name, u.user_money';
-            $list = D('Admin/UserAccount')->getUserAccountList($where, $field);
+        if(1 == $accountType){
+            $where['ua.state'] = array('in', array(1,3,4));
         }
-        
+        $field = 'ua.id, ua.money, ua.add_time, ua.state, u.user_name, u.user_money';
+        $list = D('Admin/UserAccount')->getUserAccountList($where, $field);
+
+        $tpl = 'withdrawList';
         $this->list = $list['info'];
         $this->page = $list['page'];
-        if ($accountType == 1 || $accountType == 3) {
-            $tpl = 'withdrawList';
-        } 
         $this->account_type = $accountType;
         $this->display($tpl);
-    }
-
-    //会员提现列表
-    public function withdrawAgentList(){
-        $keyword  = I('keyword', '', 'trim');
-        //$accountType = I('account_type', 0, 'intval');
-        $where['ua.account_type'] = 2;
-        $where['ua.type'] = 1;
-        $where['ua.status'] = 1;
-        if ($keyword) {
-            $where['g.agent_name'] = array('like','%'.$keyword.'%');
-        }
-        $field = 'ua.id, ua.money, ua.add_time, ua.state, g.agent_name, g.account_amout, g.province, g.city, g.district';
-        $list = D('Admin/UserAccount')->getAgentAccountList($where, $field);
-        $this->list = $list['info'];
-        $this->page = $list['page'];
-        $this->display();
     }
 
     /***
@@ -148,24 +130,53 @@ class UserController extends CommonController {
         
     }
 
-    //审核提现
+    //提现通过
     public function editWithdraw(){
         $id = I('id', 0, 'intval');
         $UserAccountModel = D('Admin/UserAccount');
+        if(IS_POST){
+            if($id > 0){
+                if(empty(I('admin_note'))) $this->ajaxReturn(V(0, '管理员备注不能为空！'));
+                if($UserAccountModel->create()){
+                    $result = $UserAccountModel->save();
+                    if($result === false){
+                        $this->ajaxReturn(V(0, '操作失败'));
+                    }
+                    $this->ajaxReturn(V(1, '操作成功', $id));
+                }
+                else{
+                    $this->ajaxReturn(V(0, $UserAccountModel->getError()));
+                }
+            }
+        }
+        $where['id'] = $id;
+        $accountInfo = $UserAccountModel->getUserAccountInfo($where);
+        $this->assign('info', $accountInfo);
+        $this->display();
+    }
+
+    //审核提现
+    public function returnWithdraw(){
+        $id = I('id', 0, 'intval');
+        $UserAccountModel = D('Admin/UserAccount');
         if (IS_POST) {
-            $state = I('state', 0);
+            $state = I('return_state', 1);
             if ($id > 0) {
+                $data = I('post.', '');
+                if(empty($data['return_desc'])) $this->ajaxReturn(V(0, '备注信息不能为空！'));
+                if(empty($data['return_number'])) $this->ajaxReturn(V(0, '请认真填写银行回执单号！'));
+                $state_arr = array(1 => 3, 0 => 4);
+                $data['state'] = $state_arr[$data['return_state']];
                 if($UserAccountModel->create()){
                     M()->startTrans();// 开启事务
-                    $result = $UserAccountModel->save();
-                    if ($result === false) {
+                    $result = $UserAccountModel->save($data);
+                    if($result === false){
                         M()->rollback(); // 事务回滚
                         $this->ajaxReturn(V(0, '操作失败'));
                     }
-                    if ($state == 1) { //完成审核
+                    if ($state == 1) { //完成打款
                         $where['id'] = $id;
                         $accountInfo = D('Admin/UserAccount')->getUserAccountDetail($where, 'user_id, money');
-
                         //减少会员冻结余额
                         $setUserMoney = D('Admin/User')->where('user_id='.$accountInfo['user_id'])->setDec('frozen_money', $accountInfo['money']);
                         if ($setUserMoney === false) {
@@ -175,7 +186,7 @@ class UserController extends CommonController {
                         M('AccountLog')->where(array('order_sn'=>"$id"))->setField('change_desc', '提现-已完成');
 
                     }
-                    else if ($state == 2) { //驳回
+                    else{
                         $where['id'] = $id;
                         $accountInfo = D('Admin/UserAccount')->getUserAccountDetail($where, 'user_id, money');
 

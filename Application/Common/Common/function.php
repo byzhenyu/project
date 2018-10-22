@@ -527,6 +527,8 @@ function accountState($type) {
         case 0  : return  C('ACCOUNT_STATE')[0];   break;
         case 1  : return  C('ACCOUNT_STATE')[1];   break;
         case 2  : return  C('ACCOUNT_STATE')[2];   break;
+        case 3  : return  C('ACCOUNT_STATE')[3];   break;
+        case 4  : return  C('ACCOUNT_STATE')[4];   break;
         default : return  false;      break;
     }
 }
@@ -1457,3 +1459,5 @@ function get_days($start_date, $end_date, $weekend_days=2){
     $data['total_relax'] = floor(($days + $start_N - 1 - $end_N) / 7) * $weekend_days - $start_reduce + $end_add;
     return $data['total_days'] - $data['total_relax'];
 }
+
+function refreshUserTags(){}

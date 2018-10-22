@@ -968,9 +968,9 @@ class UserCenterApiController extends ApiUserCommonController{
                     $resumeAuth = array('resume_id' => $data['resume_id'], 'hr_name' => $hr_name, 'hr_mobile' => $hr_mobile, 'user_id' => UID);
                     //简历验证
                     $auth_res = D('Admin/ResumeAuth')->changeResumeAuth($resumeAuth);
-                    if(false !== $auth_res){
+                    /*if(false !== $auth_res){
                         sendMessageRequest($hr_mobile, '《闪荐》简历信息邀请您验证！');
-                    }
+                    }*/
                     M()->commit();
                     $this->apiReturn(V(1, '保存成功！'));
                 }

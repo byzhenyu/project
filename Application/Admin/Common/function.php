@@ -84,8 +84,9 @@ function get_page($count, $page_size=0){
 function withdraw_audit_status($disabled) {
     switch ($disabled) {
         case 0  : return    '<span style="color: brown">待处理</span>';   break;
-        case 1  : return    '<span style="color: green">已完成</span>';   break;
-        case 2  : return    '<span style="color: red">已驳回</span>';   break;
+        case 1  : return    '<span style="color: green">已通过</span>';   break;
+        case 2  : return    '<span style="color: #ff9c03">已驳回</span>';   break;
+        case 3  : return    '<span style="color: #ff0003">已打款</span>'; break;
         default : return    false;      break;
     }
 }

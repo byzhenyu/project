@@ -1,9 +1,4 @@
 <?php
-/**
- * Created by liuniukeji.com
- * 会员充值提现
- * @author goryua <1661745274@qq.com>
-*/
 namespace Admin\Model;
 use Think\Model;
 class UserAccountModel extends Model{
@@ -11,7 +6,6 @@ class UserAccountModel extends Model{
         user_note,payment,brank_no,brank_name,brank_user_name');
 
     protected $_validate = array(
-        array('admin_note', 'require', '管理员备注不能为空！', 1, 'regex', 2)
     );
 
     /**
@@ -76,9 +70,15 @@ class UserAccountModel extends Model{
         $data['add_time'] = time();
     }
 
-    protected function _before_update(&$data, $option){ 
-        $data['admin_time'] = NOW_TIME;
-        $data['admin_user'] = session('admin_name');
+    protected function _before_update(&$data, $option){
+        if($data['state']){
+            $data['admin_time'] = NOW_TIME;
+            $data['admin_user'] = session('admin_name');
+        }
+        if($data['return_state']){
+            $data['return_time'] = NOW_TIME;
+            $data['return_user'] = session('admin_name');
+        }
     }
     
     /**
