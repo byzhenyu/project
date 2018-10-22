@@ -114,7 +114,7 @@ class RecruitModel extends Model {
      * 详情
      */
     public function getDetail($where) {
-        $field = 'u.nickname,u.head_pic, r.id,r.hr_user_id,r.position_id,r.position_name,r.recruit_num,r.age,r.nature,r.sex,r.degree,r.language_ability,r.experience,r.job_area,r.base_pay,r.merit_pay,r.welfare,r.description,r.commission,r.add_time';
+        $field = 'u.nickname,u.head_pic, r.id,r.hr_user_id,r.position_id,r.position_name,r.recruit_num,r.age,r.nature,r.sex,r.degree,r.language_ability,r.experience,r.job_area,r.base_pay,r.merit_pay,r.welfare,r.description,r.commission,r.add_time,r.get_resume_token,r.entry_token';
         $info = $this->alias('r')
             ->join('__USER__ u on r.hr_user_id = u.user_id')
             ->where($where)
@@ -130,6 +130,8 @@ class RecruitModel extends Model {
         $info['experience'] = $experience[$info['experience']];
         $info['commission'] = fen_to_yuan($info['commission']);
         $info['add_time'] = time_format($info['add_time']);
+        $info['get_resume_token'] = fen_to_yuan($info['get_resume_token']);
+        $info['entry_token'] = fen_to_yuan($info['entry_token']);
 
         return $info;
     }
