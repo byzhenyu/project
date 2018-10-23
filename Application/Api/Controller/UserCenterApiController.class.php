@@ -897,12 +897,19 @@ class UserCenterApiController extends ApiUserCommonController{
         $model = D('Admin/Resume');
         $res = $model->getResumeInfo($where);
         $res['head_pic'] = $res['head_pic'] ? $res['head_pic'] : DEFAULT_IMG;
-        if($res) $this->apiReturn(V(1, '简历获取成功！', $res));
+        if($res){
+            $address = explode(' ' ,$res['address']);
+            $res['address_p'] = $address[0];
+            unset($address[0]);
+            $res['address'] = str_replace($res['address_p'].' ', '', $res['address']);
+            $this->apiReturn(V(1, '简历获取成功！', $res));
+        }
         $auth_field = M('Resume')->getDbFields();
         $return = array();
         foreach($auth_field as &$val){
             $return[$val] = '';
         }
+        $return['address_p'] = '';
         $this->apiReturn(V(1, '获取资料失败！', $return));
     }
 
