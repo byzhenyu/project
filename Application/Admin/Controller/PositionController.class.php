@@ -57,6 +57,11 @@ class PositionController extends CommonController {
         $list = $model->getTree($where);
         $industryModel = D('Admin/Industry');
         $industryList = $industryModel->getIndustryList();
+        $returnList = array();
+        foreach($list as &$val){
+            if(in_array($val['level'], array(0, 1))) $returnList[] = $val;
+        }
+        unset($val);
         $this->keyword = $keyword;
         $this->industry = $industryList;
         $this->list = $list;

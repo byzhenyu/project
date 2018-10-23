@@ -20,7 +20,7 @@ class IndustryModel extends Model {
      * @param string $order
      * @return mixed
      */
-    public function getIndustryList($where, $field = false, $order = 'sort'){
+    public function getIndustryList($where, $field = false, $order = 'sort asc'){
         if(!$field) $field = '';
         $list = $this->where($where)->field($field)->order($order)->select();
         return $list;

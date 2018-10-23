@@ -50,7 +50,7 @@ class ExcelController extends Controller{
             else{
                 $position_info = $this->getPositionInfo(array('industry_id' => $val[0], 'parent_id' => $val[1], 'position_name' => $val[2]));
                 if($position_info) continue;
-                $arr[] = array('industry_id' => $val[0], 'parent_id' => $val[1], 'position_name' => $val[2]);
+                $arr[] = array('industry_id' => $val[0], 'parent_id' => $val[1], 'position_name' => $val[2], 'sort' => 10);
             }
         }
         unset($val);
