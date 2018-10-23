@@ -111,14 +111,14 @@ class RecruitApiController extends ApiUserCommonController{
             $where1 = array();
             if($job_area){
                 foreach($job_area as &$val){
-                    $where1[] = 'r.`job_area` like \'%'.$val.'%\'';
+                    $where1[] = '`job_area` like \'%'.$val.'%\'';
                 }
                 unset($val);
             }
             $where2 = array();
             if($position){
                 foreach($position as &$val){
-                    $where2[] = 'r.`position_id` = '.$val;
+                    $where2[] = '`position_id` = '.$val;
                 }
                 unset($val);
             }

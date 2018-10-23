@@ -1797,4 +1797,41 @@ class UserCenterApiController extends ApiUserCommonController{
             $this->apiReturn(V(0, '验证码错误'));
         }
     }
+
+    /**
+     * @desc 身份认证信息
+     */
+    public function certInfo(){
+        $user_id = UID;
+        $status = -1;
+        $desc = '资料未上传';
+        $model = D('Admin/UserAuth');
+        $info = $model->getAuthInfo(array('user_id' => $user_id));
+        if($info){
+            $status = $info['audit_status'];
+            $desc = $info['audit_desc'];
+            if($status == 1) $desc = '审核通过';
+        }
+        $this->apiReturn(V(1, '', array('status' => $status, 'desc' => $desc)));
+    }
+
+    /**
+     * @desc 已注册账号绑定微信账号
+     */
+    public function bindThirdNumber(){
+        $user_id = UID;
+        $wx_code = I('wx_code', '', 'trim');
+        $open_id = getOpenId($wx_code);
+        $user_model = D('Admin/User');
+        $user_info = $user_model->getUserInfo(array('wx' => $open_id));
+        if($user_info) $this->apiReturn(V(0, '账号已被其他账号绑定！'));
+        $save = array('wx' => $open_id);
+        $save_res = $user_model->saveUserData(array('user_id' => $user_id), $save);
+        if(false !== $save_res){
+            $this->apiReturn(V(1, '绑定成功！'));
+        }
+        else{
+            $this->apiReturn(V(0, '绑定出现错误！'));
+        }
+    }
 }
