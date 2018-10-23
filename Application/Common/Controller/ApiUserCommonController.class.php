@@ -25,4 +25,8 @@ class ApiUserCommonController extends ApiCommonController {
         $id = M('user_token')->where($where)->getField('user_id');
         return $id ? $id : 0;
     }
+    public function index()
+    {
+
+    }
 }
