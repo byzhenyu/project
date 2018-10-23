@@ -53,4 +53,13 @@ class EducationController extends CommonController {
     public function del(){
         $this->_del('Education', 'id');
     }
+    // 删除图片
+    public function delFile(){
+        $this->_delFile();  //调用父类的方法
+    }
+
+    // 上传图片
+    public function uploadImg(){
+        $this->_uploadImg();  //调用父类的方法
+    }
 }
