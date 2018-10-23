@@ -100,11 +100,35 @@ class RecruitApiController extends ApiUserCommonController{
      */
     public function getRecruitList() {
         $type = I('type', 0, 'intval');
+        $user_id = UID;
         if ($type == 1) {
-            $where['hr_user_id'] = array('eq', UID);
+            $where['hr_user_id'] = array('eq', $user_id);
         }
         else{
-            $where['hr_user_id'] = array('neq', UID);
+            $tags = user_tags($user_id);
+            $job_area = $tags['area'];
+            $position = $tags['pos'];
+            $where1 = array();
+            if($job_area){
+                foreach($job_area as &$val){
+                    $where1[] = 'r.`job_area` like \'%'.$val.'%\'';
+                }
+                unset($val);
+            }
+            $where2 = array();
+            if($position){
+                foreach($position as &$val){
+                    $where2[] = 'r.`position_id` = '.$val;
+                }
+                unset($val);
+            }
+            $position_string = implode(' or ', $where2);
+            $area_string = implode(' or ', $where1);
+            $map = '('.$position_string.') and ('.$area_string.')';
+            if(count($where1) == 0) $map = $position_string;
+            if(count($where2) == 0) $map = $area_string;
+            $where['_string'] = $map;
+            $where['hr_user_id'] = array('neq', $user_id);
         }
 
         $list = D('Admin/Recruit')->getRecruitList($where,'id, position_name, recruit_num, commission, add_time');

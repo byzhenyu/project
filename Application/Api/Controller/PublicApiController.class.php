@@ -341,4 +341,14 @@ class PublicApiController extends ApiCommonController
         $end = strtotime('2018-10-19');
         p(get_days($start, $end));exit;
     }
+
+    public function refresh(){
+        $hr_id = 14;
+        $resume_id = 21;
+        refreshUserTags($hr_id, $resume_id);
+    }
+
+    public function user_tags(){
+        p(user_tags(14));exit;
+    }
 }

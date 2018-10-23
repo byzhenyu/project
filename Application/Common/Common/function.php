@@ -1470,10 +1470,44 @@ function get_days($start_date, $end_date, $weekend_days=2){
 function refreshUserTags($hr_id = false, $resume_id = false, $resume_info = array()){
     $model = D('Admin/UserTags');
     $resume_model = D('Admin/Resume');
+    $res = true;
     if($hr_id && $resume_id){
         $resume_job = $resume_model->getResumeInfo(array('id' => $resume_id));
-        $model->refreshJobArgs($hr_id, $resume_job);
+        if($resume_job) $res = $model->refreshJobArgs($hr_id, array('job_area' => $resume_job['job_area'], 'job_position' => $resume_job['position_id']));
     }
-    if(count($resume_info) > 0 && $resume_id){}
-    return true;
+    if(count($resume_info) > 0 && $resume_id){
+        $resume_job = $resume_model->getResumeInfo(array('id' => $resume_id));
+        $tags_arr = array('job_area' => $resume_job['job_area'], 'job_position' => $resume_job['position_id']);
+        if(count(array_diff($tags_arr, $resume_info)) != 0 && count(array_diff($resume_info, $tags_arr)) != 0){
+            $hr_id = D('Admin/HrResume')->where(array('resume_id' => $resume_id))->field('hr_user_id')->select();
+            $hr_user_id = array();
+            foreach($hr_id  as &$val) $hr_user_id[] = $val['hr_user_id']; unset($val);
+            if(count($hr_user_id) > 0) $res = $model->refreshJobArgs($hr_user_id, $tags_arr);
+        }
+    }
+    return $res;
+}
+
+/**
+ * @desc 用户简历工作地区
+ * @param $hr_id
+ * @return mixed
+ */
+function user_tags($hr_id){
+    $tags = D('Admin/UserTags')->getUserTags($hr_id);
+    $area = array('job_area' => array());
+    $pos = array('job_position' => array());
+    if(count($tags) > 0){
+        foreach($tags as &$val){
+            $temp_area = explode('|', $val['job_area']);
+            $temp_pos = explode('|', $val['job_position']);
+            $area['job_area'] = array_merge($area['job_area'], $temp_area);
+            $pos['job_position'] = array_merge($pos['job_position'], $temp_pos);
+        }
+        unset($val);
+    }
+    return array(
+        'area' => $area['job_area'],
+        'pos' => $pos['job_position']
+    );
 }

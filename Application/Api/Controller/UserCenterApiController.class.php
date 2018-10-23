@@ -861,6 +861,7 @@ class UserCenterApiController extends ApiUserCommonController{
             if(false !== $create){
                 $res = $model->save($data);
                 if(false !== $res){
+                    refreshUserTags(false, $data['id'], array('job_position' => $data['position_id'], 'job_area' => $data['job_area']));
                     $this->apiReturn(V(1, '基本资料保存成功！'));
                 }
                 else{
@@ -1261,6 +1262,7 @@ class UserCenterApiController extends ApiUserCommonController{
                     $task_id = 5;
                     add_task_log(UID, $task_id);
                     add_key_operation(8, $resume_auth_info['resume_id']);
+                    refreshUserTags(UID, $resume_auth_info['resume_id']);
                     M()->commit();
                     $this->apiReturn(V(1, '认证操作成功！'));
                 }
@@ -1320,9 +1322,9 @@ class UserCenterApiController extends ApiUserCommonController{
         if($recruit_id){
             $recruitModel = D('Admin/Recruit');
             $recruitWhere = array('id' => $recruit_id);
-            $recruit_info = $recruitModel->getRecruitInfo($recruitWhere, 'position_name,job_area');
+            $recruit_info = $recruitModel->getRecruitInfo($recruitWhere, 'position_id,job_area');
             $job_area = $recruit_info['job_area'];
-            $position = $recruit_info['position_name'];
+            $position = $recruit_info['position_id'];
             $job_arr = explode(',', $job_area);
             $pos_arr = explode(',', $position);
             $where1 = array();
@@ -1335,7 +1337,7 @@ class UserCenterApiController extends ApiUserCommonController{
             $where2 = array();
             if($position){
                 foreach($pos_arr as &$val){
-                    $where2[] = 'r.`job_intension` like \'%'.$val.'%\'';
+                    $where2[] = 'r.`position_id` like \'%'.$val.'%\'';
                 }
                 unset($val);
             }
