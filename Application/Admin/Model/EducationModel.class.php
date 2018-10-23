@@ -7,8 +7,8 @@ namespace Admin\Model;
 use Think\Model;
 
 class EducationModel extends Model {
-    protected $insertFields = array('education_name', 'sort');
-    protected $updateFields = array('education_name', 'sort', 'id');
+    protected $insertFields = array('education_name', 'sort', 'suffix_img');
+    protected $updateFields = array('education_name', 'sort', 'id', 'suffix_img');
     protected $_validate = array(
         array('education_name', 'require', '学历名称不能为空！', 1, 'regex', 3),
         array('education_name', '1,50', '学历名称保持在1-50字！', 1, 'length', 3)
