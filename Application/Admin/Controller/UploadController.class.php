@@ -63,7 +63,7 @@ class UploadController extends CommonController {
                 $local_path = trim($path, '.');
                 $data['name'] =$local_path;
             }
-            $this->ajaxReturn(V(1, 'success', $data));
+            $this->ajaxReturn(V(1, 'success', $data)); 
         }
     }
 }
