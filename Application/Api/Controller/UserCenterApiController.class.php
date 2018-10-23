@@ -1144,6 +1144,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $resumeEduModel = D('Admin/ResumeEdu');
         $resumeEvaluationModel = D('Admin/ResumeEvaluation');
         $recruitResumeModel = D('Admin/RecruitResume');
+        $educationModel = D('Admin/Education');
         $recruit_where = array('id' => $id);
         $recommend_info = $recruitResumeModel->getRecruitResumeField($recruit_where, 'recommend_label,recommend_voice,id');
         $resume_where = array('id' => $resume_id);
@@ -1169,9 +1170,16 @@ class UserCenterApiController extends ApiUserCommonController{
             $m++;
         }
         unset($wval);
+        $edu_list = $educationModel->select();
+        $edu_help = array();
+        foreach($edu_list as &$edu_val){
+            $edu_help[$edu_val['education_name']] = $edu_val['suffix_img'];
+        }
+        unset($edu_val);
         foreach($resumeEduList as &$eval){
             $eval['starttime'] = time_format($eval['starttime'], 'Y-m-d');
             $eval['endtime'] = $eval['endtime'] ? time_format($eval['endtime'], 'Y-m-d') : '至今';
+            $eval['suffix_img'] = $edu_help[$eval['degree']] ? C('IMG_SERVER').$edu_help[$eval['degree']] : '';
         }
         unset($eval);
         $resumeEvaluation = $resumeEvaluationModel->getResumeEvaluationAvg($where);
