@@ -653,6 +653,16 @@ class UserCenterApiController extends ApiUserCommonController{
                     $m++;
                 }
                 break;
+            case 7:
+                $age = C('SHAN_AGE');
+                $m = 0;
+                $list = array();
+                foreach ($age as $key => $value) {
+                    $list[$m]['id'] = $key;
+                    $list[$m]['name'] = $value;
+                    $m++;
+                }
+                break;
             default:
                 $this->apiReturn(V(0, '不合法的数据类型！'));
         }
@@ -860,6 +870,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $model = D('Admin/Resume');
         $resume_where = array('user_id' => UID);
         $resume_info = $model->where($resume_where)->find();
+        $data['age'] = strtotime($data['age']);
         if($resume_info){
             $data['id'] = $resume_info['id'];
             $create = $model->create($data, 2);
@@ -1210,6 +1221,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $work_resume_money = fen_to_yuan($commission) - $get_resume_money;
         $resumeDetail['get_resume_money'] = $get_resume_money;
         $resumeDetail['work_resume_money'] = $work_resume_money;
+        $resumeDetail['age'] = time_format($resumeDetail['age'], 'Y-m-d');
         
         $userModel = D('Admin/User');
         $user_type = $userModel->getUserField(array('user_id' => $user_id), 'user_type');
