@@ -101,4 +101,16 @@ class InterviewModel extends Model {
         $number = $this->alias('i')->join('__HR_RESUME__ as r on i.resume_id = r.resume_id', 'LEFT')->where($where)->count();
         return $number;
     }
+
+    /**
+     * @desc 面试列表[]
+     * @param $where
+     * @param bool $field
+     * @param string $order
+     * @return mixed
+     */
+    public function interviewList($where, $field = false, $order = 'update_time desc'){
+        $list = $this->where($where)->field($field)->order($order)->select();
+        return $list;
+    }
 }

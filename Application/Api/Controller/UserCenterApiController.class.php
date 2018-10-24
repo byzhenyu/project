@@ -668,7 +668,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $user_tags = D('Admin/User')->getUserField(array('user_id' => UID), 'like_tags');
         $user_tags = explode(',', $user_tags);
         if(4 == $type){
-            $list = D('Admin/QuestionType')->getQuestionTypeList(array(), true, 'id,type_name as tag_name');
+            $list = D('Admin/QuestionType')->getQuestionTypeList(array(), true, 'id,type_name as tags_name');
         }
         else{
             $model = D('Admin/Tags');

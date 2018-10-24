@@ -8,7 +8,7 @@ class SettleController extends CommonController {
     public function __construct(){
         parent::__construct();
         set_time_limit(0);
-        ini_set('memory_limit','3072M');
+        ini_set('memory_limit','4096M');
     }
 
 
@@ -50,6 +50,15 @@ class SettleController extends CommonController {
      * @desc 悬赏30日自动入职
      */
     public function recruitInterview(){
+        $interviewModel = D('Admin/Interview');
+        $recruitResumeModel = D('Admin/RecruitResume');
+        $recruitModel = D('Admin/Recruit');
+        $limit_time = NOW_TIME - 30 * 86400;
+        $interview_where = array('state' => 0, 'update_time' => array('lt', $limit_time));
+        $list = $interviewModel->interviewList($interview_where);
+        foreach($list as &$val){
+        }
+        unset($val);
     }
 
     /**
@@ -57,7 +66,31 @@ class SettleController extends CommonController {
      */
     public function resumeAuth(){
         $model = D('Admin/ResumeAuth');
+        $messageModel = D('Admin/SmsMessage');
         $limit_time = NOW_TIME - 30 * 86400;
         $where = array('auth_result' => 0, 'add_time' => array('lt', $limit_time));
+        $list = $model->resumeAuthList($where);
+        $start = mktime(0,0,0,date('m'),1,date('Y'));
+        $end = mktime(23,59,59,date('m'),date('t'),date('Y'));
+        foreach($list as &$val){
+            $message_limit = $messageModel->where(array('mobile' => $val['hr_mobile'], 'add_time' => array('between', array($start, $end)), 'type' => 99))->find();
+            if($message_limit) continue;
+            $message_content = '《闪荐科技》简历认证邀请您进行认证！';
+            $send_res = sendMessageRequest($val['hr_mobile'], $message_content);
+            if($send_res['status']){
+                $data = array(
+                    'mobile' => $val['hr_mobile'],
+                    'sms_content' => $message_content,
+                    'sms_code' => '0000',
+                    'add_time' => NOW_TIME,
+                    'send_status' => $send_res['status'],
+                    'user_type' => 1,
+                    'type' => 99,
+                    'send_response_msg' => $send_res['info']
+                );
+                $messageModel->add($data);
+            }
+        }
+        unset($val);
     }
 }
