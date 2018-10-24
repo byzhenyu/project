@@ -1522,3 +1522,5 @@ function refreshRecruitCache($hr_id = UID){
     $res = $model->where(array('hr_user_id' => $hr_id))->delete();
     return $res;
 }
+
+function refreshRecruit(){}

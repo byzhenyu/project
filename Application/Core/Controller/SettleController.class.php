@@ -57,6 +57,8 @@ class SettleController extends CommonController {
         $interview_where = array('state' => 0, 'update_time' => array('lt', $limit_time));
         $list = $interviewModel->interviewList($interview_where);
         foreach($list as &$val){
+            $recruitResumeInfo = $recruitResumeModel->getRecruitResumeInfo(array('id' => $val['recruit_resume_id']));
+            $recruitInfo = $recruitModel->getRecruitInfo(array('id' => $recruitResumeInfo['recruit_id']));
         }
         unset($val);
     }
