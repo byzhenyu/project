@@ -51,16 +51,38 @@ class SettleController extends CommonController {
      */
     public function recruitInterview(){
         $interviewModel = D('Admin/Interview');
-        $recruitResumeModel = D('Admin/RecruitResume');
         $recruitModel = D('Admin/Recruit');
         $limit_time = NOW_TIME - 30 * 86400;
-        $interview_where = array('state' => 0, 'update_time' => array('lt', $limit_time));
-        $list = $interviewModel->interviewList($interview_where);
-        foreach($list as &$val){
-            $recruitResumeInfo = $recruitResumeModel->getRecruitResumeInfo(array('id' => $val['recruit_resume_id']));
-            $recruitInfo = $recruitModel->getRecruitInfo(array('id' => $recruitResumeInfo['recruit_id']));
+        $recruit_where = array('is_post' => array('lt', 2), 'status' => 1, 'add_time' => array('lt', $limit_time));
+        $recruit_list = $recruitModel->getRecruitList($recruit_where, false, '', false);
+        foreach($recruit_list as &$value){
+            $interview_where = array('i.state' => 0, 'r.recruit_id' => $value['id']);
+            $list = $interviewModel->interviewList($interview_where);
+            if(count($list) > 0){
+                foreach($list as &$val){
+                    $recruitInfo = $recruitModel->getRecruitInfo(array('id' => $value['id']));
+                    $interviewCount = $interviewModel->interviewRecruitCount(array('r.recruit_id' => $value['id'], 'i.state' => 1));
+                    if($interviewCount >= $recruitInfo['recruit_num']) continue;
+                    M()->startTrans();
+                    $interview_res = $interviewModel->saveInterviewData(array('id' => $val['id']), array('state' => 1));
+                    $recruit_res = $recruitModel->where(array('id' => $value['id']))->setInc('recruit_num');
+                    $recruit_status = 1;
+                    if($recruitInfo['recruit_num'] - 1 == $interviewCount) $recruit_status = 2;
+                    $recruit_post_res = $recruitModel->where(array('id' => $value['id']))->save(array('is_post' => $recruit_status));
+                    if(false !== $interview_res && false !== $recruit_res && false !== $recruit_post_res){
+                        M()->commit();
+                    }
+                    else{
+                        M()->rollback();
+                    }
+                }
+                unset($val);
+            }
+            else{
+                $recruitModel->where(array('id' => $value['id']))->save(array('status' => 0));
+            }
         }
-        unset($val);
+        unset($value);
     }
 
     /**

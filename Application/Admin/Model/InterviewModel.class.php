@@ -109,8 +109,18 @@ class InterviewModel extends Model {
      * @param string $order
      * @return mixed
      */
-    public function interviewList($where, $field = false, $order = 'update_time desc'){
-        $list = $this->where($where)->field($field)->order($order)->select();
+    public function interviewList($where, $field = false, $order = 'i.update_time desc'){
+        $list = $this->alias('i')->join('__RECRUIT_RESUME__ as r on i.recruit_resume_id = r.id')->where($where)->field($field)->order($order)->select();
         return $list;
+    }
+
+    /**
+     * @desc 悬赏下共入职人数
+     * @param $where
+     * @return mixed
+     */
+    public function interviewRecruitCount($where){
+        $count = $this->alias('i')->join('__RECRUIT_RESUME__ as r on i.recruit_resume_id = r.id')->where($where)->count();
+        return $count;
     }
 }
