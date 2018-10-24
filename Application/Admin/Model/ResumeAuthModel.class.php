@@ -95,4 +95,16 @@ class ResumeAuthModel extends Model {
         return $res;
     }
 
+    /**
+     * @desc 获取符合条件的简历认证列表[HR未认证简历短信发送用]
+     * @param $where
+     * @param bool $field
+     * @param string $order
+     * @return mixed
+     */
+    public function resumeAuthList($where, $field = false, $order = 'add_time desc'){
+        $list = $this->where($where)->field($field)->order($order)->select();
+        return $list;
+    }
+
 }

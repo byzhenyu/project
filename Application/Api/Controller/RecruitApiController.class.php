@@ -26,9 +26,12 @@ class RecruitApiController extends ApiUserCommonController{
     //获取平均悬赏金额
     public function getCommissionValue() {
         $position_id = I('position_id',0,'intval');
+        $recruit_amount = I('recruit_amount', 0, 'intval');
+        $getAmount = C('GET_RESUME_MONEY');
+        $radio = C('RATIO')/100; //比例
         $value = D('Admin/Recruit')->getAverageValue(array('position_id'=>$position_id));
-
-        $this->apiReturn(V(1,'令牌平均值',$value));
+        $data = array('get' => $getAmount, 'avg' => $value['average'], 'entry' => ($recruit_amount - $getAmount), 'plat' => $recruit_amount*$radio);
+        $this->apiReturn(V(1,'令牌平均值', $data));
     }
 
     //发布接口

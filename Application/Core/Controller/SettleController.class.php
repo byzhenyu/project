@@ -55,5 +55,9 @@ class SettleController extends CommonController {
     /**
      * @desc 未认证简历短信发送提醒
      */
-    public function resumeAuth(){}
+    public function resumeAuth(){
+        $model = D('Admin/ResumeAuth');
+        $limit_time = NOW_TIME - 30 * 86400;
+        $where = array('auth_result' => 0, 'add_time' => array('lt', $limit_time));
+    }
 }
