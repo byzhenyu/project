@@ -1511,3 +1511,14 @@ function user_tags($hr_id){
         'pos' => $pos['job_position']
     );
 }
+
+/**
+ * @desc 悬赏发布成功更新悬赏缓存数据
+ * @param int|mixed $hr_id
+ * @return mixed
+ */
+function refreshRecruitCache($hr_id = UID){
+    $model = D('Admin/RecruitCache');
+    $res = $model->where(array('hr_user_id' => $hr_id))->delete();
+    return $res;
+}

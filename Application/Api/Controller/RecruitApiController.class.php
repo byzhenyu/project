@@ -86,6 +86,7 @@ class RecruitApiController extends ApiUserCommonController{
         add_key_operation(5, $newId);
         $task_id = 4;
         add_task_log(UID, $task_id);
+        refreshRecruitCache();
         $trans->commit();
         $this->apiReturn(V(1,'发布成功'));
 
