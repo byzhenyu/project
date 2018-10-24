@@ -918,6 +918,7 @@ class UserCenterApiController extends ApiUserCommonController{
             $res['address_p'] = $address[0];
             unset($address[0]);
             $res['address'] = str_replace($res['address_p'].' ', '', $res['address']);
+            $res['age'] = time_format($res['age'], 'Y-m-d');
             $this->apiReturn(V(1, '简历获取成功！', $res));
         }
         $auth_field = M('Resume')->getDbFields();
