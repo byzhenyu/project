@@ -29,7 +29,8 @@ class QuestionTypeModel extends Model {
      * @param
      * @return mixed
      */
-    public function getQuestionTypeList($where){
+    public function getQuestionTypeList($where, $is_limit = false, $field = false){
+        if($is_limit) return $this->where($where)->field($field)->order('sort desc')->select();
         $count = $this->where($where)->count();
         $page = get_web_page($count);
         $list = $this->where($where)->limit($page['limit'])->order('sort desc')->select();

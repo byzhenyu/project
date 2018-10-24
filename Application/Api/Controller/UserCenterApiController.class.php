@@ -667,9 +667,14 @@ class UserCenterApiController extends ApiUserCommonController{
         if(!in_array($type, array(1,2,3,4,5))) $this->apiReturn(V(0, '标签类型不合法！'));
         $user_tags = D('Admin/User')->getUserField(array('user_id' => UID), 'like_tags');
         $user_tags = explode(',', $user_tags);
-        $model = D('Admin/Tags');
-        $where = array('tags_type' => $type);
-        $list = $model->getTagsList($where);
+        if(4 == $type){
+            $list = D('Admin/QuestionType')->getQuestionTypeList(array(), true, 'id,type_name as tag_name');
+        }
+        else{
+            $model = D('Admin/Tags');
+            $where = array('tags_type' => $type);
+            $list = $model->getTagsList($where);
+        }
         foreach($list as &$val){
             $val['sel'] = 0;
             if(in_array($val['id'], $user_tags)) $val['sel'] = 1;
