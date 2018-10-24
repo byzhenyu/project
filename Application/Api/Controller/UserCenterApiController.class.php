@@ -1158,7 +1158,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $recruitResumeModel = D('Admin/RecruitResume');
         $educationModel = D('Admin/Education');
         $recruit_where = array('id' => $id);
-        $recommend_info = $recruitResumeModel->getRecruitResumeField($recruit_where, 'recommend_label,recommend_voice,id');
+        $recommend_info = $recruitResumeModel->getRecruitResumeField($recruit_where, 'recruit_id,recommend_label,recommend_voice,id');
         $resume_where = array('id' => $resume_id);
         $resumeDetail = $resumeModel->getResumeInfo($resume_where);
         if(!$resumeDetail && $user_id == $resumeDetail['user_id']) $this->apiReturn(V(0, '您还没有填写简历！'));
@@ -1203,6 +1203,14 @@ class UserCenterApiController extends ApiUserCommonController{
             if(!$is_open) $resumeDetail['mobile'] = '****';
             if($is_open) $resumeDetail['mobile'] = strval($resumeDetail['hide_mobile']);
         }
+        //获取悬赏金额
+        $recruit_id = $recommend_info['recruit_id'];
+        $commission = M('recruit')->where(array('id'=>$recruit_id))->getField('commission');
+        $get_resume_money = C('GET_RESUME_MONEY');
+        $work_resume_money = fen_to_yuan($commission) - $get_resume_money;
+        $resumeDetail['get_resume_money'] = $get_resume_money;
+        $resumeDetail['work_resume_money'] = $work_resume_money;
+        
         $userModel = D('Admin/User');
         $user_type = $userModel->getUserField(array('user_id' => $user_id), 'user_type');
         $return = array('detail' => $resumeDetail, 'resume_work' => $resumeWorkList, 'resume_edu' => $resumeEduList, 'resume_evaluation' => $resumeEvaluation, 'evaluation_avg' => $avg, 'recruit_resume' => $recommend_info, 'is_open' => $is_open, 'introduce' => $introduced_detail, 'career_label' => $tags);
