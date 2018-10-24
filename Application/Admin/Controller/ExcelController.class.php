@@ -58,7 +58,7 @@ class ExcelController extends Controller{
         $msg = '已经成功将数据上传';
         $result = $model->addAll($arr);
 		if(false !== $result) return V(1, $msg);
-	    return V(0, '输入录入失败！');
+	    return V(0, '数据录入失败！');
 	}
 
 	private function getIndustryInfo($industry_id){

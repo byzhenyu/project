@@ -1194,11 +1194,17 @@ class UserCenterApiController extends ApiUserCommonController{
         $avg = round($sum/(count($resumeEvaluation)), 2);
         $recommend_info['interview_id'] = $interview_id;
         $recommend_info['auth_id'] = $auth_id;
-        if(UID != $resumeDetail['user_id']){
+        if($user_id != $resumeDetail['user_id']){
             if(!$is_open) $resumeDetail['mobile'] = '****';
             if($is_open) $resumeDetail['mobile'] = strval($resumeDetail['hide_mobile']);
         }
+        $userModel = D('Admin/User');
+        $user_type = $userModel->getUserField(array('user_id' => $user_id), 'user_type');
         $return = array('detail' => $resumeDetail, 'resume_work' => $resumeWorkList, 'resume_edu' => $resumeEduList, 'resume_evaluation' => $resumeEvaluation, 'evaluation_avg' => $avg, 'recruit_resume' => $recommend_info, 'is_open' => $is_open, 'introduce' => $introduced_detail, 'career_label' => $tags);
+        if(1 == $user_type){
+            $hr_voice = D('Admin/HrResume')->getHrResumeField(array('user_id' => $user_id, 'resume_id' => $resume_id), 'recommend_voice');
+            $return['hr_voice'] = $hr_voice;
+        }
         $this->apiReturn(V(1, '简历获取成功！', $return));
     }
 
@@ -1302,6 +1308,8 @@ class UserCenterApiController extends ApiUserCommonController{
         $resumeEvaluationModel = D('Admin/ResumeEvaluation');
         $resumeModel = D('Admin/Resume');
         $resumeWorkModel = D('Admin/ResumeWork');
+        $userModel = D('Admin/User');
+        $user_type = $userModel->getUserField(array('user_id' => UID), 'user_type');
         $where = array('resume_id' => $resume_id);
         $resume_where = array('id' => $resume_id);
         $resume_info = $resumeModel->getResumeInfo($resume_where);
@@ -1324,6 +1332,10 @@ class UserCenterApiController extends ApiUserCommonController{
         }
         unset($val);
         $return = array('evaluation' => $resumeEvaluation, 'avg' => $avg, 'work_list' => $resumeWorkList);
+        if(1 == $user_type){
+            $self = $resumeEvaluationModel->getResumeEvaluationInfo(array('resume_id' => $resume_id, 'user_id' => UID));
+            $return['self'] = $self;
+        }
         $this->apiReturn(V(1,  '评价详情获取成功！', $return));
     }
 

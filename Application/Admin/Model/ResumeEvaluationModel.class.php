@@ -70,4 +70,9 @@ class ResumeEvaluationModel extends Model {
         return $ret_arr;
     }
 
+    public function getResumeEvaluationInfo($where, $field = false){
+        $res = $this->where($where)->field($field)->find();
+        return $res;
+    }
+
 }

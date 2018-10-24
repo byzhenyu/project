@@ -5,6 +5,12 @@ use Common\Controller\CommonController;
  * 结算
  */
 class SettleController extends CommonController {
+    public function __construct(){
+        parent::__construct();
+        set_time_limit(0);
+        ini_set('memory_limit','3072M');
+    }
+
 
     /**
      * @desc 用户冻结金额/可提现金额变动
@@ -15,7 +21,6 @@ class SettleController extends CommonController {
         $account_time_limit = NOW_TIME - ( 5 * 86400);
         $account_where = array('diss' => 0, 'change_type' => array('in', array(2, 3, 6)), 'change_time' => array('lt', $account_time_limit));
         $now_time = NOW_TIME;
-        set_time_limit(0);
         $list = $account_model->getAccountLogFrozenList($account_where);
         foreach($list as &$val){
             $t_time_days = get_days($val['change_time'], $now_time);
@@ -40,4 +45,15 @@ class SettleController extends CommonController {
         }
         unset($val);
     }
+
+    /**
+     * @desc 悬赏30日自动入职
+     */
+    public function recruitInterview(){
+    }
+
+    /**
+     * @desc 未认证简历短信发送提醒
+     */
+    public function resumeAuth(){}
 }

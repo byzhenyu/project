@@ -84,4 +84,15 @@ class HrResumeModel extends Model {
         $list = $this->where($where)->group('hr_user_id')->field('hr_user_id,count(1) as number')->select();
         return $list;
     }
+
+    /**
+     * @desc 获取HR人才列表字段信息
+     * @param $where
+     * @param $field
+     * @return mixed
+     */
+    public function getHrResumeField($where, $field){
+        $res = $this->where($where)->getField($field);
+        return $res;
+    }
 }

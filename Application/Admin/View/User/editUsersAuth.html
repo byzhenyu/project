@@ -117,5 +117,11 @@
 	</div>
 </block>
 <block name="script">
-
+	<script type="text/javascript">
+		$(function(){
+		    $('img').click(function(){
+		        window.open($(this).attr('src'));
+			});
+		});
+	</script>
 </block>
