@@ -134,6 +134,7 @@ class RecruitApiController extends ApiUserCommonController{
             $where['_string'] = $map;
             $where['hr_user_id'] = array('neq', $user_id);
         }
+        $where['status'] = 1;
 
         $list = D('Admin/Recruit')->getRecruitList($where,'id, position_name, recruit_num, commission, add_time');
         $this->apiReturn(V(1, '悬赏列表', $list['info']));

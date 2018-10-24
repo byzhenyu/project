@@ -1445,6 +1445,7 @@ class UserCenterApiController extends ApiUserCommonController{
         if(count($where1) == 0) $map = $position_string;
         if(count($where2) == 0) $map = $area_string;
         $recruit_where = array('_string' => $map);
+        $recruit_where['status'] = 1;
         $recruit_list = $recruitModel->getRecruitList($recruit_where);
         $this->apiReturn(V(1, '悬赏列表获取成功！', $recruit_list['info']));
     }
