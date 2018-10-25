@@ -1428,6 +1428,15 @@ class UserCenterApiController extends ApiUserCommonController{
         $return = array('evaluation' => $resumeEvaluation, 'avg' => $avg, 'work_list' => $resumeWorkList);
         if(1 == $user_type){
             $self = $resumeEvaluationModel->getResumeEvaluationInfo(array('resume_id' => $resume_id, 'user_id' => UID));
+            if(!$self) {
+                $db = $resumeEvaluationModel->getDbFields();
+                $a_k = array_values($db);
+                $self = array();
+                foreach($a_k as &$a_keys){
+                    $self[$a_keys] = 0;
+                }
+                unset($a_keys);
+            }
             $return['self'] = $self;
         }
         $this->apiReturn(V(1,  '评价详情获取成功！', $return));
