@@ -1329,6 +1329,69 @@ class UserCenterApiController extends ApiUserCommonController{
     }
 
     /**
+     * @desc 简历详情 简历认证确认/放弃
+     */
+    public function detailResumeAuth(){
+        if(!check_is_auth(UID)){
+            $string = auth_string();
+            $error = '请先通过实名认证！';
+            if(false !== $string) $error = $string;
+            $this->apiReturn(V(0, $error));
+        }
+        $resume_id = I('post.resume_id');
+        $auth_result = I('post.auth_result');
+        if(!in_array($auth_result, array(1, 2))) $this->apiReturn(V(0, '认证状态有误！'));
+        $user_where = array('user_id' => UID);
+        $userModel = D('Admin/User');
+        $user_info = $userModel->getUserInfo($user_where);
+        $resume_auth_where = array('hr_mobile' => $user_info['mobile'], 'hr_id' => UID);
+        $resumeAuthModel = D('Admin/ResumeAuth');
+        $resume_auth_info = $resumeAuthModel->getResumeAuthInfo($resume_auth_where);
+        if(!$resume_auth_info) $this->apiReturn(V(0, '无法获取到对应的简历认证信息！'));
+        if($resume_auth_info['auth_result'] != 0) $this->apiReturn(V(0, '该简历已经被认证过！'));
+        $save_data['auth_result'] = $auth_result;
+        $save_data['auth_time'] = NOW_TIME;
+        M()->startTrans();
+        $res = $resumeAuthModel->saveResumeAuthData($resume_auth_where, $save_data);
+        if(1 == $auth_result){
+            if(false !== $res){
+                M()->commit();
+                $this->apiReturn(V(1, '认证操作成功！'));
+            }
+            else{
+                M()->rollback();
+                $this->apiReturn(V(0, '认证操作失败！'));
+            }
+        }
+        else{
+            $hr_resume_model = D('Admin/HrResume');
+            $data = array();
+            $data['hr_user_id'] = UID;
+            $data['resume_id'] = $resume_id;
+            $create = $hr_resume_model->create($data, 1);
+            if(false !== $create){
+                $hr_resume_result = $hr_resume_model->add($data);
+                if(false !== $hr_resume_result && false !== $res){
+                    $task_id = 5;
+                    add_task_log(UID, $task_id);
+                    add_key_operation(8, $resume_id);
+                    refreshUserTags(UID, $resume_id);
+                    M()->commit();
+                    $this->apiReturn(V(1, '认证操作成功！'));
+                }
+                else{
+                    M()->rollback();
+                    $this->apiReturn(V(0, $hr_resume_model->getError()));
+                }
+            }
+            else{
+                M()->rollback();
+                $this->apiReturn(V(0, $hr_resume_model->getError()));
+            }
+        }
+    }
+
+    /**
      * @desc 简历技能评分详情
      */
     public function resumeEvaluationDetail(){
