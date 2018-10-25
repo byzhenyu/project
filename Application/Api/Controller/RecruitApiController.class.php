@@ -68,9 +68,7 @@ class RecruitApiController extends ApiUserCommonController{
             $this->apiReturn(V(0, '悬赏工作描述中有违禁词！'));
         }
         $trans = M();
-        $data['hr_user_id'] = UID;
-
-        if ($model->create($data) ===false) {
+        if ($model->create($data, 1) ===false) {
             $trans->rollback();
             $this->apiReturn(V(0, $model->getError()));
         }

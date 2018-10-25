@@ -11,7 +11,6 @@ class RecruitModel extends Model {
     protected $updateFields = array('age', 'nature', 'sex', 'degree', 'language_ability', 'experience', 'job_area', 'base_pay', 'merit_pay', 'welfare', 'description', 'id', 'status', 'is_pos');
     protected $selectFields = array('*');
     protected $_validate = array(
-        array('hr_user_id', 'require', '发布人不能为空', 1, 'regex', 3),
         array('position_id', 'require', '请选择悬赏职位', 1, 'regex', 3),
         //array('commission,recruit_num', 'checkCommission', '悬赏佣金不足', 1, 'callback', 3),
         array('recruit_num', 'number', '请填写招聘人数', 1, 'regex', 3),
@@ -83,6 +82,7 @@ class RecruitModel extends Model {
 
     protected function _before_insert(&$data, $option) {
         $data['add_time'] = NOW_TIME;
+        $data['hr_user_id'] = UID;
     }
     protected function _before_update(&$data, $option) {
     }
@@ -125,7 +125,7 @@ class RecruitModel extends Model {
         $degreeArr = M('Education')->getField('id,education_name', true);
 
         $experience = C('WORK_EXP');
-        $info['degree'] = $degreeArr[$info['degree']].'或'.$degreeArr[$info['degree']].'以上';
+        $info['degree'] = $info['degree'].'或'.$info['degree'].'以上';
         $info['sex'] = $sexArr[$info['sex']];
         $info['experience'] = $experience[$info['experience']];
         $info['commission'] = fen_to_yuan($info['commission']);
