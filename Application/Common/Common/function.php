@@ -1128,7 +1128,13 @@ function add_task_log($user_id, $task_id, $task_name = ''){
     if(false !== $res){
         $task_reward = D('Admin/Task')->getTaskField(array('id' => $task_id), 'reward');
         account_log($user_id, $task_reward, 6, '任务所得', $res);
-        D('Admin/User')->increaseUserFieldNum($user_id, 'frozen_money', $task_reward);//暂冻结
+        //任务所得令牌直接可以提现
+        if(1 == $task_id){//实名认证奖励先冻结/后台通过之后进入可提现余额
+            D('Admin/User')->increaseUserFieldNum($user_id, 'frozen_money', $task_reward);
+        }
+        else{
+            D('Admin/User')->increaseUserFieldNum($user_id, 'withdrawable_amount', $task_reward);
+        }
     }
     return $res;
 }

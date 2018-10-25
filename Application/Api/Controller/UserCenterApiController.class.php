@@ -1943,7 +1943,8 @@ class UserCenterApiController extends ApiUserCommonController{
         $wx_code = I('wx_code', '', 'trim');
         $open_id = getOpenId($wx_code);
         $user_model = D('Admin/User');
-        $user_info = $user_model->getUserInfo(array('wx' => $open_id));
+        $user_type = $user_model->getUserField(array('user_id' => UID), 'user_type');
+        $user_info = $user_model->getUserInfo(array('wx' => $open_id, 'user_type' => $user_type));
         if($user_info) $this->apiReturn(V(0, '账号已被其他账号绑定！'));
         $save = array('wx' => $open_id);
         $save_res = $user_model->saveUserData(array('user_id' => $user_id), $save);

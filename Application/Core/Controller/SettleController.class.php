@@ -19,7 +19,7 @@ class SettleController extends CommonController {
         $account_model = D('Admin/AccountLog');
         $user_model = D('Admin/User');
         $account_time_limit = NOW_TIME - ( 5 * 86400);
-        $account_where = array('diss' => 0, 'change_type' => array('in', array(2, 3, 6)), 'change_time' => array('lt', $account_time_limit));
+        $account_where = array('diss' => 0, 'change_type' => array('in', array(2, 3)), 'change_time' => array('lt', $account_time_limit));
         $now_time = NOW_TIME;
         $list = $account_model->getAccountLogFrozenList($account_where);
         foreach($list as &$val){
