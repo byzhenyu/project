@@ -122,7 +122,7 @@ class RecruitModel extends Model {
             ->find();
         $sexArr = array('0'=>'不限','1'=>'男','2'=>'女');
 
-        $degreeArr = M('Education')->getField('id,education_name', true);
+        //$degreeArr = M('Education')->getField('id,education_name', true);
 
         $experience = C('WORK_EXP');
         $info['degree'] = $info['degree'].'或'.$info['degree'].'以上';
