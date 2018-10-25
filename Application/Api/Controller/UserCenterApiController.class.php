@@ -682,7 +682,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $user_tags = explode(',', $user_tags);
         if(4 == $type){
             $list = D('Admin/QuestionType')->getQuestionTypeList(array(), true, 'id,type_name as tags_name');
-            array_unshift($list, array('id' => 0, 'tags_name' => '全部'));
+            array_unshift($list, array('id' => 0, 'tags_name' => '所有人'));
         }
         else{
             $model = D('Admin/Tags');
@@ -691,7 +691,7 @@ class UserCenterApiController extends ApiUserCommonController{
         }
         foreach($list as &$val){
             $val['sel'] = 0;
-            if(in_array($val['id'], $user_tags)) $val['sel'] = 1;
+            if(in_array($val['id'], $user_tags) && 4 != $type) $val['sel'] = 1;
         }
         unset($val);
         $this->apiReturn(V(1, '标签列表获取成功！', $list));
