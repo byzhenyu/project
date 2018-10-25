@@ -107,7 +107,12 @@ class UserController extends CommonController {
                 if($auth_data['audit_status'] == 2 && !$auth_data['audit_desc']) $this->ajaxReturn(V(0, '审核意见不能为空！'));
                 $result = M('User')->where($where)->save($data);
                 $auth_res = M('UserAuth')->where($where)->save($auth_data);
-                if(false !== $result && false !== $auth_res) $this->ajaxReturn(V(1, '操作成功'));
+                if(false !== $result && false !== $auth_res){
+                    $account = D('Admin/AccountLog')->where(array('user_id' => $id, 'change_type' => 6))->getField('user_money');
+                    D('Admin/User')->decreaseUserFieldNum($id, 'frozen_money', $account);
+                    D('Admin/User')->increaseUserFieldNum($id, 'withdrawable_amount', $account);
+                    $this->ajaxReturn(V(1, '操作成功'));
+                }
                 $this->ajaxReturn(V(0, '修改失败请稍后重试！'));
             }
             else{
