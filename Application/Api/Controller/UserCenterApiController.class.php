@@ -955,8 +955,8 @@ class UserCenterApiController extends ApiUserCommonController{
         $data = I('post.');
         $data['user_id'] = UID;
         $model = D('Admin/ResumeWork');
-        if(!$data['resume_id']) $data['resume_id'] = D('Admin/Resume')->getResumeField(array('user_id' => UID), 'id');
-        if(!$data['resume_id']) $this->apiReturn(V(0, '请先添加简历！'));
+        if($data['resume_id'] < 1) $data['resume_id'] = D('Admin/Resume')->getResumeField(array('user_id' => UID), 'id');
+        if($data['resume_id'] < 1) $this->apiReturn(V(0, '请先添加简历！'));
         $hr_mobile = $data['mobile'];
         $hr_name = $data['hr_name'];
         $data['starttime'] = strtotime($data['starttime']);
@@ -1052,7 +1052,8 @@ class UserCenterApiController extends ApiUserCommonController{
      */
     public function writeResumeEdu(){
         $data = I('post.');
-        if(!$data['resume_id']) $data['resume_id'] = D('Admin/Resume')->getResumeField(array('user_id' => UID), 'id');
+        if($data['resume_id'] < 1) $data['resume_id'] = D('Admin/Resume')->getResumeField(array('user_id' => UID), 'id');
+        if($data['resume_id'] < 1) $this->apiReturn(V(0, '请先添加简历！'));
         $model = D('Admin/ResumeEdu');
         $data['starttime'] = strtotime($data['starttime']);
         $data['endtime'] = strtotime($data['endtime']);
