@@ -15,7 +15,7 @@ class RecruitResumeModel extends Model {
         array('recruit_hr_uid', 'require', '发布悬赏的hr有误', 1, 'regex', 3),
         array('resume_id', 'require', '简历id有误', 1, 'regex', 3),
         array('hr_user_id', 'number', '推荐人用户信息有误', 1, 'regex', 3),
-        array('recommend_label', 'require', '请选择推荐标签', 1, 'regex', 3),
+        //array('recommend_label', 'require', '请选择推荐标签', 1, 'regex', 3),
         //array('recommend_voice', 'require', '推荐语有误', 1, 'regex', 3),
 
     );
