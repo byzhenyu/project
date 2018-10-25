@@ -280,6 +280,7 @@ class UserCenterApiController extends ApiUserCommonController{
         else{
             $where['a.question_type'] = 0;
         }
+        $where['_string'] = 'or user_id = '.UID;
         if ($keywords) $where['question_title'] = array('like', '%' . $keywords . '%');
         $model = D('Admin/Question');
         $field = 'u.nickname,u.head_pic,a.id,a.like_number,a.browse_number,a.answer_number,a.add_time,a.question_title';
