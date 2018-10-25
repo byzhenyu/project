@@ -593,23 +593,36 @@ class RecruitApiController extends ApiUserCommonController{
     /**
      * @desc 悬赏暂存数据
      */
-    public function getRecruitCacheInfo(){
+    public function getRecruitCacheInfo()
+    {
         $where = array('hr_user_id' => UID);
         $model = D('Admin/RecruitCache');
         $cache = $model->getRecruitCacheInfo($where);
-        if(!$cache){
+        if (!$cache) {
             $field = $model->getDbFields();
             unset($field[0]);
             unset($field[1]);
             $data = array();
-            foreach($field as &$val){
+            foreach ($field as &$val) {
                 $data[$val] = '';
             }
             unset($val);
-        }
-        else{
+        } else {
             $data = $cache;
         }
         $this->apiReturn(V(1, '', $data));
+    }
+
+    public function getRecruitShareInfo(){
+        $recruit_id = I('recruit_id', 0, 'intval');
+        $model = D('Admin/Recruit');
+        $where = array('id' => $recruit_id);
+        $info = $model->getRecruitInfo($where, 'id,position_name,job_area,base_pay,merit_pay,commission,recruit_num');
+        $company_name = D('Admin/CompanyInfo')->getCompanyInfoField(array('user_id' => UID), 'company_name');
+        $info['company_name'] = $company_name;
+        $info['position_name'] = '招聘'. $info['position_name'];
+        $info['base_pay'] = $info['base_pay'].'-'. ($info['base_pay'] + $info['merit_pay']).'/月';
+        $info['commission'] = fen_to_yuan($info['recruit_num'] * $info['commission']);
+        $this->apiReturn(V(1, '', $info));
     }
 }
