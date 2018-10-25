@@ -236,8 +236,12 @@ class PublicApiController extends ApiCommonController
         $field = 'title,content';
         $info = $model->getArticleInfo($where, $field);
         $info['content'] = htmlspecialchars_decode($info['content']);
-        if($type == 1 || $type == 2) $this->display('getarticleinfo');
-        $this->apiReturn(V(1,'', $info));
+        if($type == 1 || $type == 2){
+            $this->display('getarticleinfo');
+        }
+        else{
+            $this->apiReturn(V(1,'', $info));
+        }
     }
 
     /**
