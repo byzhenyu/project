@@ -237,12 +237,22 @@ class PublicApiController extends ApiCommonController
         $info = $model->getArticleInfo($where, $field);
         $info['content'] = htmlspecialchars_decode($info['content']);
         if($type == 1 || $type == 2){
-            $this->data = $info;
-            $this->display('getarticleinfo');
+            $this->apiReturn(V(1, '', C('IMG_SERVER').'/index.php/Api/PublicApi/articleInfo/type/'.$type));
         }
         else{
             $this->apiReturn(V(1,'', $info));
         }
+    }
+
+    public function articleInfo(){
+        $type = I('type', 1, 'intval');
+        $where = array('article_cat_id' => $type);
+        $model = D('Admin/Article');
+        $field = 'title,content';
+        $info = $model->getArticleInfo($where, $field);
+        $info['content'] = htmlspecialchars_decode($info['content']);
+        $this->data = $info;
+        $this->display('getarticleinfo');
     }
 
     /**
