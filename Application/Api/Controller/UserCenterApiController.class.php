@@ -960,6 +960,7 @@ class UserCenterApiController extends ApiUserCommonController{
         if($data['resume_id'] < 1) $this->apiReturn(V(0, '请先添加简历！'));
         $hr_mobile = $data['mobile'];
         $hr_name = $data['hr_name'];
+        if(!$data['endtime']) $data['is_current'] = 1;
         $data['starttime'] = strtotime($data['starttime']);
         $data['endtime'] = strtotime($data['endtime']);
         if($data['is_current'] == 1) $data['endtime'] = 0;
@@ -1056,6 +1057,7 @@ class UserCenterApiController extends ApiUserCommonController{
         if($data['resume_id'] < 1) $data['resume_id'] = D('Admin/Resume')->getResumeField(array('user_id' => UID), 'id');
         if($data['resume_id'] < 1) $this->apiReturn(V(0, '请先添加简历！'));
         $model = D('Admin/ResumeEdu');
+        if(!$data['endtime']) $data['is_current'] = 1;
         $data['starttime'] = strtotime($data['starttime']);
         $data['endtime'] = strtotime($data['endtime']);
         if($data['is_current'] == 1) $data['endtime'] = 0;

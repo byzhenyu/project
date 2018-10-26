@@ -17,7 +17,6 @@ class StatisticController extends CommonController {
         $user_statistic_help = array(1 => 'days', 2 => 'weeks', 3 => 'months', 4 => 'years');
         $user_statistic_keys = array_keys($user_statistic_help);
         $where = array();
-
         //用户日/周/月/年注册统计/城市注册量分布统计
         if(1 == $type){
             $user_statistic = array();
@@ -33,28 +32,8 @@ class StatisticController extends CommonController {
             $statistic_y = array_values($user_statistic);
             $this->statistic_x = json_encode($statistic_x);
             $this->statistic_y = json_encode($statistic_y);
-            $where = array();
-            $user_city_statistic = $user_model->userStatistic($where, false, 2);
-            $city_name_arr = array();
-            foreach($user_city_statistic as &$val){
-                $city_name_arr[] = $val['city_name'];
-            }
-            unset($val);
-            $user_city_return = array();
-            $user_city_return['name'] = $city_name_arr;
-            $user_city_data_array = array();
-            foreach($city_name_arr as &$city_val){
-                foreach($user_city_statistic as &$statistic_val){
-                    if($statistic_val['city_name'] == $city_val){
-                        $user_city_data_array[] = array(
-                            'name' => $city_val,
-                            'value' => $statistic_val['user_statistic']
-                        );
-                        break;
-                    }
-                }
-            }
-            $user_city_return['data'] = $user_city_data_array;
+            //用户分布城市
+            $user_city_return = $this->user_city_statistic();
             $this->result = json_encode($user_city_return);
         }
 
@@ -70,7 +49,7 @@ class StatisticController extends CommonController {
 
         //悬赏城市分布统计
         if(2 == $type){
-            $recruit_sql = 'select count(1) as number,city_name from (SELECT a.id, SUBSTRING_INDEX(SUBSTRING_INDEX(a.job_area, \',\', b.help_topic_id + 1 ), \',\' ,- 1 ) AS city_name FROM ln_recruit a LEFT JOIN mysql.help_topic b ON b.help_topic_id < (LENGTH(a.job_area) - LENGTH(REPLACE(a.job_area, \',\', \'\')) + 1)) as tem group by city_name';
+            $recruit_sql = 'select count(1) as number,city_name from (SELECT a.id, SUBSTRING_INDEX(SUBSTRING_INDEX(a.job_area, \'|\', b.help_topic_id + 1 ), \'|\' ,- 1 ) AS city_name FROM ln_recruit a LEFT JOIN mysql.help_topic b ON b.help_topic_id < (LENGTH(a.job_area) - LENGTH(REPLACE(a.job_area, \'|\', \'\')) + 1)) as tem group by city_name';
             $model = M();
             //悬赏统计
             $recruit_statistic = $model->query($recruit_sql);
@@ -263,6 +242,59 @@ class StatisticController extends CommonController {
     }
 
     /**
+     * @desc 统计下载
+     * @extra 1、用户分布城市数量导出 2、悬赏统计导出 3、推荐统计导出 4、佣金统计导出
+     */
+    public function statisticExport(){
+        $type = I('type', 1, 'intval');
+        if(1 == $type){
+            $user_city_statistic = $this->user_city_statistic();
+            $name = $user_city_statistic['name'];
+            $title_array = array('城市名称', '注册数量');
+            $arr = array();
+            $name_keys = array_keys($name);
+            foreach($name_keys as &$val){
+                $arr[] = array($name[$val], $user_city_statistic['data'][$val]['value']);
+            }
+            unset($val);
+            array_unshift($arr, $title_array);
+            create_xls($arr, '闪荐科技用户分布城市统计.xls', '闪荐科技用户分布城市统计', '闪荐科技用户分布城市统计', array('A', 'B'));
+        }
+    }
+
+    /**
+     * @desc 用户分布城市数量统计
+     * @return array
+     */
+    private function user_city_statistic(){
+        $user_model = D('Admin/User');
+        $where = array();
+        $user_city_statistic = $user_model->userStatistic($where, false, 2);
+        $city_name_arr = array();
+        foreach($user_city_statistic as &$val){
+            if(!$val['city_name']) continue;
+            $city_name_arr[] = $val['city_name'];
+        }
+        unset($val);
+        $user_city_return = array();
+        $user_city_return['name'] = $city_name_arr;
+        $user_city_data_array = array();
+        foreach($city_name_arr as &$city_val){
+            foreach($user_city_statistic as &$statistic_val){
+                if($statistic_val['city_name'] == $city_val){
+                    $user_city_data_array[] = array(
+                        'name' => $city_val,
+                        'value' => $statistic_val['user_statistic']
+                    );
+                    break;
+                }
+            }
+        }
+        $user_city_return['data'] = $user_city_data_array;
+        return $user_city_return;
+    }
+
+    /**
      * @desc 时间生成
      * @param $type 1、本日 2、本周 3、本月 4、本年
      * @return array
@@ -295,10 +327,4 @@ class StatisticController extends CommonController {
         }
         return array('start' => $start, 'end' => $end);
     }
-
-    /**
-     * @desc 统计下载
-     * @extra TODO
-     */
-    public function statisticExport(){}
 }
