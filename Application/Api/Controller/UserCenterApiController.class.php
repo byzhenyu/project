@@ -225,6 +225,7 @@ class UserCenterApiController extends ApiUserCommonController{
     public function getQuestionTypeList(){
         $model = D('Admin/QuestionType');
         $list = $model->getQuestionTypeList();
+        array_unshift($list['info'], array('id' => 0, 'type_name' => '所有领域', 'sort' => 1));
         $this->apiReturn(V(1, '问题类型列表获取成功！', $list['info']));
     }
 
@@ -693,7 +694,6 @@ class UserCenterApiController extends ApiUserCommonController{
             if(in_array($val['id'], $user_tags)) $val['sel'] = 1;
         }
         unset($val);
-        array_unshift($list, array('id' => 0, 'tags_name' => '所有领域', 'sel' => 0));
         $this->apiReturn(V(1, '标签列表获取成功！', $list));
     }
 
