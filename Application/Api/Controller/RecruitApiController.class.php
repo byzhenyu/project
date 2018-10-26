@@ -635,4 +635,14 @@ class RecruitApiController extends ApiUserCommonController{
         $info['commission'] = fen_to_yuan($info['recruit_num'] * $info['commission']);
         $this->apiReturn(V(1, '', $info));
     }
+
+    /**
+     * @desc 悬赏分享
+     */
+    public function shareRecruit(){
+        $id = I('recruit_id', 0, 'intval');
+        $res = D('Admin/Recruit')->where(array('id' => $id))->setInc('share');
+        if(false !== $res) $this->apiReturn(V(1, ''));
+        $this->apiReturn(V(0, ''));
+    }
 }
