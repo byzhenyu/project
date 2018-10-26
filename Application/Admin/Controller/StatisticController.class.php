@@ -39,41 +39,14 @@ class StatisticController extends CommonController {
 
         //悬赏总计押金
         if(in_array($type, array(2, 4))){
-            $account_model = D('Admin/AccountLog');
-            $in_amount_where = array('change_type' => 4);
-            $out_amount_where = array('change_type' => 5);
-            $in_amount = $account_model->getAccountLogMoneySum($in_amount_where);
-            $out_amount = $account_model->getAccountLogMoneySum($out_amount_where);
-            $total_amount = fen_to_yuan($in_amount - $out_amount);
+            $total_amount = $this->recruit_total_amount();
         }
 
         //悬赏城市分布统计
         if(2 == $type){
-            $recruit_sql = 'select count(1) as number,city_name from (SELECT a.id, SUBSTRING_INDEX(SUBSTRING_INDEX(a.job_area, \'|\', b.help_topic_id + 1 ), \'|\' ,- 1 ) AS city_name FROM ln_recruit a LEFT JOIN mysql.help_topic b ON b.help_topic_id < (LENGTH(a.job_area) - LENGTH(REPLACE(a.job_area, \'|\', \'\')) + 1)) as tem group by city_name';
-            $model = M();
-            //悬赏统计
-            $recruit_statistic = $model->query($recruit_sql);
-            $city_name_arr = array();
-            foreach($recruit_statistic as &$val){
-                $city_name_arr[] = $val['city_name'];
-            }
-            unset($val);
-            $recruit_statistic_result = array();
-            $recruit_statistic_result['name'] = $city_name_arr;
-            $recruit_data_array = array();
-            foreach($city_name_arr as &$city_val){
-                foreach($recruit_statistic as &$statistic_val){
-                    if($statistic_val['city_name'] == $city_val){
-                        $recruit_data_array[] = array('value' => $statistic_val['number'], 'name' => $city_val);
-                        break;
-                    }
-                }
-            }
-            unset($city_val);
-            unset($statistic_val);
+            $recruit_data_array = $this->recruit_city_statistic();
             $recruit_statistic_result['data'] = $recruit_data_array;
-            $recruit_where = array('last_token' => array('gt', 0));
-            $recruit_number = D('Admin/Recruit')->getRecruitCount($recruit_where);
+            $recruit_number = $this->recruit_total_number();
             $this->recruit_number = $recruit_number;
             $this->recruit_amount = $total_amount;
             $this->result = json_encode($recruit_statistic_result);
@@ -141,44 +114,7 @@ class StatisticController extends CommonController {
         //悬赏佣金统计
         if(4 == $type){
             //已结算佣金
-            $account_statistic = array();
-            foreach($user_statistic_keys as &$val){
-                $t_account_time = $this->mk_time($val);
-                $t_account_where = array('change_time' => array('between', array($t_account_time['start'], $t_account_time['end'])), 'change_type' => array('in', array(2, 3, 4, 5)));
-                $t_plat_money = 0;
-                $t_recruit_money = 0;
-                $t_back_money = 0;
-                $t_share_money = 0;
-                $t_account_list = $account_model->getAccountLogSum($t_account_where);
-                foreach($t_account_list as &$list_val){
-                    if(0 == $list_val['user_id'] && in_array($list_val['change_type'], array(2, 3))){
-                        $t_plat_money += $list_val['user_money'];
-                        continue;
-                    }
-                    if(in_array($list_val['change_type'], array(2, 3))) {
-                        $t_share_money += $list_val['user_money'];
-                        continue;
-                    }
-                    if(4 == $list_val['change_type']){
-                        $t_recruit_money += $list_val['user_money'];
-                        continue;
-                    }
-                    if(5 == $list_val['change_type']){
-                        $t_back_money += $list_val['user_money'];
-                        continue;
-                    }
-                }
-                $t_total_money = $t_recruit_money - $t_back_money;
-                $t_plat_money = fen_to_yuan($t_plat_money);
-                $t_share_money = fen_to_yuan($t_share_money);
-                $t_total_money = fen_to_yuan($t_total_money);
-                $account_statistic[] = array(
-                    'keys' => $user_statistic_help[$val],
-                    $user_statistic_help[$val] => $t_total_money,
-                    'plat' => $t_plat_money,
-                    'share' => $t_share_money
-                );
-            }
+            $account_statistic = $this->account_statistic($user_statistic_keys, $user_statistic_help);
             unset($list_val);
             unset($val);
             $statistic_y = array_values($user_statistic_help);
@@ -198,40 +134,11 @@ class StatisticController extends CommonController {
             unset($d_val);
             unset($val);
             //待结算佣金
-            $recruit_model = D('Admin/Recruit');
-            $pending_where = array('last_token' => array('gt', 0));
-            $pending_field = 'recruit_num,sum(commission) as commission,sum(get_resume_token) as resume_token,sum(entry_token) as entry_token';
-            $pending_y = array();
-            $pending_plat = array();
-            $pending_total = array();
-            $pending_share = array();
-            $recruit_radio = C('RATIO');
-            $max_resume = C('MAX_RESUME');
-            foreach($user_statistic_keys as &$val){
-                $t_recruit_time = $this->mk_time($val);
-                $pending_where['add_time'] = array('between', array($t_recruit_time['start'], $t_recruit_time['end']));
-                $pendingSel = $recruit_model->getRecruitPendingSel($pending_where, $pending_field);
-                $pending_y[] = $user_statistic_help[$val];
-                $t_pending_total = 0;
-                $t_pending_plat = 0;
-                $t_pending_share = 0;
-                foreach($pendingSel as &$sel_val){
-                    $t_share = $max_resume * ($sel_val['resume_token']) + ($sel_val['recruit_num'] * $sel_val['entry_token']);
-                    $t_pending_total += fen_to_yuan($sel_val['commission']);
-                    $t_pending_share += fen_to_yuan($t_share);
-                    $t_pending_plat += fen_to_yuan($t_share * $recruit_radio / 100);
-                }
-                $pending_total[] = $t_pending_total;
-                $pending_plat[] = $t_pending_plat;
-                $pending_share[] = $t_pending_share;
-            }
-            unset($sel_val);
-            unset($val);
-
-            $this->pending_y = json_encode($pending_y);
-            $this->pending_total = json_encode($pending_total);
-            $this->pending_share = json_encode($pending_share);
-            $this->pending_plat = json_encode($pending_plat);
+            $pending_arr = $this->pending_account_statistic($user_statistic_keys, $user_statistic_help);
+            $this->pending_y = json_encode($pending_arr['y']);
+            $this->pending_total = json_encode($pending_arr['total']);
+            $this->pending_share = json_encode($pending_arr['share']);
+            $this->pending_plat = json_encode($pending_arr['plat']);
             $this->total_statistic = $total_amount;
             $this->statistic_y = json_encode($statistic_y);
             $this->plat_s = json_encode($plat_arr);
@@ -259,6 +166,41 @@ class StatisticController extends CommonController {
             unset($val);
             array_unshift($arr, $title_array);
             create_xls($arr, '闪荐科技用户分布城市统计.xls', '闪荐科技用户分布城市统计', '闪荐科技用户分布城市统计', array('A', 'B'));
+        }
+        if(2 == $type){
+            $recruit_city_statistic = $this->recruit_city_statistic();
+            $total_amount = $this->recruit_total_amount();
+            $recruit_number = $this->recruit_total_number();
+            $amount = array('悬赏总金额', $total_amount);
+            $number = array('悬赏数量', $recruit_number);
+            $city = array('城市名称', '悬赏数量');
+            $arr = array();
+            foreach($recruit_city_statistic as &$val){
+                $arr[] = array($val['name'], $val['value']);
+            }
+            unset($val);
+            array_unshift($arr, $amount, $number, $city);
+            create_xls($arr, '闪荐科技悬赏城市分布情况统计.xls', '闪荐科技悬赏城市分布情况统计', '闪荐科技悬赏城市分布情况统计', array('A', 'B'));
+        }
+        if(4 == $type){
+            $user_statistic_help = array(1 => 'days', 2 => 'weeks', 3 => 'months', 4 => 'years');
+            $user_statistic_keys = array_keys($user_statistic_help);
+            $account_statistic = $this->account_statistic($user_statistic_keys, $user_statistic_help);
+            $account_title_array = array('已结算', '总赏金', '平台可得', '分享方可得');
+            $private_help = array('days' => '日结算', 'weeks' => '周结算', 'months' => '月结算', 'years' => '年度结算');
+            $pending_statistic = $this->pending_account_statistic($user_statistic_keys, $user_statistic_help);
+            $arr = array();
+            foreach($account_statistic as &$val){
+                $arr[] = array($private_help[$val['keys']], $val[$val['keys']], $val['plat'], $val['share']);
+            }
+            unset($val);
+            array_unshift($arr, $account_title_array);
+            array_push($arr, array('待结算', '总赏金', '平台可得', '分享方可得'));
+            foreach($user_statistic_keys as &$val){
+                array_push($arr, array($private_help[$user_statistic_help[$val]], $pending_statistic['total'][$val-1], $pending_statistic['plat'][$val-1], $pending_statistic['share'][$val-1]));
+            }
+            unset($val);
+            create_xls($arr, '闪荐科技悬赏佣金统计.xls', '闪荐科技悬赏佣金统计', '闪荐科技悬赏佣金统计', array('A', 'B', 'C', 'D'));
         }
     }
 
@@ -292,6 +234,152 @@ class StatisticController extends CommonController {
         }
         $user_city_return['data'] = $user_city_data_array;
         return $user_city_return;
+    }
+
+    /**
+     * @desc 悬赏城市分布
+     * @return array
+     */
+    private function recruit_city_statistic(){
+        $recruit_sql = 'select count(1) as number,city_name from (SELECT a.id, SUBSTRING_INDEX(SUBSTRING_INDEX(a.job_area, \'|\', b.help_topic_id + 1 ), \'|\' ,- 1 ) AS city_name FROM ln_recruit a LEFT JOIN mysql.help_topic b ON b.help_topic_id < (LENGTH(a.job_area) - LENGTH(REPLACE(a.job_area, \'|\', \'\')) + 1)) as tem group by city_name';
+        $model = M();
+        //悬赏统计
+        $recruit_statistic = $model->query($recruit_sql);
+        $city_name_arr = array();
+        foreach($recruit_statistic as &$val){
+            $city_name_arr[] = $val['city_name'];
+        }
+        unset($val);
+        $recruit_statistic_result = array();
+        $recruit_statistic_result['name'] = $city_name_arr;
+        $recruit_data_array = array();
+        foreach($city_name_arr as &$city_val){
+            foreach($recruit_statistic as &$statistic_val){
+                if($statistic_val['city_name'] == $city_val){
+                    $recruit_data_array[] = array('value' => $statistic_val['number'], 'name' => $city_val);
+                    break;
+                }
+            }
+        }
+        unset($city_val);
+        unset($statistic_val);
+        return $recruit_data_array;
+    }
+
+    /**
+     * @desc 悬赏总金额
+     * @return string
+     */
+    private function recruit_total_amount(){
+        $account_model = D('Admin/AccountLog');
+        $in_amount_where = array('change_type' => 4);
+        $out_amount_where = array('change_type' => 5);
+        $in_amount = $account_model->getAccountLogMoneySum($in_amount_where);
+        $out_amount = $account_model->getAccountLogMoneySum($out_amount_where);
+        $total_amount = fen_to_yuan($in_amount - $out_amount);
+        return $total_amount;
+    }
+
+    /**
+     * @desc 悬赏数量
+     * @return mixed
+     */
+    private function recruit_total_number(){
+        $recruit_where = array('last_token' => array('gt', 0));
+        $recruit_number = D('Admin/Recruit')->getRecruitCount($recruit_where);
+        return $recruit_number;
+    }
+
+    /**
+     * @desc
+     * @param $user_statistic_keys
+     * @param $user_statistic_help
+     * @return array
+     */
+    private function account_statistic($user_statistic_keys, $user_statistic_help){
+        $account_model = D('Admin/AccountLog');
+        $account_statistic = array();
+        foreach($user_statistic_keys as &$val){
+            $t_account_time = $this->mk_time($val);
+            $t_account_where = array('change_time' => array('between', array($t_account_time['start'], $t_account_time['end'])), 'change_type' => array('in', array(2, 3, 4, 5)));
+            $t_plat_money = 0;
+            $t_recruit_money = 0;
+            $t_back_money = 0;
+            $t_share_money = 0;
+            $t_account_list = $account_model->getAccountLogSum($t_account_where);
+            foreach($t_account_list as &$list_val){
+                if(0 == $list_val['user_id'] && in_array($list_val['change_type'], array(2, 3))){
+                    $t_plat_money += $list_val['user_money'];
+                    continue;
+                }
+                if(in_array($list_val['change_type'], array(2, 3))) {
+                    $t_share_money += $list_val['user_money'];
+                    continue;
+                }
+                if(4 == $list_val['change_type']){
+                    $t_recruit_money += $list_val['user_money'];
+                    continue;
+                }
+                if(5 == $list_val['change_type']){
+                    $t_back_money += $list_val['user_money'];
+                    continue;
+                }
+            }
+            $t_total_money = $t_recruit_money - $t_back_money;
+            $t_plat_money = fen_to_yuan($t_plat_money);
+            $t_share_money = fen_to_yuan($t_share_money);
+            $t_total_money = fen_to_yuan($t_total_money);
+            $account_statistic[] = array(
+                'keys' => $user_statistic_help[$val],
+                $user_statistic_help[$val] => $t_total_money,
+                'plat' => $t_plat_money,
+                'share' => $t_share_money
+            );
+        }
+        return $account_statistic;
+    }
+
+    /**
+     * @desc 待结算赏金
+     * @param $user_statistic_keys
+     * @param $user_statistic_help
+     * @return array
+     */
+    private function pending_account_statistic($user_statistic_keys, $user_statistic_help){
+        $recruit_model = D('Admin/Recruit');
+        $pending_where = array('last_token' => array('gt', 0), 'status' => 1);
+        $pending_field = 'recruit_num,sum(commission*recruit_num) as commission,sum(get_resume_token*recruit_num) as resume_token,sum(entry_token*recruit_num) as entry_token';
+        $pending_y = array();
+        $pending_plat = array();
+        $pending_total = array();
+        $pending_share = array();
+        $recruit_radio = C('RATIO');
+        foreach($user_statistic_keys as &$val){
+            $t_recruit_time = $this->mk_time($val);
+            $pending_where['add_time'] = array('between', array($t_recruit_time['start'], $t_recruit_time['end']));
+            $pendingSel = $recruit_model->getRecruitPendingSel($pending_where, $pending_field);
+            $pending_y[] = $user_statistic_help[$val];
+            $t_pending_total = 0;
+            $t_pending_plat = 0;
+            $t_pending_share = 0;
+            foreach($pendingSel as &$sel_val){
+                $t_share = $sel_val['resume_token'] + $sel_val['entry_token'];
+                $t_pending_total += fen_to_yuan($sel_val['commission']);
+                $t_pending_plat += fen_to_yuan($t_share * $recruit_radio / 100);
+                $t_pending_share += fen_to_yuan($t_share * (1 - $recruit_radio / 100));
+            }
+            $pending_total[] = $t_pending_total;
+            $pending_plat[] = $t_pending_plat;
+            $pending_share[] = $t_pending_share;
+        }
+        unset($sel_val);
+        unset($val);
+        return array(
+            'total' => $pending_total,
+            'plat' => $pending_plat,
+            'share' => $pending_share,
+            'y' => $pending_y
+        );
     }
 
     /**
