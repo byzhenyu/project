@@ -41,9 +41,10 @@ class TaskLogModel extends Model {
     /**
      * @desc 检测任务是否还可以完成送令牌
      * @param $task_id int 任务id
+     * @param $user_id int 用户id
      * @return bool
      */
-    public function validTaskNumber($task_id){
+    public function validTaskNumber($task_id, $user_id = UID){
         $task_info = D('Admin/Task')->getTaskInfo(array('id' => $task_id));
         switch($task_info['type']){
             case 1://本日
@@ -60,9 +61,13 @@ class TaskLogModel extends Model {
                 $start_time = mktime(0,0,0,date('m'),1,date('Y'));
                 $end_time = mktime(23,59,59,date('m'),date('t'),date('Y'));
                 break;
+            case 0:
+                $start_time = 0;
+                $end_time = 0;
+                break;
             default: return true;
         }
-        $where = array('finish_time' => array('between', array($start_time, $end_time)), 'task_id' => $task_id);
+        $where = array('finish_time' => array('between', array($start_time, $end_time)), 'task_id' => $task_id, 'user_id' => $user_id);
         if($task_info['type'] == 0) unset($where['finish_time']);//永久限制任务
         $log_number = $this->where($where)->count();
         if($log_number >= $task_info['type_number']) return false;
