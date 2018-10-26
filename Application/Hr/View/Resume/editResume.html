@@ -136,6 +136,7 @@
                                     </select>
                                     <select data-am-selected="{searchBox: 1, maxHeight: '180px'}" style="display: none;" name="job_intension" id="job_intension">
                                     </select>
+                                    <input type="hidden" id="position_id" name="position_id" value="{$info['position_id']}">
                                 </td>
                             </tr>
 
@@ -221,6 +222,10 @@
                     }
                     $('#job_intension').val({$info['position_id']});
                 });
+            });
+            $('#job_intension').change(function(){
+                var position_id = $(this).val();
+                $('#position_id').val(position_id);
             });
         });
     </script>
