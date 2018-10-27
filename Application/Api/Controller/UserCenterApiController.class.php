@@ -1219,7 +1219,9 @@ class UserCenterApiController extends ApiUserCommonController{
         $avg = round($sum/(count($resumeEvaluation)), 2);
         $recommend_info['interview_id'] = $interview_id;
         $recommend_info['auth_id'] = $auth_id;
-        if($user_id != $resumeDetail['user_id']){
+        $hrModel = D('Admin/HrResume');
+        $hr_info = $hrModel->getHrResumeInfo(array('hr_user_id' => UID, 'resume_id' => $resume_id));
+        if($user_id != $resumeDetail['user_id'] && !$hr_info){
             if(!$is_open) $resumeDetail['mobile'] = '****';
             if($is_open) $resumeDetail['mobile'] = strval($resumeDetail['hide_mobile']);
         }
