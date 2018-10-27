@@ -839,7 +839,7 @@ class UserCenterApiController extends ApiUserCommonController{
             'user_id' => UID,
             'money' => $amount,
             'type' => 1,
-            'payment' => 1,
+            'payment' => 3,
             'brank_no' => $bank_info['bank_num'],
             'brank_name' => $bank_info['bank_name'],
             'brank_user_name' => $bank_info['cardholder'],

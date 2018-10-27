@@ -35,6 +35,7 @@ class ResumeModel extends Model {
     protected function _before_insert(&$data, $option){
         if(!$data['user_id']) $data['user_id'] = UID;
         $data['update_time'] = NOW_TIME;
+        if(!$data['job_intension']) $data['job_intension'] = D('Admin/Position')->getPositionField(array('id' => $data['position_id']), 'position_name');
         $saveData = array();
         if($data['head_pic']) $saveData['head_pic'] = $data['head_pic'];
         if($data['true_name']) $saveData['nickname'] = $data['true_name'];

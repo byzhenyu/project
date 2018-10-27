@@ -56,6 +56,7 @@ class RecruitApiController extends ApiUserCommonController{
         $data['get_resume_token'] = yuan_to_fen(C('GET_RESUME_MONEY'));
         $data['entry_token'] = $data['commission'] - $data['get_resume_token'];//入职获取令牌
         $user_money = D('Admin/User')->getUserField(array('user_id'=>UID),'user_money');
+        if($data['commission'] < 10) $this->apiReturn(V(0, '悬赏金额不能少于10令牌！'));
 
         if (($data['commission'] * $data['recruit_num']) > $user_money) {
             $this->apiReturn(V(0, '悄悄的告诉你，你的令牌不足喽。马上充值令牌，快速发布悬赏。'));
@@ -130,6 +131,7 @@ class RecruitApiController extends ApiUserCommonController{
             if(count($where1) == 0) $map = $position_string;
             if(count($where2) == 0) $map = $area_string;
             if($map) $where['_string'] = $map;
+            if(!$map) $where['_string'] = 'hr_user_id = 0';//无符合条件人选
             $where['hr_user_id'] = array('neq', $user_id);
         }
         $where['status'] = 1;

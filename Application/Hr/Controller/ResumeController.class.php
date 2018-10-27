@@ -62,12 +62,14 @@ class ResumeController extends HrCommonController {
         $resume_id = I('resume_id', 0, 'intval');
         $data = I('post.');
         if(IS_POST){
+            $data['user_id'] = HR_ID;
+            $data['age'] = strtotime($data['age']);
+            $data['job_area'] = $data['province'].','.$data['job_area'].','.$data['county'];
+            $data['address'] = $data['t_province'].','.$data['t_job_area'].','.$data['t_county'].' '.$data['address'];
             $op_arr = array('job_intension', 'career_label', 'language_ability');
             foreach($op_arr as &$op){
                 if($data[$op]) $data[$op] = implode(',', $data[$op]);
             }
-            $data['user_id'] = HR_ID;
-            $data['age'] = strtotime($data['age']);
             if($resume_id){
                 $create = $model->create($data, 1);
                 if(false !== $create){
@@ -149,6 +151,7 @@ class ResumeController extends HrCommonController {
         $resume_where = array('id' => $resume_id);
         $edu_list = D('Admin/Education')->getEducationList();
         $info = $model->getResumeInfo($resume_where);
+        if(!$info['age']) $info['age'] = time();
         $industry = D('Admin/Industry')->getIndustryList();
         $this->industry = $industry;
         $this->info = $info;

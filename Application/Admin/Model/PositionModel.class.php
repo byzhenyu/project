@@ -55,6 +55,16 @@ class PositionModel extends Model {
         return $res;
     }
 
+    /**
+     * @param $where
+     * @param $field
+     * @return mixed
+     */
+    public function getPositionField($where, $field){
+        $res = $this->where($where)->getField($field);
+        return $res;
+    }
+
     //提取职位列表并做排序
     public function getTree($where){
         $data = $this->order('sort asc')->where($where)->select();

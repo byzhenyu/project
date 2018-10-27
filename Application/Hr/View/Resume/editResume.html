@@ -66,7 +66,7 @@
                                     <select name="first_degree" id="first_degree" data-am-selected="">
                                         <option value="">请选择第一学历</option>
                                         <foreach name="edu_list" item="v">
-                                            <option value="$v['education_name']">{$v['education_name']}</option>
+                                            <option value="{$v['education_name']}">{$v['education_name']}</option>
                                         </foreach>
                                     </select>
                                 </td>
@@ -77,7 +77,7 @@
                                     <select name="second_degree" id="second_degree" data-am-selected="">
                                         <option value="">请选择第二学历</option>
                                         <foreach name="edu_list" item="v">
-                                            <option value="$v['education_name']">{$v['education_name']}</option>
+                                            <option value="{$v['education_name']}">{$v['education_name']}</option>
                                         </foreach>
                                     </select>
                                 </td>
@@ -85,17 +85,22 @@
                             <tr>
                                 <td><div align="right"><strong>语言能力[多选]：</strong></div></td>
                                 <td>
-                                    <select name="language_ability" id="language_ability" data-am-selected="" multiple="multiple">
+                                    <select name="language_ability[]" id="language_ability" data-am-selected="" multiple="multiple">
                                         <option value="">请选择语言能力</option>
                                         <foreach name="lang" item="v">
-                                            <option value="$v['name']">{$v['name']}</option>
+                                            <option value="{$v['name']}">{$v['name']}</option>
                                         </foreach>
                                     </select>
                                 </td>
                             </tr>
                             <tr>
                                 <td><div align="right"><strong>详细地址：</strong></div></td>
-                                <td><input type="text" id="address" name="address" value="{$info['address']}" style="width:500px" placeholder="请填写详细地址" /></td>
+                                <td>
+                                    <div class="am-form-group" id="address_address">
+                                        <select name="t_province" data-am-selected=""></select>
+                                        <select name="t_job_area" data-am-selected=""></select>
+                                        <select name="t_county" data-am-selected=""></select>
+                                    </div><input type="text" id="address" name="address" value="{$info['address']}" style="width:500px" placeholder="请填写详细地址" /></td>
                             </tr>
                             <tr>
                                 <td><div align="right"><strong>岗位性质：</strong></div></td>
@@ -122,7 +127,7 @@
                                 <td><div align="right"><strong>行业属性：</strong></div></td>
                                 <td>
                                     <select name="industry_id" id="industry_id" data-am-selected="{searchBox: 0}" >
-                                        <option value="">请选择行业</option>
+                                        <opt0ion value="">请选择行业</opt0ion>
                                         <foreach name="industry" item="v">
                                             <option value="{$v['id']}">{$v['industry_name']}</option>
                                         </foreach>
@@ -134,33 +139,10 @@
                                 <td>
                                     <select data-am-selected="{searchBox: 1, maxHeight: '180px'}" style="display: none;" name="parent_id" id="parent_id">
                                     </select>
-                                    <select data-am-selected="{searchBox: 1, maxHeight: '180px'}" style="display: none;" name="job_intension" id="job_intension">
-                                    </select>
-                                    <input type="hidden" id="position_id" name="position_id" value="{$info['position_id']}">
-                                </td>
-                            </tr>
-
-                            <!-- <tr>
-                                <td><div align="right"><strong>职业标签[多选]：</strong></div></td>
-                                <td>
-                                    <select name="career_label[]" id="career_label" data-am-selected="{searchBox: 0}" multiple="multiple">
-                                        <foreach name="career" item="v">
-                                            <option value="{$v['name']}">{$v['name']}</option>
-                                        </foreach>
+                                    <select data-am-selected="{searchBox: 1, maxHeight: '180px'}" style="display: none;" name="position_id" id="position_id">
                                     </select>
                                 </td>
                             </tr>
-
-                            <tr>
-                                <td><div align="right"><strong>推荐标签[多选]：</strong></div></td>
-                                <td>
-                                    <select name="recommend_label[]" id="recommend_label" data-am-selected="{searchBox: 0}" multiple="multiple">
-                                        <foreach name="recommend" item="v">
-                                            <option value="{$v['name']}">{$v['name']}</option>
-                                        </foreach>
-                                    </select>
-                                </td>
-                            </tr> -->
 
                             <tr>
                                 <td><div align="right"><strong>自我介绍：</strong></div></td>
@@ -193,6 +175,7 @@
     <script type="text/javascript">
         $(function() {
             initAddress('#start_address',"", "", "", 1);
+            initAddress('#address_address', "", "", "", 1);
             laydate.render({
                 elem: '#age'
             });
@@ -214,18 +197,14 @@
             $('#parent_id').change(function(){
                 var position_id = $(this).val();
                 $.post("/index.php/Admin/Position/getPositionChildrenList", {position_id: position_id}, function (data) {
-                    $('#job_intension').html('<option data-id="0" value="">请选择</option>');
+                    $('#position_id').html('<option data-id="0" value="">请选择</option>');
                     for (var i = 0; i < data.data.length; i++) {
-                        $('#job_intension').append('<option data-id="' + data.data[i].id
+                        $('#position_id').append('<option data-id="' + data.data[i].id
                             + '" value="' + data.data[i].id + '">'
                             + data.data[i].position_name + '</option>');
                     }
-                    $('#job_intension').val({$info['position_id']});
+                    //$('#position_id').val({$info['position_id']});
                 });
-            });
-            $('#job_intension').change(function(){
-                var position_id = $(this).val();
-                $('#position_id').val(position_id);
             });
         });
     </script>
