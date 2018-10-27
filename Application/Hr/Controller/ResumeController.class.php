@@ -173,6 +173,8 @@ class ResumeController extends HrCommonController {
             }
             unset($lan_val);
         }
+        $info['position_parent'] = 0;
+        if(!$info['position_id']) $info['position_id'] = 0;
         if($info['position_id']) $info['position_parent'] = D('Admin/Position')->getPositionField(array('id' => $info['position_id']), 'parent_id');
         if($info['job_area']){
             $job_area = explode(',', $info['job_area']);
