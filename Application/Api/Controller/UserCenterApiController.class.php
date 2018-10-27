@@ -1181,6 +1181,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $resume_where = array('id' => $resume_id);
         $resumeDetail = $resumeModel->getResumeInfo($resume_where);
         if(!$resumeDetail && $user_id == $resumeDetail['user_id']) $this->apiReturn(V(0, '您还没有填写简历！'));
+        $resumeDetail['head_pic'] = $resumeDetail['head_pic'] ? $resumeDetail['head_pic'] : DEFAULT_IMG;
         $introduced_detail = array('introduced_voice' => strval($resumeDetail['introduced_voice']), 'introduced_time' => strval($resumeDetail['introduced_time']), 'introduced' => strval($resumeDetail['introduced']));
         $resume_career = explode(',', $resumeDetail['career_label']);
         $resume_career = array_filter($resume_career);
@@ -1544,7 +1545,6 @@ class UserCenterApiController extends ApiUserCommonController{
         $recruit_info = $recruitModel->getRecruitInfo($recruit_where);
         if(!$recruit_info) $this->apiReturn(V(0, '获取不到对应的悬赏信息！'));
         $resume_where = array('id' => $data['resume_id']);
-        if(!$data['resume_id']) $this->apiReturn(V(0, '请选择推荐人才！'));
         $resume_info = $resumeModel->getResumeInfo($resume_where);
         if(!$resume_info) $this->apiReturn(V(0, '获取不到对应的简历详情！'));
         $data['hr_user_id'] = $hr_user_id;
