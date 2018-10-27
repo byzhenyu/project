@@ -1349,7 +1349,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $user_where = array('user_id' => UID);
         $userModel = D('Admin/User');
         $user_info = $userModel->getUserInfo($user_where);
-        $resume_auth_where = array('hr_mobile' => $user_info['mobile'], 'hr_id' => UID);
+        $resume_auth_where = array('hr_mobile' => $user_info['mobile'], 'hr_id' => UID, 'resume_id' => $resume_id);
         $resumeAuthModel = D('Admin/ResumeAuth');
         $resume_auth_info = $resumeAuthModel->getResumeAuthInfo($resume_auth_where);
         if(!$resume_auth_info) $this->apiReturn(V(0, '无法获取到对应的简历认证信息！'));

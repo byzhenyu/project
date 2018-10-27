@@ -152,6 +152,12 @@ class ResumeController extends HrCommonController {
         $edu_list = D('Admin/Education')->getEducationList();
         $info = $model->getResumeInfo($resume_where);
         if(!$info['age']) $info['age'] = time();
+        if($info['address']){
+            $address = explode(' ' ,$info['address']);
+            $info['address_p'] = $address[0];
+            unset($address[0]);
+            $info['address'] = str_replace($info['address_p'].' ', '', $info['address']);
+        }
         $industry = D('Admin/Industry')->getIndustryList();
         $this->industry = $industry;
         $this->info = $info;

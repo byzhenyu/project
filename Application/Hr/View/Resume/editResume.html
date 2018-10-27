@@ -172,9 +172,10 @@
     <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.fileupload.js"></script>
     <script type="text/javascript" src="__ADMIN__/layDate-v5.0.9/laydate/laydate.js"></script>
     <script type="text/javascript" src="__STATIC__/js/address.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/addressGD.js"></script>
     <script type="text/javascript">
         $(function() {
-            initAddress('#start_address',"", "", "", 1);
+            initAddress('#start_address',"北京", "", "", 1);
             initAddress('#address_address', "", "", "", 1);
             laydate.render({
                 elem: '#age'
@@ -185,8 +186,11 @@
             });
             function initPosition(industry_id){
                 $.post("/index.php/Admin/Position/getPositionList", {industry_id: industry_id}, function (data) {
+
                     $('#parent_id').html('<option data-id="0" value="0">一级菜单</option>');
-                    for (var i = 0; i < data.data.length; i++) {
+                    var dataLen = data.data.length;
+                    console.log(dataLen);
+                    for (var i = 0; i < dataLen; i++) {
                         $('#parent_id').append('<option data-id="' + data.data[i].id
                             + '" value="' + data.data[i].id + '">'
                             + data.data[i].position_name + '</option>');
@@ -196,15 +200,18 @@
             }
             $('#parent_id').change(function(){
                 var position_id = $(this).val();
-                $.post("/index.php/Admin/Position/getPositionChildrenList", {position_id: position_id}, function (data) {
-                    $('#position_id').html('<option data-id="0" value="">请选择</option>');
-                    for (var i = 0; i < data.data.length; i++) {
-                        $('#position_id').append('<option data-id="' + data.data[i].id
-                            + '" value="' + data.data[i].id + '">'
-                            + data.data[i].position_name + '</option>');
-                    }
-                    //$('#position_id').val({$info['position_id']});
-                });
+                if(position_id > 0){
+                    $.post("/index.php/Admin/Position/getPositionChildrenList", {position_id: position_id}, function (data) {
+                        $('#position_id').html('<option data-id="0" value="">请选择</option>');
+                        var dataLen = data.data.length;
+                        for (var i = 0; i < dataLen; i++) {
+                            $('#position_id').append('<option data-id="' + data.data[i].id
+                                + '" value="' + data.data[i].id + '">'
+                                + data.data[i].position_name + '</option>');
+                        }
+                        //$('#position_id').val({$info['position_id']});
+                    });
+                }
             });
         });
     </script>
