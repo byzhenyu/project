@@ -19,16 +19,14 @@ class RegionModel extends Model {
     	if (!empty($parent_id) && $parent_id != -1) {
     		$where['parent_id'] = array('eq',$parent_id);
     	} else {
-    		$where['parent_id'] = array('eq',0);
+    		$where['parent_id'] = array('eq',1);
     	}
     	//获取缓存中的省市县数据
     	$citys = S('parent_id'.$parent_id);
     	if (!$citys) {
-            $where['is_display'] = array('eq',0);
             $res = M('Region')->where($where)->field('id,name as region_name')->order('id,sorting')->select();
     		S('parent_id'.$parent_id,$res);
     	} else {
-    		$res = $citys;$where['is_display'] = array('eq',0);
             $res = M('Region')->where($where)->field('id,name as region_name')->order('id,sorting')->select();
     	}
 

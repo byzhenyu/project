@@ -66,7 +66,7 @@
                                     <select name="first_degree" id="first_degree" data-am-selected="">
                                         <option value="">请选择第一学历</option>
                                         <foreach name="edu_list" item="v">
-                                            <option value="{$v['education_name']}">{$v['education_name']}</option>
+                                            <option value="{$v['education_name']}" <if condition="$v.education_name eq $info['first_degree']">selected</if>>{$v['education_name']}</option>
                                         </foreach>
                                     </select>
                                 </td>
@@ -77,7 +77,7 @@
                                     <select name="second_degree" id="second_degree" data-am-selected="">
                                         <option value="">请选择第二学历</option>
                                         <foreach name="edu_list" item="v">
-                                            <option value="{$v['education_name']}">{$v['education_name']}</option>
+                                            <option value="{$v['education_name']}" <if condition="$v.education_name eq $info['second_degree']">selected</if>>{$v['education_name']}</option>
                                         </foreach>
                                     </select>
                                 </td>
@@ -88,7 +88,7 @@
                                     <select name="language_ability[]" id="language_ability" data-am-selected="" multiple="multiple">
                                         <option value="">请选择语言能力</option>
                                         <foreach name="lang" item="v">
-                                            <option value="{$v['name']}">{$v['name']}</option>
+                                            <option value="{$v['name']}" <if condition="$v['sel'] eq 1">selected</if>>{$v['name']}</option>
                                         </foreach>
                                     </select>
                                 </td>
@@ -97,9 +97,9 @@
                                 <td><div align="right"><strong>详细地址：</strong></div></td>
                                 <td>
                                     <div class="am-form-group" id="address_address">
-                                        <select name="t_province" data-am-selected=""></select>
-                                        <select name="t_job_area" data-am-selected=""></select>
-                                        <select name="t_county" data-am-selected=""></select>
+                                        <select name="t_province"></select>
+                                        <select name="t_job_area"></select>
+                                        <select name="t_county"></select>
                                     </div><input type="text" id="address" name="address" value="{$info['address']}" style="width:500px" placeholder="请填写详细地址" /></td>
                             </tr>
                             <tr>
@@ -108,7 +108,7 @@
                                     <select name="post_nature" id="post_nature" data-am-selected="{searchBox: 0}">
                                         <option value="">请选择</option>
                                         <foreach name="nature" item="v">
-                                            <option value="{$v['name']}">{$v['name']}</option>
+                                            <option value="{$v['name']}" <if condition="$v.name eq $info['post_nature']">selected</if>>{$v['name']}</option>
                                         </foreach>
                                     </select>
                                 </td>
@@ -117,9 +117,9 @@
                             <tr>
                                 <td><div align="right"><em class="must-input">*</em><strong>工作地区：</strong></div></td>
                                 <td><div class="am-form-group" id="start_address">
-                                    <select name="province" data-am-selected=""></select>
-                                    <select name="job_area" data-am-selected=""></select>
-                                    <select name="county" data-am-selected=""></select>
+                                    <select name="province"></select>
+                                    <select name="job_area"></select>
+                                    <select name="county"></select>
                                 </div></td>
                             </tr>
 
@@ -127,11 +127,18 @@
                                 <td><div align="right"><strong>行业属性：</strong></div></td>
                                 <td>
                                     <select name="industry_id" id="industry_id" data-am-selected="{searchBox: 0}" >
-                                        <opt0ion value="">请选择行业</opt0ion>
+                                        <option value="">请选择行业</option>
                                         <foreach name="industry" item="v">
                                             <option value="{$v['id']}">{$v['industry_name']}</option>
                                         </foreach>
                                     </select>
+                                    <script type="text/javascript">
+                                        $(function(){
+                                            if({$info['industry_id']} > 0){
+                                                $('#industry_id').val({$info['industry_id']});
+                                            }
+                                        });
+                                    </script>
                                 </td>
                             </tr>
                             <tr>
@@ -175,8 +182,8 @@
     <script type="text/javascript" src="__STATIC__/js/addressGD.js"></script>
     <script type="text/javascript">
         $(function() {
-            initAddress('#start_address',"北京", "", "", 1);
-            initAddress('#address_address', "", "", "", 1);
+            initAddress('#start_address',"{$info['job_area1']}", "{$info['job_area2']}", "{$info['job_area3']}", 1);
+            initAddress('#address_address', "北京市", "北京市", "东城区", 1);
             laydate.render({
                 elem: '#age'
             });
@@ -189,30 +196,46 @@
 
                     $('#parent_id').html('<option data-id="0" value="0">一级菜单</option>');
                     var dataLen = data.data.length;
-                    console.log(dataLen);
+                    var parent_sel = 0;
                     for (var i = 0; i < dataLen; i++) {
+                        if({$info['position_parent']} > 0 && data.data[i].id == {$info['position_parent']}){
+                            parent_sel = 'selected';
+                        }
+                        else{
+                            parent_sel = '';
+                        }
                         $('#parent_id').append('<option data-id="' + data.data[i].id
-                            + '" value="' + data.data[i].id + '">'
+                            + '" value="' + data.data[i].id + '" '+parent_sel+'>'
                             + data.data[i].position_name + '</option>');
                     }
-                    $('#parent_id').val({$info['parent_id']});
+                    initPositionChildren({$info['position_parent']});
                 });
             }
+
             $('#parent_id').change(function(){
-                var position_id = $(this).val();
+                initPositionChildren($(this).val());
+            });
+
+            function initPositionChildren(position_id){
                 if(position_id > 0){
                     $.post("/index.php/Admin/Position/getPositionChildrenList", {position_id: position_id}, function (data) {
                         $('#position_id').html('<option data-id="0" value="">请选择</option>');
                         var dataLen = data.data.length;
+                        var parent_sel = '';
                         for (var i = 0; i < dataLen; i++) {
+                            if(data.data[i].id == {$info['position_id']}){
+                                parent_sel = 'selected';
+                            }
+                            else{
+                                parent_sel = '';
+                            }
                             $('#position_id').append('<option data-id="' + data.data[i].id
-                                + '" value="' + data.data[i].id + '">'
+                                + '" value="' + data.data[i].id + '" '+parent_sel+'>'
                                 + data.data[i].position_name + '</option>');
                         }
-                        //$('#position_id').val({$info['position_id']});
                     });
                 }
-            });
+            }
         });
     </script>
 </block>

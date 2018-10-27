@@ -327,6 +327,8 @@ class UserCenterApiController extends ApiUserCommonController{
             $quesModel->setQuestionInc($where, 'browse_number');
             $questionPointsModel->add($points_where);
         }
+        $questionDetail['is_self'] = 0;
+        if($questionDetail['user_id'] == UID) $questionDetail['is_self'] = 1;
         $returnArray = array('question' => $questionDetail, 'question_img' => $questionImg, 'answer_list' => $answer_list['info']);
         $this->apiReturn(V(1, '问题详情获取成功！', $returnArray));
     }

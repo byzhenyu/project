@@ -154,11 +154,32 @@ class ResumeController extends HrCommonController {
         if(!$info['age']) $info['age'] = time();
         if($info['address']){
             $address = explode(' ' ,$info['address']);
-            $info['address_p'] = $address[0];
-            unset($address[0]);
-            $info['address'] = str_replace($info['address_p'].' ', '', $info['address']);
+            if(count($address) > 0){
+                $info['address_p'] = $address[0];
+                $add_help = explode(',', $address[0]);
+                $info['address1'] = $add_help[0];
+                $info['address2'] = $add_help[1];
+                $info['address3'] = $add_help[2];
+                unset($address[0]);
+                $info['address'] = str_replace($info['address_p'].' ', '', $info['address']);
+            }
         }
         $industry = D('Admin/Industry')->getIndustryList();
+        if($info['language_ability']){
+            $language = explode(',', $info['language_ability']);
+            foreach($language_arr as &$lan_val){
+                $lan_val['sel'] = 0;
+                if(in_array($lan_val['name'], $language)) $lan_val['sel'] = 1;
+            }
+            unset($lan_val);
+        }
+        if($info['position_id']) $info['position_parent'] = D('Admin/Position')->getPositionField(array('id' => $info['position_id']), 'parent_id');
+        if($info['job_area']){
+            $job_area = explode(',', $info['job_area']);
+            $info['job_area1'] = $job_area[0];
+            $info['job_area2'] = $job_area[1];
+            $info['job_area3'] = $job_area[2];
+        }
         $this->industry = $industry;
         $this->info = $info;
         $this->lang = $language_arr;
