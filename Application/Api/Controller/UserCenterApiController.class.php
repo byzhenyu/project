@@ -423,7 +423,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $answer_id = I('answer_id', 0, 'intval');
         $question_id = I('question_id', 0, 'intval');
         if(!$answer_id || !$question_id) $this->apiReturn(V(0, '请传入合法的参数！'));
-        $where = array('id' => $answer_id, 'question_id' => $question_id, 'user_id' => UID);
+        $where = array('id' => $answer_id, 'question_id' => $question_id);
         $res = D('Admin/Answer')->settingOptimum($where);
         $this->apiReturn($res);
     }
