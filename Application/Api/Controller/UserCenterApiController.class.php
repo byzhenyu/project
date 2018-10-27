@@ -1546,7 +1546,7 @@ class UserCenterApiController extends ApiUserCommonController{
         if(!$recruit_info) $this->apiReturn(V(0, '获取不到对应的悬赏信息！'));
         $resume_where = array('id' => $data['resume_id']);
         $resume_info = $resumeModel->getResumeInfo($resume_where);
-        if(!$resume_info) $this->apiReturn(V(0, '获取不到对应的简历详情！'));
+        if(!$resume_info) $this->apiReturn(V(0, '请选择推荐人才！'));
         $data['hr_user_id'] = $hr_user_id;
         $data['recruit_hr_uid'] = $recruit_info['hr_user_id'];
         if(false !== strpos(',', $data['resume_id'])){

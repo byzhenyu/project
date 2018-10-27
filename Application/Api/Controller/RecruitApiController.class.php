@@ -131,7 +131,7 @@ class RecruitApiController extends ApiUserCommonController{
             if(count($where1) == 0) $map = $position_string;
             if(count($where2) == 0) $map = $area_string;
             if($map) $where['_string'] = $map;
-            //if(!$map) $where['_string'] = 'hr_user_id = 0';//无符合条件人选
+            if(!$map) $where['_string'] = 'hr_user_id = 0';//无符合条件人选
             $where['hr_user_id'] = array('neq', $user_id);
         }
         $where['status'] = 1;
