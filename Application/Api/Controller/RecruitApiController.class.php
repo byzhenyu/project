@@ -237,6 +237,7 @@ class RecruitApiController extends ApiUserCommonController{
         $info = D('Admin/Task')->getTaskList();
         foreach($info as &$val){
             $val['reward'] = fen_to_yuan($val['reward']);
+            $val['can'] = intval($val['can']);
         }
         $this->apiReturn(V(1, '每日任务', $info));
     }

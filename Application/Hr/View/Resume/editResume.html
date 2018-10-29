@@ -192,24 +192,25 @@
                 initPosition($(this).val());
             });
             function initPosition(industry_id){
-                $.post("/index.php/Admin/Position/getPositionList", {industry_id: industry_id}, function (data) {
-
-                    $('#parent_id').html('<option data-id="0" value="0">一级菜单</option>');
-                    var dataLen = data.data.length;
-                    var parent_sel = 0;
-                    for (var i = 0; i < dataLen; i++) {
-                        if({$info['position_parent']} > 0 && data.data[i].id == {$info['position_parent']}){
-                            parent_sel = 'selected';
+                if(industry_id > 0){
+                    $.post("/index.php/Hr/Position/getPositionList", {industry_id: industry_id}, function (data) {
+                        $('#parent_id').html('<option data-id="0" value="0">一级菜单</option>');
+                        var dataLen = data.data.length;
+                        var parent_sel = 0;
+                        for (var i = 0; i < dataLen; i++) {
+                            if({$info['position_parent']} > 0 && data.data[i].id == {$info['position_parent']}){
+                                parent_sel = 'selected';
+                            }
+                            else{
+                                parent_sel = '';
+                            }
+                            $('#parent_id').append('<option data-id="' + data.data[i].id
+                                + '" value="' + data.data[i].id + '" '+parent_sel+'>'
+                                + data.data[i].position_name + '</option>');
                         }
-                        else{
-                            parent_sel = '';
-                        }
-                        $('#parent_id').append('<option data-id="' + data.data[i].id
-                            + '" value="' + data.data[i].id + '" '+parent_sel+'>'
-                            + data.data[i].position_name + '</option>');
-                    }
-                    initPositionChildren({$info['position_parent']});
-                });
+                        initPositionChildren({$info['position_parent']});
+                    });
+                }
             }
 
             $('#parent_id').change(function(){
@@ -218,7 +219,7 @@
 
             function initPositionChildren(position_id){
                 if(position_id > 0){
-                    $.post("/index.php/Admin/Position/getPositionChildrenList", {position_id: position_id}, function (data) {
+                    $.post("/index.php/Hr/Position/getPositionChildrenList", {position_id: position_id}, function (data) {
                         $('#position_id').html('<option data-id="0" value="">请选择</option>');
                         var dataLen = data.data.length;
                         var parent_sel = '';

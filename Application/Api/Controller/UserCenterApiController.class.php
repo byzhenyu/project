@@ -861,9 +861,9 @@ class UserCenterApiController extends ApiUserCommonController{
             $this->apiReturn(V(0, '用户信息修改失败！'));
         }
         else{
-            account_log($user_id, $amount, 1, '用户提现！', $account_res);
+            account_log($user_id, $amount, 1, '用户提现待审核！', $account_res);
             M()->commit();
-            $this->apiReturn(V(1, '用户提现成功！'));
+            $this->apiReturn(V(1, '提现申请成功，请等待审核！'));
         }
     }
 

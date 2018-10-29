@@ -75,6 +75,7 @@ class ResumeController extends HrCommonController {
                 if(false !== $create){
                     $res = $model->where(array('id' => $resume_id))->save($data);
                     if(false !== $res){
+                        refreshUserTags(HR_ID, $resume_id);
                         $this->ajaxReturn(V(1, '保存成功！'));
                     }
                     else{
@@ -99,6 +100,7 @@ class ResumeController extends HrCommonController {
                         if(false !== $hr_create){
                             $hr_res = $hrModel->add();
                             if(false !== $hr_res){
+                                refreshUserTags(HR_ID, $res);
                                 M()->commit();
                                 $this->ajaxReturn(V(1, '保存成功！'));
                             }
