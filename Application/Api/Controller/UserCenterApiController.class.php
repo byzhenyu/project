@@ -1966,7 +1966,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $user_type = $type_info['user_type'];
         if($type_info['wx']) $this->apiReturn(V(0, '账号已经绑定微信账号！'));
         $user_info = $user_model->getUserInfo(array('wx' => $open_id, 'user_type' => $user_type));
-        if($user_info) $this->apiReturn(V(0, '账号已被其他账号绑定！'));
+        if($user_info) $this->apiReturn(V(0, '微信账号已被其他手机号绑定！'));
         $save = array('wx' => $open_id);
         $save_res = $user_model->saveUserData(array('user_id' => $user_id), $save);
         if(false !== $save_res){
