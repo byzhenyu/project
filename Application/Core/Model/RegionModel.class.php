@@ -72,25 +72,28 @@ class RegionModel extends Model {
     public function getRegionInfo() {
 
         $keyword = I('keyword', '');
-        //$return = S('return_citys'.$keyword);
-        $return = false;
+        $return = S('return_city'.$keyword);
         if ($keyword) {
             $where['name'] = array('like', '%'.$keyword.'%');
         }
         //$where['level'] =array('eq', 2);
-        //if (!$return) {
-
-            $data = M('Region')->field('id, name, level, substring(first_code,0, 1) as first_code')->where($where)->order('first_code, id asc')->select();
+        if (!$return) {
+            $province = M('Region')->where(array('parent_id' => 1))->field('id')->select();
+            $ids = array();
+            foreach($province as &$pro) $ids[] = $pro['id']; unset($pro);
+            $where['parent_id'] = array('in', $ids);
+            $data = M('Region')->field('id, name, level, first_code')->where($where)->order('first_code, id asc')->select();
             $citys = array();
             foreach ($data as $key => $value) {
+                $value['first_code'] = substr($value['first_code'], 0, 1);
                 $citys[$value['first_code']][] = $value;
             }
             $return = array();
             foreach($citys as $k => $val){
                 $return[] = array('letter' => $k, 'children' => $val);
             }
-            //S('return_citys'.$keyword, $return);
-        //}
+            S('return_city'.$keyword, $return);
+        }
         //else{
 
         //}
