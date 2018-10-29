@@ -1803,11 +1803,11 @@ class UserCenterApiController extends ApiUserCommonController{
         $type = I('type', '', 'trim');
         $where = array('user_id' => $user_id, 'status' => 1);
         if('' != $type) $where['type'] = $type;
-        $field = 'type,money,add_time';
+        $field = 'type,money,add_time,state';
         $list = $model->getAccountByPage($where, $field);
         foreach($list['info'] as &$val){
             $val['add_time'] = time_format($val['add_time']);
-            $val['type_string'] = $val['type'] ? C('ACCOUNT_STATE')[$val['type']] : '充值';
+            $val['type_string'] = $val['type'] ? C('ACCOUNT_STATE')[$val['state']] : '充值';
             $val['money'] = fen_to_yuan($val['money']);
         }
         unset($val);
