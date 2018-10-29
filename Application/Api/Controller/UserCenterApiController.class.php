@@ -861,7 +861,7 @@ class UserCenterApiController extends ApiUserCommonController{
             $this->apiReturn(V(0, '用户信息修改失败！'));
         }
         else{
-            account_log($user_id, $amount, 1, '用户提现待审核！', $account_res);
+            account_log($user_id, $amount, 1, '提现-待审核！', $account_res);
             M()->commit();
             $this->apiReturn(V(1, '提现申请成功，请等待审核！'));
         }
@@ -1807,12 +1807,12 @@ class UserCenterApiController extends ApiUserCommonController{
         $list = $model->getAccountByPage($where, $field);
         foreach($list['info'] as &$val){
             $val['add_time'] = time_format($val['add_time']);
-            $val['type_string'] = $val['type'] ? '提现' : '充值';
+            $val['type_string'] = $val['type'] ? C('ACCOUNT_STATE')[$val['type']] : '充值';
             $val['money'] = fen_to_yuan($val['money']);
         }
         unset($val);
         $user_account = D('Admin/User')->getUserInfo(array('user_id' => $user_id), 'user_money,withdrawable_amount');
-        $total_account = fen_to_yuan($user_account['user_money']);
+        $total_account = fen_to_yuan($user_account['user_money'] + $user_account['withdrawable_amount']);
         $user_withdraw = fen_to_yuan($user_account['withdrawable_amount']);
         $this->apiReturn(V(1, '', array('account' => $total_account, 'can_account' => $user_withdraw, 'list' => $list['info'])));
     }
