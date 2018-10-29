@@ -72,14 +72,15 @@ class RegionModel extends Model {
     public function getRegionInfo() {
 
         $keyword = I('keyword', '');
-        $return = S('return_citys'.$keyword);
+        //$return = S('return_citys'.$keyword);
+        $return = false;
         if ($keyword) {
             $where['name'] = array('like', '%'.$keyword.'%');
         }
-        $where['level'] =array('eq', 2);
-        if (!$return) {
+        //$where['level'] =array('eq', 2);
+        //if (!$return) {
 
-            $data = M('Region')->field('id, name, level, first_code')->where($where)->order('first_code, id asc')->select();
+            $data = M('Region')->field('id, name, level, substring(first_code,0, 1) as first_code')->where($where)->order('first_code, id asc')->select();
             $citys = array();
             foreach ($data as $key => $value) {
                 $citys[$value['first_code']][] = $value;
@@ -88,8 +89,11 @@ class RegionModel extends Model {
             foreach($citys as $k => $val){
                 $return[] = array('letter' => $k, 'children' => $val);
             }
-            S('return_citys'.$keyword, $return);
-        }
+            //S('return_citys'.$keyword, $return);
+        //}
+        //else{
+
+        //}
 
         return $return;
     }
