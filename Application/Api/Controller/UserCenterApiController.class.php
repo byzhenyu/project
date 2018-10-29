@@ -1807,7 +1807,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $list = $model->getAccountByPage($where, $field);
         foreach($list['info'] as &$val){
             $val['add_time'] = time_format($val['add_time']);
-            $val['type_string'] = $val['type'] ? C('ACCOUNT_STATE')[$val['state']] : '充值';
+            $val['type_string'] = $val['type'] ? '提现-'.C('ACCOUNT_STATE')[$val['state']] : '充值';
             $val['money'] = fen_to_yuan($val['money']);
         }
         unset($val);
