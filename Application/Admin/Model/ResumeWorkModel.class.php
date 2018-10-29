@@ -67,4 +67,16 @@ class ResumeWorkModel extends Model {
     protected function _before_update(&$data, $option){
     }
 
+    /**
+     * @desc 工作经历修改。
+     * @param $where
+     * @param $data
+     * @return bool
+     */
+    public function saveResumeWorkData($where, $data){
+        if(!is_array($where) || !is_array($data)) return false;
+        $res = $this->where($where)->save($data);
+        return $res;
+    }
+
 }

@@ -7,8 +7,8 @@ namespace Admin\Model;
 use Think\Model;
 
 class ResumeAuthModel extends Model {
-    protected $insertFields = array('user_id', 'hr_id', 'hr_name', 'hr_mobile', 'resume_id', 'add_time');
-    protected $updateFields = array('user_id', 'hr_id', 'hr_name', 'hr_mobile', 'resume_id', 'add_time', 'auth_result', 'auth_time');
+    protected $insertFields = array('user_id', 'hr_id', 'hr_name', 'hr_mobile', 'resume_id', 'add_time', 'work_id');
+    protected $updateFields = array('user_id', 'hr_id', 'hr_name', 'hr_mobile', 'resume_id', 'add_time', 'auth_result', 'auth_time', 'work_id');
     protected $_validate = array(
     );
 

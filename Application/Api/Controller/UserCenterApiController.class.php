@@ -994,7 +994,7 @@ class UserCenterApiController extends ApiUserCommonController{
             if (false !== $create){
                 $res = $model->add($data);
                 if($res > 0){
-                    $resumeAuth = array('resume_id' => $data['resume_id'], 'hr_name' => $hr_name, 'hr_mobile' => $hr_mobile, 'user_id' => UID);
+                    $resumeAuth = array('resume_id' => $data['resume_id'], 'hr_name' => $hr_name, 'hr_mobile' => $hr_mobile, 'user_id' => UID, 'work_id' => $res);
                     //简历验证
                     $auth_res = D('Admin/ResumeAuth')->changeResumeAuth($resumeAuth);
                     /*if(false !== $auth_res){
@@ -1296,10 +1296,12 @@ class UserCenterApiController extends ApiUserCommonController{
         if($resume_auth_info['auth_result'] != 0) $this->apiReturn(V(0, '该简历已经被认证过！'));
         $save_data['auth_result'] = $auth_result;
         $save_data['auth_time'] = NOW_TIME;
+        $resumeWorkModel = D('Admin/ResumeWork');
         M()->startTrans();
         $res = $resumeAuthModel->saveResumeAuthData($resume_auth_where, $save_data);
         if(1 == $auth_result){
             if(false !== $res){
+                $resumeWorkModel->saveResumeWorkData(array('id' => $resume_auth_info['work_id']), array('state' => 2));
                 M()->commit();
                 $this->apiReturn(V(1, '认证操作成功！'));
             }
@@ -1322,6 +1324,7 @@ class UserCenterApiController extends ApiUserCommonController{
                     add_task_log(UID, $task_id);
                     add_key_operation(8, $resume_auth_info['resume_id']);
                     refreshUserTags(UID, $resume_auth_info['resume_id']);
+                    $resumeWorkModel->saveResumeWorkData(array('id' => $resume_auth_info['work_id']), array('state' => 1));
                     M()->commit();
                     $this->apiReturn(V(1, '认证操作成功！'));
                 }
@@ -1360,10 +1363,12 @@ class UserCenterApiController extends ApiUserCommonController{
         if($resume_auth_info['auth_result'] != 0) $this->apiReturn(V(0, '该简历已经被认证过！'));
         $save_data['auth_result'] = $auth_result;
         $save_data['auth_time'] = NOW_TIME;
+        $resumeWorkModel = D('Admin/ResumeWork');
         M()->startTrans();
         $res = $resumeAuthModel->saveResumeAuthData($resume_auth_where, $save_data);
         if(1 == $auth_result){
             if(false !== $res){
+                $resumeWorkModel->saveResumeWorkData(array('id' => $resume_auth_info['work_id']), array('state' => 2));
                 M()->commit();
                 $this->apiReturn(V(1, '认证操作成功！'));
             }
@@ -1385,6 +1390,7 @@ class UserCenterApiController extends ApiUserCommonController{
                     add_task_log(UID, $task_id);
                     add_key_operation(8, $resume_id);
                     refreshUserTags(UID, $resume_id);
+                    $resumeWorkModel->saveResumeWorkData(array('id' => $resume_auth_info['work_id']), array('state' => 1));
                     M()->commit();
                     $this->apiReturn(V(1, '认证操作成功！'));
                 }
