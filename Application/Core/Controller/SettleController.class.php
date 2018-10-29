@@ -8,7 +8,7 @@ class SettleController extends CommonController {
     public function __construct(){
         parent::__construct();
         set_time_limit(0);
-        ini_set('memory_limit','4096M');
+        ini_set('memory_limit','5120M');
     }
 
 
