@@ -1811,9 +1811,10 @@ class UserCenterApiController extends ApiUserCommonController{
             $val['money'] = fen_to_yuan($val['money']);
         }
         unset($val);
-        $user_account = D('Admin/User')->getUserField(array('user_id' => $user_id), 'user_money');
-        $user_account = fen_to_yuan($user_account);
-        $this->apiReturn(V(1, '', array('account' => $user_account, 'list' => $list['info'])));
+        $user_account = D('Admin/User')->getUserInfo(array('user_id' => $user_id), 'user_money,withdrawable_amount');
+        $total_account = fen_to_yuan($user_account['user_money']);
+        $user_withdraw = fen_to_yuan($user_account['withdraw_amount']);
+        $this->apiReturn(V(1, '', array('account' => $total_account, 'can_account' => $user_withdraw, 'list' => $list['info'])));
     }
 
     /**
