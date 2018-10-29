@@ -65,7 +65,7 @@ class ResumeModel extends Model {
     protected function _before_update(&$data, $option){
         $data['update_time'] = NOW_TIME;
         if(!$data['job_area']) unset($data['job_area']);
-        if(!$data['job_intension']) unset($data['job_intension']);
+        if(!$data['job_intension']) $data['job_intension'] = D('Admin/Position')->getPositionField(array('id' => $data['position_id']), 'position_name');;
         if(!$data['career_label']) unset($data['career_label']);
         $saveData = array();
         if($data['head_pic']) $saveData['head_pic'] = $data['head_pic'];

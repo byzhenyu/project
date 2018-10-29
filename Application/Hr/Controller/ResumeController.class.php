@@ -66,7 +66,7 @@ class ResumeController extends HrCommonController {
             $data['age'] = strtotime($data['age']);
             $data['job_area'] = $data['province'].','.$data['job_area'].','.$data['county'];
             $data['address'] = $data['t_province'].','.$data['t_job_area'].','.$data['t_county'].' '.$data['address'];
-            $op_arr = array('job_intension', 'career_label', 'language_ability');
+            $op_arr = array('career_label', 'language_ability');
             foreach($op_arr as &$op){
                 if($data[$op]) $data[$op] = implode(',', $data[$op]);
             }
