@@ -181,6 +181,12 @@
     <script type="text/javascript" src="__STATIC__/js/address.js"></script>
     <script type="text/javascript" src="__STATIC__/js/addressGD.js"></script>
     <script type="text/javascript">
+        function callback(data){
+            toastr(data.info);
+            if(data.status == 1){
+                location.href='/index.php/Hr/Resume/listHrResume';
+            }
+        }
         $(function() {
             initAddress('#start_address',"{$info['job_area1']}", "{$info['job_area2']}", "{$info['job_area3']}", 1);
             initAddress('#address_address', "{$info['address1']}", "{$info['address2']}", "{$info['address3']}", 1);

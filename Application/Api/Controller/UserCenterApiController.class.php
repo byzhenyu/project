@@ -1041,7 +1041,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $res = $model->getResumeWorkInfo($where);
         if($res){
             $res['starttime'] = time_format($res['starttime']);
-            $res['endtime'] = time_format($res['endtime']);
+            if($res['endtime']) $res['endtime'] = time_format($res['endtime']);
             $res['mobile'] = strval($res['work_mobile']);
             $res['hr_name'] = strval($res['work_hr_name']);
             $this->apiReturn(V(1, '经历详情获取成功！', $res));
