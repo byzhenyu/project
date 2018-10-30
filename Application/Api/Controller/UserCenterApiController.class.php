@@ -71,6 +71,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('user_id' => UID);
         $userInfo = $model->getUserInfo($where);
         $user_type = $userInfo['user_type'];
+        if($mobile != $userInfo['mobile']) $this->apiReturn(V(0, '与登录手机号不一致！'));
         if(!isMobile($mobile)) $this->apiReturn(V(0, '请输入合法的手机号！'));
         $payLen = strlen($pay_word);
         if($payLen < 6 || $payLen > 18) $this->apiReturn(V(0, '密码长度6-18位！'));
