@@ -1531,8 +1531,8 @@ class UserCenterApiController extends ApiUserCommonController{
         $hr_resume_info = $model->getResumeInfo($resume_where);
         $job_area = $hr_resume_info['job_area'];//工作地区
         $position = $hr_resume_info['job_intension'];//工作职位
-        $job_arr = explode(',', $job_area);
-        $pos_arr = explode(',', $position);
+        $job_arr = explode('|', $job_area);
+        $pos_arr = explode('|', $position);
         $where1 = array();
         if($job_area){
             foreach($job_arr as &$val){
