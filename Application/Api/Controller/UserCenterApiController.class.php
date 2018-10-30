@@ -1493,21 +1493,13 @@ class UserCenterApiController extends ApiUserCommonController{
             $recruit_info = $recruitModel->getRecruitInfo($recruitWhere, 'position_id,job_area');
             $job_area = $recruit_info['job_area'];
             $position = $recruit_info['position_id'];
-            $job_arr = explode(',', $job_area);
-            $pos_arr = explode(',', $position);
             $where1 = array();
             if($job_area){
-                foreach($job_arr as &$val){
-                    $where1[] = 'r.`job_area` like \'%'.$val.'%\'';
-                }
-                unset($val);
+                $where1[] = 'r.`job_area` = \''.$job_area.'\'';
             }
             $where2 = array();
             if($position){
-                foreach($pos_arr as &$val){
-                    $where2[] = 'r.`position_id` like \'%'.$val.'%\'';
-                }
-                unset($val);
+                $where2[] = 'r.`position_id` = '.$position;
             }
             $position_string = implode(' or ', $where2);
             $area_string = implode(' or ', $where1);
