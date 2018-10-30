@@ -122,10 +122,10 @@ class RecruitModel extends Model {
             ->find();
         $sexArr = array('0'=>'不限','1'=>'男','2'=>'女');
 
-        //$degreeArr = M('Education')->getField('id,education_name', true);
+        $degreeArr = M('Education')->where(array('id' => $info['degree']))->getField('education_name');
 
         $experience = C('WORK_EXP');
-        $info['degree'] = $info['degree'].'或'.$info['degree'].'以上';
+        $info['degree'] = $degreeArr.'或'.$degreeArr.'以上';
         $info['sex'] = $sexArr[$info['sex']];
         $info['experience'] = $experience[$info['experience']];
         $info['commission'] = fen_to_yuan($info['commission']);

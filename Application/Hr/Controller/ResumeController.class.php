@@ -36,8 +36,10 @@ class ResumeController extends HrCommonController {
         }
         $post_nature = I('post_nature', '', 'trim');
         if($post_nature) $where['r.post_nature'] = $post_nature;
-        $job_intension = I('job_intension', '', 'trim');
-        if($job_intension) $where['r.job_intension'] = array('like', '%'.$job_intension.'%');
+        $province = I('province', '', 'trim');
+        $job_area = I('job_area', '', 'trim');
+        $county = I('county', '', 'trim');
+        if($county) $where['r.job_intension'] = $province.','.$job_area.','.$county;
         $job_area = I('job_area', '', 'trim');
         if($job_area) $where['r.job_area'] = array('like', '%'.$job_area.'%');
         $career_label = I('career_label', '', 'trim');
@@ -252,9 +254,9 @@ class ResumeController extends HrCommonController {
         }
         unset($val);
 
-        $area = D('Admin/Region')->getRegionList(array('level' => 2), 'id,name');
+        $industry = D('Admin/Industry')->getIndustryList();
         $this->recommend = $tags_recommend;
-        $this->area = $area;
+        $this->industry = $industry;
         $this->intension = $tags_intension;
         $this->career = $tags_career;
         $this->nature = $nature_arr;

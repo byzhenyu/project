@@ -75,27 +75,33 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td><div align="right"><strong>行业属性：</strong></div></td>
+                                <td>
+                                    <select name="industry_id" id="industry_id" data-am-selected="{searchBox: 0}" >
+                                        <option value="">请选择行业</option>
+                                        <foreach name="industry" item="v">
+                                            <option value="{$v['id']}">{$v['industry_name']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td><div align="right"><strong>求职方向：</strong></div></td>
                                 <td>
-                                    <select name="job_intension" id="job_intension" data-am-selected="{searchBox: 0}">
-                                        <option value="">请选择</option>
-                                        <foreach name="intension" item="v">
-                                            <option value="{$v['name']}">{$v['name']}</option>
-                                        </foreach>
+                                    <select data-am-selected="{searchBox: 1, maxHeight: '180px'}" style="display: none;" name="parent_id" id="parent_id">
+                                    </select>
+                                    <select data-am-selected="{searchBox: 1, maxHeight: '180px'}" style="display: none;" name="position_id" id="position_id">
                                     </select>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td><div align="right"><strong>工作地区：</strong></div></td>
-                                <td>
-                                    <select name="job_area" id="job_area" data-am-selected="{searchBox: 1}">
-                                        <option value="">请选择</option>
-                                        <foreach name="area" item="v">
-                                            <option value="{$v['name']}">{$v['name']}</option>
-                                        </foreach>
-                                    </select>
-                                </td>
+                                <td><div class="am-form-group" id="start_address">
+                                    <select name="province"></select>
+                                    <select name="job_area"></select>
+                                    <select name="county"></select>
+                                </div></td>
                             </tr>
 
                             <tr>
@@ -128,14 +134,55 @@
     <script type="text/javascript" src="__PUBLIC__/fileupload/js/vendor/jquery.ui.widget.js"></script>
     <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.iframe-transport.js"></script>
     <script type="text/javascript" src="__ADMIN__/layDate-v5.0.9/laydate/laydate.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.fileupload.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/address.js"></script>
     <script type="text/javascript">
         $(function() {
+            initAddress('#start_address',"", "", "", 1);
             laydate.render({
                 elem: '#starttime'
             });
             laydate.render({
                 elem: '#endtime'
             });
+            $('#industry_id').change(function(){
+                initPosition($(this).val());
+            });
+            function initPosition(industry_id){
+                if(industry_id > 0){
+                    $.post("/index.php/Hr/Position/getPositionList", {industry_id: industry_id}, function (data) {
+                        $('#parent_id').html('<option data-id="0" value="0">一级菜单</option>');
+                        var dataLen = data.data.length;
+                        var parent_sel = 0;
+                        for (var i = 0; i < dataLen; i++) {
+                            parent_sel = '';
+                            $('#parent_id').append('<option data-id="' + data.data[i].id
+                                + '" value="' + data.data[i].id + '" '+parent_sel+'>'
+                                + data.data[i].position_name + '</option>');
+                        }
+                    });
+                }
+            }
+
+            $('#parent_id').change(function(){
+                initPositionChildren($(this).val());
+            });
+
+            function initPositionChildren(position_id){
+                if(position_id > 0){
+                    $.post("/index.php/Hr/Position/getPositionChildrenList", {position_id: position_id}, function (data) {
+                        $('#position_id').html('<option data-id="0" value="">请选择</option>');
+                        var dataLen = data.data.length;
+                        var parent_sel = '';
+                        for (var i = 0; i < dataLen; i++) {
+                            parent_sel = '';
+                            $('#position_id').append('<option data-id="' + data.data[i].id
+                                + '" value="' + data.data[i].id + '" '+parent_sel+'>'
+                                + data.data[i].position_name + '</option>');
+                        }
+                    });
+                }
+            }
         });
     </script>
 </block>
