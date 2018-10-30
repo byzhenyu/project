@@ -119,5 +119,18 @@ class SettleController extends CommonController {
         unset($val);
     }
 
-    public function refreshUserTags(){}
+    /**
+     * @desc 更新HR用户标签
+     * @extra TODO
+     */
+    public function refreshUserTags(){
+        $model = D('Admin/UserTags');
+        $temp_arr = array('gt', 0);
+        $tags_list = $model->getUserTags($temp_arr);
+        $tags = array();
+        foreach($tags_list as &$val) $tags[] = $val['id'];  unset($val);
+        if(count($tags) > 0){
+            $resume_list = M('HrResume')->alias('h')->join('__RESUME__ as r on h.resume_id = r.id')->where(array('h.hr_user_id' => array('in', $tags)))->select();
+        }
+    }
 }

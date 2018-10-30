@@ -1159,11 +1159,12 @@ class UserCenterApiController extends ApiUserCommonController{
         $data = I('post.');
         $data['user_id'] = UID;
         $model = D('Admin/ResumeEvaluation');
+        $resume_info = D('Admin/Resume')->getResumeInfo(array('id' => $data['resume_id']));
+        if(!$resume_info) $this->apiReturn(V(0, '请先填写简历！'));
         $create = $model->create($data);
         if(false !== $create){
             $res = $model->add($data);
             if($res){
-                $resume_info = D('Admin/Resume')->getResumeInfo(array('id' => $data['resume_id']));
                 //非本人评价简历额外获得令牌完成任务
                 if($resume_info['user_id'] != UID){
                     $task_id = 2;
@@ -1431,7 +1432,7 @@ class UserCenterApiController extends ApiUserCommonController{
      */
     public function resumeEvaluationDetail(){
         $resume_id = I('resume_id', 0, 'intval');
-        if(!$resume_id) $this->apiReturn(V(0, '简历标识不能为空！'));
+        //if(!$resume_id) $this->apiReturn(V(0, '简历标识不能为空！'));
         $resumeEvaluationModel = D('Admin/ResumeEvaluation');
         $resumeModel = D('Admin/Resume');
         $resumeWorkModel = D('Admin/ResumeWork');
