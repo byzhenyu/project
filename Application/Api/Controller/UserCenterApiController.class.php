@@ -329,6 +329,9 @@ class UserCenterApiController extends ApiUserCommonController{
         }
         $questionDetail['is_self'] = 0;
         if($questionDetail['user_id'] == UID) $questionDetail['is_self'] = 1;
+        $is_optimum = $answerModel->getAnswerDetail(array('question_id' => $question_id, 'is_optimum' => 1));
+        $questionDetail['is_optimum'] = 0;
+        if($is_optimum) $questionDetail['is_optimum'] = 1;
         $returnArray = array('question' => $questionDetail, 'question_img' => $questionImg, 'answer_list' => $answer_list['info']);
         $this->apiReturn(V(1, '问题详情获取成功！', $returnArray));
     }
