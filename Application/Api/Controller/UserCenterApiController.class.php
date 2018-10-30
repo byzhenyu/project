@@ -894,7 +894,7 @@ class UserCenterApiController extends ApiUserCommonController{
                 $res = $model->save($data);
                 if(false !== $res){
                     refreshUserTags(false, $data['id'], array('job_position' => $data['position_id'], 'job_area' => $data['job_area']));
-                    $this->apiReturn(V(1, '基本资料保存成功！'));
+                    $this->apiReturn(V(1, '保存成功！'));
                 }
                 else{
                     $this->apiReturn(V(0, $model->getError()));
@@ -909,7 +909,7 @@ class UserCenterApiController extends ApiUserCommonController{
             if(false !== $create){
                 $res = $model->add($data);
                 if($res > 0){
-                    $this->apiReturn(V(1, '基本资料保存成功！'));
+                    $this->apiReturn(V(1, '保存成功！'));
                 }
                 else{
                     $this->apiReturn(V(0, $model->getError()));
