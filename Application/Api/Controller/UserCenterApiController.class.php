@@ -1460,7 +1460,7 @@ class UserCenterApiController extends ApiUserCommonController{
         }
         unset($val);
         $return = array('evaluation' => $resumeEvaluation, 'avg' => $avg, 'work_list' => $resumeWorkList);
-        if(1 == $user_type){
+        //if(1 == $user_type){
             $self = $resumeEvaluationModel->getResumeEvaluationInfo(array('resume_id' => $resume_id, 'user_id' => UID));
             if(!$self) {
                 $db = $resumeEvaluationModel->getDbFields();
@@ -1472,7 +1472,7 @@ class UserCenterApiController extends ApiUserCommonController{
                 unset($a_keys);
             }
             $return['self'] = $self;
-        }
+        //}
         $this->apiReturn(V(1,  '评价详情获取成功！', $return));
     }
 
