@@ -1519,6 +1519,7 @@ class UserCenterApiController extends ApiUserCommonController{
         foreach($list['info'] as &$val){
             $val['add_time'] = time_format($val['add_time']);
             $val['sel'] = 0;
+            $val['age'] = time_to_age($val['age']);
         }
         $this->apiReturn(V(1, '人才列表获取成功！', $list['info']));
     }
