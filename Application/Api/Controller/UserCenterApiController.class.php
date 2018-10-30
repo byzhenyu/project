@@ -697,7 +697,7 @@ class UserCenterApiController extends ApiUserCommonController{
         foreach($list as &$val){
             $val['sel'] = 0;
             if(in_array($val['id'], $user_tags)) $val['sel'] = 1;
-            if(1 == $type && in_array($val['name'], $user_tags)) $val['sel'] = 1;
+            if(1 == $type && in_array($val['tags_name'], $user_tags)) $val['sel'] = 1;
         }
         unset($val);
         $this->apiReturn(V(1, '标签列表获取成功！', $list));
