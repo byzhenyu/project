@@ -245,6 +245,7 @@ class UserCenterApiController extends ApiUserCommonController{
             $photo = $data['photo'];
             $questionImgModel = D('Admin/QuestionImg');
             if ($photo) {
+                $photo = explode(',', $photo);
                 $num = count($photo);
                 if($num > 9) $this->apiReturn(V(0, '图片上传最多9张！'));
                 foreach ($photo as &$value) {
