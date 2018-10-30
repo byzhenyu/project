@@ -882,6 +882,11 @@ class UserCenterApiController extends ApiUserCommonController{
         $resume_info = $model->where($resume_where)->find();
         $data['age'] = strtotime($data['age']);
         $data['job_area'] = rtrim($data['job_area'], ',');
+        $address = explode(' ', $data['address']);
+        if($address){
+            $address[0] = rtrim($address[0], ',');
+            $data['address'] = implode(' ', $address);
+        }
         if($resume_info){
             $data['id'] = $resume_info['id'];
             $create = $model->create($data, 2);
