@@ -68,6 +68,7 @@ class RecruitResumeModel extends Model {
         foreach ($list as $k=>$v) {
             $list[$k]['update_time'] = time_format($v['update_time'],'Y-m-d');
             $list[$k]['sex'] = getSexInfo($v['sex']);
+            $list[$k]['age'] = time_to_age($list[$k]['age']);
         }
         return array('info' => $list, 'page' => $page['page']);
     }

@@ -239,10 +239,12 @@ class RecruitModel extends Model {
             $interviewModel = D('Admin/Interview');
             $interview_num = $interviewModel->interviewRecruitCount(array('r.recruit_id' => $recruit_id, 'i.state' => 1));
             $is_post = 1;
-            if($recruit_info['recruit_num'] - 1 == $interview_num){
+            if($recruit_info['recruit_num'] == $interview_num){
                 $is_post = 2;
             }
             $this->where(array('id' => $recruit_id))->setField('is_post', $is_post);
+            $userModel->increaseUserFieldNum($recruit_resume_info['hr_user_id'], 'recommended_number');
+            $userModel->increaseUserFieldNum($recruit_resume_info['recruit_hr_uid'], 'recruit_number');
         }
         if(false !== $release_res && false !== $token_log_res && false !== $token_log_res2 && false !== $token_account_res){
             M()->commit();

@@ -1566,27 +1566,31 @@ class UserCenterApiController extends ApiUserCommonController{
         $data = I('post.');
         $hr_user_id = UID;
         $recruitModel = D('Admin/Recruit');
-        $resumeModel = D('Admin/Resume');
+        //$resumeModel = D('Admin/Resume');
         $recruitResumeModel = D('Admin/RecruitResume');
         $hrResumeModel = D('Admin/HrResume');
         $recruit_where = array('id' => $data['recruit_id']);
         $recruit_info = $recruitModel->getRecruitInfo($recruit_where);
         if(!$recruit_info) $this->apiReturn(V(0, '获取不到对应的悬赏信息！'));
-        $resume_where = array('id' => $data['resume_id']);
-        $resume_info = $resumeModel->getResumeInfo($resume_where);
-        if(!$resume_info) $this->apiReturn(V(0, '请选择推荐人才！'));
+        if($recruit_info['is_post'] == 2) $this->apiReturn(V(0, '该悬赏职位已招满！'));
+        //$resume_where = array('id' => $data['resume_id']);
+        //$resume_info = $resumeModel->getResumeInfo($resume_where);
+        if(!$data['resume_id']) $this->apiReturn(V(0, '请选择推荐人才！'));
         $data['hr_user_id'] = $hr_user_id;
         $data['recruit_hr_uid'] = $recruit_info['hr_user_id'];
-        if(false !== strpos(',', $data['resume_id'])){
+        if(false !== strpos($data['resume_id'], ',')){
             $addAllArr = array();
             $resume_arr = explode(',', $data['resume_id']);
             foreach($resume_arr as &$val){
                 $hr_recommend_where = array('resume_id' => $val, 'hr_user_id' => UID);
                 $hr_resume_info = $hrResumeModel->getHrResumeInfo($hr_recommend_where);
+                $valid_info = $recruitResumeModel->getRecruitResumeInfo(array('recruit_id' => $data['recruit_id'], 'resume_id' => $val, 'hr_user_id' => UID));
+                if($valid_info) continue;
                 $data['recommend_label'] = $hr_resume_info['recommend_label'];
                 $data['resume_id'] = $val;
                 $addAllArr[] = $data;
             }
+            if(count($addAllArr)  == 0) $this->apiReturn(V(1, '推荐成功！'));
             $res = $recruitResumeModel->addAll($addAllArr);
             if($res){
                 add_key_operation(6, $data['recruit_id']);
