@@ -881,6 +881,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $resume_where = array('user_id' => UID);
         $resume_info = $model->where($resume_where)->find();
         $data['age'] = strtotime($data['age']);
+        $data['job_area'] = rtrim($data['job_area'], ',');
         if($resume_info){
             $data['id'] = $resume_info['id'];
             $create = $model->create($data, 2);
