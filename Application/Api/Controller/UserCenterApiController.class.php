@@ -1441,7 +1441,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('resume_id' => $resume_id);
         $resume_where = array('id' => $resume_id);
         $resume_info = $resumeModel->getResumeInfo($resume_where);
-        if(!$resume_info) $this->apiReturn(V(0, '简历详情获取失败！'));
+        //if(!$resume_info) $this->apiReturn(V(0, '简历详情获取失败！'));
         $resumeEvaluation = $resumeEvaluationModel->getResumeEvaluationAvg($where);
         $sum = array_sum(array_values($resumeEvaluation));
         $avg = round($sum/(count($resumeEvaluation)), 2);
