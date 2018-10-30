@@ -8,6 +8,7 @@ class SettleController extends CommonController {
     public function __construct(){
         parent::__construct();
         set_time_limit(0);
+        ini_set('max_execution_time', 0);
         ini_set('memory_limit','5120M');
     }
 
@@ -117,4 +118,6 @@ class SettleController extends CommonController {
         }
         unset($val);
     }
+
+    public function refreshUserTags(){}
 }

@@ -682,6 +682,9 @@ class UserCenterApiController extends ApiUserCommonController{
         $type = I('type', 0, 'intval');
         if(!in_array($type, array(1,2,3,4,5))) $this->apiReturn(V(0, '标签类型不合法！'));
         $user_tags = D('Admin/User')->getUserField(array('user_id' => UID), 'like_tags');
+        if(1 == $type){
+            $user_tags = D('Admin/Resume')->where(array('user_id' => UID))->getField('career_label');
+        }
         $user_tags = explode(',', $user_tags);
         if(4 == $type){
             $list = D('Admin/QuestionType')->getQuestionTypeList(array(), true, 'id,type_name as tags_name');
@@ -694,6 +697,7 @@ class UserCenterApiController extends ApiUserCommonController{
         foreach($list as &$val){
             $val['sel'] = 0;
             if(in_array($val['id'], $user_tags)) $val['sel'] = 1;
+            if(1 == $type && in_array($val['name'], $user_tags)) $val['sel'] = 1;
         }
         unset($val);
         $this->apiReturn(V(1, '标签列表获取成功！', $list));
@@ -1679,7 +1683,9 @@ class UserCenterApiController extends ApiUserCommonController{
         if(!$interviewInfo || $interviewInfo['state'] != 0) $this->apiReturn(V(0, '面试状态不对！'));
         $res = $model->saveInterviewData($where, $save_data);
         if(false !== $res){
-            if($state == 1) D('Admin/Recruit')->recruitPayOff($interviewInfo['recruit_resume_id'], 2);
+            if($state == 1){
+                D('Admin/Recruit')->recruitPayOff($interviewInfo['recruit_resume_id'], 2);
+            }
             $this->apiReturn(V(1, '操作成功！'));
         }
         else{

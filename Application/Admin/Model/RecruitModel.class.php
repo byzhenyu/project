@@ -235,6 +235,15 @@ class RecruitModel extends Model {
         $token_account_res = $accountLogModel->add($token_account_data);
         //增加平台资金记录
         account_log(0, $recruit_info[$type_token[$operate_type]], $type_arr[$operate_type], $type_string[$operate_type], $recruit_resume_id);
+        if(2 == $operate_type){
+            $interviewModel = D('Admin/Interview');
+            $interview_num = $interviewModel->interviewRecruitCount(array('r.recruit_id' => $recruit_id, 'i.state' => 1));
+            $is_post = 1;
+            if($recruit_info['recruit_num'] - 1 == $interview_num){
+                $is_post = 2;
+            }
+            $this->where(array('id' => $recruit_id))->setField('is_post', $is_post);
+        }
         if(false !== $release_res && false !== $token_log_res && false !== $token_log_res2 && false !== $token_account_res){
             M()->commit();
             return true;
