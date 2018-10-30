@@ -109,7 +109,7 @@ class UserController extends CommonController {
                 $auth_res = M('UserAuth')->where($where)->save($auth_data);
                 if(false !== $result && false !== $auth_res){
                     $account = D('Admin/AccountLog')->where(array('user_id' => $id, 'change_type' => 6))->getField('user_money');
-                    if($account > 0){
+                    if($account > 0 && $auth_data['audit_status'] == 1){
                         D('Admin/User')->decreaseUserFieldNum($id, 'frozen_money', $account);
                         D('Admin/User')->increaseUserFieldNum($id, 'withdrawable_amount', $account);
                     }
