@@ -969,6 +969,10 @@ class UserCenterApiController extends ApiUserCommonController{
         if($data['endtime'] && $data['starttime'] > $data['endtime']){
             $this->apiReturn(V(0, '结束时间不能小于开始时间！'));
         }
+        if(!isMobile($hr_mobile)) $this->apiReturn(V(0, '请输入合法的HR联系方式！'));
+        if(!$hr_name) $this->apiReturn(V(0, '请输入HR姓名！'));
+        $data['work_mobile'] = $hr_mobile;
+        $data['work_hr_name'] = $hr_name;
         if($data['id'] > 0){
             $create = $model->create($data, 2);
             if(false !== $create){
@@ -985,10 +989,6 @@ class UserCenterApiController extends ApiUserCommonController{
             }
         }
         else{
-            if(!isMobile($hr_mobile)) $this->apiReturn(V(0, '请输入合法的HR联系方式！'));
-            if(!$hr_name) $this->apiReturn(V(0, '请输入HR姓名！'));
-            $data['work_mobile'] = $hr_mobile;
-            $data['work_hr_name'] = $hr_name;
             M()->startTrans();
             $create = $model->create($data, 1);
             if (false !== $create){
