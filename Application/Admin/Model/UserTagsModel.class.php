@@ -13,7 +13,7 @@ class UserTagsModel extends Model{
         if(is_array($hr_id)){
             fastcgi_finish_request();
             foreach($hr_id as &$value){
-                A('Core/Settle')->refreshUserTags($value);
+                $this->singleOperate($value, $args);
             }
             return true;
         }
