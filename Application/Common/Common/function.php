@@ -1530,14 +1530,15 @@ function refreshRecruitCache($hr_id = UID){
 }
 
 
-function doRequest($url, $param=array()){
-    $url = 'http://www.example.com/doRequest.php';
+/**
+ * @desc 更新用户城市/职业标签信息
+ * @param $hr_user_id
+ */
+function request_tags($hr_user_id){
+    $url = C('DO_REQUEST');
     $param = array(
-        'name'=>'fdipzone',
-        'gender'=>'male',
-        'age'=>30
+        'hr_user_id' => $hr_user_id
     );
-    doRequest($url, $param);
     $url_info = parse_url($url);
     $host = $url_info['host'];
     $path = $url_info['path'];

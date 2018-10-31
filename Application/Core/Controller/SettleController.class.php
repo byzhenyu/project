@@ -123,28 +123,73 @@ class SettleController extends CommonController {
      * @desc 更新用户简历标签内容
      */
     public function refreshUserTags(){
-        $model = D('Admin/UserTags');
-        $temp_arr = array('gt', 0);
         $hr_user_id = I('hr_user_id', 0, 'intval');
-        $hr_user_id = 136;
+        if(!$hr_user_id) return true;
         $where = array();
-        $tags_model = M('UserTags');
         if($hr_user_id){
+            $tags_model = M('UserTags');
             $where['h.hr_user_id'] = $hr_user_id;
             $field = 'position_id,hr_user_id,job_area';
             $resume_list = M('HrResume')->alias('h')->field($field)->join('__RESUME__ as r on h.resume_id = r.id')->where($where)->select();
             if(count($resume_list) > 0){
-                $tags_arr = array();
+                $tags_model->where(array('user_id' => $hr_user_id))->delete();
+                $temp_area = '';
+                $temp_position = '';
+                $area_arr = array();
+                $position_arr = array();
+                $area_add_arr = array();
+                $position_add_arr = array();
+                foreach($resume_list as &$val){
+                    if(!in_array($val['job_area'], $area_arr)){
+                        $area_arr[] = $val['job_area'];
+                        if(mb_strlen($temp_area.$val['job_area']) + 1 > 255){
+                            $temp_area = rtrim($temp_area, '|');
+                            $area_add_arr[] = $temp_area;
+                            $temp_area = '';
+                            $temp_area .= $val['job_area'].'|';
+                        }
+                        else{
+                            $temp_area .= $val['job_area'].'|';
+                        }
+                    }
+                    if(!in_array($val['position_id'], $position_arr)){
+                        $position_arr[] = $val['position_id'];
+                        if(mb_strlen($temp_position.$val['position_id']) + 1 > 255){
+                            $temp_position = rtrim($temp_position, '|');
+                            $position_add_arr[] = $temp_position;
+                            $temp_position = '';
+                            $temp_position .= $val['position_id'].'|';
+                        }
+                        else{
+                            $temp_position .= $val['position_id'].'|';
+                        }
+                    }
+                }
+                //添加最后一轮地区到添加数组中
+                $area_add_arr[] = $temp_area;
+                $position_add_arr[] = $temp_position;
+                unset($val);
+                $area_keys = array_keys($area_add_arr);
+                $tags_add_arr = array();
+                foreach($area_keys as &$k_val){
+                    $t_pos = $position_add_arr[$k_val] ? rtrim($position_add_arr[$k_val], '|') : '';
+                    $tags_add_arr[] = array('user_id' => $hr_user_id, 'job_area' => rtrim($area_add_arr[$k_val], '|'), 'job_position' => $t_pos);
+                }
+                unset($k_val);
+                $res = $tags_model->addAll($tags_add_arr);
+                return $res;
             }
             return true;
         }
         else{
+            //暂不支持全部修改
+            return true;
+            $model = D('Admin/UserTags');
+            $temp_arr = array('gt', 0);
             $tags_list = $model->getUserTags($temp_arr);
             $tags = array();
             foreach($tags_list as &$val) $tags[] = $val['user_id'];  unset($val);
             $where['h.hr_user_id'] = array('in', $tags);
-            //暂不支持全部修改
-            return true;
         }
     }
 }
