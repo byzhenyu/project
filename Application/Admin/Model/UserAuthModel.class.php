@@ -13,11 +13,10 @@ class UserAuthModel extends Model {
         array('true_name', 'require', '真实姓名不能为空！', 1, 'regex', 3),
         array('true_name', 'checkTypeLength', '真实姓名不能超过18字！', 2, 'callback', 3),
         array('cert_type', 'require', '证件类型不能为空！', 1, 'regex', 3),
-        array('idcard_number', 'require', '身份证号不能为空！', 1, 'regex', 3),
-        array('idcard_number', 'isCard', '不是合法的身份证', 1, 'function', 3),
-        array('idcard_up', 'require', '身份证正面照不能为空！', 1, 'regex', 3),
-        array('idcard_down', 'require', '身份证反面照不能为空！', 1, 'regex', 3),
-        array('hand_pic', 'require', '手持身份证不能为空!', 1, 'regex', 3),
+        array('idcard_number', 'require', '证件号码不能为空！', 1, 'regex', 3),
+        array('idcard_up', 'require', '证件照正面不能为空！', 1, 'regex', 3),
+        array('idcard_down', 'require', '证件照反面不能为空！', 1, 'regex', 3),
+        array('hand_pic', 'require', '手持证件照不能为空!', 1, 'regex', 3),
     );
 
     /**
@@ -50,6 +49,12 @@ class UserAuthModel extends Model {
         $where = array('user_id' => $uid);
         $data['user_id'] = $uid;
         $res = $this->where($where)->find();
+        if($data['cert_type'] == 1){
+            if(!isCard($data['idcard_number'])){
+                $this->error = '不是合法的身份证号！';
+                return false;
+            }
+        }
         if($res) $this->where($where)->delete();
     }
     //更新操作前的钩子操作
