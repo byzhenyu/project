@@ -96,6 +96,7 @@ class PublicApiController extends ApiCommonController
         } elseif ($result == false && $type == 4) {
             $this->apiReturn(V(0, '手机号码已存在'));
         }
+        if(6 == $type) $this->checkPayMobile($mobile);
         $sms_code = randCode(C('SMS_CODE_LEN'), 1);
         $sms_code = 1234;
         switch ($type) {
@@ -136,6 +137,20 @@ class PublicApiController extends ApiCommonController
             $this->apiReturn(V(1, '发送成功'));
         } else {
             $this->apiReturn(V(0, '发送失败:' . $send_result['info']));
+        }
+    }
+
+    /**
+     * @desc 设置支付密码验证手机号是否与登录手机号一致
+     * @param $mobile
+     */
+    private function checkPayMobile($mobile){
+        $token = I('token', 0, 'trim');
+        $user_id = M('UserToken')->where(array('token' => $token))->getField('user_id');
+        if(!$user_id) $this->apiReturn(V(0, '登录状态有误！'));
+        $user_mobile = D('Admin/User')->getUserField(array('user_id' => $user_id), 'mobile');
+        if($user_mobile != $mobile){
+            $this->apiReturn(V(0, '手机号与认证手机号不一致！'));
         }
     }
 

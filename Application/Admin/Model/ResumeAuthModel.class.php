@@ -32,6 +32,7 @@ class ResumeAuthModel extends Model {
             if ($val['head_pic'] == '') {
                 $val['head_pic'] = 'https://shanjian.oss-cn-hangzhou.aliyuncs.com/nopic.png';
             }
+            $val['age'] = time_to_age($val['age']);
         }
         return array(
             'info' => $res,

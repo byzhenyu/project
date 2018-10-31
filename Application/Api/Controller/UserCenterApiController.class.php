@@ -71,10 +71,11 @@ class UserCenterApiController extends ApiUserCommonController{
         $where = array('user_id' => UID);
         $userInfo = $model->getUserInfo($where);
         $user_type = $userInfo['user_type'];
-        if($mobile != $userInfo['mobile']) $this->apiReturn(V(0, '与登录手机号不一致！'));
+        if($mobile != $userInfo['mobile']) $this->apiReturn(V(0, '手机号与认证手机号不一致！'));
         if(!isMobile($mobile)) $this->apiReturn(V(0, '请输入合法的手机号！'));
         $payLen = strlen($pay_word);
         if($payLen < 6 || $payLen > 18) $this->apiReturn(V(0, '密码长度6-18位！'));
+        if(pwdHash($pay_word, $userInfo['password'], true)) $this->apiReturn(V(0, '不能与登录密码一致！'));
         $valid = D('Admin/SmsMessage')->checkSmsMessage($sms_code, $mobile, $user_type, 6);
         if(!$valid['status']) $this->apiReturn($valid);
         $model = D('Admin/User');
