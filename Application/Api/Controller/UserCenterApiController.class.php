@@ -1249,14 +1249,16 @@ class UserCenterApiController extends ApiUserCommonController{
         $recommend_info['interview_id'] = $interview_id;
         $recommend_info['auth_id'] = $auth_id;
         $hrModel = D('Admin/HrResume');
+        $auth_model = D('Admin/ResumeAuth');
         $hr_info = $hrModel->getHrResumeInfo(array('hr_user_id' => UID, 'resume_id' => $resume_id));
-        if($user_id != $resumeDetail['user_id'] && !$hr_info){
+        $hr_auth_info = $auth_model->getResumeAuthInfo(array('resume_id' => $resume_id, 'hr_id' => UID));
+        if($user_id != $resumeDetail['user_id'] && !$hr_info && !$hr_auth_info){
             if(!$is_open) $resumeDetail['mobile'] = '****';
             if($is_open) $resumeDetail['mobile'] = strval($resumeDetail['hide_mobile']);
         }
         //获取悬赏金额
         $recruit_id = $recommend_info['recruit_id'];
-        $commission = M('recruit')->where(array('id'=>$recruit_id))->getField('commission');
+        $commission = M('Recruit')->where(array('id'=>$recruit_id))->getField('commission');
         $get_resume_money = C('GET_RESUME_MONEY');
         $work_resume_money = fen_to_yuan($commission) - $get_resume_money;
         $resumeDetail['get_resume_money'] = $get_resume_money;
