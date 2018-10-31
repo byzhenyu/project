@@ -215,17 +215,20 @@ class RecruitModel extends Model {
         $recruit_resume_info = $recruitResumeModel->getRecruitResumeInfo(array('id' => $recruit_resume_id));
         if(!$recruit_resume_info) return false;
         $recruit_id = $recruit_resume_info['recruit_id'];
+        $radio = C('RATIO');
         M()->startTrans();
         //减少悬赏发布人冻结资金
         $recruit_where = array('id' => $recruit_id);
         $recruit_info = $this->getRecruitInfo($recruit_where);
         $release_res = $userModel->decreaseUserFieldNum($recruit_info['hr_user_id'], 'frozen_money', $recruit_info[$type_token[$operate_type]]);
         //增加用户资金/暂冻结金额资金
-        $token_log_res = $userModel->increaseUserFieldNum($recruit_resume_info['hr_user_id'], 'user_money', $recruit_info[$type_token[$operate_type]]);
-        $token_log_res2 = $userModel->increaseUserFieldNum($recruit_resume_info['hr_user_id'], 'frozen_money', $recruit_info[$type_token[$operate_type]]);
+        //$token_log_res = $userModel->increaseUserFieldNum($recruit_resume_info['hr_user_id'], 'user_money', $recruit_info[$type_token[$operate_type]]);
+        $user_account_money = $recruit_info[$type_token[$operate_type]] * ((100 - $radio) / 100);
+        $plat_account_money = $recruit_info[$type_token[$operate_type]] - $user_account_money;
+        $token_log_res2 = $userModel->increaseUserFieldNum($recruit_resume_info['hr_user_id'], 'frozen_money', $user_account_money);
         $token_account_data = array(
             'user_id' => $recruit_resume_info['hr_user_id'],
-            'user_money' => $recruit_info[$type_token[$operate_type]],
+            'user_money' => $user_account_money,
             'change_desc' => $type_string[$operate_type],
             'change_type' => $type_arr[$operate_type],
             'order_sn' => $recruit_resume_id,
@@ -234,7 +237,7 @@ class RecruitModel extends Model {
         //增加资金记录
         $token_account_res = $accountLogModel->add($token_account_data);
         //增加平台资金记录
-        account_log(0, $recruit_info[$type_token[$operate_type]], $type_arr[$operate_type], $type_string[$operate_type], $recruit_resume_id);
+        account_log(0, $plat_account_money, $type_arr[$operate_type], $type_string[$operate_type], $recruit_resume_id);
         if(2 == $operate_type){
             $interviewModel = D('Admin/Interview');
             $interview_num = $interviewModel->interviewRecruitCount(array('r.recruit_id' => $recruit_id, 'i.state' => 1));
@@ -246,7 +249,7 @@ class RecruitModel extends Model {
             $userModel->increaseUserFieldNum($recruit_resume_info['hr_user_id'], 'recommended_number', 1);
             $userModel->increaseUserFieldNum($recruit_resume_info['recruit_hr_uid'], 'recruit_number', 1);
         }
-        if(false !== $release_res && false !== $token_log_res && false !== $token_log_res2 && false !== $token_account_res){
+        if(false !== $release_res && false !== $token_log_res2 && false !== $token_account_res){
             M()->commit();
             return true;
         }
