@@ -903,6 +903,7 @@ class UserCenterApiController extends ApiUserCommonController{
                 $res = $model->save($data);
                 if(false !== $res){
                     echo json_encode(V(1, '保存成功！'));
+                    set_time_limit(0);
                     fastcgi_finish_request();
                     refreshUserTags(false, $data['id'], array('job_position' => $data['position_id'], 'job_area' => $data['job_area']));
                 }
