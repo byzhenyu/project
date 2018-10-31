@@ -78,6 +78,7 @@ class AnswerModel extends Model {
         $answer_id = $where['id'];
         $answerInfo = $this->getAnswerDetail($where);
         if(!$answerInfo) return V(0, '未找到对应的答案信息！');
+        if($answerInfo['user_id'] == UID) return V(0, '不能采纳自己的回答为最佳答案！');
         unset($where['id']);
         $where['is_optimum'] = 1;
         $answerInfo = $this->getAnswerDetail($where);

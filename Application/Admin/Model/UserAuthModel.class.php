@@ -59,7 +59,7 @@ class UserAuthModel extends Model {
     }
     //更新操作前的钩子操作
     protected function _before_update(&$data, $option){
-
+        $data['audit_status'] = 0;//上传凭证修改  修改为待审核
     }
 
 }
