@@ -198,15 +198,17 @@ class UserCenterApiController extends ApiUserCommonController{
         $model = D('Admin/Question');
         $create = $model->create($data);
         if(false !== $create){
-            $question_id = $model->add($data);
-            if(!$question_id) $this->apiReturn(V(0, $model->getError()));
             //评论图片处理
             $photo = $data['photo'];
-            $questionImgModel = D('Admin/QuestionImg');
             if ($photo) {
                 $photo = explode(',', $photo);
                 $num = count($photo);
-                if($num > 9) $this->apiReturn(V(0, '图片上传最多9张！'));
+                if ($num > 9) $this->apiReturn(V(0, '图片上传最多9张！'));
+            }
+            $question_id = $model->add($data);
+            if(!$question_id) $this->apiReturn(V(0, $model->getError()));
+            $questionImgModel = D('Admin/QuestionImg');
+            if ($photo) {
                 foreach ($photo as &$value) {
                     $data_img['item_id'] = $question_id;
                     $data_img['img_path'] = $value;
@@ -241,15 +243,17 @@ class UserCenterApiController extends ApiUserCommonController{
         $model = D('Admin/Answer');
         $create = $model->create($data);
         if(false !== $create){
-            $answer_id = $model->add($data);
-            if(!$answer_id)$this->apiReturn(V(0, $model->getError()));
             //评论图片处理
             $photo = $data['photo'];
-            $questionImgModel = D('Admin/QuestionImg');
-            if ($photo) {
+            if($photo){
                 $photo = explode(',', $photo);
                 $num = count($photo);
                 if($num > 9) $this->apiReturn(V(0, '图片上传最多9张！'));
+            }
+            $answer_id = $model->add($data);
+            if(!$answer_id)$this->apiReturn(V(0, $model->getError()));
+            $questionImgModel = D('Admin/QuestionImg');
+            if ($photo) {
                 foreach ($photo as &$value) {
                     $data_img['item_id'] = $answer_id;
                     $data_img['img_path'] = $value;

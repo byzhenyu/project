@@ -1539,7 +1539,7 @@ function request_tags($hr_user_id){
         $URL['port'] = 80;
     }
 
-    $request ='POST '.$URL['path']." HTTP/1.1\nHost: ".$URL['host']."\nContent-type: application/x-www-form-urlencoded\nContent-length: ".strlen(trim($params))."\nConnection: close\n\n".trim($params)."\n";
+    $request ='POST '.$URL['path']." HTTP/1.1\r\nHost: ".$URL['host']."\r\nContent-type: application/x-www-form-urlencoded\r\nContent-length: ".strlen(trim($params))."\r\nConnection: close\r\n\r\n".trim($params)."\r\n";
 
     try{
         $fp = fsockopen($URL['host'], $URL['port']);
