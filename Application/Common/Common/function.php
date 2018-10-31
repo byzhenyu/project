@@ -1543,17 +1543,16 @@ function request_tags($hr_user_id){
     $host = $url_info['host'];
     $path = $url_info['path'];
     $query = isset($param)? http_build_query($param) : '';
-    $port = 80;
-    $errno = 0;
-    $errstr = '';
-    $timeout = 10;
-    $fp = fsockopen($host, $port, $errno, $errstr, $timeout);
+    $fp = fsockopen($host);
     $out = "POST ".$path." HTTP/1.1\r\n";
     $out .= "host:".$host."\r\n";
     $out .= "content-length:".strlen($query)."\r\n";
     $out .= "content-type:application/x-www-form-urlencoded\r\n";
     $out .= "connection:close\r\n\r\n";
     $out .= $query;
-    fputs($fp, $out);
+    fwrite($fp,$out);
+    //检索HTTP状态码
+    $data = fgets($fp,128);
+    p($data);exit;
     fclose($fp);
 }
