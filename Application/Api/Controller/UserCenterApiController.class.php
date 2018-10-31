@@ -1606,6 +1606,8 @@ class UserCenterApiController extends ApiUserCommonController{
             $hr_recommend_where = array('resume_id' => $data['resume_id'], 'hr_user_id' => UID);
             $hr_resume_info = $hrResumeModel->getHrResumeInfo($hr_recommend_where);
             $data['recommend_label'] = $hr_resume_info['recommend_label'];
+            $valid_info = $recruitResumeModel->getRecruitResumeInfo(array('recruit_id' => $data['recruit_id'], 'resume_id' => $data['resume_id'], 'hr_user_id' => UID));
+            if($valid_info) $this->apiReturn(V(0, '你已经向该悬赏推荐过此人！'));
             $create = $recruitResumeModel->create($data);
             if(false !== $create){
                 $res = $recruitResumeModel->add($data);

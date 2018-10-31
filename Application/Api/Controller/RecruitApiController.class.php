@@ -293,7 +293,7 @@ class RecruitApiController extends ApiUserCommonController{
         $where['user_id'] = UID;
         $data = D('Admin/AccountLog')->getAccountLogByPage($where,'log_id,user_id,user_money,change_time,change_desc');
         if ($type == 1) {
-            $where['change_type'] = array('in', [2,3]);
+            $where['change_type'] = array('in', [2,3,6]);
             $info['list'] = $data['info'];
             $info['statistics'] = D('Admin/AccountLog')->getAccountMsg($where);
         } else {
