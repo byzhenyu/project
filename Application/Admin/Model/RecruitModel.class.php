@@ -243,8 +243,8 @@ class RecruitModel extends Model {
                 $is_post = 2;
             }
             $this->where(array('id' => $recruit_id))->setField('is_post', $is_post);
-            $userModel->increaseUserFieldNum($recruit_resume_info['hr_user_id'], 'recommended_number');
-            $userModel->increaseUserFieldNum($recruit_resume_info['recruit_hr_uid'], 'recruit_number');
+            $userModel->increaseUserFieldNum($recruit_resume_info['hr_user_id'], 'recommended_number', 1);
+            $userModel->increaseUserFieldNum($recruit_resume_info['recruit_hr_uid'], 'recruit_number', 1);
         }
         if(false !== $release_res && false !== $token_log_res && false !== $token_log_res2 && false !== $token_account_res){
             M()->commit();
