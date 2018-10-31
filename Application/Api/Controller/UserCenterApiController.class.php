@@ -1059,9 +1059,9 @@ class UserCenterApiController extends ApiUserCommonController{
         $model = D('Admin/ResumeWork');
         $res = $model->getResumeWorkInfo($where);
         if($res){
-            $res['starttime'] = time_format($res['starttime']);
+            $res['starttime'] = time_format($res['starttime'], 'Y-m-d');
             if($res['endtime']){
-                $res['endtime'] = time_format($res['endtime']);
+                $res['endtime'] = time_format($res['endtime'], 'Y-m-d');
             }
             else{
                 $res['endtime'] = '至今';
@@ -1133,7 +1133,7 @@ class UserCenterApiController extends ApiUserCommonController{
         if($res){
             $res['starttime'] = time_format($res['starttime'], 'Y-m-d');
             if($res['endtime']){
-                $res['endtime'] = time_format($res['endtime']);
+                $res['endtime'] = time_format($res['endtime'], 'Y-m-d');
             }
             else{
                 $res['endtime'] = '至今';
