@@ -21,7 +21,7 @@ class InterviewModel extends Model {
      * @param string $order 排序顺序
      * @return array
      */
-    public function getInterviewList($where, $field = false, $order = ''){
+    public function getInterviewList($where, $field = false, $order = 'i.update_time desc'){
         if(!$field) $field = 'i.resume_id,i.state,i.update_time,r.age,r.sex,r.true_name,r.head_pic,r.update_time as resume_time,i.id as interview_id,i.recruit_resume_id';
         $number = $this->alias('i')->join('__RESUME__ as r on i.resume_id = r.id')->where($where)->count();
         $page = get_web_page($number);
