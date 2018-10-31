@@ -1394,7 +1394,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $resume_auth_where = array('hr_mobile' => $user_info['mobile'], 'hr_id' => UID, 'resume_id' => $resume_id);
         $resumeAuthModel = D('Admin/ResumeAuth');
         $resume_auth_info = $resumeAuthModel->getResumeAuthInfo($resume_auth_where);
-        if(!$resume_auth_info) $this->apiReturn(V(0, '无法获取到对应的简历认证信息！'));
+        if(!$resume_auth_info) $this->apiReturn(V(0, '你不是该简历申请的HR！'));
         if($resume_auth_info['auth_result'] != 0) $this->apiReturn(V(0, '该简历已经被认证过！'));
         $save_data['auth_result'] = $auth_result;
         $save_data['auth_time'] = NOW_TIME;
