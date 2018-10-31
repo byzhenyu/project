@@ -11,6 +11,7 @@ class QuestionModel extends Model {
     protected $updateFields = array('question_title', 'question_type', 'question_content', 'user_id', 'browse_number', 'like_number', 'answer_number', 'disabled', 'question_type');
     protected $_validate = array(
         array('question_title', 'require', '问题标题不能为空！', 1, 'regex', 3),
+        array('question_title', '10,40', '问题标题长度10-40！', 1, 'length', 3),
         array('question_content', 'require', '问题内容不能为空！', 1, 'regex', 3),
         array('question_content', '1,200', '问题内容不能超过200字', 1, 'length', 3),
         array('city_name', 'require', '所在城市获取失败!', 1, 'regex', 3)
