@@ -33,7 +33,7 @@
                                                 <div class="tpl-form-file-img">
                                                     <img src="{$info['suffix_img']}" alt="" style="min-height:122px; width: 122px;" id="img_">
                                                 </div>
-                                                <input type="hidden" value="{$info['thumb_img']}" name="suffix_img" id="img" />
+                                                <input type="hidden" value="{$info['suffix_img']}" name="suffix_img" id="img" />
                                                 <button type="button" class="am-btn am-btn-success am-btn-sm" id="btnUpload">上传</button>
                                                 <button type="button" class="am-btn am-btn-danger am-btn-sm" onclick="delFile($('#img').val(), '')" id="btn_delete_">删除</button>
                                                 <if condition="$info['suffix_img'] eq ''">
