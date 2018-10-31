@@ -1482,14 +1482,18 @@ function refreshUserTags($hr_id = false, $resume_id = false, $resume_info = arra
         if($resume_job) $res = $model->refreshJobArgs($hr_id, array('job_area' => $resume_job['job_area'], 'job_position' => $resume_job['position_id']));
     }
     if(count($resume_info) > 0 && $resume_id){
-        $resume_job = $resume_model->getResumeInfo(array('id' => $resume_id));
-        $tags_arr = array('job_area' => $resume_job['job_area'], 'job_position' => $resume_job['position_id']);
-        if(count(array_diff($tags_arr, $resume_info)) != 0 && count(array_diff($resume_info, $tags_arr)) != 0){
-            $hr_id = D('Admin/HrResume')->where(array('resume_id' => $resume_id))->field('hr_user_id')->select();
-            $hr_user_id = array();
-            foreach($hr_id  as &$val) $hr_user_id[] = $val['hr_user_id']; unset($val);
-            if(count($hr_user_id) > 0) $res = $model->refreshJobArgs($hr_user_id, $tags_arr);
+        //$resume_job = $resume_model->getResumeInfo(array('id' => $resume_id));
+        //$tags_arr = array('job_area' => $resume_job['job_area'], 'job_position' => $resume_job['position_id']);
+        //if(count(array_diff($tags_arr, $resume_info)) != 0 && count(array_diff($resume_info, $tags_arr)) != 0){
+        $hr_id = D('Admin/HrResume')->where(array('resume_id' => $resume_id))->field('hr_user_id')->select();
+        $hr_user_id = array();
+        fastcgi_finish_request();
+        foreach($hr_id  as &$val){
+            $hr_user_id[] = $val['hr_user_id'];
+            A('Core/Settle')->refreshUserTags($val['hr_user_id']);
         }
+        unset($val);
+        //}
     }
     return $res;
 }
