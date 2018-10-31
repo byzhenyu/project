@@ -79,6 +79,11 @@ function load_config($file,$parse=CONF_PARSE){
     }
 }
 
+if (!function_exists("fastcgi_finish_request")) {
+    function fastcgi_finish_request()  {
+    }
+}
+
 /**
  * 解析yaml文件返回一个数组
  * @param string $file 配置文件名

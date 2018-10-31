@@ -382,8 +382,4 @@ class PublicApiController extends ApiCommonController
     public function user_tags(){
         p(user_tags(14));exit;
     }
-
-    public function request_test(){
-        p(request_tags(136));
-    }
 }

@@ -1528,27 +1528,3 @@ function refreshRecruitCache($hr_id = UID){
     $res = $model->where(array('hr_user_id' => $hr_id))->delete();
     return $res;
 }
-
-
-function request_tags($hr_user_id){
-    $arr = array('hr_user_id' => $hr_user_id);
-    $params = http_build_query($arr);
-    $url = C('DO_REQUEST');
-    $URL = parse_url($url);
-    if(!isset($URL['port'])){
-        $URL['port'] = 80;
-    }
-
-    $request ='POST '.$URL['path']." HTTP/1.1\r\nHost: ".$URL['host']."\r\nContent-type: application/x-www-form-urlencoded\r\nContent-length: ".strlen(trim($params))."\r\nConnection: close\r\n\r\n".trim($params)."\r\n";
-
-    try{
-        $fp = fsockopen($URL['host'], $URL['port']);
-        fwrite($fp, $request);
-        $res = fread($fp, 1024);
-    }catch(Exception $e){
-        fclose($fp);
-        return false;
-    }
-    fclose($fp);
-    return $res;
-}

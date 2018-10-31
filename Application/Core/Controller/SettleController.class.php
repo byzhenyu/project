@@ -122,8 +122,7 @@ class SettleController extends CommonController {
     /**
      * @desc 更新用户简历标签内容
      */
-    public function refreshUserTags(){
-        $hr_user_id = I('hr_user_id', 0, 'intval');
+    public function refreshUserTags($hr_user_id){
         if(!$hr_user_id) return true;
         $where = array();
         if($hr_user_id){

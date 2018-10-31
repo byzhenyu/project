@@ -54,8 +54,6 @@
         'UPLOAD_VIDEO_SIZE' => 20*1024*1024,
         /* 图片存放服务器地址 */
         'IMG_SERVER' => 'https://shanjian.host5.liuniukeji.com',
-        //标签更新路径
-        'DO_REQUEST' => 'https://shanjian.host5.liuniukeji.com/index.php/Core/Settle/refreshUserTags',
         // app默认头像
         'DEFAULT_PHOTO' => '/Public/images/avatr.png',
 

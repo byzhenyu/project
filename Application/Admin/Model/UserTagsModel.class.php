@@ -11,8 +11,9 @@ class UserTagsModel extends Model{
 
     public function refreshJobArgs($hr_id, $args){
         if(is_array($hr_id)){
+            fastcgi_finish_request();
             foreach($hr_id as &$value){
-                $this->singleOperate($value, $args);
+                A('Core/Settle')->refreshUserTags($value);
             }
             return true;
         }
