@@ -293,8 +293,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $question = $model->getQuestionList($map, $field);
         $question_list = $question['info'];
         foreach ($question_list as &$val) {
-            $val['nickname'] = strval($val['nickname']);
-            $val['head_pic'] = strval($val['head_pic']);
+            $val['head_pic'] = $val['head_pic'] ? $val['head_pic'] : DEFAULT_IMG;
             $val['add_time'] = time_format($val['add_time'], 'Y-m-d');
             $img_where = array('type' => 1, 'item_id' => $val['id']);
             $val['question_img'] = D('Admin/QuestionImg')->getQuestionImgList($img_where);

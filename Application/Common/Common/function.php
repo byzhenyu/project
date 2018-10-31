@@ -1528,3 +1528,31 @@ function refreshRecruitCache($hr_id = UID){
     $res = $model->where(array('hr_user_id' => $hr_id))->delete();
     return $res;
 }
+
+
+function doRequest($url, $param=array()){
+    $url = 'http://www.example.com/doRequest.php';
+    $param = array(
+        'name'=>'fdipzone',
+        'gender'=>'male',
+        'age'=>30
+    );
+    doRequest($url, $param);
+    $url_info = parse_url($url);
+    $host = $url_info['host'];
+    $path = $url_info['path'];
+    $query = isset($param)? http_build_query($param) : '';
+    $port = 80;
+    $errno = 0;
+    $errstr = '';
+    $timeout = 10;
+    $fp = fsockopen($host, $port, $errno, $errstr, $timeout);
+    $out = "POST ".$path." HTTP/1.1\r\n";
+    $out .= "host:".$host."\r\n";
+    $out .= "content-length:".strlen($query)."\r\n";
+    $out .= "content-type:application/x-www-form-urlencoded\r\n";
+    $out .= "connection:close\r\n\r\n";
+    $out .= $query;
+    fputs($fp, $out);
+    fclose($fp);
+}

@@ -120,17 +120,31 @@ class SettleController extends CommonController {
     }
 
     /**
-     * @desc 更新HR用户标签
-     * @extra TODO
+     * @desc 更新用户简历标签内容
      */
     public function refreshUserTags(){
         $model = D('Admin/UserTags');
         $temp_arr = array('gt', 0);
-        $tags_list = $model->getUserTags($temp_arr);
-        $tags = array();
-        foreach($tags_list as &$val) $tags[] = $val['id'];  unset($val);
-        if(count($tags) > 0){
-            $resume_list = M('HrResume')->alias('h')->join('__RESUME__ as r on h.resume_id = r.id')->where(array('h.hr_user_id' => array('in', $tags)))->select();
+        $hr_user_id = I('hr_user_id', 0, 'intval');
+        $hr_user_id = 136;
+        $where = array();
+        $tags_model = M('UserTags');
+        if($hr_user_id){
+            $where['h.hr_user_id'] = $hr_user_id;
+            $field = 'position_id,hr_user_id,job_area';
+            $resume_list = M('HrResume')->alias('h')->field($field)->join('__RESUME__ as r on h.resume_id = r.id')->where($where)->select();
+            if(count($resume_list) > 0){
+                $tags_arr = array();
+            }
+            return true;
+        }
+        else{
+            $tags_list = $model->getUserTags($temp_arr);
+            $tags = array();
+            foreach($tags_list as &$val) $tags[] = $val['user_id'];  unset($val);
+            $where['h.hr_user_id'] = array('in', $tags);
+            //暂不支持全部修改
+            return true;
         }
     }
 }
