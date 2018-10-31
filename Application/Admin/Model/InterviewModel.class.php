@@ -123,4 +123,9 @@ class InterviewModel extends Model {
         $count = $this->alias('i')->join('__RECRUIT_RESUME__ as r on i.recruit_resume_id = r.id')->where($where)->count();
         return $count;
     }
+
+    public function getInterviewField($where, $field){
+        $res = $this->where($where)->getField($field);
+        return $res;
+    }
 }

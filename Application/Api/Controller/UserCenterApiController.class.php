@@ -1208,6 +1208,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $resumeEvaluationModel = D('Admin/ResumeEvaluation');
         $recruitResumeModel = D('Admin/RecruitResume');
         $educationModel = D('Admin/Education');
+        if(!$id) $id = D('Admin/Interview')->getInterviewField(array('id' => $interview_id), 'recruit_resume_id');
         $recruit_where = array('id' => $id);
         $recommend_info = $recruitResumeModel->getRecruitResumeField($recruit_where, 'recruit_id,recommend_label,recommend_voice,id');
         $resume_where = array('id' => $resume_id);
