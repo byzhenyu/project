@@ -1487,7 +1487,6 @@ function refreshUserTags($hr_id = false, $resume_id = false, $resume_info = arra
         //if(count(array_diff($tags_arr, $resume_info)) != 0 && count(array_diff($resume_info, $tags_arr)) != 0){
         $hr_id = D('Admin/HrResume')->where(array('resume_id' => $resume_id))->field('hr_user_id')->select();
         $hr_user_id = array();
-        //fastcgi_finish_request();
         foreach($hr_id  as &$val){
             $hr_user_id[] = $val['hr_user_id'];
             A('Core/Settle')->refreshUserTags($val['hr_user_id']);
