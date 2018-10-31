@@ -384,6 +384,6 @@ class PublicApiController extends ApiCommonController
     }
 
     public function request_test(){
-        request_tags(136);
+        p(request_tags(136));
     }
 }

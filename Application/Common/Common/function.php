@@ -1530,29 +1530,25 @@ function refreshRecruitCache($hr_id = UID){
 }
 
 
-/**
- * @desc 更新用户城市/职业标签信息
- * @param $hr_user_id
- */
 function request_tags($hr_user_id){
+    $arr = array('hr_user_id' => $hr_user_id);
+    $params = http_build_query($arr);
     $url = C('DO_REQUEST');
-    $param = array(
-        'hr_user_id' => $hr_user_id
-    );
-    $url_info = parse_url($url);
-    $host = $url_info['host'];
-    $path = $url_info['path'];
-    $query = isset($param)? http_build_query($param) : '';
-    $fp = fsockopen($host);
-    $out = "POST ".$path." HTTP/1.1\r\n";
-    $out .= "host:".$host."\r\n";
-    $out .= "content-length:".strlen($query)."\r\n";
-    $out .= "content-type:application/x-www-form-urlencoded\r\n";
-    $out .= "connection:close\r\n\r\n";
-    $out .= $query;
-    fwrite($fp,$out);
-    //检索HTTP状态码
-    $data = fgets($fp,128);
-    p($data);exit;
+    $URL = parse_url($url);
+    if(!isset($URL['port'])){
+        $URL['port'] = 80;
+    }
+
+    $request ='POST '.$URL['path']." HTTP/1.1\nHost: ".$URL['host']."\nContent-type: application/x-www-form-urlencoded\nContent-length: ".strlen(trim($params))."\nConnection: close\n\n".trim($params)."\n";
+
+    try{
+        $fp = fsockopen($URL['host'], $URL['port']);
+        fwrite($fp, $request);
+        $res = fread($fp, 1024);
+    }catch(Exception $e){
+        fclose($fp);
+        return false;
+    }
     fclose($fp);
+    return $res;
 }
