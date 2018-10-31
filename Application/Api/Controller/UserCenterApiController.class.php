@@ -1263,7 +1263,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $recruit_id = $recommend_info['recruit_id'];
         $commission = M('Recruit')->where(array('id'=>$recruit_id))->getField('commission');
         $get_resume_money = C('GET_RESUME_MONEY');
-        $work_resume_money = fen_to_yuan($commission - $get_resume_money);
+        $work_resume_money = fen_to_yuan($commission) - $get_resume_money;
         $resumeDetail['get_resume_money'] = $get_resume_money;
         $resumeDetail['work_resume_money'] = $work_resume_money;
         $resumeDetail['age'] = time_format($resumeDetail['age'], 'Y-m-d');
