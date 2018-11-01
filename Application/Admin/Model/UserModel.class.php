@@ -57,7 +57,7 @@ class UserModel extends Model{
         $userslist = $this->field($field)->alias('u')->join('__USER_AUTH__ as a on u.user_id = a.user_id', 'LEFT')->where($where)->limit($usersData['limit'])->order($sort)->select();
         foreach($userslist as &$val){
             if(($val['weixin'] || $val['qq']) && !$val['mobile']) $val['mobile'] = '三方登录未绑定';
-            if($val['audit_status'] == 0) $val['is_auth'] = 2;
+            if($val['audit_status'] == '') $val['is_auth'] = 2;
         }
         return array(
             'userslist'=>$userslist,

@@ -14,7 +14,7 @@ class ContactsModel extends Model
         array('contact_name', '0,12', '联系人姓名长度0-12位！', 1, 'length', 3),
         array('relation_id', 'require', '联系人关系不能为空！', 1, 'regex', 3),
         array('contact_mobile', 'isMobile', '请输入正确的联系人手机号格式！', 1, 'function', 3),
-        array('contact_email', 'is_email', '请输入正确的邮箱格式！', 1, 'function', 3)
+        //array('contact_email', 'is_email', '请输入正确的邮箱格式！', 1, 'function', 3)
     );
 
     /**
