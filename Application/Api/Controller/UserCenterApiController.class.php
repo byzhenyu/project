@@ -278,7 +278,7 @@ class UserCenterApiController extends ApiUserCommonController{
     {
         $keywords = I('keywords', '', 'trim');
         $city_id = I('city_id', '', 'trim');
-        $where = array('a.city_name' => $city_id, 'a.disabled' => 1);
+        $where = array('a.city_name' => $city_id);
         unset($where['a.city_name']);
         $userLikeTags = D('Admin/User')->getUserField(array('user_id' => UID), 'like_tags');
         if($userLikeTags){
@@ -292,10 +292,12 @@ class UserCenterApiController extends ApiUserCommonController{
         $map['_complex'] = $where;
         $map['_logic'] = 'or';
         $map['a.user_id'] = UID;
-        $map['a.disabled'] = 1;
+        $maps['_complex'] = $map;
+        $maps['a.disabled'] = 1;
+        $maps['_logic'] = 'and';
         $model = D('Admin/Question');
         $field = 'u.nickname,u.head_pic,a.id,a.like_number,a.browse_number,a.answer_number,a.add_time,a.question_title';
-        $question = $model->getQuestionList($map, $field);
+        $question = $model->getQuestionList($maps, $field);
         $question_list = $question['info'];
         foreach ($question_list as &$val) {
             $val['head_pic'] = $val['head_pic'] ? $val['head_pic'] : DEFAULT_IMG;
