@@ -23,10 +23,11 @@ class AnswerModel extends Model {
      */
     public function getAnswerList($where, $field = false, $order = 'add_time desc'){
         $where['a.disabled'] = 1;
+        $where['q.disabled'] = 1;
         if(!$field) $field = 'a.*,u.nickname,u.head_pic';
-        $count = $this->alias('a')->join('__USER__ as u on u.user_id = a.user_id')->where($where)->count();
+        $count = $this->alias('a')->join('__USER__ as u on u.user_id = a.user_id')->join('__QUESTION__ as q on q.id = a.question_id')->where($where)->count();
         $page = get_web_page($count);
-        $list = $this->alias('a')->where($where)->field($field)->limit($page['limit'])->join('__USER__ as u on u.user_id = a.user_id')->order($order)->select();
+        $list = $this->alias('a')->where($where)->field($field)->limit($page['limit'])->join('__USER__ as u on u.user_id = a.user_id')->join('__QUESTION__ as q on q.id = a.question_id')->order($order)->select();
         foreach($list as &$val){
             $val['add_time'] = time_format($val['add_time'], 'Y-m-d');
             $val['head_pic'] = $val['head_pic'] ? strval($val['head_pic']) : DEFAULT_IMG;
