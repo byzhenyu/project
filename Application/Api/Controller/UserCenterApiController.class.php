@@ -1319,6 +1319,7 @@ class UserCenterApiController extends ApiUserCommonController{
         }
         $id = I('post.id');
         $auth_result = I('post.auth_result');
+        if(1 == $auth_result) $this->apiReturn(V(1, '操作成功！'));
         $recommend_label = I('post.recommend_label');
         if(!in_array($auth_result, array(1, 2))) $this->apiReturn(V(0, '认证状态有误！'));
         $user_where = array('user_id' => UID);
@@ -1338,11 +1339,11 @@ class UserCenterApiController extends ApiUserCommonController{
             if(false !== $res){
                 $resumeWorkModel->saveResumeWorkData(array('id' => $resume_auth_info['work_id']), array('state' => 2));
                 M()->commit();
-                $this->apiReturn(V(1, '认证操作成功！'));
+                $this->apiReturn(V(1, '操作成功！'));
             }
             else{
                 M()->rollback();
-                $this->apiReturn(V(0, '认证操作失败！'));
+                $this->apiReturn(V(0, '操作失败！'));
             }
         }
         else{
@@ -1387,6 +1388,7 @@ class UserCenterApiController extends ApiUserCommonController{
         }
         $resume_id = I('post.resume_id');
         $auth_result = I('post.auth_result');
+        if(1 == $auth_result) $this->apiReturn(V(1, '操作成功！'));
         if(!in_array($auth_result, array(1, 2))) $this->apiReturn(V(0, '认证状态有误！'));
         $user_where = array('user_id' => UID);
         $userModel = D('Admin/User');
@@ -1438,6 +1440,23 @@ class UserCenterApiController extends ApiUserCommonController{
                 M()->rollback();
                 $this->apiReturn(V(0, $hr_resume_model->getError()));
             }
+        }
+    }
+
+    /**
+     * @desc 删除简历认证
+     */
+    public function delResumeAuth(){
+        $auth_id = I('auth_id', 0, 'intval');
+        $auth_model = D('Admin/ResumeAuth');
+        $auth_info = $auth_model->getResumeAuthInfo(array('auth_id' => $auth_id, 'hr_id' => UID));
+        if(!$auth_info) $this->apiReturn(V(0, '不属于你的认证简历！'));
+        $res = $auth_model->where(array('auth_id' => $auth_id))->delete();
+        if(false !== $res){
+            $this->apiReturn(V(1, '操作成功！'));
+        }
+        else{
+            $this->apiReturn(V(0, '操作有误！'));
         }
     }
 
