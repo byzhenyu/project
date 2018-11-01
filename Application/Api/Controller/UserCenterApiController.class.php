@@ -1971,7 +1971,10 @@ class UserCenterApiController extends ApiUserCommonController{
         if ($result['status'] == 1) {
             $save = array('mobile' => $mobile, 'password' => $password);
             $res = $userModel->saveUserData(array('user_id' => UID), $save);
-            if(false !== $res) $this->apiReturn(V(1, '手机号码绑定成功'));
+            if(false !== $res){
+                if (1 == $userInfo['user_type']) D('Admin/ResumeAuth')->saveResumeAuthData(array('hr_mobile' => $mobile), array('hr_id' => UID));
+                $this->apiReturn(V(1, '手机号码绑定成功'));
+            }
             $this->apiReturn(V(0, '绑定失败！'));
         }
         else{
