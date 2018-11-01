@@ -15,6 +15,7 @@ class PublicApiController extends ApiCommonController
         $user_name = I('post.user_name', '');
         $password = I('post.password', '');
         $userType = I('post.user_type', 0);//0、普通会员  1、HR
+        if(!$user_name) $this->apiReturn(V(0, '请输入登录账号！'));
         $loginInfo = D('Admin/User')->dologin($user_name, $password, '', $userType);
         if ($loginInfo['status'] == 1) { //登录成功
             add_key_operation(2, $loginInfo['data']['user_id'], $loginInfo['data']['user_id']);

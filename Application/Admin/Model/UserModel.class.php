@@ -84,6 +84,8 @@ class UserModel extends Model{
             if(!$info['disabled']) return V(0, '用户已经被禁用');
             if(pwdHash($pwd, $info['password'], true) != true) return V(0, '密码输入不正确');
             $unArr = array('disabled', 'password');
+
+            if(cmp_black_white($info['mobile'])) return V(0, '手机号在黑名单内！');
             $info['pay_password'] = $info['pay_password'] ? 1 : 0;
             $info['register_time'] = time_format($info['register_time']);
             foreach($unArr as &$val) unset($info[$val]); unset($val);
