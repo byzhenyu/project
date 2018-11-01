@@ -345,6 +345,18 @@ class UserCenterApiController extends ApiUserCommonController{
         $this->apiReturn(V(1, '问题详情获取成功！', $returnArray));
     }
 
+    public function delAnswer(){
+        $answer_id = I('answer_id', 0, 'intval');
+        $answer_model = D('Admin/Answer');
+        $res = $answer_model->where(array('id' => $answer_id, 'user_id' => UID))->delete();
+        if(false !== $res){
+            $this->apiReturn(V(1, '删除成功！'));
+        }
+        else{
+            $this->apiReturn(V(0, '删除失败！'));
+        }
+    }
+
     /**
      * @desc 问题点赞
      */
