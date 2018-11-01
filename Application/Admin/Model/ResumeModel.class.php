@@ -41,7 +41,8 @@ class ResumeModel extends Model {
         if($data['sex']) $saveData['sex'] = $data['sex'];
         $userModel = D('Admin/User');
         $user_where = array('user_id' => $data['user_id']);
-        if(count($saveData) > 0){
+        $user_type = $userModel->getUserField($user_where, 'user_type');
+        if(count($saveData) > 0 && 0 == $user_type){
             $user_res = $userModel->saveUserData($user_where, $saveData);
             if(false === $user_res){
                 $this->error = '主表信息修改失败！';

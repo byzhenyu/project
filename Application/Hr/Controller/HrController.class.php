@@ -34,6 +34,7 @@ class HrController extends HrCommonController {
         unset($val);
         $info['like_tags'] = rtrim($tags, ',');
         if(!$info['like_tags']) $info['like_tags'] = '尚未填写';
+        p($info);
         $this->info = $info;
         $this->display();
     }
