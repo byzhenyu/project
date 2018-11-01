@@ -48,19 +48,16 @@ class UserModel extends Model{
      * @param  String $mobile [查询时所使用的手机号]
      * @return array
      */
-    public function getUsersList($where, $field = null, $sort = 'register_time desc'){
-        if(is_null($field)){
-            $field = $this->selectFields;
-        }
+    public function getUsersList($where, $field = false, $sort = 'register_time desc'){
+        if(!$field) $field = 'u.*,a.audit_status';
         $where['status'] = array('eq', 1);
 
-        $count = $this->where($where)->count();
+        $count = $this->where($where)->alias('u')->join('__USER_AUTH__ as a on u.user_id = a.user_id', 'LEFT')->count();
         $usersData = get_page($count, 15);
-        $userslist = $this->field($field)->where($where)->limit($usersData['limit'])->order($sort)->select();
+        $userslist = $this->field($field)->alias('u')->join('__USER_AUTH__ as a on u.user_id = a.user_id', 'LEFT')->where($where)->limit($usersData['limit'])->order($sort)->select();
         foreach($userslist as &$val){
             if(($val['weixin'] || $val['qq']) && !$val['mobile']) $val['mobile'] = '三方登录未绑定';
-            $res = D('Admin/UserAuth')->getAuthInfo(array('user_id' => $val['user_id']));
-            if($val['is_auth'] != 1) $val['is_auth'] = $res ? $val['is_auth'] : 2;
+            if($val['audit_status'] == 0) $val['is_auth'] = 2;
         }
         return array(
             'userslist'=>$userslist,

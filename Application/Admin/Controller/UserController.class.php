@@ -12,7 +12,13 @@ class UserController extends CommonController {
         $is_auth = I('is_auth', -1, 'intval');
         $userModel = D('Admin/User');
         $where = array('user_type' => $type);
-        if($is_auth != -1) $where['is_auth'] = $is_auth;
+        if($is_auth != -1){
+            if($is_auth == 1) $where['u.is_auth'] = 1;
+            if($is_auth == 0){
+                $where['u.is_auth'] = 0;
+                $where['a.audit_status'] = 0;
+            }
+        }
         if ($keyword) {
             $where['mobile|user_name'] = array('like','%'.$keyword.'%');
         }
