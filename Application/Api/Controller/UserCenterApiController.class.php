@@ -292,6 +292,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $map['_complex'] = $where;
         $map['_logic'] = 'or';
         $map['a.user_id'] = UID;
+        $map['a.disabled'] = 1;
         $model = D('Admin/Question');
         $field = 'u.nickname,u.head_pic,a.id,a.like_number,a.browse_number,a.answer_number,a.add_time,a.question_title';
         $question = $model->getQuestionList($map, $field);

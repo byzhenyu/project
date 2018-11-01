@@ -242,7 +242,7 @@ class RecruitApiController extends ApiUserCommonController{
             $val['reward'] = fen_to_yuan($val['reward']);
             $val['can'] = intval($val['can']);
             $t_n = $task_log->validTaskNumber($val['id'], UID, true);
-            $val['type_number'] = $task_arr[$val['type']].$val['type_number'].'份/进度'.$t_n;
+            $val['type_number'] = $task_arr[$val['type']].$val['type_number'].'份/已完成'.$t_n;
         }
         unset($val);
         $this->apiReturn(V(1, '每日任务', $info));
