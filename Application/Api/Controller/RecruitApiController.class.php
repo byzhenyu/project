@@ -236,11 +236,13 @@ class RecruitApiController extends ApiUserCommonController{
      */
     public function getTaskList() {
         $info = D('Admin/Task')->getTaskList();
+        $task_log = D('Admin/TaskLog');
         $task_arr = array(1 => '每日限制', 0 => '永久限制', 2 => '每周限制', 3 => '每月限制');
         foreach($info as &$val){
             $val['reward'] = fen_to_yuan($val['reward']);
             $val['can'] = intval($val['can']);
-            $val['type_number'] = $task_arr[$val['type']].$val['type_number'].'份';
+            $t_n = $task_log->validTaskNumber($val['id'], UID, true);
+            $val['type_number'] = $task_arr[$val['type']].$val['type_number'].'份/进度'.$t_n;
         }
         unset($val);
         $this->apiReturn(V(1, '每日任务', $info));
