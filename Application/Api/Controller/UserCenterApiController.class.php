@@ -1464,10 +1464,10 @@ class UserCenterApiController extends ApiUserCommonController{
     public function delResumeAuth(){
         $auth_id = I('auth_id', 0, 'intval');
         $auth_model = D('Admin/ResumeAuth');
-        $auth_info = $auth_model->getResumeAuthInfo(array('auth_id' => $auth_id, 'hr_id' => UID));
+        $auth_info = $auth_model->getResumeAuthInfo(array('id' => $auth_id, 'hr_id' => UID));
         if(!$auth_info) $this->apiReturn(V(0, '不属于你的认证简历！'));
         if($auth_info['auth_result'] != 0) $this->apiReturn(V(0, '仅可删除待审核认证简历'));
-        $res = $auth_model->where(array('auth_id' => $auth_id))->delete();
+        $res = $auth_model->where(array('id' => $auth_id))->delete();
         if(false !== $res){
             $this->apiReturn(V(1, '操作成功！'));
         }
