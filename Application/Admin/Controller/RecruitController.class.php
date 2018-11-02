@@ -37,6 +37,7 @@ class RecruitController extends CommonController {
         $user_where = array('user_id' => $info['hr_user_id']);
         $user_info = $userModel->getUserInfo($user_where, 'nickname,user_name');
         $info['release_name'] = !empty($user_info['nickname']) ? $user_info['nickname'] : $user_info['user_name'];
+        $info['experience'] = C('WORK_EXP')[$info['experience']];
         $this->info = $info;
         $this->display();
     }

@@ -35,37 +35,33 @@
                             <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
                                 <thead>
                                 <tr>
-                                    <th width="10%" >姓名</th>
-                                    <th width="12%">联系方式</th>
-                                    <th width="12%" class="align-center">求职方向</th>
-                                    <th width="10%" class="align-center">工作性质</th>
-                                    <th width="15%" class="align-center">更新时间</th>
+                                    <th width="10%">悬赏职位</th>
+                                    <th width="8%">悬赏数量</th>
+                                    <th width="12%" class="align-center">悬赏佣金</th>
+                                    <th width="12%" class="align-center">已推荐数量</th>
+                                    <th width="10%" class="align-center">悬赏时间</th>
+                                    <th width="15%" class="align-center">悬赏地区</th>
+                                    <th width="15%" class="align-center">福利待遇</th>
                                     <th class="align-center">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <foreach name="info" item="v" key="k">
                                     <tr class="gradeX">
-                                        <td >{$v['true_name']}</td>
+                                        <td  style="color: #ff1408">{$v['position_name']}</td>
                                         <td>
-                                            手机号：{$v['mobile']}<br/>
-                                            邮箱：{$v['email']}
+                                            {$v['recruit_num']}
                                         </td>
-                                        <td class="align-center">{$v['job_intension']}</td>
-                                        <td class="align-center">{$v['post_nature']}</td>
-                                        <td class="align-center">{:time_format($v['update_time'])}</td>
+                                        <td class="align-center">{$v['commission']}</td>
+                                        <td class="align-center">{$v['num']}</td>
+                                        <td class="align-center">{$v['add_time']}</td>
+                                        <td class="align-center" style="color: #ff1408">{$v['job_area']}</td>
+                                        <td class="align-center">{$v['welfare']}</td>
 
                                         <td class="f-14 align-center">
                                             <div class="tpl-table-black-operation">
                                                 <div class="tw-dropdown-toggle" style="position:relative;display: inline; ">
-
-                                                    <a href="{:U('ResumeEdu/getResumeEduList',array('resume_id'=>$v['id']))}">完善教育经历
-                                                    </a>
-                                                    <a href="{:U('ResumeWork/getResumeWorkList',array('resume_id'=>$v['id']))}">完善工作经历
-                                                    </a>
-                                                    <a href="{:U('Resume/editResume',array('resume_id'=>$v['id']))}">编辑简历
-                                                    </a>
-                                                    <a href="{:U('Resume/seeResumeDetail',array('id'=>$v['id']))}">简历详情
+                                                    <a href="{:U('Recruit/seeRecruitDetail',array('id'=>$v['id']))}">悬赏详情
                                                     </a>
                                                 </div>
                                             </div>
