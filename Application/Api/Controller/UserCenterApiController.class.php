@@ -345,6 +345,9 @@ class UserCenterApiController extends ApiUserCommonController{
         $this->apiReturn(V(1, '问题详情获取成功！', $returnArray));
     }
 
+    /**
+     * @desc 删除回答答案
+     */
     public function delAnswer(){
         $answer_id = I('answer_id', 0, 'intval');
         $answer_model = D('Admin/Answer');
@@ -354,6 +357,22 @@ class UserCenterApiController extends ApiUserCommonController{
         }
         else{
             $this->apiReturn(V(0, '删除失败！'));
+        }
+    }
+
+    /**
+     * @desc 删除问题
+     */
+    public function delQuestion(){
+        $question_id = I('question_id', 0, 'intval');
+        $answer_count = D('Admin/Answer')->getAnswerNum(array('question_id' => $question_id));
+        if($answer_count > 0) $this->apiReturn(V(0, '该问题下已有回答，不可删除！'));
+        $questionRes = D('Admin/Question')->where(array('id' => $question_id, 'user_id' => UID))->save(array('disabled' => 0));
+        if(false !== $questionRes){
+            $this->apiReturn(V(1, '删除成功！'));
+        }
+        else{
+            $this->apiReturn(V(0, '操作错误！'));
         }
     }
 

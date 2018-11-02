@@ -43,6 +43,16 @@ class AnswerModel extends Model {
     }
 
     /**
+     * @desc 回答数量
+     * @param $where
+     * @return mixed
+     */
+    public function getAnswerNum($where){
+        $res = $this->where($where)->count();
+        return $res;
+    }
+
+    /**
      * @desc 获取答案详情
      * @param $where
      * @param bool $field
