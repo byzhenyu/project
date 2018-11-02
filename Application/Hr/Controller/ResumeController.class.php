@@ -50,6 +50,7 @@ class ResumeController extends HrCommonController {
         foreach($list['info'] as &$val){
             if($val['hr_user_id'] == $val['user_id']) $val['is_edit'] = 1;
         }
+        unset($val);
         $this->keywords = $resume_name;
         $this->page = $list['page'];
         $this->info = $list['info'];
@@ -107,6 +108,7 @@ class ResumeController extends HrCommonController {
                             if(false !== $hr_res){
                                 refreshUserTags(HR_ID, $res);
                                 M()->commit();
+                                $this->addResumeWorkEducation($res);
                                 $this->ajaxReturn(V(1, '保存成功！'));
                             }
                             else{
@@ -200,6 +202,31 @@ class ResumeController extends HrCommonController {
             $this->nature = $nature_arr;
             $this->display();
         }
+    }
+
+    /**
+     * @desc 新建简历   新增教育经历/工作经历
+     * @param $resume_id int 简历id
+     * @return bool
+     */
+    private function addResumeWorkEducation($resume_id){
+        if(!$resume_id) return false;
+        $edu_model = D('Admin/ResumeEdu');
+        $work_model = D('Admin/ResumeWork');
+        $data = I('post.', '');
+        $edu_field = array('resume_id' => $resume_id, 'school_name' => $data['school_name'], 'degree' => $data['degree'], 'major' => $data['major'], 'starttime' => strtotime($data['edu_starttime']), 'endtime' => strtotime($data['edu_endtime']), 'describe' => $data['edu_describe']);
+        $work_field = array('resume_id' => $resume_id, 'company_name' => $data['company_name'], 'position' => $data['position'], 'starttime' => strtotime($data['work_starttime']), 'endtime' => strtotime($data['work_endtime']), 'describe' => $data['work_describe']);
+        if($data['edu_is_current'] == 1) $edu_field['endtime'] = 0;
+        if($data['work_is_current'] == 1) $work_field['endtime'] = 0;
+        $edu_create = $edu_model->create($edu_field, 1);
+        if(false !== $edu_create){
+            $edu_model->add($edu_field);
+        }
+        $work_create = $work_model->create($work_field, 1);
+        if(false !== $work_create){
+            $work_model->add($work_field);
+        }
+        return true;
     }
 
     /**

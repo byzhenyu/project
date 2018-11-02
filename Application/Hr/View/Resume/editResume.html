@@ -63,7 +63,7 @@
                             <tr>
                                 <td><div align="right"><strong>第一学历：</strong></div></td>
                                 <td>
-                                    <select name="first_degree" id="first_degree" data-am-selected="">
+                                    <select name="first_degree" id="first_degree" data-am-selected="{maxHeight: 200}">
                                         <option value="">请选择第一学历</option>
                                         <foreach name="edu_list" item="v">
                                             <option value="{$v['education_name']}" <if condition="$v.education_name eq $info['first_degree']">selected</if>>{$v['education_name']}</option>
@@ -74,7 +74,7 @@
                             <tr>
                                 <td><div align="right"><strong>第二学历：</strong></div></td>
                                 <td>
-                                    <select name="second_degree" id="second_degree" data-am-selected="">
+                                    <select name="second_degree" id="second_degree" data-am-selected="{maxHeight: 200}">
                                         <option value="">请选择第二学历</option>
                                         <foreach name="edu_list" item="v">
                                             <option value="{$v['education_name']}" <if condition="$v.education_name eq $info['second_degree']">selected</if>>{$v['education_name']}</option>
@@ -158,6 +158,82 @@
                                     <textarea name="introduced" id="" cols="100" rows="10">{$info['introduced']}</textarea>
                                 </td>
                             </tr>
+                            <if condition="$info['id'] gt 0">
+                                <tr>
+                                    <td colspan="2" align="center">
+                                        <input type="hidden" name="resume_id" value="{$info['id']}">
+                                        <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+                                        <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback();">返回</button>
+                                    </td>
+                                </tr>
+                            </if>
+                        </tbody>
+                        <if condition="$info['id'] lt 1">
+                            <thead>
+                                <tr><th colspan="4">教育经历</th></tr>
+                            </thead>
+                            <tbody>
+
+                            <tr>
+                                <td><div align="right"><strong>学校名称：</strong></div></td>
+                                <td><input type="text" id="school_name" name="school_name" value="" style="width:500px" placeholder="请输入学校名称"/></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>学历：</strong></div></td>
+                                <td>
+                                    <select name="degree" id="degree" data-am-selected="{maxHeight: 200}">
+                                        <option value="">请选择学历</option>
+                                        <foreach name="edu_list" item="v">
+                                            <option value="{$v['education_name']}" >{$v['education_name']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>专业：</strong></div></td>
+                                <td><input type="text" id="major" name="major" value="" style="width:500px" placeholder="请输入专业" /></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>开始时间：</strong></div></td>
+                                <td><input type="text" id="edu_starttime" name="edu_starttime" value=""  style="width:500px"/></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>结束时间：</strong></div></td>
+                                <td><input type="text" id="edu_endtime" name="edu_endtime" value=""  style="width:500px"/><br><input type="checkbox" name="edu_is_current" value="1" />至今</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>描述信息：</strong></div></td>
+                                <td>
+                                    <textarea name="edu_describe" cols="80" rows="6" placeholder="请填写描述信息"></textarea>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <thead>
+                            <tr><th colspan="4">基本信息</th></tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td><div align="right"><strong>公司名称：</strong></div></td>
+                                <td><input type="text" id="company_name" name="company_name" value="" style="width:500px" placeholder="请输入公司名称"/></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>职位：</strong></div></td>
+                                <td><input type="text" id="position" name="position" value="" style="width:500px" placeholder="请输入职位名称" /></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>开始时间：</strong></div></td>
+                                <td><input type="text" id="work_starttime" name="work_starttime" value=""  style="width:500px"/></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>结束时间：</strong></div></td>
+                                <td><input type="text" id="work_endtime" name="work_endtime" value=""  style="width:500px"/><br><input type="checkbox" name="work_is_current" value="1" />至今</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>描述信息：</strong></div></td>
+                                <td>
+                                    <textarea name="work_describe" cols="80" rows="6" placeholder="请填写描述信息"></textarea>
+                                </td>
+                            </tr>
 
                             <tr>
                                 <td colspan="2" align="center">
@@ -166,7 +242,8 @@
                                     <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback();">返回</button>
                                 </td>
                             </tr>
-                        </tbody>
+                            </tbody>
+                        </if>
                     </table>
                     </form>         
                 </div>
@@ -199,6 +276,18 @@
             initAddress('#address_address', "{$info['address1']}", "{$info['address2']}", "{$info['address3']}", 1);
             laydate.render({
                 elem: '#age'
+            });
+            laydate.render({
+                elem: '#edu_starttime'
+            });
+            laydate.render({
+                elem: '#edu_endtime'
+            });
+            laydate.render({
+                elem: '#work_starttime'
+            });
+            laydate.render({
+                elem: '#work_endtime'
             });
             initPosition({$info['industry_id']});
             $('#industry_id').change(function(){

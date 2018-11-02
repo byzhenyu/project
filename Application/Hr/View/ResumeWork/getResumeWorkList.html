@@ -18,8 +18,7 @@
                             <div class="am-form-group">
                                 <div class="am-btn-toolbar">
                                     <div class="am-btn-group am-btn-group-xs">
-                                        <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback();">返回</button>
-                                        <a type="button" class="am-btn am-btn-default am-btn-success" href="{:U('ResumeWork/editResumeWork', array('resume_id' => $resume_id))}"><span class="am-icon-plus"></span> 新增工作经历</a>
+                                        <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback1();">返回</button>
                                     </div>
                                 </div>
                             </div>
@@ -60,8 +59,8 @@
                                             <td class="align-center">{:pageNumber(10, $k+1)}</td>
                                             <td >{$v['company_name']}</td>
                                             <td class="align-center">{$v['position']}</td>
-                                            <td class="align-center">{$v['starttime']|date='Y-m-d', ###}</td>
-                                            <td class="align-center">{$v['endtime']|date='Y-m-d', ###}</td>
+                                            <td class="align-center">{$v['starttime']}</td>
+                                            <td class="align-center">{$v['endtime']}</td>
                                             <td class="f-14 align-center">
                                                 <div class="tpl-table-black-operation">
                                                     <a href="{:U('ResumeWork/editResumeWork',array('id'=>$v['id'], 'resume_id' => $resume_id))}">
@@ -97,5 +96,8 @@
 
 <block name="script">
     <script type="text/javascript">
+        function goback1(){
+            location.href='/index.php/Hr/Resume/listHrResume';
+        }
     </script>
 </block>

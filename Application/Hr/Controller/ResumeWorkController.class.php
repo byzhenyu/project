@@ -13,6 +13,15 @@ class ResumeWorkController extends HrCommonController {
         $resume_work_model = D('Admin/ResumeWork');
         if($keywords) $resume_work_where['company_name'] = array('like', '%'.$keywords.'%');
         $list = $resume_work_model->getResumeWorkList($resume_work_where);
+        foreach($list as &$val){
+            $val['starttime'] = time_format($val['starttime'], 'Y-m-d');
+            if($val['endtime']){
+                $val['endtime'] = time_format($val['endtime'], 'Y-m-d');
+            }
+            else{
+                $val['endtime'] = '至今';
+            }
+        }
         $this->resume_id = $resume_id;
         $this->list = $list;
         $this->keywords = $keywords;
@@ -63,7 +72,11 @@ class ResumeWorkController extends HrCommonController {
         $info = $model->getResumeWorkInfo($where);
         $info['resume_id'] = $data['resume_id'];
         if(!$info['starttime']) $info['starttime'] = time();
-        if(!$info['endtime']) $info['endtime'] = time();
+        $info['is_current'] = 0;
+        if(!$info['endtime']){
+            $info['endtime'] = time();
+            $info['is_current'] = 1;
+        }
         $this->info = $info;
         $this->resume_id = $data['resume_id'];
         $this->display();

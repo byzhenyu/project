@@ -96,15 +96,18 @@
                                             <td class="f-14 align-center">
                                                 <div class="tpl-table-black-operation">
                                                     <div class="tw-dropdown-toggle" style="position:relative;display: inline; ">
-
-                                                                <a href="{:U('ResumeEdu/getResumeEduList',array('resume_id'=>$v['id']))}">完善教育经历
-                                                                </a>
-                                                                <a href="{:U('ResumeWork/getResumeWorkList',array('resume_id'=>$v['id']))}">完善工作经历
-                                                                </a>
-                                                                <a href="{:U('Resume/editResume',array('resume_id'=>$v['id']))}">编辑简历
-                                                                </a>
-                                                                <a href="{:U('Resume/seeResumeDetail',array('id'=>$v['id']))}">简历详情
-                                                                </a>
+                                                        <if condition="$v['is_edit'] eq 1">
+                                                            <a href="{:U('ResumeEdu/getResumeEduList',array('resume_id'=>$v['id']))}">完善教育经历
+                                                            </a>
+                                                            <a href="{:U('ResumeWork/getResumeWorkList',array('resume_id'=>$v['id']))}">完善工作经历
+                                                            </a>
+                                                            <a href="javascript:;"data-url="{:U('ResumeWork/editResumeWork', array('resume_id'=>$v['id']))}" class="increase_resume_work"> 新增工作经历 </a>
+                                                            <a href="javascript:;"data-url="{:U('ResumeEdu/editResumeEdu', array('resume_id'=>$v['id']))}" class="increase_resume_edu"> 新增教育经历 </a>
+                                                            <a href="{:U('Resume/editResume',array('resume_id'=>$v['id']))}">编辑简历
+                                                            </a>
+                                                        </if>
+                                                        <a href="{:U('Resume/seeResumeDetail',array('id'=>$v['id']))}">简历详情
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </td>
@@ -133,15 +136,27 @@
 
 <block name="script">
     <script type="text/javascript">
-       //更多的弹窗
-        $('.dropdown-button').click(function(event){
-            $(".more-dropdown-menu").hide();
-            $(this).siblings('.more-dropdown-menu').show();
-            event.stopPropagation();
-        });
-
-        $(document).click(function(){
-            $(".more-dropdown-menu").hide();
-        });
+       $('.increase_resume_work').click(function(){
+           var url = $(this).attr('data-url');
+           layer.open({
+               type: 2,
+               title: '新增工作经历',
+               shadeClose: true,
+               shade: 0.5,
+               area: ['60%', '60%'],
+               content: url,
+           });
+       });
+       $('.increase_resume_edu').click(function(){
+           var url = $(this).attr('data-url');
+           layer.open({
+               type: 2,
+               title: '新增教育经历',
+               shadeClose: true,
+               shade: 0.5,
+               area: ['60%', '60%'],
+               content: url,
+           });
+       });
     </script>
 </block>

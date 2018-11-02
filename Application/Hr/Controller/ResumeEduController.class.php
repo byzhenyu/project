@@ -14,6 +14,16 @@ class ResumeEduController extends HrCommonController {
         $resume_edu_model = D('Admin/ResumeEdu');
         if ($keywords) $resume_edu_where['school_name'] = array('like', '%'.$keywords.'%');
         $list = $resume_edu_model->getResumeEduList($resume_edu_where);
+        foreach($list as &$val){
+            $val['starttime'] = time_format($val['starttime'], 'Y-m-d');
+            if($val['endtime']){
+                $val['endtime'] = time_format($val['endtime'], 'Y-m-d');
+            }
+            else{
+                $val['endtime'] = '至今';
+            }
+        }
+        unset($val);
         $this->resume_id = $resume_id;
         $this->list = $list;
         $this->keywords = $keywords;
@@ -65,7 +75,11 @@ class ResumeEduController extends HrCommonController {
         }
         $info = $model->getResumeEduInfo(array('id' => $id));
         if(!$info['starttime']) $info['starttime'] = time();
-        if(!$info['endtime']) $info['endtime'] = time();
+        $info['is_current'] = 0;
+        if(!$info['endtime']){
+            $info['endtime'] = time();
+            $info['is_current'] = 1;
+        }
         $info['resume_id'] = $data['resume_id'];
         $this->info = $info;
         $this->display();
