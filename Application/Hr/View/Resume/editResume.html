@@ -189,6 +189,7 @@
             initialFrameHeight: 350
         })
         function callback(data){
+            console.log(data);
             toastr(data.info);
             if(data.status == 1){
                 location.href='/index.php/Hr/Resume/listHrResume';

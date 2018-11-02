@@ -77,8 +77,11 @@ class ResumeController extends HrCommonController {
                 if(false !== $create){
                     $res = $model->where(array('id' => $resume_id))->save($data);
                     if(false !== $res){
-                        refreshUserTags(HR_ID, $resume_id);
-                        $this->ajaxReturn(V(1, '保存成功！'));
+                        header('Content-Type:application/json; charset=utf-8');
+                        echo json_encode(V(1, '保存成功'));
+                        fastcgi_finish_request();
+                        set_time_limit(0);
+                        refreshUserTags(false, $resume_id, array('job_position' => $data['position_id'], 'job_area' => $data['job_area']));
                     }
                     else{
                         $this->ajaxReturn(V(0, $model->getError()));
@@ -127,74 +130,76 @@ class ResumeController extends HrCommonController {
                 }
             }
         }
-        $work_nature = C('WORK_NATURE');
-        $language = C('SHAN_LANGUAGE');
-        $arr_values = array_values($work_nature);
-        $lang_values = array_values($language);
-        $nature_arr = array();
-        $language_arr = array();
-        $tags_where = array('tags_type' => array('in', array(1,2,5)));
-        $tagsModel = D('Admin/Tags');
-        $tags_info = $tagsModel->getTagsList($tags_where, 'id,tags_name,tags_type');
-        $tags_career = array();
-        $tags_recommend = array();
-        foreach($tags_info as &$val){
-            if(1 == $val['tags_type']) $tags_career[] = array('id' => $val['id'], 'name' => $val['tags_name']);
-            if(5 == $val['tags_type']) $tags_recommend[] = array('id' => $val['id'], 'name' => $val['tags_name']);
-        }
-        unset($val);
-        foreach($arr_values as &$val){
-            $nature_arr[] = array('id' => $val, 'name' => $val);
-        }
-        unset($val);
-        foreach($lang_values as &$val){
-            $language_arr[] = array('id' => $val, 'name' => $val);
-        }
-        unset($val);
-        $area = D('Admin/Region')->getRegionList(array('level' => 2), 'id,name');
-        $resume_where = array('id' => $resume_id);
-        $edu_list = D('Admin/Education')->getEducationList();
-        $info = $model->getResumeInfo($resume_where);
-        if(!$info['age']) $info['age'] = time();
-        if($info['address']){
-            $address = explode(' ' ,$info['address']);
-            if(count($address) > 0){
-                $info['address_p'] = $address[0];
-                $add_help = explode(',', $address[0]);
-                $info['address1'] = $add_help[0];
-                $info['address2'] = $add_help[1];
-                $info['address3'] = $add_help[2];
-                unset($address[0]);
-                $info['address'] = str_replace($info['address_p'].' ', '', $info['address']);
+        else{
+            $work_nature = C('WORK_NATURE');
+            $language = C('SHAN_LANGUAGE');
+            $arr_values = array_values($work_nature);
+            $lang_values = array_values($language);
+            $nature_arr = array();
+            $language_arr = array();
+            $tags_where = array('tags_type' => array('in', array(1,2,5)));
+            $tagsModel = D('Admin/Tags');
+            $tags_info = $tagsModel->getTagsList($tags_where, 'id,tags_name,tags_type');
+            $tags_career = array();
+            $tags_recommend = array();
+            foreach($tags_info as &$val){
+                if(1 == $val['tags_type']) $tags_career[] = array('id' => $val['id'], 'name' => $val['tags_name']);
+                if(5 == $val['tags_type']) $tags_recommend[] = array('id' => $val['id'], 'name' => $val['tags_name']);
             }
-        }
-        $industry = D('Admin/Industry')->getIndustryList();
-        if($info['language_ability']){
-            $language = explode(',', $info['language_ability']);
-            foreach($language_arr as &$lan_val){
-                $lan_val['sel'] = 0;
-                if(in_array($lan_val['name'], $language)) $lan_val['sel'] = 1;
+            unset($val);
+            foreach($arr_values as &$val){
+                $nature_arr[] = array('id' => $val, 'name' => $val);
             }
-            unset($lan_val);
+            unset($val);
+            foreach($lang_values as &$val){
+                $language_arr[] = array('id' => $val, 'name' => $val);
+            }
+            unset($val);
+            $area = D('Admin/Region')->getRegionList(array('level' => 2), 'id,name');
+            $resume_where = array('id' => $resume_id);
+            $edu_list = D('Admin/Education')->getEducationList();
+            $info = $model->getResumeInfo($resume_where);
+            if(!$info['age']) $info['age'] = time();
+            if($info['address']){
+                $address = explode(' ' ,$info['address']);
+                if(count($address) > 0){
+                    $info['address_p'] = $address[0];
+                    $add_help = explode(',', $address[0]);
+                    $info['address1'] = $add_help[0];
+                    $info['address2'] = $add_help[1];
+                    $info['address3'] = $add_help[2];
+                    unset($address[0]);
+                    $info['address'] = str_replace($info['address_p'].' ', '', $info['address']);
+                }
+            }
+            $industry = D('Admin/Industry')->getIndustryList();
+            if($info['language_ability']){
+                $language = explode(',', $info['language_ability']);
+                foreach($language_arr as &$lan_val){
+                    $lan_val['sel'] = 0;
+                    if(in_array($lan_val['name'], $language)) $lan_val['sel'] = 1;
+                }
+                unset($lan_val);
+            }
+            $info['position_parent'] = 0;
+            if(!$info['position_id']) $info['position_id'] = 0;
+            if($info['position_id']) $info['position_parent'] = D('Admin/Position')->getPositionField(array('id' => $info['position_id']), 'parent_id');
+            if($info['job_area']){
+                $job_area = explode(',', $info['job_area']);
+                $info['job_area1'] = $job_area[0];
+                $info['job_area2'] = $job_area[1];
+                $info['job_area3'] = $job_area[2];
+            }
+            $this->industry = $industry;
+            $this->info = $info;
+            $this->lang = $language_arr;
+            $this->edu_list = $edu_list;
+            $this->recommend = $tags_recommend;
+            $this->area = $area;
+            $this->career = $tags_career;
+            $this->nature = $nature_arr;
+            $this->display();
         }
-        $info['position_parent'] = 0;
-        if(!$info['position_id']) $info['position_id'] = 0;
-        if($info['position_id']) $info['position_parent'] = D('Admin/Position')->getPositionField(array('id' => $info['position_id']), 'parent_id');
-        if($info['job_area']){
-            $job_area = explode(',', $info['job_area']);
-            $info['job_area1'] = $job_area[0];
-            $info['job_area2'] = $job_area[1];
-            $info['job_area3'] = $job_area[2];
-        }
-        $this->industry = $industry;
-        $this->info = $info;
-        $this->lang = $language_arr;
-        $this->edu_list = $edu_list;
-        $this->recommend = $tags_recommend;
-        $this->area = $area;
-        $this->career = $tags_career;
-        $this->nature = $nature_arr;
-        $this->display();
     }
 
     /**

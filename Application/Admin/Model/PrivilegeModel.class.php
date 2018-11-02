@@ -96,17 +96,24 @@ class PrivilegeModel extends Model {
      */
     public function hasPrivilege($where){
         $privilegeModel = M('Privilege');
-        if($where['admin_id'] == 1){
-            unset($where['admin_id']);
-            $has = $privilegeModel->where($where)->count();
-//             echo $privilegeModel->_sql();die;
-        }else{
-            $has = $privilegeModel
+        $t_wh = $where;
+        unset($t_wh['admin_id']);
+        $t_has = $privilegeModel->where($t_wh)->count();
+        if($t_has){
+            if($where['admin_id'] == 1){
+                unset($where['admin_id']);
+                $has = $privilegeModel->where($where)->count();
+            }else{
+                $has = $privilegeModel
                     ->where($where)
                     ->join('ln_role_privilege a on a.pri_id = ln_privilege.id')
                     ->join('ln_admin_role b on b.role_id = a.role_id')
                     ->where($where)
                     ->count("a.role_id");
+            }
+        }
+        else{
+            $has = 1;
         }
         return $has;
     }

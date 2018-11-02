@@ -36,31 +36,31 @@
                             <tr>
                                 <td><div align="right"><strong>昵称：</strong></div></td>
                                 <td>{$info['nickname']}</td>
-                                <td><div align="right"><em class="must-input">*</em><strong>所在城市：</strong></div></td>
+                                <td><div align="right"><strong>所在地：</strong></div></td>
                                 <td>{$info['city_name']}</td>
                             </tr>
                             <tr>
                                 <td><div align="right"><strong>邮箱：</strong></div></td>
                                 <td>{$info['email']}</td>
-                                <td><div align="right"><em class="must-input">*</em><strong>可提现金额：</strong></div></td>
+                                <td><div align="right"><strong>可提现金额：</strong></div></td>
                                 <td>{:fen_to_yuan($info['withdrawable_amount'])}</td>
                             </tr>
                             <tr>
                                 <td><div align="right"><strong>推荐人数：</strong></div></td>
                                 <td>{$info['recommended_number']}</td>
-                                <td><div align="right"><em class="must-input">*</em><strong>招揽人数：</strong></div></td>
+                                <td><div align="right"><strong>招揽人数：</strong></div></td>
                                 <td>{$info['recruit_number']}</td>
                             </tr>
                             <tr>
                                 <td><div align="right"><strong>是否完成认证：</strong></div></td>
                                 <td><if condition="$info.is_auth eq 1">已完成<else/>未完成</if></td>
-                                <td><div align="right"><em class="must-input">*</em><strong>擅长领域：</strong></div></td>
+                                <td><div align="right"><strong>擅长领域：</strong></div></td>
                                 <td>{$info['like_tags']}</td>
                             </tr>
                             <tr>
-                                <td><div align="right"><em class="must-input">*</em><strong>登录密码：</strong></div></td>
+                                <td><div align="right"><strong>登录密码：</strong></div></td>
                                 <td><input type="password" id="password" name="password" value="" style="width:500px" placeholder="请输入新的登录密码,不修改请勿填写" /></td>
-                                <td><div align="right"><em class="must-input">*</em><strong>确认密码：</strong></div></td>
+                                <td><div align="right"><strong>确认密码：</strong></div></td>
                                 <td><input type="password" id="new_password" name="new_password" value="" style="width:500px" placeholder="请再次输入新的登录密码" /></td>
                             </tr>
                             <tr>

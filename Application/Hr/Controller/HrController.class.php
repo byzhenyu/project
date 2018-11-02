@@ -34,6 +34,7 @@ class HrController extends HrCommonController {
         unset($val);
         $info['like_tags'] = rtrim($tags, ',');
         if(!$info['like_tags']) $info['like_tags'] = '尚未填写';
+        $info['city_name'] = M('CompanyInfo')->where(array('user_id' => HR_ID))->getField('company_address');
         $this->info = $info;
         $this->display();
     }

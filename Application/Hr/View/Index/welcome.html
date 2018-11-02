@@ -1,22 +1,95 @@
 <extend name="Common/base"/>
 <block name="style">
-
+    <style type="text/css">
+    </style>
 </block>
 
 <block name="body">
-    <!-- 内容区域 -->
-    <div class="container-fluid am-cf">
+    <div class="row-content am-cf">
         <div class="row">
-           
-           
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                <div class="widget am-cf">
+                    <div class="widget-head am-cf">
+                        <div class="widget-title  am-cf">可推荐悬赏列表[根据人才列表筛选]</div>
+                    </div>
+                    <div class="widget-body  am-fr">
+
+                        <div class="am-u-sm-12 am-u-md-12 am-u-lg-8">
+                            <div class="am-form-group">
+                                <div class="am-btn-toolbar">
+                                    <div class="am-btn-group am-btn-group-xs">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <form action="__SELF__" method="get">
+                            <div class="am-u-sm-12 am-u-md-6 am-u-lg-4">
+                                <div class="am-form-group tpl-table-list-select">
+
+                                </div>
+                            </div>
+                        </form>
+
+                        <div class="am-u-sm-12">
+                            <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                                <thead>
+                                <tr>
+                                    <th width="10%" >姓名</th>
+                                    <th width="12%">联系方式</th>
+                                    <th width="12%" class="align-center">求职方向</th>
+                                    <th width="10%" class="align-center">工作性质</th>
+                                    <th width="15%" class="align-center">更新时间</th>
+                                    <th class="align-center">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <foreach name="info" item="v" key="k">
+                                    <tr class="gradeX">
+                                        <td >{$v['true_name']}</td>
+                                        <td>
+                                            手机号：{$v['mobile']}<br/>
+                                            邮箱：{$v['email']}
+                                        </td>
+                                        <td class="align-center">{$v['job_intension']}</td>
+                                        <td class="align-center">{$v['post_nature']}</td>
+                                        <td class="align-center">{:time_format($v['update_time'])}</td>
+
+                                        <td class="f-14 align-center">
+                                            <div class="tpl-table-black-operation">
+                                                <div class="tw-dropdown-toggle" style="position:relative;display: inline; ">
+
+                                                    <a href="{:U('ResumeEdu/getResumeEduList',array('resume_id'=>$v['id']))}">完善教育经历
+                                                    </a>
+                                                    <a href="{:U('ResumeWork/getResumeWorkList',array('resume_id'=>$v['id']))}">完善工作经历
+                                                    </a>
+                                                    <a href="{:U('Resume/editResume',array('resume_id'=>$v['id']))}">编辑简历
+                                                    </a>
+                                                    <a href="{:U('Resume/seeResumeDetail',array('id'=>$v['id']))}">简历详情
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </foreach>
+                                </tbody>
+                            </table>
+                            <empty name="info">
+                                <h4>aOh! 没有相关内容!</h4>
+                            </empty>
+                        </div>
+                        <div class="am-u-lg-12 am-cf">
+
+                            <div class="am-fr">
+                                <div class="am-pagination tpl-pagination">
+                                    {$page}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-
-    </div>
-
-    <div class="row-content am-cf" style="height:500px;">
-        
-        
-
     </div>
 </block>
 
