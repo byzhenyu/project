@@ -219,7 +219,7 @@ class UserModel extends Model{
     //修改操作前的钩子操作
     protected function _after_update(&$data, $option){
         $user_id = I('user_id', 0);
-        if ($data['disabled'] == 0) {
+        if ($data['disabled'] === 0) {
             $this->changeToken($user_id);
         }
     }
