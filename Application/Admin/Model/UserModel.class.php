@@ -65,6 +65,17 @@ class UserModel extends Model{
         );
     }
 
+    /***
+     * @desc 用户导出列表
+     * @param $where
+     * @param $field
+     * @return mixed
+     */
+    public function getUserExportList($where, $field){
+        $res = $this->where($where)->field($field)->select();
+        return $res;
+    }
+
     /**
      * @desc 用户端登录
      * @param $user_name string 登录账号

@@ -19,8 +19,9 @@
                                 <div class="am-btn-toolbar">
                                     <div class="am-btn-group am-btn-group-xs">
                                         <!--<button type="button" class="am-btn am-btn-default am-btn-danger" onclick="recycle('chkbId', '确认删除?! 删除后无法恢复!', true)">-->
-                                            <!--<span class="am-icon-trash-o"></span> 批量删除-->
-                                        </button>
+                                            <!--<span class="am-icon-trash-o"></span> 批量删除</button>-->
+                                       <a type="button" class="am-btn am-btn-default am-btn-success" href="{:U('Admin/User/user_export', array('type' => $user_type))}"><span></span> 导出为excel</a>
+
                                     </div>
                                 </div>
                             </div>

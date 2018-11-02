@@ -34,6 +34,23 @@ class UserController extends CommonController {
     }
 
     /**
+     * @desc 用户导出
+     */
+    public function user_export(){
+        $type = I('type', 0, 'intval');
+        $where = array('user_type' => $type, 'register_time' => array('between', array(NOW_TIME - 30*86400, NOW_TIME)));
+        $userModel = D('Admin/User');
+        $data = $userModel->getUserExportList($where, 'user_name,mobile,nickname,email,register_time');
+        $leader_arr = array('用户名', '手机号', '邮箱', '注册时间');
+        $export_arr = array();
+        foreach($data as &$val){
+            $export_arr[] = array($val['nickname'], $val['mobile'], $val['email'], time_format($val['register_time']));
+        }
+        array_unshift($export_arr, $leader_arr);
+        create_xls($export_arr, '闪荐科技近一个月注册用户.xls', '闪荐科技近一个月注册用户', '闪荐科技近一个月注册用户', array('A', 'B', 'C', 'D'));
+    }
+
+    /**
      * 用户详情
      */
     public function userDetail(){
