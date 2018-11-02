@@ -66,5 +66,11 @@
 
 <block name="script">
 <script type="text/javascript">
+    function callback(data){
+        toastr(data.info);
+        if(data.status == 1){
+            location.href='/index.php/Admin/BlackWhite/listBlackWhite/type/' + {$type};
+        }
+    }
 </script>
 </block>

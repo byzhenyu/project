@@ -147,6 +147,12 @@
     <script type="text/javascript" charset="utf-8" src="__PUBLIC__/ajaxupload/imgupload.js?v=1.0"></script>
 
     <script type="text/javascript">
+        function callback(data) {
+            toastr(data.info);
+            if (data.status == 1) {
+                location.href = '__URL__/listArticle';
+            }
+        }
         var ue = UE.getEditor('content1', {
             autoHeightEnabled: false,
             initialFrameWidth: '700',

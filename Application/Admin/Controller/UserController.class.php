@@ -104,8 +104,10 @@ class UserController extends CommonController {
     public function editUsersAuth() {
         $id = I('user_id', 0, 'intval');
         $where['user_id'] = $id;
+        $result = D('Admin/UserAuth')->getAuthInfo($where);
         if (IS_POST) {
             if ($id > 0) {
+                if($result['audit_status'] == 1) $this->ajaxReturn(V(0, '已审核'));
                 $auth_data['audit_status'] = I('state', 2, 'intval');
                 $auth_data['audit_desc'] = I('audit_desc', '', 'trim');
                 $data['is_auth'] = 0;
@@ -127,7 +129,7 @@ class UserController extends CommonController {
                 $this->ajaxReturn(V(0, '资料未上传！'));
             }
         } else {
-            $result = D('Admin/UserAuth')->getAuthInfo($where);
+            $user_type = D('Admin/User')->getUserField($where, 'user_type');
             $result['cert_type'] = C('CERT_TYPE')[$result['cert_type']];
             $audit_desc = C('AUDIT_DESC');
             $audit_arr = array();
@@ -137,6 +139,7 @@ class UserController extends CommonController {
             }
             unset($v);
             $this->audit_desc = $audit_arr;
+            $this->user_type = $user_type;
             $this->assign('info', $result);
             $this->display();
         }

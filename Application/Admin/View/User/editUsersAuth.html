@@ -51,6 +51,14 @@
 									<img src="{$info['hand_pic']}" alt="手持身份证照片" width="100px">
 								</td>
 							</tr>
+							<if condition="$user_type eq 1">
+								<tr>
+									<td><div align="right"><strong>营业执照：</strong></div></td>
+									<td>
+										<img src="{$info['business_license']}" alt="营业执照" width="100px">
+									</td>
+								</tr>
+							</if>
 							<tr>
 								<td><div align="right"><strong>添加时间：</strong></div></td>
 								<td>{:time_format($info['add_time'])}</td>
@@ -106,6 +114,7 @@
 								<td align="center">
 									<input type="hidden" value="{$info['user_id']}" name="user_id" />
 									<button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+									<button type="button" class="am-btn am-btn-default tpl-btn-bg-color-default " onclick="goback()">返回</button>
 								</td>
 							</tr>
 							</tbody>
@@ -118,6 +127,12 @@
 </block>
 <block name="script">
 	<script type="text/javascript">
+        function callback(data){
+            toastr(data.info);
+            if(data.status == 1){
+                location.href='/index.php/Admin/User/listUser/type/' + {$user_type};
+            }
+        }
 		$(function(){
 		    $('img').click(function(){
 		        window.open($(this).attr('src'));

@@ -40,5 +40,11 @@
 
 <block name="script">
 <script type="text/javascript">
+    function callback(data) {
+        toastr(data.info);
+        if (data.status == 1) {
+            location.href = '__URL__/listContraband';
+        }
+    }
 </script>
 </block>
