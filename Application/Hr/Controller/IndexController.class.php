@@ -52,7 +52,7 @@ class IndexController extends HrCommonController {
 
         $where['status'] = 1;
         $where['is_post'] = array('lt', 2);
-        $list = $recruit_model->getRecruitList($where,'id, position_name, recruit_num, commission, add_time, job_area, position_name, welfare, ');
+        $list = $recruit_model->getRecruitList($where,'id, position_name, recruit_num, commission, add_time, job_area, position_name, welfare');
         p($list);
         $this->display();
     }
