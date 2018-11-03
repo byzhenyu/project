@@ -95,4 +95,22 @@ class AccountLogModel extends Model {
         $res = $this->where($where)->field($field)->select();
         return $res;
     }
+
+    /**
+     * @desc 获取悬赏的赏金情况
+     * @param $where
+     * @param bool $field
+     * @param string $order
+     * @return array
+     */
+    public function getRecruitAccountList($where, $field = false, $order = 'a.change_time desc'){
+        if(!$field) $field = 'a.*,u.mobile,u.user_name,u.nickname';
+        $count = $this->alias('a')->join('__USER__ as u on a.user_id = u.user_id', 'LEFT')->where($where)->count();
+        $page = get_web_page($count);
+        $list = $this->alias('a')->join('__USER__ as u on a.user_id = u.user_id', 'LEFT')->where($where)->field($field)->order($order)->limit($page['limit'])->select();
+        return array(
+            'info' => $list,
+            'page' => $page['page']
+        );
+    }
 }

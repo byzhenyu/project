@@ -58,6 +58,33 @@ class RecruitController extends CommonController {
         $this->display();
     }
 
+    /**
+     * @desc 悬赏佣金情况
+     */
+    public function seeRecruitAccountLog(){
+        $recruit_id = I('recruit_id', 0, 'intval');
+        $recruit_resume_model = D('Admin/RecruitResume');
+        $recruit_resume = $recruit_resume_model->recruitResumeStatistic(array('recruit_id' => $recruit_id));
+        if(count($recruit_resume) > 0){
+            $order_sn = array();
+            $keywords = I('keyword', '', 'trim');
+            foreach($recruit_resume as &$val) $order_sn[] = $val['id']; unset($val);
+            $where = array('change_type' => array('in', array(2,3,7)), 'order_sn' => array('in', $order_sn));
+            if($keywords) $where['u.mobile|u.nickname'] = array('like', '%'.$keywords.'%');
+            $data = D('Admin/AccountLog')->getRecruitAccountList($where);
+            foreach($data['info'] as &$val){
+                $val['user_money'] = fen_to_yuan($val['user_money']);
+                $val['diss_string'] = '冻结中';
+                if($val['diss'] == 1) $val['diss_string'] = '已结算';
+                $val['change_time'] = time_format($val['change_time'], 'Y-m-d');
+            }
+            unset($val);
+        }
+        $this->info = $data['info'];
+        $this->page = $data['page'];
+        $this->display();
+    }
+
     public function del(){
         $this->_del('Recruit', 'id');
     }
