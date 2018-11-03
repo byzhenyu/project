@@ -105,6 +105,8 @@
                                                             <a href="javascript:;"data-url="{:U('ResumeEdu/editResumeEdu', array('resume_id'=>$v['id']))}" class="increase_resume_edu"> 新增教育经历 </a>
                                                             <a href="{:U('Resume/editResume',array('resume_id'=>$v['id']))}">编辑简历
                                                             </a>
+                                                            <else/>
+                                                            <span style="color: #ff1408;">认证简历不可操作</span>
                                                         </if>
                                                         <a href="{:U('Resume/seeResumeDetail',array('id'=>$v['id']))}">简历详情
                                                         </a>
