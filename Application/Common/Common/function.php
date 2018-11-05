@@ -1338,6 +1338,7 @@ function string_data($data){
         }
         $data[$val] = strval($data[$val]);
         if($data[$val] == 'undefined') $data[$val] = '';
+        $data[$val] = filter_enter($data[$val]);
     }
     unset($val);
     return $data;
