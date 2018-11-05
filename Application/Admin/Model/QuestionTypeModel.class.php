@@ -24,6 +24,12 @@ class QuestionTypeModel extends Model {
         }
         return true;
     }
+
+    public function getQuestionTypeName($where, $field){
+        $res = $this->where($where)->getField($field);
+        return $res;
+    }
+
     /**
      * 获取问题类型名称
      * @param

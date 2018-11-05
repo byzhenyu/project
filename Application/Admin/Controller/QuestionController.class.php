@@ -60,6 +60,8 @@ class QuestionController extends CommonController {
         else{
             $answer['nickname'] = D('Admin/User')->getUserField(array('user_id' => $answer['user_id']), 'nickname');
         }
+        $info['question_type'] = $info['question_type'] > 0 ? D('Admin/QuestionType')->getQuestionTypeName(array('id' => $info['question_type']), 'type_name') : '所有领域';
+        $info['question_img'] = D('Admin/QuestionImg')->getQuestionImgList(array('type' => 1, 'item_id' => $id));
         $this->answer = $answer;
         $this->optimum = $optimum;
         $this->info = $info;

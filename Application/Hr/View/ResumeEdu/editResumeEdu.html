@@ -32,8 +32,15 @@
                                 <td><input type="text" id="school_name" name="school_name" value="{$info['school_name']}" style="width:500px" placeholder="请输入学校名称"/></td>
                             </tr>
                             <tr>
-                                <td><div align="right"><em class="must-input">*</em><strong>学历：</strong></div></td>
-                                <td><input type="text" id="degree" name="degree" value="{$info['degree']}" style="width:500px" placeholder="请输入学历" /></td>
+                                <td><div align="right"><strong>学历：</strong></div></td>
+                                <td colspan="3">
+                                    <select name="degree" id="degree" data-am-selected="{maxHeight: 200}">
+                                        <option value="">请选择学历</option>
+                                        <foreach name="edu_list" item="v">
+                                            <option value="{$v['education_name']}" <if condition="$v.education_name eq $info['degree']">selected</if>>{$v['education_name']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
                             </tr>
                             <tr>
                                 <td><div align="right"><em class="must-input">*</em><strong>专业：</strong></div></td>
@@ -66,7 +73,6 @@
                                     <input type="hidden" name="resume_id" value="{$info['resume_id']}">
                                     <input type="hidden" name="id" value="{$info['id']}">
                                     <button type="button" onclick="editResumeEdu()" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
-                                    <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback();">返回</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -100,12 +106,8 @@
                 success : function(data){
                     toastr(data.info);
                     if(data.status == 1){
-                        if(parseInt({$info['id']}) > 0){
-                            location.href='__URL__/getResumeEduList/resume_id/'+{$info['resume_id']};
-                        }
-                        else{
-                            setTimeout(layer_reload, 1000);
-                        }
+                        window.parent.location.reload();
+                        setTimeout(layer_reload, 1000);
                     }
                 }
             });

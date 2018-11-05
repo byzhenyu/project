@@ -81,7 +81,7 @@ class ResumeController extends HrCommonController {
                     $res = $model->where(array('id' => $resume_id))->save($data);
                     if(false !== $res){
                         header('Content-Type:application/json; charset=utf-8');
-                        echo json_encode(V(1, '保存成功'));
+                        echo json_encode(V(1, '保存成功', $resume_id));
                         fastcgi_finish_request();
                         set_time_limit(0);
                         refreshUserTags(false, $resume_id, array('job_position' => $data['position_id'], 'job_area' => $data['job_area']));
@@ -112,8 +112,8 @@ class ResumeController extends HrCommonController {
                             if(false !== $hr_res){
                                 refreshUserTags(HR_ID, $res);
                                 M()->commit();
-                                $this->addResumeWorkEducation($res);
-                                $this->ajaxReturn(V(1, '保存成功！'));
+                                //$this->addResumeWorkEducation($res);
+                                $this->ajaxReturn(V(1, '保存成功！', $res));
                             }
                             else{
                                 M()->rollback();
@@ -196,6 +196,38 @@ class ResumeController extends HrCommonController {
                 $info['job_area2'] = $job_area[1];
                 $info['job_area3'] = $job_area[2];
             }
+
+            //教育经历
+            $resume_edu_where = array('resume_id' => $resume_id);
+            $resume_edu_model = D('Admin/ResumeEdu');
+            $resume_edu_list = $resume_edu_model->getResumeEduList($resume_edu_where);
+            foreach($resume_edu_list as &$val){
+                $val['starttime'] = time_format($val['starttime'], 'Y-m-d');
+                if($val['endtime']){
+                    $val['endtime'] = time_format($val['endtime'], 'Y-m-d');
+                }
+                else{
+                    $val['endtime'] = '至今';
+                }
+            }
+            unset($val);
+            //工作经历
+            $resume_work_where = array('resume_id' => $resume_id);
+            $resume_work_model = D('Admin/ResumeWork');
+            $resume_work_list = $resume_work_model->getResumeWorkList($resume_work_where);
+            foreach($resume_work_list as &$val){
+                $val['starttime'] = time_format($val['starttime'], 'Y-m-d');
+                if($val['endtime']){
+                    $val['endtime'] = time_format($val['endtime'], 'Y-m-d');
+                }
+                else{
+                    $val['endtime'] = '至今';
+                }
+            }
+
+            $this->resume_edu_list = $resume_edu_list;
+            $this->resume_work_list = $resume_work_list;
+
             $this->industry = $industry;
             $this->info = $info;
             $this->lang = $language_arr;

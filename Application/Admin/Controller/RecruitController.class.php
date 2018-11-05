@@ -38,6 +38,8 @@ class RecruitController extends CommonController {
         $user_info = $userModel->getUserInfo($user_where, 'nickname,user_name');
         $info['release_name'] = !empty($user_info['nickname']) ? $user_info['nickname'] : $user_info['user_name'];
         $info['experience'] = C('WORK_EXP')[$info['experience']];
+        $education = D('Admin/Education')->getEducationInfo(array('id' => $info['degree']));
+        $info['education_name'] = $education['education_name'] == '不限' ? '不限' : $education['education_name'].'或'.$education['education_name'].'以上';
         $this->info = $info;
         $this->display();
     }

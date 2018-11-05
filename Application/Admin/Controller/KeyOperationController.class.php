@@ -19,7 +19,7 @@ class KeyOperationController extends CommonController{
         $where = array();
         $model = D('Admin/KeyOperation');
         if($operate_type) $where['k.operate_type'] = $operate_type;
-        if($keywords) $where['u.user_name|u.mobile'] = array('like', '%'.$keywords.'%');
+        if($keywords) $where['u.user_name|u.mobile|u.nickname'] = array('like', '%'.$keywords.'%');
         if($min && $max){
             $min = strtotime($min);
             $max = strtotime($max);

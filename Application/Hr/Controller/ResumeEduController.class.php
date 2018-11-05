@@ -80,7 +80,10 @@ class ResumeEduController extends HrCommonController {
             $info['endtime'] = time();
             $info['is_current'] = 1;
         }
+
+        $edu_list = D('Admin/Education')->getEducationList();
         $info['resume_id'] = $data['resume_id'];
+        $this->edu_list = $edu_list;
         $this->info = $info;
         $this->display();
     }

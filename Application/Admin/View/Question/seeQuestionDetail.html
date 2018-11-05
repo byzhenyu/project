@@ -57,6 +57,16 @@
 								<td><div align="right"><strong>回答数：</strong></div></td>
 								<td>{$info['answer_number']}</td>
 							</tr>
+							<tr>
+								<td>
+									<div align="right"><strong>图片</strong></div>
+								</td>
+								<td>
+									<foreach name="info.question_img" item="v">
+										<img src="{$v['img_path']}" alt="" style="width: 180px;">
+									</foreach>
+								</td>
+							</tr>
 						</table>
 						<table width="100%" class="am-table am-table-bordered">
 							<thead>
@@ -111,5 +121,11 @@
 	</div>
 </block>
 <block name="script">
-
+	<script type="text/javascript">
+        $(function(){
+            $('img').click(function(){
+                window.open($(this).attr('src'));
+            });
+        });
+	</script>
 </block>

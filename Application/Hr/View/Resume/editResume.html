@@ -28,24 +28,24 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td><div align="right"><em class="must-input">*</em><strong>真实姓名：</strong></div></td>
-                                <td><input type="text" id="true_name" name="true_name" value="{$info['true_name']}" style="width:500px" placeholder="请输入真实姓名"/></td>
+                                <td width="25%"><div align="right"><em class="must-input">*</em><strong>真实姓名：</strong></div></td>
+                                <td colspan="3"><input type="text" id="true_name" name="true_name" value="{$info['true_name']}"  placeholder="请输入真实姓名"/></td>
                             </tr>
                             <tr>
                                 <td><div align="right"><em class="must-input">*</em><strong>手机号：</strong></div></td>
-                                <td><input type='tel' maxlength="11" id="mobile" name="mobile" value="{$info['mobile']}" style="width:500px" placeholder="请输入手机号" /></td>
+                                <td colspan="3"><input type='tel' maxlength="11" id="mobile" name="mobile" value="{$info['mobile']}"  placeholder="请输入手机号" /></td>
                             </tr>
                             <tr>
                                 <td><div align="right"><em class="must-input">*</em><strong>电子邮箱：</strong></div></td>
-                                <td><input type="email" id="email" name="email" value="{$info['email']}" style="width:500px" placeholder="请输入电子邮箱" /></td>
+                                <td colspan="3"><input type="email" id="email" name="email" value="{$info['email']}" style="width:500px" placeholder="请输入电子邮箱" /></td>
                             </tr>
                             <tr>
                                 <td><div align="right"><em class="must-input">*</em><strong>年龄：</strong></div></td>
-                                <td><input type="text" id="age" name="age" value="{$info['age']|date='Y-m-d', ###}" style="width:500px" placeholder="请选择年龄" /></td>
+                                <td colspan="3"><input type="text" id="age" name="age" value="{$info['age']|date='Y-m-d', ###}" style="width:500px" placeholder="请选择年龄" /></td>
                             </tr>
                             <tr>
                                 <td><div align="right"><em class="must-input">*</em><strong>性别：</strong></div></td>
-                                <td>
+                                <td colspan="3">
                                     <label class="am-radio-inline">
                                         <input type="radio" name="sex" class="sex_default1" value="1" data-am-ucheck> 男
                                     </label>
@@ -62,7 +62,7 @@
                             </tr>
                             <tr>
                                 <td><div align="right"><strong>第一学历：</strong></div></td>
-                                <td>
+                                <td colspan="3">
                                     <select name="first_degree" id="first_degree" data-am-selected="{maxHeight: 200}">
                                         <option value="">请选择第一学历</option>
                                         <foreach name="edu_list" item="v">
@@ -73,7 +73,7 @@
                             </tr>
                             <tr>
                                 <td><div align="right"><strong>第二学历：</strong></div></td>
-                                <td>
+                                <td colspan="3">
                                     <select name="second_degree" id="second_degree" data-am-selected="{maxHeight: 200}">
                                         <option value="">请选择第二学历</option>
                                         <foreach name="edu_list" item="v">
@@ -84,7 +84,7 @@
                             </tr>
                             <tr>
                                 <td><div align="right"><strong>语言能力[多选]：</strong></div></td>
-                                <td>
+                                <td colspan="3">
                                     <select name="language_ability[]" id="language_ability" data-am-selected="" multiple="multiple">
                                         <option value="">请选择语言能力</option>
                                         <foreach name="lang" item="v">
@@ -95,7 +95,7 @@
                             </tr>
                             <tr>
                                 <td><div align="right"><strong>详细地址：</strong></div></td>
-                                <td>
+                                <td colspan="3">
                                     <div class="am-form-group" id="address_address">
                                         <select name="t_province"></select>
                                         <select name="t_job_area"></select>
@@ -104,7 +104,7 @@
                             </tr>
                             <tr>
                                 <td><div align="right"><strong>岗位性质：</strong></div></td>
-                                <td>
+                                <td colspan="3">
                                     <select name="post_nature" id="post_nature" data-am-selected="{searchBox: 0}">
                                         <option value="">请选择</option>
                                         <foreach name="nature" item="v">
@@ -116,7 +116,7 @@
 
                             <tr>
                                 <td><div align="right"><em class="must-input">*</em><strong>工作地区：</strong></div></td>
-                                <td><div class="am-form-group" id="start_address">
+                                <td colspan="3"><div class="am-form-group" id="start_address">
                                     <select name="province"></select>
                                     <select name="job_area"></select>
                                     <select name="county"></select>
@@ -125,7 +125,7 @@
 
                             <tr>
                                 <td><div align="right"><strong>行业属性：</strong></div></td>
-                                <td>
+                                <td colspan="3">
                                     <select name="industry_id" id="industry_id" data-am-selected="{searchBox: 0}" >
                                         <option value="">请选择行业</option>
                                         <foreach name="industry" item="v">
@@ -143,7 +143,7 @@
                             </tr>
                             <tr>
                                 <td><div align="right"><strong>求职方向：</strong></div></td>
-                                <td>
+                                <td colspan="3">
                                     <select data-am-selected="{searchBox: 1, maxHeight: '180px'}" style="display: none;" name="parent_id" id="parent_id">
                                     </select>
                                     <select data-am-selected="{searchBox: 1, maxHeight: '180px'}" style="display: none;" name="position_id" id="position_id">
@@ -153,93 +153,108 @@
 
                             <tr>
                                 <td><div align="right"><strong>自我介绍：</strong></div></td>
-                                <td>
+                                <td colspan="3">
                                     <!--<script id="content1" name="introduced" type="text/plain">{$info["introduced"]|htmlspecialchars_decode}</script>-->
                                     <textarea name="introduced" id="" cols="100" rows="10">{$info['introduced']}</textarea>
                                 </td>
                             </tr>
-                            <if condition="$info['id'] gt 0">
-                                <tr>
-                                    <td colspan="2" align="center">
-                                        <input type="hidden" name="resume_id" value="{$info['id']}">
-                                        <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
-                                        <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback();">返回</button>
-                                    </td>
-                                </tr>
-                            </if>
+                            <tr>
+                                <td colspan="4" align="center">
+                                    <input type="hidden" name="resume_id" value="{$info['id']}">
+                                    <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+                                    <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback1();">返回</button>
+                                </td>
+                            </tr>
                         </tbody>
-                        <if condition="$info['id'] lt 1">
+                        <if condition="$info['id'] gt 0">
                             <thead>
                                 <tr><th colspan="4">教育经历</th></tr>
                             </thead>
                             <tbody>
-
+                            <empty name="resume_edu_list">
+                                <tr>
+                                    <td>
+                                        <div align="right"><strong>教育经历</strong></div>
+                                    </td>
+                                    <td colspan="3">
+                                        暂无
+                                    </td>
+                                </tr>
+                            </empty>
+                            <notempty name="resume_edu_list">
+                                <foreach name="resume_edu_list" item="v">
+                                    <tr>
+                                        <td style="width: 25%;"><div align="right"><strong>学校/学历：</strong></div></td>
+                                        <td style="width: 25%;">{$v['school_name']}&nbsp;&nbsp;|&nbsp;&nbsp;{$v['degree']}</td>
+                                        <td style="width: 25%"><div align="right"><strong>时间：</strong></div></td>
+                                        <td>{$v['starttime']}&nbsp;&nbsp;-&nbsp;&nbsp;{$v['endtime']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><div align="right"><strong>专业/描述：</strong></div></td>
+                                        <td><span style="color: #ff6e04">{$v['major']}</span>&nbsp;&nbsp;|&nbsp;&nbsp;{$v['describe']}</td>
+                                        <td colspan="2">
+                                            <a href="javascript:;" data-url="{:U('ResumeEdu/editResumeEdu',array('id'=>$v['id'], 'resume_id' => $info['id']))}" class="increase_resume_edu">
+                                            <i class="am-icon-pencil">编辑</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </foreach>
+                            </notempty>
                             <tr>
-                                <td><div align="right"><strong>学校名称：</strong></div></td>
-                                <td><input type="text" id="school_name" name="school_name" value="" style="width:500px" placeholder="请输入学校名称"/></td>
-                            </tr>
-                            <tr>
-                                <td><div align="right"><strong>学历：</strong></div></td>
-                                <td>
-                                    <select name="degree" id="degree" data-am-selected="{maxHeight: 200}">
-                                        <option value="">请选择学历</option>
-                                        <foreach name="edu_list" item="v">
-                                            <option value="{$v['education_name']}" >{$v['education_name']}</option>
-                                        </foreach>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><div align="right"><strong>专业：</strong></div></td>
-                                <td><input type="text" id="major" name="major" value="" style="width:500px" placeholder="请输入专业" /></td>
-                            </tr>
-                            <tr>
-                                <td><div align="right"><strong>开始时间：</strong></div></td>
-                                <td><input type="text" id="edu_starttime" name="edu_starttime" value=""  style="width:500px"/></td>
-                            </tr>
-                            <tr>
-                                <td><div align="right"><strong>结束时间：</strong></div></td>
-                                <td><input type="text" id="edu_endtime" name="edu_endtime" value=""  style="width:500px"/><br><input type="checkbox" name="edu_is_current" value="1" />至今</td>
-                            </tr>
-                            <tr>
-                                <td><div align="right"><strong>描述信息：</strong></div></td>
-                                <td>
-                                    <textarea name="edu_describe" cols="80" rows="6" placeholder="请填写描述信息"></textarea>
+                                <td colspan="4" style="text-align: center">
+                                    <div class="tpl-table-black-operation">
+                                        <div class="tw-dropdown-toggle" style="position:relative;display: inline; ">
+                                            <a href="javascript:;" data-url="{:U('ResumeEdu/editResumeEdu', array('resume_id' => $info['id']))}" class="increase_resume_edu"> 新增教育经历 </a>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                             </tbody>
                             <thead>
-                            <tr><th colspan="4">工作经历</th></tr>
+                                <tr><th colspan="4">工作经历</th></tr>
                             </thead>
                             <tbody>
+                            <empty name="resume_work_list">
+                                <tr>
+                                    <td>
+                                        <div align="right"><strong>工作经历</strong></div>
+                                    </td>
+                                    <td colspan="3">
+                                        暂无
+                                    </td>
+                                </tr>
+                            </empty>
+                            <notempty name="resume_work_list">
+                                <foreach name="resume_work_list" item="v">
+                                    <tr>
+                                        <td><div align="right"><strong>公司名称/职位：</strong></div></td>
+                                        <td>{$v['company_name']}&nbsp;&nbsp;|&nbsp;&nbsp;<span style="color: #ff6e04">{$v['position']}</span></td>
+                                        <td><div align="right"><strong>时间：</strong></div></td>
+                                        <td>{$v['starttime']}&nbsp;&nbsp;-&nbsp;&nbsp;{$v['endtime']}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><div align="right"><strong>描述：</strong></div></td>
+                                        <td>{$v['describe']}</td>
+                                        <td colspan="2">
+                                            <a href="javascript:;" data-url="{:U('ResumeWork/editResumeWork',array('id'=>$v['id'], 'resume_id' => $info['id']))}" class="increase_resume_work">
+                                                <i class="am-icon-pencil">编辑</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </foreach>
+                            </notempty>
                             <tr>
-                                <td><div align="right"><strong>公司名称：</strong></div></td>
-                                <td><input type="text" id="company_name" name="company_name" value="" style="width:500px" placeholder="请输入公司名称"/></td>
-                            </tr>
-                            <tr>
-                                <td><div align="right"><strong>职位：</strong></div></td>
-                                <td><input type="text" id="position" name="position" value="" style="width:500px" placeholder="请输入职位名称" /></td>
-                            </tr>
-                            <tr>
-                                <td><div align="right"><strong>开始时间：</strong></div></td>
-                                <td><input type="text" id="work_starttime" name="work_starttime" value=""  style="width:500px"/></td>
-                            </tr>
-                            <tr>
-                                <td><div align="right"><strong>结束时间：</strong></div></td>
-                                <td><input type="text" id="work_endtime" name="work_endtime" value=""  style="width:500px"/><br><input type="checkbox" name="work_is_current" value="1" />至今</td>
-                            </tr>
-                            <tr>
-                                <td><div align="right"><strong>描述信息：</strong></div></td>
-                                <td>
-                                    <textarea name="work_describe" cols="80" rows="6" placeholder="请填写描述信息"></textarea>
+                                <td colspan="4" style="text-align: center">
+                                    <div class="tpl-table-black-operation">
+                                        <div class="tw-dropdown-toggle" style="position:relative;display: inline; ">
+                                            <a href="javascript:;"data-url="{:U('ResumeWork/editResumeWork', array('resume_id'=>$v['id']))}" class="increase_resume_work"> 新增工作经历 </a>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
-
                             <tr>
-                                <td colspan="2" align="center">
-                                    <input type="hidden" name="resume_id" value="{$info['id']}">
-                                    <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
-                                    <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback();">返回</button>
+                                <td colspan="4" style="text-align: center;">
+                                    <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback1();">返回</button>
                                 </td>
                             </tr>
                             </tbody>
@@ -263,8 +278,16 @@
         function callback(data){
             toastr(data.info);
             if(data.status == 1){
-                location.href='/index.php/Hr/Resume/listHrResume';
+                if(parseInt({$info['id']}) < 1){
+                    location.href='/index.php/Hr/Resume/editResume/resume_id/'+data.data;
+                }
+                else{
+                    location.href='/index.php/Hr/Resume/listHrResume';
+                }
             }
+        }
+        function goback1(){
+            location.href='/index.php/Hr/Resume/listHrResume';
         }
         $(function() {
             initAddress('#start_address',"{$info['job_area1']}", "{$info['job_area2']}", "{$info['job_area3']}", 1);
@@ -334,6 +357,28 @@
                     });
                 }
             }
+            $('.increase_resume_work').click(function(){
+                var url = $(this).attr('data-url');
+                layer.open({
+                    type: 2,
+                    title: '新增工作经历',
+                    shadeClose: true,
+                    shade: 0.5,
+                    area: ['60%', '60%'],
+                    content: url,
+                });
+            });
+            $('.increase_resume_edu').click(function(){
+                var url = $(this).attr('data-url');
+                layer.open({
+                    type: 2,
+                    title: '新增教育经历',
+                    shadeClose: true,
+                    shade: 0.5,
+                    area: ['60%', '60%'],
+                    content: url,
+                });
+            });
         });
     </script>
 </block>

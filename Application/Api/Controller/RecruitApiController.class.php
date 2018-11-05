@@ -192,6 +192,8 @@ class RecruitApiController extends ApiUserCommonController{
         $recruit_resume_model = D('Admin/RecruitResume');
         $resume_model = D('Admin/Resume');
         $user_model = D('Admin/User');
+        $recruit_resume_open = $recruit_resume_model->getRecruitResumeField(array('id' => $recruit_resume_id), 'is_open');
+        if($recruit_resume_open == 1) $this->apiReturn(V(0, '无需重复下载！'));
         $recruit_info = $recruit_model->getRecruitInfo(array('id' => $recruit_id));
         $recruit_num = $recruit_info['recruit_num'];
         $recruit_resume_count = $recruit_resume_model->getRecruitResumeNum(array('recruit_id' => $recruit_id, 'is_open' => 1));
