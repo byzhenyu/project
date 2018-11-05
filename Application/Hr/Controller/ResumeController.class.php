@@ -75,6 +75,8 @@ class ResumeController extends HrCommonController {
             }
             if($resume_id){
                 $create = $model->create($data, 1);
+                $check_res = D('Admin/HrResume')->checkHrResumeMobile($data['mobile'], $resume_id, HR_ID);
+                if($check_res) $this->ajaxReturn(V(0, '该手机号已存在！'));
                 if(false !== $create){
                     $res = $model->where(array('id' => $resume_id))->save($data);
                     if(false !== $res){
@@ -95,6 +97,8 @@ class ResumeController extends HrCommonController {
             else{
                 M()->startTrans();
                 $create = $model->create($data, 2);
+                $check_res = D('Admin/HrResume')->checkHrResumeMobile($data['mobile'], false, HR_ID);
+                if($check_res) $this->ajaxReturn(V(0, '该手机号已存在！'));
                 if(false !== $create){
                     $res = $model->add($data);
                     if(false !== $res){

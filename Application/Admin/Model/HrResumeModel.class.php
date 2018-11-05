@@ -95,4 +95,24 @@ class HrResumeModel extends Model {
         $res = $this->where($where)->getField($field);
         return $res;
     }
+
+    /**
+     * @desc 检测HR下简历手机号是否存在
+     * @param $mobile
+     * @param bool $resume_id
+     * @param bool $hr_id
+     * @return bool
+     */
+    public function checkHrResumeMobile($mobile, $resume_id = false, $hr_id = false){
+        $where = array('r.mobile' => $mobile, 'r.user_id' => $hr_id);
+        if(!$resume_id){
+            $res = $this->alias('h')->join('__RESUME__ as r on h.resume_id = r.id')->where($where)->find();
+        }
+        else{
+            $where['r.id'] = array('neq', $resume_id);
+            $res = $this->alias('h')->join('__RESUME__ as r on h.resume_id = r.id')->where($where)->find();
+        }
+        if($res) return true;
+        return false;
+    }
 }

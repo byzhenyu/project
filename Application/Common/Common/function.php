@@ -1531,3 +1531,12 @@ function refreshRecruitCache($hr_id = UID){
     $res = $model->where(array('hr_user_id' => $hr_id))->delete();
     return $res;
 }
+
+function filter_enter($str){
+    $str = str_replace('&quot;',"", $str);
+    $str = str_replace('&lt;',"<", $str);
+    $str = str_replace('&gt;',">", $str);
+    $str = str_replace('&amp;',"&", $str);
+    $str = str_replace('char(10)','\r\n', $str);
+    return $str;
+}
