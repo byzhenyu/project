@@ -24,10 +24,10 @@ class RegionModel extends Model {
     	//获取缓存中的省市县数据
     	$citys = S('parent_id'.$parent_id);
     	if (!$citys) {
-            $res = M('Region')->where($where)->field('id,name as region_name')->order('id,sorting')->select();
+            $res = M('Region')->where($where)->field('id,name as region_name')->order('first_code')->select();
     		S('parent_id'.$parent_id,$res);
     	} else {
-            $res = M('Region')->where($where)->field('id,name as region_name')->order('id,sorting')->select();
+            $res = M('Region')->where($where)->field('id,name as region_name')->order('first_code')->select();
     	}
 
     	return $res;
