@@ -47,7 +47,8 @@ class ResumeEduController extends HrCommonController {
                 if(false !== $create){
                     $res = $model->save($data);
                     if(false !== $res){
-                        $this->ajaxReturn(V(1, '学历信息保存成功！'));
+                        $info = $model->getResumeEduInfo(array('id' => $id));
+                        $this->ajaxReturn(V(1, '学历信息保存成功！', $info['resume_id']));
                     }
                     else{
                         $this->ajaxReturn(V(0, $model->getError()));
@@ -58,7 +59,7 @@ class ResumeEduController extends HrCommonController {
                 }
             }
             else{
-                if(!$data['resume_id']) $this->ajaxReturn(V(0, '简历编号错误'));
+                if(!$data['resume_id']) $this->ajaxReturn(V(0, '请先提交以上基本信息'));
                 $create = $model->create($data, 1);
                 if(false !== $create){
                     $res = $model->add($data);
@@ -81,9 +82,9 @@ class ResumeEduController extends HrCommonController {
             $info['endtime'] = time();
             $info['is_current'] = 1;
         }
+        $info['resume_id'] = $data['resume_id'] ? $data['resume_id'] : $info['resume_id'];
 
         $edu_list = D('Admin/Education')->getEducationList();
-        $info['resume_id'] = $data['resume_id'];
         $this->edu_list = $edu_list;
         $this->info = $info;
         $this->display();
