@@ -137,7 +137,14 @@ class RecruitApiController extends ApiUserCommonController{
         $where['status'] = 1;
         $where['is_post'] = array('lt', 2);
 
-        $list = D('Admin/Recruit')->getRecruitList($where,'id, position_name, recruit_num, commission, add_time');
+        $list = D('Admin/Recruit')->getRecruitList($where,'id, position_name, recruit_num, commission, add_time,position_id');
+        $position_model = D('Admin/Position');
+        foreach($list['info'] as &$val){
+            $t_parent_id = $position_model->getPositionField(array('id' => $val['position_id']), 'parent_id');
+            $position_name = $position_model->getPositionField(array('id' => $t_parent_id), 'position_name');
+            $val['position_name'] = $position_name . $val['position_name'];
+        }
+        unset($val);
         $this->apiReturn(V(1, '悬赏列表', $list['info']));
     }
 
