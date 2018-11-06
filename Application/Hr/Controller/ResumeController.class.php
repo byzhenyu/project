@@ -196,6 +196,7 @@ class ResumeController extends HrCommonController {
                 $info['job_area2'] = $job_area[1];
                 $info['job_area3'] = $job_area[2];
             }
+            $info['id'] = $resume_id;
 
             //教育经历
             $resume_edu_where = array('resume_id' => $resume_id);
