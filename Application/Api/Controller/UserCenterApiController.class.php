@@ -2019,9 +2019,9 @@ class UserCenterApiController extends ApiUserCommonController{
         $userModel = D('Admin/User');
         $userInfo = $userModel->getUserInfo(array('user_id' => UID));
 
-        $result = D('Admin/SmsMessage')->checkSmsMessage($sms_code, $mobile, $userInfo['user_type'], 4);
         $strlen = strlen($password);
         if(!$strlen || $strlen < 6 || $strlen > 18) $this->apiReturn(V(0, '请输入6-18位登录密码'));
+        $result = D('Admin/SmsMessage')->checkSmsMessage($sms_code, $mobile, $userInfo['user_type'], 4);
         if ($result['status'] == 1) {
             $save = array('mobile' => $mobile, 'password' => $password);
             $res = $userModel->saveUserData(array('user_id' => UID), $save);
