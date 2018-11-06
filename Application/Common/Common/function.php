@@ -1509,8 +1509,8 @@ function user_tags($hr_id){
     $pos = array('job_position' => array());
     if(count($tags) > 0){
         foreach($tags as &$val){
-            $temp_area = explode('|', $val['job_area']);
-            $temp_pos = explode('|', $val['job_position']);
+            if(!empty($val['job_area'])) $temp_area = explode('|', $val['job_area']);
+            if(!empty($val['job_position'])) $temp_pos = explode('|', $val['job_position']);
             $area['job_area'] = array_merge($area['job_area'], $temp_area);
             $pos['job_position'] = array_merge($pos['job_position'], $temp_pos);
         }
