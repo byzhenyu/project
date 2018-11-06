@@ -1833,7 +1833,7 @@ class UserCenterApiController extends ApiUserCommonController{
      */
     public function recharge() {
         $recharge_money = I('recharge_money', '');
-        if (!$recharge_money || $recharge_money < 1) {
+        if (!$recharge_money || $recharge_money < 0) {
             $this->apiReturn(V(0, '充值金额不能小于1元！'));
         }
         $code = I('wx_code', '');
