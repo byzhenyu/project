@@ -78,10 +78,11 @@ class ResumeEduController extends HrCommonController {
         $info = $model->getResumeEduInfo(array('id' => $id));
         if(!$info['starttime']) $info['starttime'] = time();
         $info['is_current'] = 0;
-        if(!$info['endtime']){
+        if(!$info['endtime'] && $id){
             $info['endtime'] = time();
             $info['is_current'] = 1;
         }
+        if(!$info['endtime']) $info['endtime'] = time();
         $info['resume_id'] = $data['resume_id'] ? $data['resume_id'] : $info['resume_id'];
 
         $edu_list = D('Admin/Education')->getEducationList();
