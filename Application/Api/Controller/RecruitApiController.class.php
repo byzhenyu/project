@@ -142,7 +142,7 @@ class RecruitApiController extends ApiUserCommonController{
         foreach($list['info'] as &$val){
             $t_parent_id = $position_model->getPositionField(array('id' => $val['position_id']), 'parent_id');
             $position_name = $position_model->getPositionField(array('id' => $t_parent_id), 'position_name');
-            $val['position_name'] = $position_name . $val['position_name'];
+            $val['position_name'] = $position_name .'-'. $val['position_name'];
         }
         unset($val);
         $this->apiReturn(V(1, '悬赏列表', $list['info']));
