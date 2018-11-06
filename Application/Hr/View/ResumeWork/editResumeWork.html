@@ -95,7 +95,7 @@
                 success : function(data){
                     toastr(data.info);
                     if(data.status == 1){
-                        window.parent.location.reload();
+                        window.parent.location.href='/index.php/Hr/Resume/editResume/resume_id/'+data.data;
                         setTimeout(layer_reload, 1000);
                     }
                 }

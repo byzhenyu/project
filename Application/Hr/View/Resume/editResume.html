@@ -160,13 +160,12 @@
                             </tr>
                             <tr>
                                 <td colspan="4" align="center">
-                                    <input type="hidden" name="resume_id" value="{$info['id']}">
-                                    <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+                                    <input type="hidden" id="resume_id_class" name="resume_id" value="{$info['id']}">
+                                    <button type="submit" id="submit_class" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
                                     <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback1();">返回</button>
                                 </td>
                             </tr>
                         </tbody>
-                        <if condition="$info['id'] gt 0">
                             <thead>
                                 <tr><th colspan="4">教育经历</th></tr>
                             </thead>
@@ -193,8 +192,11 @@
                                         <td><div align="right"><strong>专业/描述：</strong></div></td>
                                         <td><span style="color: #ff6e04">{$v['major']}</span>&nbsp;&nbsp;|&nbsp;&nbsp;{$v['describe']}</td>
                                         <td colspan="2">
-                                            <a href="javascript:;" data-url="{:U('ResumeEdu/editResumeEdu',array('id'=>$v['id'], 'resume_id' => $info['id']))}" class="increase_resume_edu">
+                                            <a href="javascript:;" data-url="{:U('ResumeEdu/editResumeEdu',array('id'=>$v['id']))}" class="increase_resume_edu1">
                                             <i class="am-icon-pencil">编辑</i>
+                                            </a>
+                                            <a href="javascript:;" data-url="{:U('ResumeEdu/delResumeEdu',array('id'=>$v['id']))}" class="delete_resume_edu">
+                                                <i class="am-icon-recycle">删除</i>
                                             </a>
                                         </td>
                                     </tr>
@@ -236,8 +238,11 @@
                                         <td><div align="right"><strong>描述：</strong></div></td>
                                         <td>{$v['describe']}</td>
                                         <td colspan="2">
-                                            <a href="javascript:;" data-url="{:U('ResumeWork/editResumeWork',array('id'=>$v['id'], 'resume_id' => $info['id']))}" class="increase_resume_work">
+                                            <a href="javascript:;" data-url="{:U('ResumeWork/editResumeWork',array('id'=>$v['id']))}" class="increase_resume_work1">
                                                 <i class="am-icon-pencil">编辑</i>
+                                            </a>
+                                            <a href="javascript:;" data-url="{:U('ResumeWork/delResumeWork',array('id'=>$v['id']))}" class="delete_resume_work">
+                                                <i class="am-icon-recycle">删除</i>
                                             </a>
                                         </td>
                                     </tr>
@@ -247,7 +252,7 @@
                                 <td colspan="4" style="text-align: center">
                                     <div class="tpl-table-black-operation">
                                         <div class="tw-dropdown-toggle" style="position:relative;display: inline; ">
-                                            <a href="javascript:;" data-url="{:U('ResumeWork/editResumeWork', array('resume_id'=>$info['id']))}" class="increase_resume_work"> 新增工作经历 </a>
+                                            <a href="javascript:;" data-url="" class="increase_resume_work"> 新增工作经历 </a>
                                         </div>
                                     </div>
                                 </td>
@@ -258,7 +263,6 @@
                                 </td>
                             </tr>
                             </tbody>
-                        </if>
                     </table>
                     </form>         
                 </div>
@@ -278,12 +282,9 @@
         function callback(data){
             toastr(data.info);
             if(data.status == 1){
-                if(parseInt({$info['id']}) < 1){
-                    location.href='/index.php/Hr/Resume/editResume/resume_id/'+data.data;
-                }
-                else{
-                    location.href='/index.php/Hr/Resume/listHrResume';
-                }
+                $('#resume_id_class').val(data.data);
+                //$('#submit_class').attr('type', 'button');
+                //location.href='/index.php/Hr/Resume/editResume/resume_id/'+data.data;
             }
         }
         function goback1(){
@@ -357,8 +358,18 @@
                     });
                 }
             }
+            $('.delete_resume_edu').click(function(){
+                if(confirm('确认删除该教育经历？')){
+                    $.get($(this).data('url'), {}, function(data){toastr(data.info);if(data.status == 1) location.reload();});
+                }
+            });
+            $('.delete_resume_work').click(function(){
+                if(confirm('确认删除该工作经历？')){
+                    $.get($(this).data('url'), {}, function(data){toastr(data.info);if(data.status == 1) location.reload();});
+                }
+            });
             $('.increase_resume_work').click(function(){
-                var url = $(this).attr('data-url');
+                var url = '/index.php/Hr/ResumeWork/editResumeWork/resume_id/'+$('#resume_id_class').val();
                 layer.open({
                     type: 2,
                     title: '新增工作经历',
@@ -368,11 +379,33 @@
                     content: url,
                 });
             });
+            $('.increase_resume_work1').click(function(){
+                var url = $(this).data('url');
+                layer.open({
+                    type: 2,
+                    title: '编辑工作经历',
+                    shadeClose: true,
+                    shade: 0.5,
+                    area: ['60%', '60%'],
+                    content: url,
+                });
+            });
             $('.increase_resume_edu').click(function(){
-                var url = $(this).attr('data-url');
+                var url ='/index.php/Hr/ResumeEdu/editResumeEdu/resume_id/'+$('#resume_id_class').val();
                 layer.open({
                     type: 2,
                     title: '新增教育经历',
+                    shadeClose: true,
+                    shade: 0.5,
+                    area: ['60%', '60%'],
+                    content: url,
+                });
+            });
+            $('.increase_resume_edu1').click(function(){
+                var url = $(this).data('url');
+                layer.open({
+                    type: 2,
+                    title: '编辑教育经历',
                     shadeClose: true,
                     shade: 0.5,
                     area: ['60%', '60%'],

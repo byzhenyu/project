@@ -28,7 +28,7 @@ class LoginController extends Controller {
         }
         $mobile = I('post.mobile', '');
         $password = I('post.password', '');
-        $loginInfo = D('Admin/User')->doLogin($mobile, $password, '', 1);
+        $loginInfo = D('Admin/User')->doLogin($mobile, $password, '', 1, true);
         if( $loginInfo['status'] == 1 ){ //登录成功
             unset($loginInfo['password']);
             /* 存入session */

@@ -82,9 +82,10 @@ class UserModel extends Model{
      * @param $pwd string 登录密码
      * @param string $field 返回字段
      * @param $user_type int 用户类型 0、普通会员 1、HR
+     * @param $web_server bool
      * @return array
      */
-    public function doLogin($user_name, $pwd, $field = '', $user_type){
+    public function doLogin($user_name, $pwd, $field = '', $user_type, $web_server = false){
         if(!$field) $field = 'user_id,user_name,password,pay_password,mobile,email,head_pic,nickname,sex,user_money,frozen_money,disabled,register_time,recommended_number,recruit_number,is_auth,user_type,log_count';
         $where = array('user_name|mobile' => $user_name, 'status' => 1, 'user_type' => $user_type);
         $info = $this->where($where)->field($field)->find();
@@ -99,7 +100,7 @@ class UserModel extends Model{
             foreach($unArr as &$val) unset($info[$val]); unset($val);
             $info['head_pic'] = !empty($info['head_pic']) ? strval($info['head_pic']) : DEFAULT_IMG;
             $info['nickname'] = strval($info['nickname']);
-            $info['token'] = $this->updateUserToken($info['user_id']);
+            if(!$web_server) $info['token'] = $this->updateUserToken($info['user_id']);
             return V(1, '用户登录成功', $info);
         }
         else{

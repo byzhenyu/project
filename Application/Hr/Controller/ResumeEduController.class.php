@@ -58,11 +58,12 @@ class ResumeEduController extends HrCommonController {
                 }
             }
             else{
+                if(!$data['resume_id']) $this->ajaxReturn(V(0, '简历编号错误'));
                 $create = $model->create($data, 1);
                 if(false !== $create){
                     $res = $model->add($data);
                     if($res > 0){
-                        $this->ajaxReturn(V(1, '学历信息保存成功！'));
+                        $this->ajaxReturn(V(1, '学历信息保存成功！', $data['resume_id']));
                     }
                     else{
                         $this->ajaxReturn(V(0, $model->getError()));
@@ -86,6 +87,17 @@ class ResumeEduController extends HrCommonController {
         $this->edu_list = $edu_list;
         $this->info = $info;
         $this->display();
+    }
+
+    public function delResumeEdu(){
+        $id = I('id', 0, 'intval');
+        $res = D('Admin/ResumeEdu')->where(array('id' => $id))->delete();
+        if(false !== $res){
+            $this->ajaxReturn(V(1, '删除成功！'));
+        }
+        else{
+            $this->ajaxReturn(V(0, '操作错误！'));
+        }
     }
 
     public function del(){
