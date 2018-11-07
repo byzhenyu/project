@@ -416,7 +416,7 @@ class PublicApiController extends ApiCommonController
         $auth_model = D('Admin/ResumeAuth');
         $hr_info = $hrModel->getHrResumeInfo(array('hr_user_id' => $user_id, 'resume_id' => $resume_id));
         $hr_auth_info = $auth_model->getResumeAuthInfo(array('resume_id' => $resume_id, 'hr_id' => $user_id));
-        if(!$token) $hr_info = true;
+        if(!$user_id) $hr_info = true;
         if($user_id != $resumeDetail['user_id'] && !$hr_info && !$hr_auth_info){
             if(!$is_open) $resumeDetail['mobile'] = '****';
             if($is_open) $resumeDetail['mobile'] = strval($resumeDetail['hide_mobile']);
