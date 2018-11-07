@@ -1505,21 +1505,7 @@ function refreshUserTags($hr_id = false, $resume_id = false, $resume_info = arra
  */
 function user_tags($hr_id){
     $tags = D('Admin/UserTags')->getUserTags($hr_id);
-    $area = array('job_area' => array());
-    $pos = array('job_position' => array());
-    if(count($tags) > 0){
-        foreach($tags as &$val){
-            if(!empty($val['job_area'])) $temp_area = explode('|', $val['job_area']);
-            if(!empty($val['job_position'])) $temp_pos = explode('|', $val['job_position']);
-            $area['job_area'] = array_merge($area['job_area'], $temp_area);
-            $pos['job_position'] = array_merge($pos['job_position'], $temp_pos);
-        }
-        unset($val);
-    }
-    return array(
-        'area' => $area['job_area'],
-        'pos' => $pos['job_position']
-    );
+    return $tags;
 }
 
 /**

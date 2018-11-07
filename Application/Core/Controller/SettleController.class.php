@@ -132,47 +132,28 @@ class SettleController extends CommonController {
             $resume_list = M('HrResume')->alias('h')->field($field)->join('__RESUME__ as r on h.resume_id = r.id')->where($where)->select();
             if(count($resume_list) > 0){
                 $tags_model->where(array('user_id' => $hr_user_id))->delete();
-                $temp_area = '';
-                $temp_position = '';
+                $area_help_arr = array();
                 $area_arr = array();
-                $position_arr = array();
-                $area_add_arr = array();
-                $position_add_arr = array();
                 foreach($resume_list as &$val){
-                    if(!in_array($val['job_area'], $area_arr)){
-                        $area_arr[] = $val['job_area'];
-                        if(mb_strlen($temp_area.$val['job_area']) + 1 > 255){
-                            $temp_area = rtrim($temp_area, '|');
-                            $area_add_arr[] = $temp_area;
-                            $temp_area = '';
-                            $temp_area .= $val['job_area'].'|';
+                    if(!in_array($val['position_id'] ,$area_help_arr[$val['job_area']])){
+                        $area_help_arr[$val['job_area']][] = $val['position_id'];
+                        if(count($area_arr[$val['job_area']]) > 0){
+                            $t_pos = implode('|', $area_arr[$val['job_area']]);
+                            if(strlen($t_pos.$val['position_id']) > 155){
+                                $tags_model->add(array('user_id' => $hr_user_id, 'job_area' => $val['job_area'], 'job_position' => $area_arr[$val['job_area']]));
+                                $area_arr[$val['job_area']] = array();
+                            }
                         }
-                        else{
-                            $temp_area .= $val['job_area'].'|';
-                        }
-                    }
-                    if(!in_array($val['position_id'], $position_arr)){
-                        $position_arr[] = $val['position_id'];
-                        if(mb_strlen($temp_position.$val['position_id']) + 1 > 255){
-                            $temp_position = rtrim($temp_position, '|');
-                            $position_add_arr[] = $temp_position;
-                            $temp_position = '';
-                            $temp_position .= $val['position_id'].'|';
-                        }
-                        else{
-                            $temp_position .= $val['position_id'].'|';
-                        }
+
+                        $area_arr[$val['job_area']][] = $val['position_id'];
                     }
                 }
-                //添加最后一轮地区到添加数组中
-                $area_add_arr[] = $temp_area;
-                $position_add_arr[] = $temp_position;
                 unset($val);
-                $area_keys = array_keys($area_add_arr);
                 $tags_add_arr = array();
-                foreach($area_keys as &$k_val){
-                    $t_pos = $position_add_arr[$k_val] ? rtrim($position_add_arr[$k_val], '|') : '';
-                    $tags_add_arr[] = array('user_id' => $hr_user_id, 'job_area' => rtrim($area_add_arr[$k_val], '|'), 'job_position' => $t_pos);
+                $arr_keys = array_keys($area_arr);
+                foreach($arr_keys as &$k_val){
+                    $t_position = implode('|', $area_arr[$k_val]);
+                    $tags_add_arr[] = array('user_id' => $hr_user_id, 'job_area' => $k_val, 'job_position' => $t_position);
                 }
                 unset($k_val);
                 $res = $tags_model->addAll($tags_add_arr);
@@ -183,12 +164,6 @@ class SettleController extends CommonController {
         else{
             //暂不支持全部修改
             return true;
-            $model = D('Admin/UserTags');
-            $temp_arr = array('gt', 0);
-            $tags_list = $model->getUserTags($temp_arr);
-            $tags = array();
-            foreach($tags_list as &$val) $tags[] = $val['user_id'];  unset($val);
-            $where['h.hr_user_id'] = array('in', $tags);
         }
     }
 }
