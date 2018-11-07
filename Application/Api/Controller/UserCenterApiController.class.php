@@ -1636,6 +1636,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $recruit_where = array('id' => $data['recruit_id']);
         $recruit_info = $recruitModel->getRecruitInfo($recruit_where);
         if(!$recruit_info) $this->apiReturn(V(0, '获取不到对应的悬赏信息！'));
+        if($hr_user_id == $recruit_info['hr_user_id']) $this->apiReturn(V(0, '不能向自己推荐简历！'));
         if($recruit_info['is_post'] == 2) $this->apiReturn(V(0, '该悬赏职位已招满！'));
         //$resume_where = array('id' => $data['resume_id']);
         //$resume_info = $resumeModel->getResumeInfo($resume_where);
