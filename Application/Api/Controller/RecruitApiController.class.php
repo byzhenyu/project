@@ -305,7 +305,7 @@ class RecruitApiController extends ApiUserCommonController{
             foreach($info['list'] as &$val){
                 if($val['change_type'] != 1) continue;
                 $val['user_account_state'] = $account_model->getAccountField(array('id' => $val['order_sn']), 'state');
-                $val['change_desc'] = C('ACCOUNT_STATE')[$val['user_account_state']];
+                $val['change_desc'] = '提现'.C('ACCOUNT_STATE')[$val['user_account_state']];
             }
             unset($val);
         } else {
