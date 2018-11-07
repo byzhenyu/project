@@ -1635,13 +1635,13 @@ class UserCenterApiController extends ApiUserCommonController{
         $hrResumeModel = D('Admin/HrResume');
         $recruit_where = array('id' => $data['recruit_id']);
         $recruit_info = $recruitModel->getRecruitInfo($recruit_where);
+        $data['resume_id'] = str_replace('undefined', '', $data['resume_id']);
+        if(!$data['resume_id']) $this->apiReturn(V(0, '请选择推荐人才！'));
         if(!$recruit_info) $this->apiReturn(V(0, '获取不到对应的悬赏信息！'));
         if($hr_user_id == $recruit_info['hr_user_id']) $this->apiReturn(V(0, '不能向自己推荐简历！'));
         if($recruit_info['is_post'] == 2) $this->apiReturn(V(0, '该悬赏职位已招满！'));
         //$resume_where = array('id' => $data['resume_id']);
         //$resume_info = $resumeModel->getResumeInfo($resume_where);
-        $data['resume_id'] = str_replace('undefined', '', $data['resume_id']);
-        if(!$data['resume_id']) $this->apiReturn(V(0, '请选择推荐人才！'));
         $data['hr_user_id'] = $hr_user_id;
         $data['recruit_hr_uid'] = $recruit_info['hr_user_id'];
         if(false !== strpos($data['resume_id'], ',')){
