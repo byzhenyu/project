@@ -1125,7 +1125,7 @@ function add_task_log($user_id, $task_id, $task_name = ''){
         'task_name' => $task_name
     );
     $res = $model->add($data);
-    if(false !== $res){
+    if($res){
         $task_reward = D('Admin/Task')->getTaskField(array('id' => $task_id), 'reward');
         account_log($user_id, $task_reward, 6, '任务所得', $res);
         //任务所得令牌直接可以提现
