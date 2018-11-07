@@ -439,4 +439,16 @@ class PublicApiController extends ApiCommonController
         }
         $this->apiReturn(V(1, '简历获取成功！', $return));
     }
+
+    /**
+     * 悬赏详情
+     */
+    public function getRecruitListDetail() {
+        $id = I('id', 0,'intval');
+        $info = D('Admin/Recruit')->getDetail(array('r.id'=>$id));
+        $info = string_data($info);
+        $info['company_name'] = D('Admin/CompanyInfo')->getCompanyInfoField(array('user_id' => $info['hr_user_id']), 'company_name');
+        if(!$info['company_name']) $info['company_name'] = '暂未填写';
+        $this->apiReturn(V(1,'详情', $info));
+    }
 }
