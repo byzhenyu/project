@@ -1842,6 +1842,10 @@ class UserCenterApiController extends ApiUserCommonController{
         if (!$recharge_money || $recharge_money < 1) {
             $this->apiReturn(V(0, '充值金额不能小于1元！'));
         }
+        $regex = '/^\d+(\.\d{1,2})?$/';
+        if(!preg_match($regex, $recharge_money)){
+            $this->apiReturn(V(0, '充值金额小数点最多两位！'));
+        }
         $code = I('wx_code', '');
         if (!$code) {
             $this->apiReturn(V(0,'wx_code不能为空'));
