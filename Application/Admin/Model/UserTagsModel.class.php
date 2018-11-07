@@ -32,6 +32,8 @@ class UserTagsModel extends Model{
                 return $this->add(array('user_id' => $hr_id, 'job_area' => $args['job_area'], 'job_position' => $args['job_position']));
             }
             else{
+                $valid['job_position'] = explode('|', $valid['job_position']);
+                if(in_array($args['job_position'], $valid['job_position'])) return true;
                 return $this->where(array('id' => $valid['id']))->save(array('job_position' => $t_position));
             }
         }
