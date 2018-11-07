@@ -296,11 +296,18 @@ class RecruitApiController extends ApiUserCommonController{
     public function getHrAccountLog() {
         $type = I('type', 0 , 'intval');
         $where['user_id'] = UID;
-        $data = D('Admin/AccountLog')->getAccountLogByPage($where,'log_id,user_id,user_money,change_time,change_desc');
+        $data = D('Admin/AccountLog')->getAccountLogByPage($where,'log_id,user_id,user_money,change_time,change_desc,change_type,order_sn');
+        $account_model = D('Admin/UserAccount');
         if ($type == 1) {
             $where['change_type'] = array('in', [2,3,6]);
             $info['list'] = $data['info'];
             $info['statistics'] = D('Admin/AccountLog')->getAccountMsg($where);
+            foreach($info['list'] as &$val){
+                if($val['change_type'] != 1) continue;
+                $val['user_account_state'] = $account_model->getAccountField(array('id' => $val['order_sn']), 'state');
+                $val['change_desc'] = C('ACCOUNT_STATE')[$val['user_account_state']];
+            }
+            unset($val);
         } else {
             $info = $data['info'];
         }

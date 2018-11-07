@@ -94,4 +94,9 @@ class UserAccountModel extends Model{
         $userInfo = $this->field($fields)->where($where)->find();
         return $userInfo;
     }
+
+    public function getAccountField($where, $field){
+        $res = $this->where($where)->getField($field);
+        return $res;
+    }
 }
