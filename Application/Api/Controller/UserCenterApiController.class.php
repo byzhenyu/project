@@ -351,7 +351,7 @@ class UserCenterApiController extends ApiUserCommonController{
     public function delAnswer(){
         $answer_id = I('answer_id', 0, 'intval');
         $answer_model = D('Admin/Answer');
-        $res = $answer_model->where(array('id' => $answer_id, 'user_id' => UID))->delete();
+        $res = $answer_model->where(array('id' => $answer_id, 'user_id' => UID))->save(array('disabled' => 0));
         if(false !== $res){
             $this->apiReturn(V(1, '删除成功！'));
         }
