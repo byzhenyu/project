@@ -360,6 +360,95 @@ class PublicApiController extends ApiCommonController
         }
     }
 
+    /**
+     * @desc 获取简历详情
+     * @extra 根据推荐列表获取简历详情
+     */
+    public function getResumeDetail(){
+        $user_id = UID;
+        $id = I('post.id');
+        $interview_id = I('interview_id', 0, 'intval');
+        $resume_id = I('post.resume_id');
+        $is_open = I('post.is_open', 0, 'intval');
+        $auth_id = I('auth_id', 0, 'intval');
+        $resumeModel = D('Admin/Resume');
+        if(!$resume_id) $resume_id = $resumeModel->getResumeField(array('user_id' => $user_id), 'id');
+        $resumeWorkModel = D('Admin/ResumeWork');
+        $resumeEduModel = D('Admin/ResumeEdu');
+        $resumeEvaluationModel = D('Admin/ResumeEvaluation');
+        $recruitResumeModel = D('Admin/RecruitResume');
+        $educationModel = D('Admin/Education');
+        if(!$id) $id = D('Admin/Interview')->getInterviewField(array('id' => $interview_id), 'recruit_resume_id');
+        $recruit_where = array('id' => $id);
+        $recommend_info = $recruitResumeModel->getRecruitResumeField($recruit_where, 'recruit_id,recommend_label,recommend_voice,id');
+        $resume_where = array('id' => $resume_id);
+        $resumeDetail = $resumeModel->getResumeInfo($resume_where);
+        if(!$resumeDetail && $user_id == $resumeDetail['user_id']) $this->apiReturn(V(0, '您还没有填写简历！'));
+        $resumeDetail['head_pic'] = $resumeDetail['head_pic'] ? $resumeDetail['head_pic'] : DEFAULT_IMG;
+        $introduced_detail = array('introduced_voice' => strval($resumeDetail['introduced_voice']), 'introduced_time' => strval($resumeDetail['introduced_time']), 'introduced' => strval($resumeDetail['introduced']));
+        $resume_career = explode(',', $resumeDetail['career_label']);
+        $resume_career = array_filter($resume_career);
+        $tags = array();
+        foreach($resume_career as &$val){
+            $tags[] = array('tags_name' => $val, 'sel' => 1);
+        }
+        unset($val);
+        $where = array('resume_id' => $resume_id);
+        $resumeWorkList = $resumeWorkModel->getResumeWorkList($where);
+        $resumeEduList = $resumeEduModel->getResumeEduList($where);
+
+        $m = 1;
+        foreach($resumeWorkList as &$wval){
+            $wval['starttime'] = time_format($wval['starttime'], 'Y-m-d');
+            $wval['endtime'] = $wval['endtime'] ? time_format($wval['endtime'], 'Y-m-d') : '至今';
+            $wval['sort'] = $m;
+            $m++;
+        }
+        unset($wval);
+        $edu_list = $educationModel->select();
+        $edu_help = array();
+        foreach($edu_list as &$edu_val){
+            $edu_help[$edu_val['education_name']] = $edu_val['suffix_img'];
+        }
+        unset($edu_val);
+        foreach($resumeEduList as &$eval){
+            $eval['starttime'] = time_format($eval['starttime'], 'Y-m-d');
+            $eval['endtime'] = $eval['endtime'] ? time_format($eval['endtime'], 'Y-m-d') : '至今';
+            $eval['suffix_img'] = $edu_help[$eval['degree']] ? C('IMG_SERVER').$edu_help[$eval['degree']] : '';
+        }
+        unset($eval);
+        $resumeEvaluation = $resumeEvaluationModel->getResumeEvaluationAvg($where);
+        $sum = array_sum(array_values($resumeEvaluation));
+        $avg = round($sum/(count($resumeEvaluation)), 2);
+        $recommend_info['interview_id'] = $interview_id;
+        $recommend_info['auth_id'] = $auth_id;
+        $hrModel = D('Admin/HrResume');
+        $auth_model = D('Admin/ResumeAuth');
+        $hr_info = $hrModel->getHrResumeInfo(array('hr_user_id' => UID, 'resume_id' => $resume_id));
+        $hr_auth_info = $auth_model->getResumeAuthInfo(array('resume_id' => $resume_id, 'hr_id' => UID));
+        if($user_id != $resumeDetail['user_id'] && !$hr_info && !$hr_auth_info){
+            if(!$is_open) $resumeDetail['mobile'] = '****';
+            if($is_open) $resumeDetail['mobile'] = strval($resumeDetail['hide_mobile']);
+        }
+        //获取悬赏金额
+        $recruit_id = $recommend_info['recruit_id'];
+        $commission = M('Recruit')->where(array('id'=>$recruit_id))->getField('commission');
+        $get_resume_money = C('GET_RESUME_MONEY');
+        $work_resume_money = fen_to_yuan($commission) - $get_resume_money;
+        $resumeDetail['get_resume_money'] = $get_resume_money;
+        $resumeDetail['work_resume_money'] = $work_resume_money;
+        $resumeDetail['age'] = time_format($resumeDetail['age'], 'Y-m-d');
+
+        $userModel = D('Admin/User');
+        $user_type = $userModel->getUserField(array('user_id' => $user_id), 'user_type');
+        $return = array('detail' => $resumeDetail, 'resume_work' => $resumeWorkList, 'resume_edu' => $resumeEduList, 'resume_evaluation' => $resumeEvaluation, 'evaluation_avg' => $avg, 'recruit_resume' => $recommend_info, 'is_open' => $is_open, 'introduce' => $introduced_detail, 'career_label' => $tags);
+        if(1 == $user_type){
+            $hr_voice = D('Admin/HrResume')->getHrResumeField(array('user_id' => $user_id, 'resume_id' => $resume_id), 'recommend_voice');
+            $return['hr_voice'] = $hr_voice;
+        }
+        $this->apiReturn(V(1, '简历获取成功！', $return));
+    }
+
     public function to_string_test(){
         $data = array(
             NULL, null, 0, 'string', 'nihao', array(null, 'string2', 'string3', 0, 1111, 'caonima', 'ni' => array(null, 'string4'))
