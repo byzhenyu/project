@@ -872,6 +872,10 @@ class UserCenterApiController extends ApiUserCommonController{
         $amount = I('amount', 0, 'intval');
         $bank_id = I('bank_id', 0, 'intval');
         if($amount <= 0) $this->apiReturn(V(0, '请输入合法的提现金额！'));
+        $regex = '/^\d+(\.\d{1,2})?$/';
+        if(!preg_match($regex, $amount)){
+            $this->apiReturn(V(0, '提现金额小数点不能超过两位！'));
+        }
         $user_model = D('Admin/User');
         $bank_where = $user_where = array('user_id' => $user_id);
         $bank_model = D('Admin/UserBank');
