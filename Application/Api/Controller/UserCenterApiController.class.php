@@ -869,7 +869,7 @@ class UserCenterApiController extends ApiUserCommonController{
             $this->apiReturn(V(0, $error));
         }
         $user_id = UID;
-        $amount = I('amount', 0, 'intval');
+        $amount = I('amount', 0, 'trim');
         $bank_id = I('bank_id', 0, 'intval');
         if($amount <= 0) $this->apiReturn(V(0, '请输入合法的提现金额！'));
         $regex = '/^\d+(\.\d{1,2})?$/';
