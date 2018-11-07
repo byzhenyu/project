@@ -349,23 +349,13 @@ class PublicApiController extends ApiCommonController
         print_r($data);
     }
 
-    public function regexMatch(){
-        $data['commission'] = 1;
-        $regex = '/^\d+(\.\d{1,2})?$/';
-        if(!preg_match($regex, $data['commission'])){
-            $this->apiReturn(V(0, '不匹配'));
-        }
-        else{
-            $this->apiReturn(V(1, '匹配'));
-        }
-    }
-
     /**
      * @desc 获取简历详情
      * @extra 根据推荐列表获取简历详情
      */
     public function getResumeDetail(){
-        $user_id = UID;
+        $token = I('token', '', 'trim');
+        $user_id = M('UserToken')->where(array('token' => $token))->getField('user_id');
         $id = I('post.id');
         $interview_id = I('interview_id', 0, 'intval');
         $resume_id = I('post.resume_id');
@@ -424,8 +414,9 @@ class PublicApiController extends ApiCommonController
         $recommend_info['auth_id'] = $auth_id;
         $hrModel = D('Admin/HrResume');
         $auth_model = D('Admin/ResumeAuth');
-        $hr_info = $hrModel->getHrResumeInfo(array('hr_user_id' => UID, 'resume_id' => $resume_id));
-        $hr_auth_info = $auth_model->getResumeAuthInfo(array('resume_id' => $resume_id, 'hr_id' => UID));
+        $hr_info = $hrModel->getHrResumeInfo(array('hr_user_id' => $user_id, 'resume_id' => $resume_id));
+        $hr_auth_info = $auth_model->getResumeAuthInfo(array('resume_id' => $resume_id, 'hr_id' => $user_id));
+        if(!$token) $hr_info = true;
         if($user_id != $resumeDetail['user_id'] && !$hr_info && !$hr_auth_info){
             if(!$is_open) $resumeDetail['mobile'] = '****';
             if($is_open) $resumeDetail['mobile'] = strval($resumeDetail['hide_mobile']);
@@ -447,29 +438,5 @@ class PublicApiController extends ApiCommonController
             $return['hr_voice'] = $hr_voice;
         }
         $this->apiReturn(V(1, '简历获取成功！', $return));
-    }
-
-    public function to_string_test(){
-        $data = array(
-            NULL, null, 0, 'string', 'nihao', array(null, 'string2', 'string3', 0, 1111, 'caonima', 'ni' => array(null, 'string4'))
-        );
-        $data = string_data($data);
-        $this->apiReturn(V(0, '', $data));
-    }
-
-    public function weekDays(){
-        $start = strtotime('2018-10-16');
-        $end = strtotime('2018-10-19');
-        p(get_days($start, $end));exit;
-    }
-
-    public function refresh(){
-        $hr_id = 14;
-        $resume_id = 21;
-        refreshUserTags($hr_id, $resume_id);
-    }
-
-    public function user_tags(){
-        p(user_tags(14));exit;
     }
 }
