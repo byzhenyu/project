@@ -52,7 +52,7 @@ class RecruitResumeModel extends Model {
      * @param $order string 排序顺序
      * @return mixed
      */
-    public function getResumeListByPage($where, $field = '', $order = 'id desc'){
+    public function getResumeListByPage($where, $field = '', $order = 'r.is_open desc'){
         if(!$field) {
             $field = array('r.id, r.resume_id, resume.head_pic,resume.true_name,resume.sex, resume.age,resume.update_time,r.is_open');
         }
@@ -66,9 +66,10 @@ class RecruitResumeModel extends Model {
             ->order($order)
             ->select();
         foreach ($list as $k=>$v) {
+            $is_open = $list[$k]['is_open'] == 1 ? '[已下载]' : '';
             $list[$k]['update_time'] = time_format($v['update_time'],'Y-m-d');
             $list[$k]['sex'] = getSexInfo($v['sex']);
-            $list[$k]['age'] = time_to_age($list[$k]['age']);
+            $list[$k]['age'] = time_to_age($list[$k]['age']).$is_open;
         }
         return array('info' => $list, 'page' => $page['page']);
     }

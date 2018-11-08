@@ -25,27 +25,25 @@ class IndexController extends HrCommonController {
         $user_id = HR_ID;
         $recruit_model = D('Admin/Recruit');
         $tags = user_tags($user_id);
-        $job_area = $tags['area'];
-        $position = $tags['pos'];
-        $where1 = array();
-        if($job_area){
-            foreach($job_area as &$val){
-                $where1[] = '`job_area` = \''.$val.'\'';
+        $map = '';
+        if(count($tags) > 0){
+            $where1 = array();
+            foreach($tags as &$val){
+                $val['job_area'] = rtrim($val['job_area'], ',');
+                if(false !== strpos($val['job_position'], '|')){
+                    $pos = 'in ('.str_replace('|', ',', $val['job_position']).')';
+                }
+                else{
+                    $pos = '= '.$val['job_position'];
+                }
+                $where1[] = ' (`job_area` like \''.$val['job_area'].'%\' and `position_id` '.$pos.') ';
             }
             unset($val);
+            $map = implode(' or ', $where1);
         }
-        $where2 = array();
-        if($position){
-            foreach($position as &$val){
-                $where2[] = '`position_id` = '.$val;
-            }
-            unset($val);
-        }
-        $position_string = implode(' or ', $where2);
-        $area_string = implode(' or ', $where1);
-        $map = '('.$position_string.') and ('.$area_string.')';
-        if(count($where1) == 0) $map = $position_string;
-        if(count($where2) == 0) $map = $area_string;
+        if($map) $where['_string'] = $map;
+        if(!$map) $where['_string'] = 'hr_user_id = 0';//无符合条件人选
+        $where['hr_user_id'] = array('neq', $user_id);
         if($map) $where['_string'] = $map;
         if(!$map) $where['_string'] = 'hr_user_id = 0';//无符合条件人选
         $where['hr_user_id'] = array('neq', $user_id);
