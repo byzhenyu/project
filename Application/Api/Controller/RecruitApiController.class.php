@@ -113,6 +113,7 @@ class RecruitApiController extends ApiUserCommonController{
             if(count($tags) > 0){
                 $where1 = array();
                 foreach($tags as &$val){
+                    $val['job_area'] = rtrim($val['job_area'], ',');
                     if(false !== strpos($val['job_position'], '|')){
                         $pos = 'in ('.str_replace('|', ',', $val['job_position']).')';
                     }
