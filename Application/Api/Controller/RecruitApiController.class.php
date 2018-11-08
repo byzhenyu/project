@@ -30,7 +30,9 @@ class RecruitApiController extends ApiUserCommonController{
         $getAmount = C('GET_RESUME_MONEY');
         $radio = C('RATIO')/100; //比例
         $value = D('Admin/Recruit')->getAverageValue(array('position_id'=>$position_id));
-        $data = array('get' => $getAmount, 'avg' => $value['average'], 'entry' => ($recruit_amount - $getAmount), 'plat' => $recruit_amount*$radio);
+        $entry = $recruit_amount - $getAmount;
+        if($entry < 0) $entry = 0;
+        $data = array('get' => $getAmount, 'avg' => $value['average'], 'entry' => $entry, 'plat' => $recruit_amount*$radio);
         $this->apiReturn(V(1,'令牌平均值', $data));
     }
 
@@ -52,7 +54,7 @@ class RecruitApiController extends ApiUserCommonController{
         if(!$position_name) $this->apiReturn(V(0, '获取不到职位名称！'));
         $getResumeMoney = C('GET_RESUME_MONEY');
         $data['position_name'] = $position_name;
-        if($data['commission'] < $getResumeMoney) $this->apiReturn(V(0, '悬赏金额不能少于'.$getResumeMoney.'令牌！'));
+        if($data['commission'] <= $getResumeMoney) $this->apiReturn(V(0, '悬赏金额需要大于'.$getResumeMoney.'令牌！'));
         $regex = '/^\d+(\.\d{1,2})?$/';
         if(!preg_match($regex, $data['commission'])){
             $this->apiReturn(V(0, '悬赏令牌小数点最多两位！'));
