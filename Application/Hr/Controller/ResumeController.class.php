@@ -100,6 +100,8 @@ class ResumeController extends HrCommonController {
                 $check_res = D('Admin/HrResume')->checkHrResumeMobile($data['mobile'], false, HR_ID);
                 if($check_res) $this->ajaxReturn(V(0, '该手机号已存在！'));
                 if(false !== $create){
+                    $str = '保存成功！';
+                    if(!$this->firstValid()) $str = '简历保存成功，请前往小程序推荐！';
                     $res = $model->add($data);
                     if(false !== $res){
                         $tag_recommend = I('post.recommend');
@@ -113,8 +115,7 @@ class ResumeController extends HrCommonController {
                                 refreshUserTags(HR_ID, $res);
                                 M()->commit();
                                 //$this->addResumeWorkEducation($res);
-                                if(!$this->firstValid()) $this->ajaxReturn(V(1, '简历保存成功，请前往小程序推荐！'));
-                                $this->ajaxReturn(V(1, '保存成功！', $res));
+                                $this->ajaxReturn(V(1, $str, $res));
                             }
                             else{
                                 M()->rollback();
