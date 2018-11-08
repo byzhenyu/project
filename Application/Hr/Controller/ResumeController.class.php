@@ -113,6 +113,7 @@ class ResumeController extends HrCommonController {
                                 refreshUserTags(HR_ID, $res);
                                 M()->commit();
                                 //$this->addResumeWorkEducation($res);
+                                if(!$this->firstValid()) $this->ajaxReturn(V(1, '简历保存成功，请前往小程序推荐！'));
                                 $this->ajaxReturn(V(1, '保存成功！', $res));
                             }
                             else{
@@ -238,6 +239,12 @@ class ResumeController extends HrCommonController {
             $this->nature = $nature_arr;
             $this->display();
         }
+    }
+
+    private function firstValid(){
+        $res = D('Admin/HrResume')->getHrResumeCount(array('hr_user_id' => HR_ID));
+        if($res > 0) return true;
+        return false;
     }
 
     /**
