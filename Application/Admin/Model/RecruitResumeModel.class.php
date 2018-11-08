@@ -66,7 +66,7 @@ class RecruitResumeModel extends Model {
             ->order($order)
             ->select();
         foreach ($list as $k=>$v) {
-            $is_open = $list[$k]['is_open'] == 1 ? ' [已下载]' : '';
+            $is_open = $list[$k]['is_open'] == 1 ? '    [已下载]' : '';
             $list[$k]['update_time'] = time_format($v['update_time'],'Y-m-d');
             $list[$k]['sex'] = getSexInfo($v['sex']);
             $list[$k]['age'] = time_to_age($list[$k]['age']).$is_open;
