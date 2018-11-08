@@ -50,20 +50,21 @@ class RecruitApiController extends ApiUserCommonController{
         $model = D('Admin/Recruit');
         $position_name = M('Position')->where(array('id'=>$data['position_id']))->getField('position_name');
         if(!$position_name) $this->apiReturn(V(0, '获取不到职位名称！'));
+        $getResumeMoney = C('GET_RESUME_MONEY');
         $data['position_name'] = $position_name;
-        //判断余额
-        $data['last_token'] = $data['commission'] = yuan_to_fen($data['commission']);
-        $data['get_resume_token'] = yuan_to_fen(C('GET_RESUME_MONEY'));
-        $data['entry_token'] = $data['commission'] - $data['get_resume_token'];//入职获取令牌
-        $user_money = D('Admin/User')->getUserField(array('user_id'=>UID),'user_money');
-        if($data['commission'] < 10) $this->apiReturn(V(0, '悬赏金额不能少于10令牌！'));
-
-        if (($data['commission'] * $data['recruit_num']) > $user_money) {
-            $this->apiReturn(V(0, '悄悄的告诉你，你的令牌不足喽。马上充值令牌，快速发布悬赏。'));
-        }
+        if($data['commission'] < $getResumeMoney) $this->apiReturn(V(0, '悬赏金额不能少于'.$getResumeMoney.'令牌！'));
         $regex = '/^\d+(\.\d{1,2})?$/';
         if(!preg_match($regex, $data['commission'])){
             $this->apiReturn(V(0, '悬赏令牌小数点最多两位！'));
+        }
+        //判断余额
+        $data['last_token'] = $data['commission'] = yuan_to_fen($data['commission']);
+        $data['get_resume_token'] = yuan_to_fen($getResumeMoney);
+        $data['entry_token'] = $data['commission'] - $data['get_resume_token'];//入职获取令牌
+        $user_money = D('Admin/User')->getUserField(array('user_id'=>UID),'user_money');
+
+        if (($data['commission'] * $data['recruit_num']) > $user_money) {
+            $this->apiReturn(V(0, '悄悄的告诉你，你的令牌不足喽。马上充值令牌，快速发布悬赏。'));
         }
         if (cmp_contraband($data['description'])) {
             $this->apiReturn(V(0, '悬赏工作描述中有违禁词！'));
