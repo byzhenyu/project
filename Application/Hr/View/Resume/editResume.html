@@ -154,8 +154,8 @@
                             <tr>
                                 <td><div align="right"><strong>自我介绍：</strong></div></td>
                                 <td colspan="3">
-                                    <!--<script id="content1" name="introduced" type="text/plain">{$info["introduced"]|htmlspecialchars_decode}</script>-->
-                                    <textarea name="introduced" id="" cols="100" rows="10">{$info['introduced']}</textarea>
+                                    <script id="content1" name="introduced" type="text/plain">{$info["introduced"]|htmlspecialchars_decode}</script>
+                                    <!--<textarea name="introduced" id="" cols="100" rows="10">{$info['introduced']}</textarea>-->
                                 </td>
                             </tr>
                             <tr>
@@ -276,8 +276,8 @@
     <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.fileupload.js"></script>
     <script type="text/javascript" src="__ADMIN__/layDate-v5.0.9/laydate/laydate.js"></script>
     <script type="text/javascript" src="__STATIC__/js/address.js"></script>
-    <!--<script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.config.js"></script>-->
-    <!--<script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.all.min.js"></script>-->
+    <script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.all.min.js"></script>
     <script type="text/javascript">
         function callback(data){
             toastr(data.info);
@@ -286,11 +286,11 @@
             }
         }
 
-//        var ue = UE.getEditor('content1', {
-//            autoHeightEnabled: false,
-//            initialFrameWidth: '700',
-//            initialFrameHeight: 350
-//        });
+        var ue = UE.getEditor('content1', {
+            autoHeightEnabled: false,
+            initialFrameWidth: '700',
+            initialFrameHeight: 350
+        });
         function goback1(){
             location.href='/index.php/Hr/Resume/listHrResume';
         }
