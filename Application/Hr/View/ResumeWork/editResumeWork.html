@@ -53,7 +53,8 @@
                             <tr>
                                 <td><div align="right"><em class="must-input">*</em><strong>描述信息：</strong></div></td>
                                 <td>
-                                    <script id="content1" name="describe" type="text/plain">{$info["describe"]|htmlspecialchars_decode}</script>
+                                    <!--<script id="content1" name="describe" type="text/plain">{$info["describe"]|htmlspecialchars_decode}</script>-->
+                                    <textarea name="describe" id="" cols="100" rows="10">{$info['describe']}</textarea>
                                 </td>
                             </tr>
 
@@ -77,8 +78,8 @@
     <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.iframe-transport.js"></script>
     <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.fileupload.js"></script>
     <script type="text/javascript" src="__ADMIN__/layDate-v5.0.9/laydate/laydate.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
-    <script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.all.min.js"></script>
+    <!--<script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.config.js"></script>-->
+    <!--<script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.all.min.js"></script>-->
     <script type="text/javascript">
         $(function() {
             laydate.render({
@@ -88,11 +89,11 @@
                 elem: '#endtime'
             });
         });
-        var ue = UE.getEditor('content1', {
-            autoHeightEnabled: false,
-            initialFrameWidth: '500',
-            initialFrameHeight: 350
-        })
+//        var ue = UE.getEditor('content1', {
+//            autoHeightEnabled: false,
+//            initialFrameWidth: '500',
+//            initialFrameHeight: 350
+//        });
         function editResumeWork(){
             $.ajax({
                 url : "{:U('ResumeWork/editResumeWork')}",
