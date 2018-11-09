@@ -1250,7 +1250,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $educationModel = D('Admin/Education');
         if(!$id) $id = D('Admin/Interview')->getInterviewField(array('id' => $interview_id), 'recruit_resume_id');
         $recruit_where = array('id' => $id);
-        $recommend_info = $recruitResumeModel->getRecruitResumeField($recruit_where, 'recruit_id,recommend_label,recommend_voice,id');
+        $recommend_info = $recruitResumeModel->getRecruitResumeField($recruit_where, 'recruit_id,recommend_label,recommend_voice,id,hr_user_id');
         $resume_where = array('id' => $resume_id);
         $resumeDetail = $resumeModel->getResumeInfo($resume_where);
         if(!$resumeDetail && $user_id == $resumeDetail['user_id']) $this->apiReturn(V(0, '您还没有填写简历！'));
@@ -1315,6 +1315,7 @@ class UserCenterApiController extends ApiUserCommonController{
         if(1 == $user_type){
             $hr_voice = D('Admin/HrResume')->getHrResumeField(array('user_id' => $user_id, 'resume_id' => $resume_id), 'recommend_voice');
             $return['hr_voice'] = $hr_voice;
+            $return['recruit_resume']['recommend_voice'] = $hr_voice;
         }
         $this->apiReturn(V(1, '简历获取成功！', $return));
     }
