@@ -1527,3 +1527,14 @@ function filter_enter($str){
     $str = str_replace('char(10)','\r\n', $str);
     return $str;
 }
+
+function judgeHtml($str){
+    if($str != strip_tags($str)) return true;
+    return false;
+}
+
+function autoBreak($str){
+    $str = str_replace("\r\n","<br />", $str);
+    $str = str_replace("\n","<br />", $str);
+    return $str;
+}
