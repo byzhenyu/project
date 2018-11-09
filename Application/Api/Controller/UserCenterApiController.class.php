@@ -1273,7 +1273,7 @@ class UserCenterApiController extends ApiUserCommonController{
             $wval['endtime'] = $wval['endtime'] ? time_format($wval['endtime'], 'Y-m-d') : '至今';
             $wval['sort'] = $m;
             $m++;
-            if(!judgeHtml($wval['describe'])) $eval['describe'] = '<p>'.autoBreak($wval['describe']).'</p>';
+            $eval['describe'] = autoBreak($wval['describe']);
         }
         unset($wval);
         $edu_list = $educationModel->select();
@@ -1286,7 +1286,7 @@ class UserCenterApiController extends ApiUserCommonController{
             $eval['starttime'] = time_format($eval['starttime'], 'Y-m-d');
             $eval['endtime'] = $eval['endtime'] ? time_format($eval['endtime'], 'Y-m-d') : '至今';
             $eval['suffix_img'] = $edu_help[$eval['degree']] ? C('IMG_SERVER').$edu_help[$eval['degree']] : '';
-            if(!judgeHtml($eval['describe'])) $eval['describe'] = '<p>'.autoBreak($eval['describe']).'</p>';
+            $eval['describe'] = autoBreak($eval['describe']);
         }
         unset($eval);
         $resumeEvaluation = $resumeEvaluationModel->getResumeEvaluationAvg($where);

@@ -1534,7 +1534,6 @@ function judgeHtml($str){
 }
 
 function autoBreak($str){
-    $str = str_replace("\r\n","<br />", $str);
-    $str = str_replace("\n","<br />", $str);
+    $str = str_replace("\r\n","\n", $str);
     return $str;
 }
