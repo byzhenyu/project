@@ -52,7 +52,7 @@ class PublicApiController extends ApiCommonController
                 $loginInfo = $userModel->doLogin($mobile, $password, '', $user_type);
                 if ($loginInfo['status'] == 1) {
                     add_key_operation(1, $user_id, $user_id);
-                    if (1 == $user_type) D('Admin/ResumeAuth')->saveResumeAuthData(array('hr_mobile' => $mobile), array('hr_id' => $user_id));
+                    if (1 == $user_type) D('Admin/ResumeAuth')->saveResumeAuthData(array('hr_mobile' => $mobile, 'hr_id' => 0), array('hr_id' => $user_id));
                     $this->apiReturn($loginInfo);
                 } else {
                     $this->apiReturn(V(0, $loginInfo['info']));
