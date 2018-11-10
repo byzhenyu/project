@@ -1908,22 +1908,30 @@ class UserCenterApiController extends ApiUserCommonController{
      */
     public function getWithRechargeList(){
         $user_id = UID;
-        $model = D('Admin/UserAccount');
-        $type = I('type', '', 'trim');
-        $where = array('user_id' => $user_id, 'status' => 1);
-        if('' != $type) $where['type'] = $type;
-        $field = 'type,money,add_time,state';
-        $list = $model->getAccountByPage($where, $field);
-        foreach($list['info'] as &$val){
+        $where['user_id'] = UID;
+        $where['change_type'] = array('in', [0,1,4,5,7]);
+        $data = D('Admin/AccountLog')->getAccountLogByPage($where,'change_type as type,user_money as money,change_time as add_time, change_desc,order_sn');
+        $account_model = D('Admin/UserAccount');
+        foreach($data['info'] as &$val){
             $val['add_time'] = time_format($val['add_time']);
-            $val['type_string'] = $val['type'] ? '提现-'.C('ACCOUNT_STATE')[$val['state']] : '充值';
+            if($val['type'] == 1){
+                $val['state'] = $account_model->getAccountField(array('id' => $val['order_sn']), 'state');
+                $type_string = '提现-'.C('ACCOUNT_STATE')[$val['state']];
+            }
+            elseif($val['type'] == 0){
+                $type_string = '充值';
+            }
+            else{
+                $type_string = $val['change_desc'];
+            }
+            $val['type_string'] = $type_string;
             $val['money'] = fen_to_yuan($val['money']);
         }
         unset($val);
         $user_account = D('Admin/User')->getUserInfo(array('user_id' => $user_id), 'user_money,withdrawable_amount');
         $total_account = fen_to_yuan($user_account['user_money'] + $user_account['withdrawable_amount']);
         $user_withdraw = fen_to_yuan($user_account['withdrawable_amount']);
-        $this->apiReturn(V(1, '', array('account' => $total_account, 'can_account' => $user_withdraw, 'list' => $list['info'])));
+        $this->apiReturn(V(1, '', array('account' => $total_account, 'can_account' => $user_withdraw, 'list' => $data['info'])));
     }
 
     /**
