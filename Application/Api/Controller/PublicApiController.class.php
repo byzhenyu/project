@@ -314,7 +314,7 @@ class PublicApiController extends ApiCommonController
             'msgtype' => 'binding_Relation',
             'appkey' => 'nR0PMcWCFPkeBKaNjdkTmCUZZlmMirRn1AmNZ0C44w6oR6qng4Q1Q5oTjQ0NkZBO',
             'unitID' => 10000000074,
-            'prtms' => 14717691050,
+            'prtms' => 17669138650,
             'uidType' => 0,
         );
         $secret = 'm7ubdSX8LUdT';

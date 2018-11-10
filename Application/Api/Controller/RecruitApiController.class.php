@@ -224,9 +224,11 @@ class RecruitApiController extends ApiUserCommonController{
         $recruit_resume_res = M('RecruitResume')->where(array('id' => $recruit_resume_id))->setField('is_open', 1);
         if(false !== $recruit_res && false !== $recruit_resume_res){
             $recruitResume = $recruit_resume_model->getRecruitResumeField(array('id' => $recruit_resume_id), 'resume_id');
-            $resume_info = $resume_model->getResumeField(array('id' => $recruitResume['resume_id']), 'mobile');
-            $hideMobile = hideMobile($resume_info);
-            if(false !== $hideMobile) M('Resume')->where(array('id' => $recruitResume['resume_id']))->setField('hide_mobile', $hideMobile);
+            $resume_info = $resume_model->getResumeInfo(array('id' => $recruitResume['resume_id']));
+            if(!$resume_info['hide_mobile']){
+                $hideMobile = hideMobile($resume_info['mobile']);
+                if(false !== $hideMobile) M('Resume')->where(array('id' => $recruitResume['resume_id']))->setField('hide_mobile', $hideMobile);
+            }
             M()->commit();
             $this->apiReturn(V(1, '恭喜你悬赏到了一个人才线索，我们将为你扣除'.$get_resume_money.'令牌用来打赏！'));
         }
