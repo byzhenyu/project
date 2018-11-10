@@ -1767,7 +1767,12 @@ class UserCenterApiController extends ApiUserCommonController{
         $res = $model->saveInterviewData($where, $save_data);
         if(false !== $res){
             if($state == 1){
-                D('Admin/Recruit')->recruitPayOff($interviewInfo['recruit_resume_id'], 2);
+                $recruitResumeModel = D('Admin/RecruitResume');
+                $recruit_resume_info = $recruitResumeModel->getRecruitResumeInfo(array('id' => $interviewInfo['recruit_resume_id']));
+                $recruitModel = D('Admin/Recruit');
+                $recruit_info = $recruitModel->getRecruitInfo(array('id' => $recruit_resume_info['recruit_id']));
+                if($recruit_info['is_post'] == 2) $this->apiReturn(V(0, '该悬赏已经招聘完成！'));
+                $recruitModel->recruitPayOff($interviewInfo['recruit_resume_id'], 2);
             }
             $this->apiReturn(V(1, '操作成功！'));
         }
