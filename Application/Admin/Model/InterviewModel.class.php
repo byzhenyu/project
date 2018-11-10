@@ -63,7 +63,7 @@ class InterviewModel extends Model {
             $this->error = '获取不到对应悬赏信息！';
             return false;
         }
-        $interview_where = array('hr_user_id' => $data['hr_user_id'], 'resume_id' => $data['resume_id']);
+        $interview_where = array('hr_user_id' => $data['hr_user_id'], 'resume_id' => $data['resume_id'], 'recruit_resume_id' => $data['recruit_resume_id']);
         $res = $this->getInterviewInfo($interview_where);
         if($res){
             $this->error = '该悬赏已经发送过面试信息！';
