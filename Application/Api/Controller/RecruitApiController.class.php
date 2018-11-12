@@ -181,8 +181,8 @@ class RecruitApiController extends ApiUserCommonController{
         $where['recruit_id'] = $recruit_id;
         $where['hr_user_id'] = $hr_id;
         $data = D('Admin/RecruitResume')->getResumeListByPage($where);
-        $arr = $this->getHrOpenResumeList(UID);
-        $resumeModel = D('Admin/Resume');
+        //$arr = $this->getHrOpenResumeList(UID);
+        /*$resumeModel = D('Admin/Resume');
         foreach($data['info'] as &$val){
             $resume_info = $resumeModel->getResumeInfo(array('id' => $val['resume_id']));
             $t_valid = $resume_info['true_name'].','.$resume_info['mobile'];
@@ -191,7 +191,7 @@ class RecruitApiController extends ApiUserCommonController{
                 $val['is_open'] = 1;
             }
         }
-        unset($val);
+        unset($val);*/
         $this->apiReturn(V(1, '推荐简历列表',$data['info']));
     }
 
