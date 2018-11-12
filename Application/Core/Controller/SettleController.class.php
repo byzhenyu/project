@@ -32,7 +32,7 @@ class SettleController extends CommonController {
                 //增加用户可提现金额
                 $increase_res = $user_model->increaseUserFieldNum($val['user_id'], 'withdrawable_amount', $val['user_money']);
                 //修改用户资金记录状态
-                $account_res = $account_model->where(array('id' => $val['id']))->save(array('diss' => 1));
+                $account_res = $account_model->where(array('id' => $val['id']))->setField('diss', 1);
                 if(false !== $decrease_res && false !== $increase_res && false !== $account_res){
                     M()->commit();
                 }
