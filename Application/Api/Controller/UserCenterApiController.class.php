@@ -223,6 +223,7 @@ class UserCenterApiController extends ApiUserCommonController{
                     $data_img['img_path'] = $value;
                     $questionImgModel->add($data_img);
                 }
+                unset($value);
             }
             add_key_operation(3, $question_id);
             $this->apiReturn(V(1, '问题发布成功！'));
@@ -269,6 +270,7 @@ class UserCenterApiController extends ApiUserCommonController{
                     $data_img['type'] = 2;
                     $questionImgModel->add($data_img);
                 }
+                unset($value);
             }
             $incWhere = array('id' => $data['question_id']);
             D('Admin/Question')->setQuestionInc($incWhere, 'answer_number');//问题回答数
