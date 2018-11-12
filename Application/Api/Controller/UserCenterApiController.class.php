@@ -1747,6 +1747,7 @@ class UserCenterApiController extends ApiUserCommonController{
             $val['update_time'] = time_format($val['update_time']);
             $val['resume_time'] = time_format($val['resume_time']);
             $val['state_string'] = interview_state($val['state']);
+            $val['age'] = time_to_age($val['age']);
         }
         unset($val);
         $this->apiReturn(V(1, '面试列表获取成功！', $resumeInterviewList['info']));
