@@ -34,6 +34,15 @@ class UserCenterApiController extends ApiUserCommonController{
     }
 
     /**
+     * @desc HR招揽/推荐人数
+     */
+    public function recruitRecommendInfo(){
+        $user_id = UID;
+        $res = D('Admin/User')->getUserInfo(array('user_id' => $user_id), 'recruit_number,recommended_number');
+        $this->apiReturn(V(1, '', $res));
+    }
+
+    /**
      * @desc  用户修改密码
      * @param password string 用户密码
      * @param new_password string 新密码
