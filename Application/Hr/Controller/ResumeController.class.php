@@ -62,6 +62,7 @@ class ResumeController extends HrCommonController {
      */
     public function editResume(){
         $model = D('Admin/Resume');
+        $userModel = D('Admin/User');
         $resume_id = I('resume_id', 0, 'intval');
         $data = I('post.');
         if(IS_POST){
@@ -79,6 +80,8 @@ class ResumeController extends HrCommonController {
                 //$check_res = D('Admin/HrResume')->checkHrResumeMobile($data['mobile'], $resume_id, HR_ID);
                 //if($check_res) $this->ajaxReturn(V(0, '该手机号已存在！'));
                 if(false !== $create){
+                    $user_info = $userModel->getUserInfo(array('mobile' => $data['mobile']));
+                    if($user_info) $this->ajaxReturn(V(0, '该手机号已在C端注册，请前往小程序认证获得！'));
                     $res = $model->where(array('id' => $resume_id))->save($data);
                     if(false !== $res){
                         header('Content-Type:application/json; charset=utf-8');
@@ -102,6 +105,8 @@ class ResumeController extends HrCommonController {
                 //if($check_res) $this->ajaxReturn(V(0, '该手机号已存在！'));
                 if(false !== $create){
                     $str = '保存成功！';
+                    $user_info = $userModel->getUserInfo(array('mobile' => $data['mobile']));
+                    if($user_info) $this->ajaxReturn(V(0, '该手机号已在C端注册，请前往小程序认证获得！'));
                     if(!$this->firstValid()) $str = '简历保存成功，请前往小程序推荐！';
                     $res = $model->add($data);
                     if(false !== $res){
