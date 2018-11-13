@@ -1537,3 +1537,9 @@ function autoBreak($str){
     $str = str_replace("\r\n","\n", $str);
     return $str;
 }
+
+function refreshUserResume($mobile, $user_id){
+    $model = D('Admin/Resume');
+    $resume_info = $model->getResumeInfo(array('mobile' => $mobile));
+    if($resume_info) $model->where(array('mobile' => $model))->save(array('user_id' => $user_id));
+}

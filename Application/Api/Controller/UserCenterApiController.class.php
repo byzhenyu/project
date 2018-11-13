@@ -2067,6 +2067,7 @@ class UserCenterApiController extends ApiUserCommonController{
             $res = $userModel->saveUserData(array('user_id' => UID), $save);
             if(false !== $res){
                 if (1 == $userInfo['user_type']) D('Admin/ResumeAuth')->saveResumeAuthData(array('hr_mobile' => $mobile, 'hr_id' => 0), array('hr_id' => UID));
+                if(0 == $userInfo['user_type']) refreshUserResume($mobile, UID);
                 $this->apiReturn(V(1, '手机号码绑定成功'));
             }
             $this->apiReturn(V(0, '绑定失败！'));

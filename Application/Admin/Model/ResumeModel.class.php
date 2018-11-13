@@ -49,6 +49,11 @@ class ResumeModel extends Model {
                 return false;
             }
         }
+        $resumeInfo = $this->getResumeInfo(array('mobile' => $data['mobile']));
+        if($resumeInfo){
+            $this->error = '简历库已有此手机号，请前往小程序认证获得！';
+            return false;
+        }
         /*$user_info = $userModel->getUserField($user_where, 'user_type');
         $resumeInfo = $this->getResumeInfo($user_where);
         //普通用户简历验证
@@ -81,6 +86,11 @@ class ResumeModel extends Model {
                 $this->error = '主表信息修改失败！';
                 return false;
             }
+        }
+        $resumeInfo = $this->getResumeInfo(array('mobile' => $data['mobile'], 'id' => array('neq', $data['id'])));
+        if($resumeInfo){
+            $this->error = '简历库已有此手机号！';
+            return false;
         }
         $data['initials'] = rev_pinyin($data['true_name']);
     }

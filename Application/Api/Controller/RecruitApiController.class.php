@@ -181,17 +181,14 @@ class RecruitApiController extends ApiUserCommonController{
         $where['recruit_id'] = $recruit_id;
         $where['hr_user_id'] = $hr_id;
         $data = D('Admin/RecruitResume')->getResumeListByPage($where);
-        //$arr = $this->getHrOpenResumeList(UID);
-        /*$resumeModel = D('Admin/Resume');
+        $arr = $this->getHrOpenResumeList(UID);
         foreach($data['info'] as &$val){
-            $resume_info = $resumeModel->getResumeInfo(array('id' => $val['resume_id']));
-            $t_valid = $resume_info['true_name'].','.$resume_info['mobile'];
-            if(in_array($t_valid, $arr) && !is_int($val['age'])){
+            if(in_array($val['resume_id'], $arr) && !is_int($val['age'])){
                 $val['age'] = $val['age'].' [已下载]';
                 $val['is_open'] = 1;
             }
         }
-        unset($val);*/
+        unset($val);
         $this->apiReturn(V(1, '推荐简历列表',$data['info']));
     }
 
@@ -201,11 +198,10 @@ class RecruitApiController extends ApiUserCommonController{
      * @return array
      */
     private function getHrOpenResumeList($hr_id){
-        $list = M('RecruitResume')->alias('r')->where(array('r.recruit_hr_uid' => $hr_id))->join('__RESUME__ as m on r.resume_id = m.id')->field('m.true_name,m.mobile')->select();
+        $list = M('RecruitResume')->where(array('recruit_hr_uid' => $hr_id))->field('resume_id')->select();
         $arr = array();
         foreach($list as &$val){
-            $t_valid = $val['true_name'].','.$val['mobile'];
-            if(!in_array($t_valid, $arr)) $arr[] = $t_valid;
+            if(!in_array($val['resume_id'], $arr)) $arr[] = $val['resume_id'];
         }
         unset($val);
         return $arr;
