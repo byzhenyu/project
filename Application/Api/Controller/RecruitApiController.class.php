@@ -183,7 +183,7 @@ class RecruitApiController extends ApiUserCommonController{
         $data = D('Admin/RecruitResume')->getResumeListByPage($where);
         $arr = $this->getHrOpenResumeList(UID);
         foreach($data['info'] as &$val){
-            if(in_array($val['resume_id'], $arr) && !is_int($val['age'])){
+            if(in_array($val['resume_id'], $arr) && !is_integer($val['age'])){
                 $val['age'] = $val['age'].' [已下载]';
                 $val['is_open'] = 1;
             }
