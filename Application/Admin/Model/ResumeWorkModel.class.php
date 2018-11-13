@@ -25,7 +25,7 @@ class ResumeWorkModel extends Model {
      * @param $limit
      * @return mixed
      */
-    public function getResumeWorkList($where, $field = false, $order = 'endtime desc', $limit = 5){
+    public function getResumeWorkList($where, $field = false, $order = 'id asc', $limit = 5){
         if(!$field) $field = '*';
         $res = $this->where($where)->field($field)->order($order)->limit($limit)->select();
         return $res;
