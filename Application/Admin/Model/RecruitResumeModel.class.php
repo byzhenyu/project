@@ -71,6 +71,9 @@ class RecruitResumeModel extends Model {
             if($list[$k]['is_open'] == 1){
                 $list[$k]['age'] = time_to_age($list[$k]['age']).' [已下载]';
             }
+            else{
+                $list[$k]['age'] = time_to_age($list[$k]['age']);
+            }
         }
         return array('info' => $list, 'page' => $page['page']);
     }
