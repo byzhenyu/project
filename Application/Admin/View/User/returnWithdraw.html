@@ -33,14 +33,18 @@
                                 <td><div align="right"><strong>提现方式：</strong></div></td>
                                 <td>{:paymentType($info['payment'])}</td>
                             </tr>
-                            	<tr>
-	                                <td><div align="right"><strong>银行卡号：</strong></div></td>
-	                                <td>{$info.brank_no}</td>
-	                            </tr>
-	                            <tr>
-	                                <td><div align="right"><strong>银行卡姓名：</strong></div></td>
-	                                <td>{$info.brank_name}</td>
-	                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>银行卡号：</strong></div></td>
+                                <td>{$info.brank_no}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>银行卡姓名：</strong></div></td>
+                                <td>{$info.brank_name}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>持卡者：</strong></div></td>
+                                <td>{$info.cardholder}</td>
+                            </tr>
                             <tr>
                                 <td><div align="right"><strong>提现金额：</strong></div></td>
                                 <td>￥{:fen_to_yuan($info['money'])}</td>
