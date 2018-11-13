@@ -1541,5 +1541,5 @@ function autoBreak($str){
 function refreshUserResume($mobile, $user_id){
     $model = D('Admin/Resume');
     $resume_info = $model->getResumeInfo(array('mobile' => $mobile));
-    if($resume_info) $model->where(array('mobile' => $model))->save(array('user_id' => $user_id));
+    if($resume_info) $model->where(array('mobile' => $mobile))->save(array('user_id' => $user_id));
 }
