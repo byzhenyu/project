@@ -1363,9 +1363,9 @@ array('Q4',   30,   32,    0),
  */
 function create_xls($data,$filename='闪荐科技.xls',$subject='闪荐科技',$title='闪荐科技',$sheet=array(), $count = 0){
     ini_set('max_execution_time', '0');
-    Vendor('PHPExcel.PHPExcel');
+    Vendor('Phpexcel.PHPExcel');
     $filename=str_replace('.xls', '', $filename);
-    $phpexcel = new \PHPExcel();
+    $phpexcel = new PHPExcel();
     $phpexcel->getProperties()
         ->setCreator("admin")
         ->setLastModifiedBy("admin")
