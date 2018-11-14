@@ -21,7 +21,7 @@ class PublicApiController extends ApiCommonController
         if ($loginInfo['status'] == 1) { //登录成功
             add_key_operation(2, $loginInfo['data']['user_id'], $loginInfo['data']['user_id']);
             M('User')->where(array('user_id'=>$loginInfo['data']['user_id']))->setInc('log_count');
-            $loginInfo['data']['log_count'] = 1;
+            $loginInfo['data']['log_count']++;
             $this->apiReturn($loginInfo);
         } else {
             $this->apiReturn(V(0, $loginInfo['info']));
@@ -224,8 +224,8 @@ class PublicApiController extends ApiCommonController
                 $user['token'] = $token;
                 $user['register_time'] = time_format($user['register_time'], 'Y-m-d');
                 D('Admin/User')->increaseUserFieldNum($row_id, 'log_count', 1);
+                $user['log_count']++;
                 if(!$user['mobile']) $user['log_count'] = 1;
-                $user['log_count'] = 1;
                 unset($user['password']);
                 $this->apiReturn(V(1, '登录成功', $user));
             } else {
