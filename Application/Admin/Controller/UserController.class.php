@@ -16,7 +16,7 @@ class UserController extends CommonController {
             if($is_auth == 1) $where['u.is_auth'] = 1;
             if($is_auth == 0){
                 $where['u.is_auth'] = 0;
-                $where['a.audit_status'] = 0;
+                $where['a.audit_status'] = array('in', array(0,2));
             }
         }
         if ($keyword) {
