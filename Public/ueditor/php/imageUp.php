@@ -21,7 +21,7 @@
         "savePath" => "../../../Uploads/Picture/Detail/",
         "maxSize" => 1000, //单位KB
         "allowFiles" => array(".gif", ".png", ".jpg", ".jpeg", ".bmp"),
-        "returnPath" => 'http://'.$_SERVER['HTTP_HOST'].'/Uploads/Picture/Detail/', //返回路径
+        "returnPath" => 'https://'.$_SERVER['HTTP_HOST'].'/Uploads/Picture/Detail/', //返回路径
     );
 
     //生成上传实例对象并完成上传
