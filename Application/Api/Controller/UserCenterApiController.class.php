@@ -1825,7 +1825,7 @@ class UserCenterApiController extends ApiUserCommonController{
         $time = time().'.png';//生成的二维码文件名
         $fileName = $path.$time;//1.拼装生成的二维码文件路径
 
-        $data = 'https://shanjian.host5.liuniukeji.com/index.php/Invite/Invite/index/true_name/'.$true_name.'/company_name/'.$company_name.'/hr_id/'.$hr_user_id.'/resume_id/'.$resume_id;//2.生成二维码的数据(扫码显示该数据)
+        $data = C('IMG_SERVER').'/index.php/Invite/Invite/index/true_name/'.$true_name.'/company_name/'.$company_name.'/hr_id/'.$hr_user_id.'/resume_id/'.$resume_id;//2.生成二维码的数据(扫码显示该数据)
 
         $level = 'L';  //3.纠错级别：L、M、Q、H
 
