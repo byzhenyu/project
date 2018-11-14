@@ -55,6 +55,8 @@ class PublicApiController extends ApiCommonController
                     add_key_operation(1, $user_id, $user_id);
                     if (1 == $user_type) D('Admin/ResumeAuth')->saveResumeAuthData(array('hr_mobile' => $mobile, 'hr_id' => 0), array('hr_id' => $user_id));
                     if(0 == $user_type) refreshUserResume($mobile, $user_id);
+                    M('User')->where(array('user_id'=>$loginInfo['data']['user_id']))->setInc('log_count');
+                    $loginInfo['data']['log_count']++;
                     $this->apiReturn($loginInfo);
                 } else {
                     $this->apiReturn(V(0, $loginInfo['info']));
