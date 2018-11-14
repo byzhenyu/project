@@ -224,6 +224,7 @@ class PublicApiController extends ApiCommonController
                 $user['token'] = $token;
                 $user['register_time'] = time_format($user['register_time'], 'Y-m-d');
                 D('Admin/User')->increaseUserFieldNum($row_id, 'log_count', 1);
+                if(!$user['mobile']) $user['log_count'] = 1;
                 $user['log_count'] = 1;
                 unset($user['password']);
                 $this->apiReturn(V(1, '登录成功', $user));
