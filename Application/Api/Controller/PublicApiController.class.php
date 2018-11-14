@@ -21,6 +21,7 @@ class PublicApiController extends ApiCommonController
         if ($loginInfo['status'] == 1) { //登录成功
             add_key_operation(2, $loginInfo['data']['user_id'], $loginInfo['data']['user_id']);
             M('User')->where(array('user_id'=>$loginInfo['data']['user_id']))->setInc('log_count');
+            $loginInfo['data']['log_count'] = 1;
             $this->apiReturn($loginInfo);
         } else {
             $this->apiReturn(V(0, $loginInfo['info']));
