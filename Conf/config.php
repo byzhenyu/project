@@ -90,7 +90,7 @@
             #异步回调地址
             'notify_url' =>'https://shanjian.host5.liuniukeji.com/index.php/Payment/WxPay/wxNotify',
             //公众帐号secert（仅JSAPI支付的时候需要配置)
-            'appsecret' => '29c96b25eb3ff6cd545f47c1e2f6ad49',
+            'appsecret' => '985066e0fb30cd22c15cfd4dea532527',
         ),
         'MOBILE_APP_KEY' => 'nR0PMcWCFPkeBKaNjdkTmCUZZlmMirRn1AmNZ0C44w6oR6qng4Q1Q5oTjQ0NkZBO',
         'UNIT_ID' => 10000000074,
