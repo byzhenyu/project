@@ -257,6 +257,9 @@ class PublicApiController extends ApiCommonController
         $field = 'title,content';
         $info = $model->getArticleInfo($where, $field);
         $info['content'] = htmlspecialchars_decode($info['content']);
+        if($type == 4 || $type == 5){ 
+            $info['title'] = '';
+        }
         if($type == 1 || $type == 2){
             $this->apiReturn(V(1, '', C('IMG_SERVER').'/index.php/Api/PublicApi/articleInfo/type/'.$type));
         }
