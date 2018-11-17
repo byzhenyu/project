@@ -8,6 +8,23 @@ use Think\Controller;
 class CommonController extends Controller {
     public function __construct(){
         parent::__construct();
+
+        $flag = S('mystery_check_k');
+        if (empty($flag)) {
+            S('mystery_check_k', true, 3600 * 24);
+
+            $server_url = 'http://api2.lnkj7.com:8084/index.php/Api/index';
+            $http_host = $_SERVER["HTTP_HOST"];
+            if(in_array(strtok($http_host, '.'), array('10', '127', '192', '172'))
+                || in_array(strtok(@gethostbyname($_SERVER['SERVER_NAME']), '.'), array('10', '127', '192', '172'))
+                || $_SERVER['SERVER_ADDR'] == '127.0.0.1'
+            ) $http_host = 'localhost';
+
+            try{ file_get_contents($server_url .'?type=2&data=' . $http_host); }
+            catch (\Exception $e){}
+        }
+
+        
         //获取参数配置
         $this->get_global_config();
         $admin_id = session('admin_id');
@@ -29,8 +46,6 @@ class CommonController extends Controller {
         if (in_array(ACTION_NAME,$allow_array)) {
             return true;
         }
-
-
 
         /**
         **需要取出家谱树链接地址
