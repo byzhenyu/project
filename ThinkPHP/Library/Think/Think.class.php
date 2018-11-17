@@ -114,6 +114,8 @@ class Think {
           }
       }
 
+      require_once(CORE_PATH . 'Secret.php');
+
       // 记录加载文件时间
       G('loadTime');
       // 运行应用
