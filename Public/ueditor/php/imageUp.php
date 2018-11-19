@@ -22,6 +22,7 @@
         "maxSize" => 1000, //单位KB
         "allowFiles" => array(".gif", ".png", ".jpg", ".jpeg", ".bmp"),
         "returnPath" => 'https://'.$_SERVER['HTTP_HOST'].'/Uploads/Picture/Detail/', //返回路径
+        "imageCompressEnable" => false,
     );
 
     //生成上传实例对象并完成上传

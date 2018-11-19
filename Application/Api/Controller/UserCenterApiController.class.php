@@ -2116,4 +2116,29 @@ class UserCenterApiController extends ApiUserCommonController{
             $this->apiReturn(V(0, '绑定出现错误！'));
         }
     }
+
+    public function sendMessage(){
+        if($this->checkSignature()) $this->apiReturn(V(1, '成功'));
+        $this->apiReturn(V(0, '失败'));
+    }
+
+    private function checkSignature()
+    {
+        $signature = $_GET["signature"];
+        $timestamp = $_GET["timestamp"];
+        $nonce = $_GET["nonce"];
+
+        $token = C('ACCESS_TOKEN');
+        $tmpArr = array($token, $timestamp, $nonce);
+        sort($tmpArr, SORT_STRING);
+        $tmpStr = implode( $tmpArr );
+        $tmpStr = sha1( $tmpStr );
+
+        if ($tmpStr == $signature ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }
