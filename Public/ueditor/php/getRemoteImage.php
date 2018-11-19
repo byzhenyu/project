@@ -12,7 +12,8 @@
     $config = array(
         "savePath" => "upload/" ,            //保存路径
         "allowFiles" => array( ".gif" , ".png" , ".jpg" , ".jpeg" , ".bmp" ) , //文件允许格式
-        "maxSize" => 3000                    //文件大小限制，单位KB
+        "maxSize" => 3000,                    //文件大小限制，单位KB
+        "imageCompressEnable" => false,
     );
     $uri = htmlspecialchars( $_POST[ 'upfile' ] );
     $uri = str_replace( "&amp;" , "&" , $uri );
