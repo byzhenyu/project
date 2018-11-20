@@ -80,11 +80,10 @@ function time_format($time = NULL, $style = 'Y-m-d H:i:s') {
  * 手机格式验证
  * @param string $mobile 验证的手机号码
  * @return boolean
- * zhaojiping 修正
  */
 function isMobile($mobile){
     if ( !empty($mobile) ) {
-        if( preg_match("/^1[34578]\d{9}$/", $mobile) ){
+        if( preg_match("/^1[345789]\d{9}$/", $mobile) ){
             return true;
         }
     }
