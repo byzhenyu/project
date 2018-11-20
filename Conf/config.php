@@ -3,7 +3,7 @@
     return array(
         /* 数据库设置 */
         'DB_TYPE'               =>  'mysqli',     // 数据库类型
-        'DB_HOST'               =>  '120.77.211.154', // 服务器地址
+        'DB_HOST'               =>  '47.105.143.119', // 服务器地址
         'DB_NAME'               =>  'ln_shanjian',          // 数据库名
         'DB_USER'               =>  'xijiushop',      // 用户名
         'DB_PWD'                =>  'xijiushop',          // 密码
