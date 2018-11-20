@@ -118,6 +118,8 @@ class ResumeController extends HrCommonController {
                         if(false !== $hr_create){
                             $hr_res = $hrModel->add();
                             if(false !== $hr_res){
+                                $task_id = 3;
+                                add_task_log(HR_ID, $task_id);
                                 refreshUserTags(HR_ID, $res);
                                 M()->commit();
                                 //$this->addResumeWorkEducation($res);

@@ -33,7 +33,7 @@ class TaskLogModel extends Model {
     protected function _before_insert(&$data, $option){
         $data['finish_time'] = NOW_TIME;
         if(!$data['task_name']) $data['task_name'] = D('Admin/Task')->getTaskField(array('id' => $data['task_id']), 'task_name');
-        if(!$this->validTaskNumber($data['task_id'])){
+        if(!$this->validTaskNumber($data['task_id'], $data['user_id'])){
             return false;
         }
     }

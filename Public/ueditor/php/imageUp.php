@@ -19,7 +19,7 @@
     $config = array(
         //"savePath" => ($path == "1" ? "upload/" : "upload1/"),
         "savePath" => "../../../Uploads/Picture/Detail/",
-        "maxSize" => 1000, //单位KB
+        "maxSize" => 10000, //单位KB
         "allowFiles" => array(".gif", ".png", ".jpg", ".jpeg", ".bmp"),
         "returnPath" => 'https://'.$_SERVER['HTTP_HOST'].'/Uploads/Picture/Detail/', //返回路径
         "imageCompressEnable" => false,
