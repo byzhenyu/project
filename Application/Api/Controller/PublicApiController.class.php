@@ -257,6 +257,7 @@ class PublicApiController extends ApiCommonController
         $field = 'title,content,display';
         $info = $model->getArticleInfo($where, $field);
         $info['content'] = htmlspecialchars_decode($info['content']);
+        if(!$info['display']) $info['display'] = 0;
         if($type == 4 || $type == 5){ 
             $info['title'] = '';
         }
