@@ -254,7 +254,7 @@ class PublicApiController extends ApiCommonController
         $type = I('type', 1, 'intval');
         $where = array('article_cat_id' => $type);
         $model = D('Admin/Article');
-        $field = 'title,content';
+        $field = 'title,content,display';
         $info = $model->getArticleInfo($where, $field);
         $info['content'] = htmlspecialchars_decode($info['content']);
         if($type == 4 || $type == 5){ 
