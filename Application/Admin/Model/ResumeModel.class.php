@@ -65,7 +65,8 @@ class ResumeModel extends Model {
             $this->error = '请先通过实名认证！';
             return false;
         }*/
-        $data['initials'] = rev_pinyin($data['true_name']);
+        //$data['initials'] = rev_pinyin($data['true_name']);
+        $data['initials'] = '';
     }
 
     protected function _before_update(&$data, $option){
@@ -92,7 +93,8 @@ class ResumeModel extends Model {
             $this->error = '简历库已有此手机号！';
             return false;
         }
-        $data['initials'] = rev_pinyin($data['true_name']);
+        //$data['initials'] = rev_pinyin($data['true_name']);
+        $data['initials'] = '';
     }
 
     /**
