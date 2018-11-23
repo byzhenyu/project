@@ -4,7 +4,6 @@
  */
 namespace Admin\Model;
 use Think\Model;
-use Common\Tools\Emchat;
 class UserModel extends Model{
     protected $insertFields = array('user_name','nickname','password','mobile','email', 'register_time', 'sex', 'status', 'user_type', 'is_auth','log_count', 'wx');
     protected $updateFields = array('user_id','user_name','nickname','password','mobile','email', 'sex', 'status', 'disabled', 'user_type', 'is_auth', 'head_pic','log_count', 'wx');

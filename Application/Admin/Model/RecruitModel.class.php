@@ -12,7 +12,6 @@ class RecruitModel extends Model {
     protected $selectFields = array('*');
     protected $_validate = array(
         array('position_id', 'require', '请选择悬赏职位', 1, 'regex', 3),
-        //array('commission,recruit_num', 'checkCommission', '悬赏佣金不足', 1, 'callback', 3),
         array('recruit_num', 'number', '请填写招聘人数', 1, 'regex', 3),
         array('nature', 'require', '岗位性质不能为空', 1, 'regex', 3),
         array('sex', array(0,1,2), '性别字段有误', 1, 'in', 3),
@@ -36,23 +35,6 @@ class RecruitModel extends Model {
 
     );
 
-    /**
-     * 验证佣金数量
-     */
-    protected function checkCommission($data) {
-        $resumeMoney = yuan_to_fen(C('GET_RESUME_MONEY'));
-        $entryMoney = yuan_to_fen(C('GET_ENTRY_MONEY'));
-        $maxResume = C('MAX_RESUME');
-        $resumeNum = $data['recruit_num'];
-        if ($resumeNum > $maxResume) {
-            $resumeNum = $maxResume;
-        }
-        $total = ($resumeMoney + $entryMoney)*$resumeNum;
-        if ($data['commission'] < $total) {
-            return false;
-        }
-        return true;
-    }
     /**
      * 获取悬赏列表
      * @param $where array 条件

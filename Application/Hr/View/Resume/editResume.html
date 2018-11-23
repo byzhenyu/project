@@ -36,7 +36,7 @@
                                 <td colspan="3"><input type='tel' maxlength="11" id="mobile" name="mobile" value="{$info['mobile']}"  placeholder="请输入手机号" /></td>
                             </tr>
                             <tr>
-                                <td><div align="right"><em class="must-input">*</em><strong>电子邮箱：</strong></div></td>
+                                <td><div align="right"><strong>电子邮箱：</strong></div></td>
                                 <td colspan="3"><input type="email" id="email" name="email" value="{$info['email']}" style="width:500px" placeholder="请输入电子邮箱" /></td>
                             </tr>
                             <tr>
@@ -60,22 +60,22 @@
                                     </script>
                                 </td>
                             </tr>
+                            <!--<tr>-->
+                                <!--<td><div align="right"><strong>第一学历：</strong></div></td>-->
+                                <!--<td colspan="3">-->
+                                    <!--<select name="first_degree" id="first_degree" data-am-selected="{maxHeight: 200}">-->
+                                        <!--<option value="">请选择第一学历</option>-->
+                                        <!--<foreach name="edu_list" item="v">-->
+                                            <!--<option value="{$v['education_name']}" <if condition="$v.education_name eq $info['first_degree']">selected</if>>{$v['education_name']}</option>-->
+                                        <!--</foreach>-->
+                                    <!--</select>-->
+                                <!--</td>-->
+                            <!--</tr>-->
                             <tr>
-                                <td><div align="right"><strong>第一学历：</strong></div></td>
-                                <td colspan="3">
-                                    <select name="first_degree" id="first_degree" data-am-selected="{maxHeight: 200}">
-                                        <option value="">请选择第一学历</option>
-                                        <foreach name="edu_list" item="v">
-                                            <option value="{$v['education_name']}" <if condition="$v.education_name eq $info['first_degree']">selected</if>>{$v['education_name']}</option>
-                                        </foreach>
-                                    </select>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><div align="right"><strong>第二学历：</strong></div></td>
+                                <td><div align="right"><strong>婚否：</strong></div></td>
                                 <td colspan="3">
                                     <select name="second_degree" id="second_degree" data-am-selected="{maxHeight: 200}">
-                                        <option value="">请选择第二学历</option>
+                                        <option value="">是否已婚</option>
                                         <foreach name="edu_list" item="v">
                                             <option value="{$v['education_name']}" <if condition="$v.education_name eq $info['second_degree']">selected</if>>{$v['education_name']}</option>
                                         </foreach>
@@ -94,13 +94,12 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><div align="right"><strong>详细地址：</strong></div></td>
+                                <td><div align="right"><strong>户籍：</strong></div></td>
                                 <td colspan="3">
                                     <div class="am-form-group" id="address_address">
                                         <select name="t_province"></select>
                                         <select name="t_job_area"></select>
-                                        <select name="t_county"></select>
-                                    </div><input type="text" id="address" name="address" value="{$info['address']}" style="width:500px" placeholder="请填写详细地址" /></td>
+                                    </div></td>
                             </tr>
                             <tr>
                                 <td><div align="right"><strong>岗位性质：</strong></div></td>
@@ -119,12 +118,10 @@
                                 <td colspan="3"><div class="am-form-group" id="start_address">
                                     <select name="province"></select>
                                     <select name="job_area"></select>
-                                    <select name="county"></select>
                                 </div></td>
                             </tr>
-
                             <tr>
-                                <td><div align="right"><strong>行业属性：</strong></div></td>
+                                <td><div align="right"><strong>求职方向：</strong></div></td>
                                 <td colspan="3">
                                     <select name="industry_id" id="industry_id" data-am-selected="{searchBox: 0}" >
                                         <option value="">请选择行业</option>
@@ -139,11 +136,6 @@
                                             }
                                         });
                                     </script>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><div align="right"><strong>求职方向：</strong></div></td>
-                                <td colspan="3">
                                     <select data-am-selected="{searchBox: 1, maxHeight: '180px'}" style="display: none;" name="parent_id" id="parent_id">
                                     </select>
                                     <select data-am-selected="{searchBox: 1, maxHeight: '180px'}" style="display: none;" name="position_id" id="position_id">

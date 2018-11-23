@@ -198,7 +198,7 @@ class RecruitApiController extends ApiUserCommonController{
      * @return array
      */
     private function getHrOpenResumeList($hr_id){
-        $list = M('RecruitResume')->where(array('recruit_hr_uid' => $hr_id))->field('resume_id')->select();
+        $list = M('RecruitResume')->where(array('recruit_hr_uid' => $hr_id, 'is_open' => 1))->field('resume_id')->select();
         $arr = array();
         foreach($list as &$val){
             if(!in_array($val['resume_id'], $arr)) $arr[] = $val['resume_id'];
