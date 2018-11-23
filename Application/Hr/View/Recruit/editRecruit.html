@@ -1,0 +1,259 @@
+<extend name="Common/base"/>
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/fileupload/css/jquery.fileupload.css" media="all">
+    <style>
+        .am-table {
+            font-size: 1.3rem;
+            margin-bottom: 0;
+        }
+        .am-btn{
+            padding:5px 15px;font-size:12px
+        }
+    </style>
+</block>
+
+<block name="body">
+    <!-- 内容区域 -->
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">{$info['id'] ? '编辑' : '新增'}悬赏</div>
+                </div>
+                <div class="widget-body  am-fr">
+                    <form id="orderForm" action="__ACTION__" method="post" class="ajaxForm">
+                    <table width="100%" class="am-table am-table-bordered">
+                        <thead>
+                            <tr><th colspan="4">基本信息</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td width="25%"><div align="right"><em class="must-input">*</em><strong>悬赏金额：</strong></div></td>
+                                <td colspan="3"><input type="text" id="commission" name="commission" value="{$info['commission']}"  placeholder="请输入悬赏金额"/></td>
+                            </tr>
+                            <tr>
+                                <td width="25%"><div align="right"><em class="must-input">*</em><strong>招聘人数：</strong></div></td>
+                                <td colspan="3"><input type="text" id="recruit_num" name="recruit_num" value="{$info['recruit_num']}"  placeholder="请输入招聘数量"/></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>行业属性：</strong></div></td>
+                                <td colspan="3">
+                                    <select name="industry_id" id="industry_id" data-am-selected="{searchBox: 0}" >
+                                        <option value="">请选择行业</option>
+                                        <foreach name="industry" item="v">
+                                            <option value="{$v['id']}">{$v['industry_name']}</option>
+                                        </foreach>
+                                    </select>
+                                    <script type="text/javascript">
+                                        $(function(){
+                                            if(parseInt({$info['industry_id']}) > 0){
+                                                $('#industry_id').val({$info['industry_id']});
+                                            }
+                                        });
+                                    </script>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>求职方向：</strong></div></td>
+                                <td colspan="3">
+                                    <select data-am-selected="{searchBox: 1, maxHeight: '180px'}" style="display: none;" name="parent_id" id="parent_id">
+                                    </select>
+                                    <select data-am-selected="{searchBox: 1, maxHeight: '180px'}" style="display: none;" name="position_id" id="position_id">
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="25%"><div align="right"><em class="must-input">*</em><strong>基本工资：</strong></div></td>
+                                <td colspan="3"><input type="text" id="base_pay" name="base_pay" value="{$info['base_pay']}"  placeholder="基本工资"/></td>
+                            </tr>
+                            <tr>
+                                <td width="25%"><div align="right"><em class="must-input">*</em><strong>绩效工资：</strong></div></td>
+                                <td colspan="3"><input type="text" id="merit_pay" name="merit_pay" value="{$info['merit_pay']}"  placeholder="请输入绩效工资"/></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><em class="must-input">*</em><strong>年龄：</strong></div></td>
+                                <td colspan="3">
+                                    <select name="age" id="age" data-am-selected="">
+                                        <option value=""></option>
+                                        <foreach name="recruit_data.age" item="v">
+                                            <option value="{$v['value']}" <if condition="$info.age eq $v['value']">selected</if>>{$v['value']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><em class="must-input">*</em><strong>性质：</strong></div></td>
+                                <td colspan="3">
+                                    <select name="nature" id="nature" data-am-selected="">
+                                        <option value=""></option>
+                                        <foreach name="recruit_data.nature" item="v">
+                                            <option value="{$v['value']}" <if condition="$info.nature eq $v['value']">selected</if>>{$v['value']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><em class="must-input">*</em><strong>工作经验：</strong></div></td>
+                                <td colspan="3">
+                                    <select name="experience" id="experience" data-am-selected="">
+                                        <option value=""></option>
+                                        <foreach name="recruit_data.experience" item="v">
+                                            <option value="{$v['id']}" <if condition="$info.experience eq $v['id']">selected</if>>{$v['value']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><em class="must-input">*</em><strong>性别：</strong></div></td>
+                                <td colspan="3">
+                                    <select name="sex" id="sex" data-am-selected="">
+                                        <option value="0">请选择</option>
+                                        <foreach name="recruit_data.sex" item="v">
+                                            <option value="{$v['id']}"  <if condition="$info.sex eq $v['id']">selected</if>>{$v['value']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><div align="right"><strong>学历：</strong></div></td>
+                                <td colspan="3">
+                                    <select name="degree" id="degree" data-am-selected="{maxHeight: 200}">
+                                        <option value="">请选择学历</option>
+                                        <foreach name="recruit_data.degree" item="v">
+                                            <option value="{$v['id']}" <if condition="$v.id eq $info['degree']">selected</if>>{$v['education_name']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>语言能力[多选]：</strong></div></td>
+                                <td colspan="3">
+                                    <select name="language_ability[]" id="language_ability" data-am-selected="" multiple="multiple">
+                                        <option value="">请选择语言能力</option>
+                                        <foreach name="recruit_data.lang" item="v">
+                                            <option value="{$v['value']}" <if condition="$v['sel'] eq 1">selected</if>>{$v['value']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>福利[多选]：</strong></div></td>
+                                <td colspan="3">
+                                    <select name="welfare[]" id="welfare" data-am-selected="" multiple="multiple">
+                                        <option value="">请选择福利</option>
+                                        <foreach name="recruit_data.tags" item="v">
+                                            <option value="{$v['tags_name']}" <if condition="$v['sel'] eq 1">selected</if>>{$v['tags_name']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td><div align="right"><em class="must-input">*</em><strong>工作地区：</strong></div></td>
+                                <td colspan="3"><div class="am-form-group" id="start_address">
+                                    <select name="province"></select>
+                                    <select name="city"></select>
+                                    <select name="county"></select>
+                                </div></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>描述：</strong></div></td>
+                                <td colspan="3">
+                                    <script id="content1" name="description" type="text/plain">{$info["description"]|htmlspecialchars_decode}</script>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" align="center">
+                                    <input type="hidden" id="id" class="recruit_hidden_class" name="recruit_id" value="{$info['id']}">
+                                    <button type="submit" id="submit_class" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+                                    <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback1();">返回</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </form>         
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/vendor/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.fileupload.js"></script>
+    <script type="text/javascript" src="__ADMIN__/layDate-v5.0.9/laydate/laydate.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/address.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.all.min.js"></script>
+    <script type="text/javascript">
+        function callback(data){
+            toastr(data.info);
+            if(data.status == 1){
+                $('.recruit_hidden_class').val(data.data);
+            }
+        }
+
+        var ue = UE.getEditor('content1', {
+            autoHeightEnabled: false,
+            initialFrameWidth: '700',
+            initialFrameHeight: 350
+        });
+        function goback1(){
+            location.href='/index.php/Hr/Recruit/recruitList';
+        }
+        $(function() {
+            initAddress('#start_address',"{$info['job_area1']}", "{$info['job_area2']}", "{$info['job_area3']}", 1);
+            initPosition({$info['industry_id']});
+            $('#industry_id').change(function(){
+                initPosition($(this).val());
+            });
+            function initPosition(industry_id){
+                if(industry_id > 0){
+                    $.post("/index.php/Hr/Position/getPositionList", {industry_id: industry_id}, function (data) {
+                        $('#parent_id').html('<option data-id="0" value="0">一级菜单</option>');
+                        var dataLen = data.data.length;
+                        var parent_sel = 0;
+                        for (var i = 0; i < dataLen; i++) {
+                            if({$info['position_parent']} > 0 && data.data[i].id == {$info['position_parent']}){
+                                parent_sel = 'selected';
+                            }
+                            else{
+                                parent_sel = '';
+                            }
+                            $('#parent_id').append('<option data-id="' + data.data[i].id
+                                + '" value="' + data.data[i].id + '" '+parent_sel+'>'
+                                + data.data[i].position_name + '</option>');
+                        }
+                        initPositionChildren({$info['position_parent']});
+                    });
+                }
+            }
+
+            $('#parent_id').change(function(){
+                initPositionChildren($(this).val());
+            });
+
+            function initPositionChildren(position_id){
+                if(position_id > 0){
+                    $.post("/index.php/Hr/Position/getPositionChildrenList", {position_id: position_id}, function (data) {
+                        $('#position_id').html('<option data-id="0" value="">请选择</option>');
+                        var dataLen = data.data.length;
+                        var parent_sel = '';
+                        for (var i = 0; i < dataLen; i++) {
+                            if(data.data[i].id == {$info['position_id']}){
+                                parent_sel = 'selected';
+                            }
+                            else{
+                                parent_sel = '';
+                            }
+                            $('#position_id').append('<option data-id="' + data.data[i].id
+                                + '" value="' + data.data[i].id + '" '+parent_sel+'>'
+                                + data.data[i].position_name + '</option>');
+                        }
+                    });
+                }
+            }
+        });
+    </script>
+</block>
