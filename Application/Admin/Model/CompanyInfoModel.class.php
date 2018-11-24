@@ -7,8 +7,8 @@ namespace Admin\Model;
 use Think\Model;
 
 class CompanyInfoModel extends Model {
-    protected $insertFields = array('id','user_id','company_name','company_size','company_nature','company_mobile','company_email','company_industry','company_address','company_pic');
-    protected $updateFields = array('id','user_id','company_name','company_size','company_nature','company_mobile','company_email','company_industry','company_address','company_pic');
+    protected $insertFields = array('id','user_id','company_name','company_size','company_nature','company_mobile','company_email','company_industry','company_address','company_pic', 'company_logo');
+    protected $updateFields = array('id','user_id','company_name','company_size','company_nature','company_mobile','company_email','company_industry','company_address','company_pic', 'company_logo');
     protected $_validate = array(
         array('company_name', 'require', '公司名称不能为空', 1, 'regex', 3),
         array('company_name', '1,100', '公司名称保持在1-100字！', 1, 'length', 3),
@@ -18,7 +18,7 @@ class CompanyInfoModel extends Model {
         array('company_email', 'require', '请填写公司联系邮箱！', 1, 'regex', 3),
         array('company_industry', 'require', '公司所属行业不能为空！', 1, 'regex', 3),
         array('company_address', 'require', '请填写公司地址！', 1, 'regex', 3),
-        array('company_address', '1,150', '公司名称保持在1-150字！', 1, 'length', 3),
+        array('company_address', '1,150', '公司名称保持在1-150字！', 1, 'length', 3)
     );
 
     /**
