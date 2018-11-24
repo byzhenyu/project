@@ -21,7 +21,7 @@ class EducationModel extends Model {
      * @param string $order
      * @return mixed
      */
-    public function getEducationList($where, $field = false, $order = 'sort'){
+    public function getEducationList($where = array(), $field = false, $order = 'sort'){
         if(!$field) $field = '*';
         $list = $this->where($where)->field($field)->order($order)->select();
         return $list;
