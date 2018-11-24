@@ -32,7 +32,13 @@ class InvoiceController extends HrCommonController {
     * @return mixed
     */
     public function  addInvoice(){
+        $userInvoice_amount = $this->User->where(array( 'user_id' => HR_ID))->getField('invoice_amount');
+        $data = I('post.');
+        if($userInvoice_amount < $data['invoice_amount']){
+            $this->ajaxReturn(V(0,'可开的发票余额不足'));
+        }
 
+        $this->ajaxReturn(V(1,'发布成功', $newId));
     }
 
 }
