@@ -190,7 +190,8 @@
         function callback(data){
             toastr(data.info);
             if(data.status == 1){
-                $('.recruit_hidden_class').val(data.data);
+                location.href='/index.php/Hr/Recruit/recruitList';
+                //$('.recruit_hidden_class').val(data.data);
             }
         }
 

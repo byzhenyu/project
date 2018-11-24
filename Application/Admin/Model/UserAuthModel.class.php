@@ -15,7 +15,7 @@ class UserAuthModel extends Model {
         array('cert_type', 'require', '证件类型不能为空！', 1, 'regex', 3),
         array('idcard_number', 'require', '证件号码不能为空！', 1, 'regex', 3),
         array('idcard_up', 'require', '证件照正面不能为空！', 1, 'regex', 3),
-        array('idcard_down', 'require', '证件照反面不能为空！', 1, 'regex', 3),
+        //array('idcard_down', 'require', '证件照反面不能为空！', 1, 'regex', 3),
         array('hand_pic', 'require', '手持证件照不能为空!', 1, 'regex', 3),
     );
 

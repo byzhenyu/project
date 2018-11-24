@@ -69,7 +69,8 @@ class ResumeController extends HrCommonController {
             $data['user_id'] = HR_ID;
             $data['age'] = strtotime($data['age']);
             $data['job_area'] = $data['province'].','.$data['job_area'].','.$data['county'];
-            $data['address'] = $data['t_province'].','.$data['t_job_area'].','.$data['t_county'].' '.$data['address'];
+            $data['job_area'] = rtrim($data['job_area'], ',');
+            $data['address'] = $data['t_province'].','.$data['t_job_area'];
             $op_arr = array('career_label', 'language_ability');
             foreach($op_arr as &$op){
                 if($data[$op]) $data[$op] = implode(',', $data[$op]);
@@ -100,6 +101,7 @@ class ResumeController extends HrCommonController {
             }
             else{
                 M()->startTrans();
+                $data['is_audit'] = 0;
                 $create = $model->create($data, 2);
                 //$check_res = D('Admin/HrResume')->checkHrResumeMobile($data['mobile'], false, HR_ID);
                 //if($check_res) $this->ajaxReturn(V(0, '该手机号已存在！'));
@@ -235,9 +237,10 @@ class ResumeController extends HrCommonController {
                 }
             }
 
+            $is_marry = returnArrData(C('SHAN_RESUME_MARRY'));
             $this->resume_edu_list = $resume_edu_list;
             $this->resume_work_list = $resume_work_list;
-
+            $this->marry = $is_marry;
             $this->industry = $industry;
             $this->info = $info;
             $this->lang = $language_arr;

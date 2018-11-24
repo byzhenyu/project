@@ -7,15 +7,15 @@ namespace Admin\Model;
 use Think\Model;
 
 class ResumeEduModel extends Model {
-    protected $insertFields = array('resume_id', 'school_name', 'degree', 'starttime', 'endtime', 'major', 'describe', 'suffix_img');
-    protected $updateFields = array('resume_id', 'school_name', 'degree', 'starttime', 'endtime', 'major', 'describe', 'suffix_img', 'id');
+    protected $insertFields = array('resume_id', 'school_name', 'degree', 'starttime', 'endtime', 'major');
+    protected $updateFields = array('resume_id', 'school_name', 'degree', 'starttime', 'endtime', 'major', 'id');
     protected $_validate = array(
         array('school_name', 'require', '学校名称不能为空！', 1, 'regex', 3),
         array('degree', 'require', '学历不能为空！', 1, 'regex', 3),
         array('major', 'require', '专业不能为空！', 1, 'regex', 3),
         array('starttime', 'require', '请选择开始时间！', 1, 'regex', 3),
         //array('endtime', 'require', '请选择结束时间!', 1, 'regex', 3),
-        array('describe', 'require', '请输入教育描述!', 1, 'regex', 3)
+        //array('describe', 'require', '请输入教育描述!', 1, 'regex', 3)
     );
 
     /**

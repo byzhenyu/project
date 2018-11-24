@@ -117,7 +117,7 @@ class UserCenterApiController extends ApiUserCommonController{
             if(empty($data['business_license'])) $this->apiReturn(V(0, '请上传营业执照！'));
             $upArray['business_license'] = $data['business_license'];
         }
-        $array = array('idcard_up' => '请上传身份证正面照！', 'idcard_down' => '请上传身份证反面照！', 'hand_pic' => '请上传手持身份证照！');
+        $array = array('idcard_up' => '请上传身份证正面照！', 'hand_pic' => '请上传手持身份证照！');
         $keys = array_keys($array);
         foreach($keys as &$val){
             if(empty($data[$val])) $this->apiReturn(V(0, $array[$val]));

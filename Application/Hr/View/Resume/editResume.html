@@ -36,10 +36,6 @@
                                 <td colspan="3"><input type='tel' maxlength="11" id="mobile" name="mobile" value="{$info['mobile']}"  placeholder="请输入手机号" /></td>
                             </tr>
                             <tr>
-                                <td><div align="right"><strong>电子邮箱：</strong></div></td>
-                                <td colspan="3"><input type="email" id="email" name="email" value="{$info['email']}" style="width:500px" placeholder="请输入电子邮箱" /></td>
-                            </tr>
-                            <tr>
                                 <td><div align="right"><em class="must-input">*</em><strong>年龄：</strong></div></td>
                                 <td colspan="3"><input type="text" id="age" name="age" value="{$info['age']|date='Y-m-d', ###}" style="width:500px" placeholder="请选择年龄" /></td>
                             </tr>
@@ -54,8 +50,8 @@
                                     </label>
                                     <script type="text/javascript">
                                         $(function(){
-                                            if(1 == {$info['sex']}) $('.sex_default1').attr('checked', true);
-                                            if(2 == {$info['sex']}) $('.sex_default2').attr('checked', true);
+                                            if(1 == parseInt({$info['sex']})) $('.sex_default1').attr('checked', true);
+                                            if(2 == parseInt({$info['sex']})) $('.sex_default2').attr('checked', true);
                                         });
                                     </script>
                                 </td>
@@ -74,10 +70,10 @@
                             <tr>
                                 <td><div align="right"><strong>婚否：</strong></div></td>
                                 <td colspan="3">
-                                    <select name="second_degree" id="second_degree" data-am-selected="{maxHeight: 200}">
+                                    <select name="is_marry" id="is_marry" data-am-selected="{maxHeight: 200}">
                                         <option value="">是否已婚</option>
-                                        <foreach name="edu_list" item="v">
-                                            <option value="{$v['education_name']}" <if condition="$v.education_name eq $info['second_degree']">selected</if>>{$v['education_name']}</option>
+                                        <foreach name="marry" item="v">
+                                            <option value="{$v['id']}" <if condition="$v.id eq $info['is_marry']">selected</if>>{$v['value']}</option>
                                         </foreach>
                                     </select>
                                 </td>
@@ -94,14 +90,6 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td><div align="right"><strong>户籍：</strong></div></td>
-                                <td colspan="3">
-                                    <div class="am-form-group" id="address_address">
-                                        <select name="t_province"></select>
-                                        <select name="t_job_area"></select>
-                                    </div></td>
-                            </tr>
-                            <tr>
                                 <td><div align="right"><strong>岗位性质：</strong></div></td>
                                 <td colspan="3">
                                     <select name="post_nature" id="post_nature" data-am-selected="{searchBox: 0}">
@@ -114,10 +102,19 @@
                             </tr>
 
                             <tr>
+                                <td><div align="right"><strong>户籍：</strong></div></td>
+                                <td colspan="3">
+                                    <div class="am-form-group" id="address_address">
+                                        <select name="t_province"></select>
+                                        <select name="t_job_area"></select>
+                                    </div></td>
+                            </tr>
+                            <tr>
                                 <td><div align="right"><em class="must-input">*</em><strong>工作地区：</strong></div></td>
                                 <td colspan="3"><div class="am-form-group" id="start_address">
                                     <select name="province"></select>
                                     <select name="job_area"></select>
+                                    <select name="county"></select>
                                 </div></td>
                             </tr>
                             <tr>
@@ -131,7 +128,7 @@
                                     </select>
                                     <script type="text/javascript">
                                         $(function(){
-                                            if({$info['industry_id']} > 0){
+                                            if(parseInt({$info['industry_id']}) > 0){
                                                 $('#industry_id').val({$info['industry_id']});
                                             }
                                         });
@@ -143,6 +140,10 @@
                                 </td>
                             </tr>
 
+                            <tr>
+                                <td><div align="right"><strong>电子邮箱：</strong></div></td>
+                                <td colspan="3"><input type="email" id="email" name="email" value="{$info['email']}" style="width:500px" placeholder="请输入电子邮箱" /></td>
+                            </tr>
                             <tr>
                                 <td><div align="right"><strong>自我介绍：</strong></div></td>
                                 <td colspan="3">
@@ -181,8 +182,8 @@
                                         <td>{$v['starttime']}&nbsp;&nbsp;-&nbsp;&nbsp;{$v['endtime']}</td>
                                     </tr>
                                     <tr>
-                                        <td><div align="right"><strong>专业/描述：</strong></div></td>
-                                        <td><span style="color: #ff6e04">{$v['major']}</span>&nbsp;&nbsp;|&nbsp;&nbsp;{$v['describe']}</td>
+                                        <td><div align="right"><strong>专业：</strong></div></td>
+                                        <td><span style="color: #ff6e04">{$v['major']}</span></td>
                                         <td colspan="2">
                                             <a href="javascript:;" data-url="{:U('ResumeEdu/editResumeEdu',array('id'=>$v['id']))}" class="increase_resume_edu1">
                                             <i class="am-icon-pencil">编辑</i>
