@@ -9,7 +9,7 @@
             <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                 <div class="widget am-cf">
                     <div class="widget-head am-cf">
-                        <div class="widget-title  am-cf">APP导航栏管理</div>
+                        <div class="widget-title  am-cf">导航设置</div>
 
                     </div>
                     <div class="widget-body  am-fr">
@@ -18,10 +18,10 @@
                             <div class="am-form-group">
                                 <div class="am-btn-toolbar">
                                     <div class="am-btn-group am-btn-group-xs">
-                                        <!--<a type="button" class="am-btn am-btn-default am-btn-success" href="{:U('Nav/editNav?type=0')}"><span class="am-icon-plus"></span> 新增</a>-->
-                                        <!--<button type="button" class="am-btn am-btn-default am-btn-danger" onclick="javascript:recycle('chkbId', '确认删除?! 删除后无法恢复!', true)">-->
-                                            <!--<span class="am-icon-trash-o"></span> 批量删除-->
-                                        <!--</button>-->
+                                        <a type="button" class="am-btn am-btn-default am-btn-success" href="{:U('Nav/editNav?type=0')}"><span class="am-icon-plus"></span> 新增</a>
+                                        <button type="button" class="am-btn am-btn-default am-btn-danger" onclick="javascript:recycle('chkbId', '确认删除?! 删除后无法恢复!', true)">
+                                            <span class="am-icon-trash-o"></span> 批量删除
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -33,7 +33,6 @@
                                         <th><input class="check-all" type="checkbox"></th>
                                         <th>序号</th>
                                         <th>标题</th>
-                                        <th>状态</th>
                                         <th>排序</th>
                                         <th>操作</th>
                                     </tr>
@@ -46,19 +45,12 @@
                                             <td style="text-align:left; width: 50%;">
                                                 {$v['title']}
                                             </td>
-                                            <td class="center">
-                                                {:show_disabled($v['disabled'])}
-                                            </td>
                                             <td class="center">{$v['sort']}</td>
-
                                             <td class="f-14">
                                                 <div class="tpl-table-black-operation">
                                                     <a href="{:U('Nav/editNav',array('id'=>$v['id'], 'type'=>$type))}">
                                                         <i class="am-icon-pencil"></i> 编辑
                                                     </a>
-                                                    <!--<a href="javascript:void(0)" onclick="javascript:recycle({$v['id']}, '确认删除?!此步骤无法恢复!', true)" class="tpl-table-black-operation-del">-->
-                                                        <!--<i class="am-icon-trash"></i> 删除-->
-                                                    <!--</a>-->
                                                 </div>
                                             </td>
                                         </tr>

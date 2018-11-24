@@ -86,7 +86,7 @@ class ResumeController extends HrCommonController {
                     $res = $model->where(array('id' => $resume_id))->save($data);
                     if(false !== $res){
                         header('Content-Type:application/json; charset=utf-8');
-                        echo json_encode(V(1, '保存成功', $resume_id));
+                        echo json_encode(V(1, '上传成功，等待后台审核！', $resume_id));
                         fastcgi_finish_request();
                         set_time_limit(0);
                         refreshUserTags(false, $resume_id, array('job_position' => $data['position_id'], 'job_area' => $data['job_area']));
@@ -106,7 +106,7 @@ class ResumeController extends HrCommonController {
                 //$check_res = D('Admin/HrResume')->checkHrResumeMobile($data['mobile'], false, HR_ID);
                 //if($check_res) $this->ajaxReturn(V(0, '该手机号已存在！'));
                 if(false !== $create){
-                    $str = '保存成功！';
+                    $str = '保存成功，等待后台审核！';
                     $user_info = $userModel->getUserInfo(array('mobile' => $data['mobile']));
                     if($user_info) $this->ajaxReturn(V(0, '该手机号已在C端注册，请前往小程序认证获得！'));
                     if(!$this->firstValid()) $str = '简历保存成功，请前往小程序推荐！';
@@ -257,31 +257,6 @@ class ResumeController extends HrCommonController {
         $res = D('Admin/HrResume')->getHrResumeCount(array('hr_user_id' => HR_ID));
         if($res > 0) return true;
         return false;
-    }
-
-    /**
-     * @desc 新建简历   新增教育经历/工作经历
-     * @param $resume_id int 简历id
-     * @return bool
-     */
-    private function addResumeWorkEducation($resume_id){
-        if(!$resume_id) return false;
-        $edu_model = D('Admin/ResumeEdu');
-        $work_model = D('Admin/ResumeWork');
-        $data = I('post.', '');
-        $edu_field = array('resume_id' => $resume_id, 'school_name' => $data['school_name'], 'degree' => $data['degree'], 'major' => $data['major'], 'starttime' => strtotime($data['edu_starttime']), 'endtime' => strtotime($data['edu_endtime']), 'describe' => $data['edu_describe']);
-        $work_field = array('resume_id' => $resume_id, 'company_name' => $data['company_name'], 'position' => $data['position'], 'starttime' => strtotime($data['work_starttime']), 'endtime' => strtotime($data['work_endtime']), 'describe' => $data['work_describe']);
-        if($data['edu_is_current'] == 1) $edu_field['endtime'] = 0;
-        if($data['work_is_current'] == 1) $work_field['endtime'] = 0;
-        $edu_create = $edu_model->create($edu_field, 1);
-        if(false !== $edu_create){
-            $edu_model->add($edu_field);
-        }
-        $work_create = $work_model->create($work_field, 1);
-        if(false !== $work_create){
-            $work_model->add($work_field);
-        }
-        return true;
     }
 
     /**

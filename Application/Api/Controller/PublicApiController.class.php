@@ -196,13 +196,13 @@ class PublicApiController extends ApiCommonController
         $open_id = getOpenId($wx_code);
         $t_open_id = I('open_id', '', 'trim');
         if($t_open_id) $open_id = $t_open_id;
-        $user_type = I('user_type', 0, 'intval');
         $thirdType = 'wx';
         if ('wx' == $thirdType) {
             $where['wx'] = $map['wx'] = $open_id;
         }
-        if (!$thirdType) $where['wx'] = $map['wx'] = $open_id;
-        $where['user_type'] = $map['user_type'] = $user_type;
+        $where['wx'] = $map['wx'] = $open_id;
+        $mobile = I('mobile', 0, 'trim');
+        if(!isMobile($mobile)) $this->apiReturn(V(0, '不是合法的手机号码！'));
         $map['head_pic'] = I('head_pic', '');
         $map['nickname'] = I('nickname', '');
         if (!$open_id) {
@@ -246,7 +246,7 @@ class PublicApiController extends ApiCommonController
 
     /**
      * @desc 关于我们
-     * @param 1、关于我们 2、注册协议 4新手指南
+     * @param 1、关于我们 2、注册协议 4、新手指南[C] 5、新手指南[HR] 7、帮助中心
      */
 
 
@@ -258,10 +258,10 @@ class PublicApiController extends ApiCommonController
         $info = $model->getArticleInfo($where, $field);
         $info['content'] = htmlspecialchars_decode($info['content']);
         if(!$info['display']) $info['display'] = 0;
-        if($type == 4 || $type == 5){ 
+        if($type == 5){
             $info['title'] = '';
         }
-        if($type == 1 || $type == 2){
+        if(in_array($type, array(1, 2, 4, 5, 7))){
             $this->apiReturn(V(1, '', C('IMG_SERVER').'/index.php/Api/PublicApi/articleInfo/type/'.$type));
         }
         else{
@@ -269,9 +269,26 @@ class PublicApiController extends ApiCommonController
         }
     }
 
+    /**
+     * @desc 文章详情
+     */
     public function articleInfo(){
         $type = I('type', 1, 'intval');
         $where = array('article_cat_id' => $type);
+        $model = D('Admin/Article');
+        $field = 'title,content';
+        $info = $model->getArticleInfo($where, $field);
+        $info['content'] = htmlspecialchars_decode($info['content']);
+        $this->data = $info;
+        $this->display('getarticleinfo');
+    }
+
+    /**
+     * @desc 公告详情
+     */
+    public function noticeInfo(){
+        $article_id = I('id', 1, 'intval');
+        $where = array('article_id' => $article_id);
         $model = D('Admin/Article');
         $field = 'title,content';
         $info = $model->getArticleInfo($where, $field);

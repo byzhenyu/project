@@ -1,15 +1,12 @@
 <?php
 /**
- * 后台轮播图控制器
- * @author wangzhiliang QQ:1337841872 liniukeji.com
+ * 导航设置
  */
 namespace Admin\Controller;
-use Think\Controller;
 class NavController extends CommonController {
 
-    // 手机APP首页导航
-    public function mobileNav(){
-        $where['type'] = 0;       // type类型  0表示手机APP首页导航  1表示web导航
+    public function listNav(){
+        $where['type'] = 0; // type类型  0、小程序  1、APP
         $list = D('Nav')->navList($where);
         $this->list = $list;
         $this->type = 0;
@@ -24,7 +21,6 @@ class NavController extends CommonController {
         }
         $id = I('id', 0, 'intval');     // Nav表的主键id
         $Nav = D('Nav');
-        //p(I('post.'));exit;
         if (IS_POST) {
             if ($_POST['type'] == 1) {
                 unset($_POST['img']);
@@ -49,6 +45,8 @@ class NavController extends CommonController {
             
         }
         $info = $Nav->detailInfo($id);
+        $nav_link_type = returnArrData(C('SHAN_NAV_LINK'));
+        $this->link_type = $nav_link_type;
         $this->type = $type;
         $this->info = $info;     
         $this->display();

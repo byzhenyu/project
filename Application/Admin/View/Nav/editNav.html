@@ -9,7 +9,7 @@
            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                 <div class="widget am-cf">
                     <div class="widget-head am-cf">
-                        <div class="widget-title am-fl">{:isset($info['id'])?'编辑':'新增'}APP导航栏</div>
+                        <div class="widget-title am-fl">{:isset($info['id'])?'编辑':'新增'}导航栏目</div>
                     </div>
                     <div class="widget-body am-fr">
 
@@ -23,15 +23,7 @@
                                     <small>请填写标题文字1-60字符。</small>
                                 </div>
                             </div>
-                            <div class="am-form-group">
-                                <label for="title" class="am-u-sm-2 am-form-label">
-                                    商品分类id
-                                </label>
-                                <div class="am-u-sm-10">
-                                    <input type="text" class="tpl-form-input" id="category_id" name="category_id" placeholder="请输入商品分类id"  value="{$info['category_id']}">
-                                    <small>请填写商品分类id, 多个分类用英文半角逗号隔开不要有空格（250,238）</small>
-                                </div>
-                            </div>
+
 
                             <div class="am-form-group">
                                 <label class="am-u-sm-2 am-form-label">图标图片</label>
@@ -56,15 +48,42 @@
                                     </div>
                                 </div>
                             </div>
-                            <!--<div class="am-form-group">-->
-                                <!--<label for="title" class="am-u-sm-2 am-form-label">-->
-                                    <!--链接地址 <span class="tpl-form-line-small-title must-input">*</span>-->
-                                <!--</label>-->
-                                <!--<div class="am-u-sm-10">-->
-                                    <!--<input type="text" class="tpl-form-input" id="url" name="url" placeholder="请输入链接地址"  value="{$info['url']}">-->
-                                    <!--<small>用于显示打开内容的链接地址</small>-->
-                                <!--</div>-->
-                            <!--</div>-->
+
+                            <div class="am-form-group">
+                                <label class="am-u-sm-2 am-form-label">
+                                    导航位置
+                                </label>
+                                <div class="am-u-sm-10">
+                                    <div class="row">
+                                        <div class="am-u-sm-3">
+                                            <select name="position" id="position">
+                                                <option value="">选择导航所在位置</option>
+                                                <option value="1" <if condition="$info.position eq 1">selected</if>>HR端</option>
+                                                <option value="0" <if condition="$info.position eq 0 && $info.position neq ''">selected</if>>C端</option>
+                                            </select>
+                                        </div>
+                                        <div class="am-u-sm-9"></div></div>
+                                </div>
+                            </div>
+
+                            <div class="am-form-group">
+                                <label class="am-u-sm-2 am-form-label">
+                                    链接地址
+                                </label>
+                                <div class="am-u-sm-10">
+                                    <div class="row">
+                                        <div class="am-u-sm-3">
+                                            <select name="link_type" id="link_type">
+                                                <option value="">选择链接地址</option>
+                                                <foreach name="link_type" item="v">
+                                                    <option value="{$v['id']}" <if condition="$v['id'] eq $info['link_type']"> selected </if>>{$v['value']}</option>
+                                                </foreach>
+                                            </select>
+                                        </div>
+                                        <div class="am-u-sm-9"></div></div>
+                                </div>
+                            </div>
+
                             <div class="am-form-group">
                                 <label class="am-u-sm-2 am-form-label">
                                     排序 
@@ -79,28 +98,6 @@
                                 </div>
                             </div>
 
-                            <div class="am-form-group">
-                                <label class="am-u-sm-2 am-form-label">是否禁用</label>
-                                <div class="am-u-sm-10">
-                                    <div class="am-form-group">
-                                        <label class="am-radio-inline">
-                                            <input type="radio" name="disabled" id="abled" value="1" data-am-ucheck> 正常
-                                        </label>
-                                        <label class="am-radio-inline">
-                                            <input type="radio" name="disabled" id="disabled" value="0" data-am-ucheck> 禁用
-                                        </label>
-                                    </div>
-                                    <if condition="$info['disabled'] eq 1 or $info['disabled'] eq ''">
-                                        <script>
-                                            $('#abled').attr('checked','true');
-                                        </script>
-                                    <else/>
-                                        <script>
-                                            $('#disabled').attr('checked','true');
-                                        </script>
-                                    </if>
-                                </div>
-                            </div>
                             <div class="am-form-group">
                                 <div class="am-u-sm-10 am-u-sm-push-2">
                                     <input type="hidden" name="id" value="{$info['id']}">
