@@ -5,9 +5,9 @@
 namespace Hr\Model;
 use Think\Model;
 class UserModel extends Model{
-    protected $insertFields = array('user_name','nickname','password','mobile','email', 'register_time', 'sex', 'status', 'user_type', 'is_auth','log_count', 'wx');
-    protected $updateFields = array('user_id','user_name','nickname','password','mobile','email', 'sex', 'status', 'disabled', 'user_type', 'is_auth', 'head_pic','log_count', 'wx');
-    protected $selectFields = array('user_id, user_name, nickname, password, mobile, email, sex, status, user_money,frozen_money,withdrawable_amount,disabled,register_time,user_type,is_auth,log_count,wx');
+    protected $insertFields = array('user_name','nickname','password','mobile','email', 'register_time', 'sex', 'status', 'user_type', 'is_auth','log_count', 'wx','invoice_amount');
+    protected $updateFields = array('user_id','user_name','nickname','password','mobile','email', 'sex', 'status', 'disabled', 'user_type', 'is_auth', 'head_pic','log_count', 'wx','invoice_amount');
+    protected $selectFields = array('user_id, user_name, nickname, password, mobile, email, sex, status, user_money,frozen_money,withdrawable_amount,disabled,register_time,user_type,is_auth,log_count,wx, invoice_amount');
     protected $_validate = array(
         array('mobile', 'require', '会员手机/账号不能为空！', 1, 'regex', 3),
         array('mobile','/^1[3|4|5|7|8|9][0-9]\d{8}$/','不是有效的手机号码',1,'regex', 3),
