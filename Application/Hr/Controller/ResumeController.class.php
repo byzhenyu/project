@@ -175,7 +175,7 @@ class ResumeController extends HrCommonController {
             unset($val);
             $area = D('Admin/Region')->getRegionList(array('level' => 2), 'id,name');
             $resume_where = array('id' => $resume_id);
-            $edu_list = D('Admin/Education')->getEducationList();
+            $edu_list = D('Admin/Education')->getEducationList(array('id' => array('gt', 0)));
             $info = $model->getResumeInfo($resume_where);
             if(!$info['age']) $info['age'] = time();
             if($info['address']){
