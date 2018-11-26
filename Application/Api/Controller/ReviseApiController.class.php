@@ -71,18 +71,29 @@ class ReviseApiController extends ApiUserCommonController{
         $user_id = UID;
         $company_model = D('Admin/CompanyInfo');
         $accountLogModel = D('Admin/AccountLog');
+        $userModel = D('Admin/User');
         $return_list = array();
         $return_list['task'] = $this->taskList();
         $rank_list = $this->rankList();
         $company_logo = $company_model->getCompanyInfoField(array('user_id' => $user_id), 'company_logo');
         $rank_list['company_logo'] = $company_logo;
         $return_list['rank'] = $rank_list;
-        $start_time = mktime(0,0,0,date('m'),1,date('Y'));
-        $end_time = mktime(23,59,59,date('m'),date('t'),date('Y'));
+        $_time = time_list(3);
+        $start_time = $_time['start'];
+        $end_time = $_time['end'];
         $account_where = array('change_type' => array('in', array(2, 3, 6)), 'change_time' => array('between', array($start_time, $end_time)));
         $sum_money = $accountLogModel->getAccountLogMoneySum($account_where);
-        $return_list['month_amount'] = fen_to_yuan($sum_money);
+        $can_money = $userModel->getUserField(array('user_id' => $user_id), 'withdrawable_amount');
+        $money = array('month_amount' => fen_to_yuan($sum_money), 'can_money' => fen_to_yuan($can_money));
+        $return_list['money'] = $money;
         $this->apiReturn(V(1, '任务首页内容', $return_list));
+    }
+
+    /**
+     * @desc 悬赏列表
+     */
+    public function getRecruitList(){
+        $user_id = UID;
     }
 
     /**

@@ -1542,3 +1542,28 @@ function refreshUserResume($mobile, $user_id){
     $resume_info = $model->getResumeInfo(array('mobile' => $mobile));
     if($resume_info) $model->where(array('mobile' => $mobile))->save(array('user_id' => $user_id));
 }
+
+function time_list($type){
+    switch($type){
+        case 1://本日
+            $start_time = mktime(0,0,0,date('m'), date('d'), date('Y'));
+            $end_time = mktime(23,59,59,date('m'),date('d'),date('Y'));
+            break;
+        case 2://本周
+            $date_w = date('w');
+            if($date_w == 0) $date_w = 7;
+            $start_time = mktime(0,0,0,date('m'),date('d')-$date_w+1,date('Y'));
+            $end_time = mktime(23,59,59,date('m'),date('d')-$date_w+7,date('Y'));
+            break;
+        case 3://本月
+            $start_time = mktime(0,0,0,date('m'),1,date('Y'));
+            $end_time = mktime(23,59,59,date('m'),date('t'),date('Y'));
+            break;
+        case 0:
+            $start_time = 0;
+            $end_time = 0;
+            break;
+        default: return true;
+    }
+    return array('start' => $start_time, 'end' => $end_time);
+}
