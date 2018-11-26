@@ -7,8 +7,8 @@ namespace Admin\Model;
 use Think\Model;
 
 class ResumeModel extends Model {
-    protected $insertFields = array('user_id', 'initials', 'true_name', 'mobile', 'email', 'head_pic', 'sex', 'age', 'job_intension', 'job_area', 'post_nature', 'first_degree', 'second_degree', 'language_ability', 'address', 'introduced', 'introduced_voice', 'career_label', 'hr_id', 'industry_id', 'position_id', 'is_audit', 'expect_salary');
-    protected $updateFields = array('user_id', 'initials', 'true_name', 'mobile', 'email', 'head_pic', 'sex', 'age', 'job_intension', 'job_area', 'post_nature', 'first_degree', 'second_degree', 'language_ability', 'address', 'introduced', 'introduced_voice', 'career_label', 'hr_id', 'update_time', 'id', 'hide_mobile', 'industry_id', 'position_id', 'expect_salary');
+    protected $insertFields = array('user_id', 'initials', 'true_name', 'mobile', 'email', 'head_pic', 'sex', 'age', 'job_intension', 'job_area', 'post_nature', 'first_degree', 'second_degree', 'language_ability', 'address', 'introduced', 'introduced_voice', 'career_label', 'hr_id', 'industry_id', 'position_id', 'is_audit', 'expect_salary', 'is_incumbency');
+    protected $updateFields = array('user_id', 'initials', 'true_name', 'mobile', 'email', 'head_pic', 'sex', 'age', 'job_intension', 'job_area', 'post_nature', 'first_degree', 'second_degree', 'language_ability', 'address', 'introduced', 'introduced_voice', 'career_label', 'hr_id', 'update_time', 'id', 'hide_mobile', 'industry_id', 'position_id', 'expect_salary', 'is_incumbency');
     protected $_validate = array(
         array('true_name', 'require', '真实姓名不能为空！', 1,'regex',3),
         array('true_name', '1,12', '真实姓名控制在12个字以内！',1,'length',3),
@@ -56,17 +56,6 @@ class ResumeModel extends Model {
             $this->error = '简历库已有此手机号，请前往小程序认证获得！';
             return false;
         }
-        /*$user_info = $userModel->getUserField($user_where, 'user_type');
-        $resumeInfo = $this->getResumeInfo($user_where);
-        //普通用户简历验证
-        if($resumeInfo && !$user_info){
-            $this->error = '您已经创建过简历！';
-            return false;
-        }
-        if(!check_is_auth($data['user_id'])){
-            $this->error = '请先通过实名认证！';
-            return false;
-        }*/
         //$data['initials'] = rev_pinyin($data['true_name']);
         $data['initials'] = '';
     }
@@ -108,5 +97,16 @@ class ResumeModel extends Model {
     public function getResumeField($where, $field){
         $res = $this->where($where)->getField($field);
         return $res;
+    }
+
+    /**
+     * @desc 保存简历数据
+     * @param $where
+     * @param $data
+     * @return bool
+     */
+    public function saveResumeData($where, $data){
+        $result = $this->where($where)->save($data);
+        return $result;
     }
 }

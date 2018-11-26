@@ -13,6 +13,7 @@ class RecruitModel extends Model {
     protected $_validate = array(
         array('position_id', 'require', '请选择悬赏职位', 1, 'regex', 3),
         array('recruit_num', 'number', '请填写招聘人数', 1, 'regex', 3),
+        array('recruit_num', array(1, 100), '招聘人数不能超过100', 1, 'between', 3),
         array('nature', 'require', '岗位性质不能为空', 1, 'regex', 3),
         array('sex', array(0,1,2), '性别字段有误', 1, 'in', 3),
         array('degree', 'require', '请选择学历要求', 1, 'regex', 3),
@@ -206,9 +207,10 @@ class RecruitModel extends Model {
      * @desc 获取简历联系方式/简历入职
      * @param $recruit_resume_id int 悬赏推荐表主键id
      * @param $operate_type int 1、获取简历联系方式 2、入职获取简历
+     * @param $is_pay_back bool 是否属于补缴下载简历
      * @return bool
      */
-    public function recruitPayOff($recruit_resume_id, $operate_type = 1){
+    public function recruitPayOff($recruit_resume_id, $operate_type = 1, $is_pay_back = false){
         $accountLogModel = D('Admin/AccountLog');
         $userModel = D('Admin/User');
         $recruitResumeModel = D('Admin/RecruitResume');
@@ -217,18 +219,23 @@ class RecruitModel extends Model {
         $type_token = array(1 => 'get_resume_token', 2 => 'entry_token');
         $recruit_resume_info = $recruitResumeModel->getRecruitResumeInfo(array('id' => $recruit_resume_id));
         if(!$recruit_resume_info) return false;
+        $recruit_resume_user_where = array('user_id' => $recruit_resume_info['hr_user_id']);
+        $recruit_resume_user = $userModel->getUserInfo($recruit_resume_user_where, 'frozen_money,recommended_number');//悬赏推荐用户信息
+        $recruit_user_where = array('user_id' => $recruit_resume_info['recruit_hr_uid']);
+        $recruit_user = $userModel->getUserInfo($recruit_user_where, 'frozen_money,recruit_number,invoice_amount');//悬赏发布用户信息
         $recruit_id = $recruit_resume_info['recruit_id'];
         $radio = C('RATIO');
         M()->startTrans();
         //减少悬赏发布人冻结资金
         $recruit_where = array('id' => $recruit_id);
         $recruit_info = $this->getRecruitInfo($recruit_where);
-        $release_res = $userModel->decreaseUserFieldNum($recruit_info['hr_user_id'], 'frozen_money', $recruit_info[$type_token[$operate_type]]);
+        $recruit_save = array('frozen_money' => $recruit_user['frozen_money'] - $recruit_info[$type_token[$operate_type]]);
+        //$release_res = $userModel->decreaseUserFieldNum($recruit_info['hr_user_id'], 'frozen_money', $recruit_info[$type_token[$operate_type]]);
         //增加用户资金/暂冻结金额资金
-        //$token_log_res = $userModel->increaseUserFieldNum($recruit_resume_info['hr_user_id'], 'user_money', $recruit_info[$type_token[$operate_type]]);
         $user_account_money = $recruit_info[$type_token[$operate_type]] * ((100 - $radio) / 100);
         $plat_account_money = $recruit_info[$type_token[$operate_type]] - $user_account_money;
-        $token_log_res2 = $userModel->increaseUserFieldNum($recruit_resume_info['hr_user_id'], 'frozen_money', $user_account_money);
+        $recruit_resume_save = array('frozen_money' => $recruit_resume_user['frozen_money'] + $user_account_money);
+        //$token_log_res2 = $userModel->increaseUserFieldNum($recruit_resume_info['hr_user_id'], 'frozen_money', $user_account_money);
         $token_account_data = array(
             'user_id' => $recruit_resume_info['hr_user_id'],
             'user_money' => $user_account_money,
@@ -249,9 +256,22 @@ class RecruitModel extends Model {
                 $is_post = 2;
             }
             $this->where(array('id' => $recruit_id))->setField('is_post', $is_post);
-            $userModel->increaseUserFieldNum($recruit_resume_info['hr_user_id'], 'recommended_number', 1);
-            $userModel->increaseUserFieldNum($recruit_resume_info['recruit_hr_uid'], 'recruit_number', 1);
+            $recruit_save['recruit_number'] = $recruit_user['recruit_number']++;//增加悬赏发布悬赏总人数字段
+            $recruit_resume_save['recommended_number'] = $recruit_resume_user['recommended_number']++;//悬赏推荐方
+            //$userModel->increaseUserFieldNum($recruit_resume_info['hr_user_id'], 'recommended_number', 1);
+            //$userModel->increaseUserFieldNum($recruit_resume_info['recruit_hr_uid'], 'recruit_number', 1);
         }
+        //增加用户可开发票金额
+        $recruit_save['invoice_amount'] = $recruit_user['invoice_amount'] + $recruit_info[$type_token[$operate_type]];
+        $release_res = $userModel->saveUserData($recruit_user_where, $recruit_save);
+        $token_log_res2 = $userModel->saveUserData($recruit_resume_user_where, $recruit_resume_save);
+        //修改悬赏剩余佣金
+        $recruit_info_save = array();
+        if(!$is_pay_back && $operate_type == 1){
+            $recruit_info_save['last_token'] = $recruit_info['last_token'] - $recruit_info[$type_token[$operate_type]];
+        }
+        if($operate_type == 2) $recruit_info_save['last_token'] = $recruit_info['last_token'] - $recruit_info[$type_token[$operate_type]];
+        if(count($recruit_info_save) > 0) $this->where($recruit_where)->save($recruit_info_save);
         if(false !== $release_res && false !== $token_log_res2 && false !== $token_account_res){
             M()->commit();
             return true;

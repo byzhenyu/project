@@ -17,8 +17,10 @@ class ReviseApiController extends ApiUserCommonController{
         $user_model = D('Admin/User');
         $incumbency = I('incumbency', 0, 'intval');
         $save = array('is_incumbency' => $incumbency);
-        $res = $user_model->where(array('user_id' => UID))->save($save);
+        $user_where = array('user_id' => UID);
+        $res = $user_model->where($user_where)->save($save);
         if(false !== $res){
+            D('Admin/Resume')->saveResumeData($user_where, $save);
             $this->apiReturn(V(1, '求职状态更改成功！'));
         }
         else{
@@ -304,7 +306,7 @@ class ReviseApiController extends ApiUserCommonController{
             $val['add_time'] = time_format($val['add_time'], 'Y-m-d');
             $val['commission'] = fen_to_yuan($val['commission']);
 
-            $hr_resume_where = array('h.hr_user_id' => $user_id);
+            $hr_resume_where = array('h.hr_user_id' => $user_id, 'r.is_incumbency' => 1);//接受推荐
             $hr_resume_where['r.position_id'] = $val['position_id'];
             $hr_resume_where['r.job_area'] = array('like', $val['job_area'].'%');
             $val['resume_matching'] = $hr_resume_model->getHrResumeList($hr_resume_where, 'h.id', 'h.add_time desc', true);
@@ -315,6 +317,7 @@ class ReviseApiController extends ApiUserCommonController{
 
     /**
      * @desc 求职者悬赏列表
+     * @extra keywords string 悬赏检索关键字
      */
     private function normalRecruitList(){
         $user_id = UID;
@@ -330,7 +333,7 @@ class ReviseApiController extends ApiUserCommonController{
             if(false !== $string) $error = $string;
             $this->apiReturn(V(0, $error));
         }
-
+        $keywords = I('keywords', '', 'trim');//首页悬赏筛选
         $user_job_area = $resume_info['job_area'];
         $job_area = explode(',', $user_job_area);
         $_job_area_where = $job_area[0].','.$job_area[1];
@@ -339,7 +342,7 @@ class ReviseApiController extends ApiUserCommonController{
         $where['r.hr_user_id'] = array('neq', $user_id);
         $where['r.is_post'] = array('lt', 2);
         $where['r.status'] = 1;
-
+        if($keywords) $where['r.position_name'] = array('like', '%'.$keywords.'%');
         $list = $recruit_model->getHrRecruitList($where,'r.id, r.position_name, r.recruit_num, r.commission, r.add_time, r.position_id,c.company_name,r.job_area');
         foreach($list['info'] as &$val){
             $t_parent_id = $position_model->getPositionField(array('id' => $val['position_id']), 'parent_id');
