@@ -138,7 +138,8 @@ class ReviseApiController extends ApiUserCommonController{
         $nav_model = D('Admin/Nav');
         $position = I('position', 1, 'intval');
         $nav_where = array('position' => $position);
-        $list = $nav_model->navList($nav_where);
+        $field = 'link_type,img,title,id,sort';
+        $list = $nav_model->navList($nav_where, $field, 'sort asc');
         return $list;
     }
 
@@ -148,7 +149,8 @@ class ReviseApiController extends ApiUserCommonController{
     private function noticeList(){
         $model = D('Admin/Article');
         $notice_where = array('article_cat_id' => 6, 'display' => 1);
-        $list = $model->getArticleList($notice_where);
+        $field = 'article_id,title';
+        $list = $model->getArticleList($notice_where, $field, 'sort asc');
         return $list['articlelist'];
     }
 
@@ -158,7 +160,7 @@ class ReviseApiController extends ApiUserCommonController{
     private function bannerList(){
         $model = D('Admin/Ad');
         $position = I('ad_position', 1, 'intval');
-        $where = array('position_id' => $position, 'display' => 1);
+        $where = array('ad.position_id' => $position, 'display' => 1);
         $field = 'title,content';
         $list = $model->getAdlist($where, $field);
         return $list['info'];

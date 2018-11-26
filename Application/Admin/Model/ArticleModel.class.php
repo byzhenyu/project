@@ -41,21 +41,19 @@ class ArticleModel extends RelationModel {
             return true;
         }
     }
-    /**
-     * 获取文章列表
-     * @param
-     * @return array    ['attrlist']文章列表 ['page']分页数据
-     */
-    public function getArticleList($where){
-        $count = $this->where($where)->count();
-        $page = get_page($count);
-        $articlelist =
-            $this->where($where)
-                ->limit($page['limit'])
-                ->order('addtime desc')
-                ->select();
 
-        return array('articlelist'=>$articlelist,'page'=>$page['page']);
+    /**
+     * @desc 文章列表
+     * @param $where
+     * @param $field
+     * @return array
+     */
+    public function getArticleList($where, $field = false){
+        if(!$field) $field = '*';
+        $count = $this->where($where)->count();
+        $page = get_web_page($count);
+        $articleList = $this->where($where)->field($field)->limit($page['limit'])->order('addtime desc')->select();
+        return array('articlelist' => $articleList, 'page' => $page['page']);
     }
 
     //添加操作前的钩子操作

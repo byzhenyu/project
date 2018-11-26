@@ -9,6 +9,7 @@ class ReviseExtraApiController extends ReviseUserCommonController{
 
     /**
      * @desc 绑定用户类型
+     * @param user_type 0:求职者 1、HR端
      */
     public function bindUserType(){
         $user_model = D('Admin/User');
