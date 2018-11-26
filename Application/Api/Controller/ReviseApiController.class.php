@@ -298,7 +298,7 @@ class ReviseApiController extends ApiUserCommonController{
 
     /**
      * @desc 求职者投递简历
-     * @TODO 自己推荐自己的简历  虚拟号问题
+     * @TODO 自己投递简历  虚拟号问题
      */
     public function delivery(){
         $user_id = UID;
@@ -324,7 +324,7 @@ class ReviseApiController extends ApiUserCommonController{
         if($recruit_area[0] != $resume_area[0] || $recruit_area[1] != $resume_area[1]) $this->apiReturn(V(0, '求职地区与悬赏不匹配！'));
         $recruitResumeModel = D('Admin/RecruitResume');
         $valid_info = $recruitResumeModel->getRecruitResumeInfo(array('recruit_id' => $recruit_id, 'resume_id' => $resume_info['id'], 'hr_user_id' => $user_id));
-        if($valid_info) $this->apiReturn(V(0, '你已经向该悬赏推荐过此人！'));
+        if($valid_info) $this->apiReturn(V(0, '该悬赏你已投递！'));
         $data = array('recruit_id' => $recruit_id, 'recruit_hr_uid' => $recruit_info['hr_user_id'], 'resume_id' => $resume_info['id'], 'hr_user_id' => $user_id, 'is_open' => 1);
         $res = $recruitResumeModel->add($data);
         if($res){
