@@ -90,11 +90,110 @@ class ReviseApiController extends ApiUserCommonController{
     }
 
     /**
+     * @desc 获取HR基本资料
+     */
+    public function getHrInfo(){
+        $user_id = UID;
+        $user_model = D('Admin/User');
+        $user_where = array('user_id' => $user_id);
+        $array = array('head_pic', 'nickname', 'sex', 'age', 'like_tags');
+        $user_info = $user_model->getUserInfo($user_where, $array);
+        $list = D('Admin/QuestionType')->getQuestionTypeList(array(), true, 'id,type_name as tags_name');
+        $user_tags = explode(',', $user_info['like_tags']);
+        foreach($list as &$val){
+            $val['sel'] = 0;
+            if(in_array($val['id'], $user_tags)) $val['sel'] = 1;
+        }
+        unset($val);
+        $user_info['age'] = time_format($user_info['age'], 'Y-m-d');
+        if(!$user_info){
+            $user_info = array();
+            foreach($array as &$val) $user_info[$val] = ''; unset($val);
+        }
+        $this->apiReturn(V(1, '用户信息', array('user_info' => $user_info, 'list' => $list)));
+    }
+
+    /**
+     * @desc 获取HR公司信息
+     */
+    public function getHrCompanyInfo(){
+        $user_id = UID;
+        $array = array('id','user_id', 'company_logo', 'company_name','company_size','company_nature','company_mobile','company_email','company_industry','company_address');
+        $info = D('Admin/CompanyInfo')->getCompanyInfoInfo(array('user_id' => $user_id));
+        $address = explode(' ' ,$info['company_address']);
+        if(count($address) > 0){
+            $info['company_address_p'] = $address[0];
+            unset($address[0]);
+            $info['company_address'] = str_replace($info['company_address_p'].' ', '', $info['company_address']);
+        }
+        else{
+            $info['company_address_p'] = '';
+        }
+        if(!$info) {
+            foreach($array as &$value) $info[$value] = '';
+            $info['company_pic'] = array();
+            $info['company_address_p'] = '';
+        }
+        $this->apiReturn(V(1 ,'编辑个人资料',$info));
+    }
+
+    /**
+     * @desc 编辑HR基本资料
+     */
+    public function editHrDoc(){
+        $user_id = UID;
+        $data = I('post.', '');
+        $model = D('Admin/User');
+        $create = $model->create($data, 4);
+        if(false !== $create){
+            $res = $model->saveUserData(array('user_id' => $user_id), $data);
+            if(false !== $res){
+                $this->apiReturn(V(1, '保存成功！'));
+            }
+        }
+        $this->apiReturn(V(0, $model->getError()));
+    }
+
+    /**
+     * @desc 编辑HR公司信息
+     */
+    public function editHrCompanyInfo(){
+        $user_id = UID;
+        $data = I('post.', '');
+        $model = D('Admin/CompanyInfo');
+        $where = array('user_id' => $user_id);
+        $company_info = $model->getCompanyInfoInfo($where);
+        if($company_info){
+            $create = $model->create($data, 2);
+            if(false !== $create){
+                $res = $model->where($where)->save($data);
+                if(false !== $res){
+                    $this->apiReturn(V(1, '保存成功！'));
+                }
+            }
+        }
+        else{
+           $create = $model->create($data, 1);
+           if(false !== $create){
+               $res = $model->add($data);
+               if($res){
+                   $this->apiReturn(V(1, '保存成功！'));
+               }
+           }
+        }
+        $this->apiReturn(V(0, $model->getError()));
+    }
+
+    /**
      * @desc 悬赏列表
      */
     public function getRecruitList(){
         $user_id = UID;
     }
+
+    private function hrRecruitList(){}
+
+    private function normalRecruitList(){}
 
     /**
      * @desc 每日任务列表
