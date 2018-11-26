@@ -119,8 +119,11 @@ class ReviseApiController extends ApiUserCommonController{
      */
     public function getHrCompanyInfo(){
         $user_id = UID;
+        $where = array('user_id' => $user_id);
+        $id = I('id', 0, 'intval');
+        if($id) $where = array('id' => $id);
         $array = array('id','user_id', 'company_logo', 'company_name','company_size','company_nature','company_mobile','company_email','company_industry','company_address');
-        $info = D('Admin/CompanyInfo')->getCompanyInfoInfo(array('user_id' => $user_id));
+        $info = D('Admin/CompanyInfo')->getCompanyInfoInfo($where);
         $address = explode(' ' ,$info['company_address']);
         if(count($address) > 0){
             $info['company_address_p'] = $address[0];
@@ -199,6 +202,61 @@ class ReviseApiController extends ApiUserCommonController{
             $list = $this->normalRecruitList();
         }
         $this->apiReturn(V(1, '悬赏列表', $list));
+    }
+
+    /**
+     * @desc 求职者投递简历
+     * @TODO 自己投递简历  虚拟号问题
+     */
+    public function delivery(){
+        $user_id = UID;
+        $recruit_id = I('recruit_id', 0, 'intval');
+        $recruit_model = D('Admin/Recruit');
+        $resume_model = D('Admin/Resume');
+        $user_where = array('user_id' => $user_id);
+        $resume_info = $resume_model->getResumeInfo($user_where);
+        if(!$resume_info) $this->apiReturn(V(0, '请先完善简历信息！'));
+        if(!check_is_auth($user_id)){
+            $string = auth_string();
+            $error = '请先通过实名认证！';
+            if(false !== $string) $error = $string;
+            $this->apiReturn(V(0, $error));
+        }
+        $recruit_where = array('id' => $recruit_id);
+        $recruit_info = $recruit_model->getRecruitInfo($recruit_where);
+        if(!$recruit_info) $this->apiReturn(V(0, '悬赏信息获取失败！'));
+        if($recruit_info['is_post'] == 2) $this->apiReturn(V(0, '该悬赏职位已招满！'));
+        if($recruit_info['position_id'] != $resume_info['position_id']) $this->apiReturn(V(0, '求职岗位与悬赏不匹配！'));
+        $recruit_area = explode(',', $recruit_info['job_area']);
+        $resume_area = explode(',', $resume_info['job_area']);
+        if($recruit_area[0] != $resume_area[0] || $recruit_area[1] != $resume_area[1]) $this->apiReturn(V(0, '求职地区与悬赏不匹配！'));
+        $recruitResumeModel = D('Admin/RecruitResume');
+        $valid_info = $recruitResumeModel->getRecruitResumeInfo(array('recruit_id' => $recruit_id, 'resume_id' => $resume_info['id'], 'hr_user_id' => $user_id));
+        if($valid_info) $this->apiReturn(V(0, '该悬赏你已投递！'));
+        $data = array('recruit_id' => $recruit_id, 'recruit_hr_uid' => $recruit_info['hr_user_id'], 'resume_id' => $resume_info['id'], 'hr_user_id' => $user_id, 'is_open' => 1);
+        $res = $recruitResumeModel->add($data);
+        if($res){
+            $this->apiReturn(V(1, '投递成功！'));
+        }
+        else{
+            $this->apiReturn(V(0, $recruitResumeModel->getError()));
+        }
+    }
+
+    /**
+     * @desc 求职者投递历史
+     */
+    public function deliveryHistory(){
+        $user_id = UID;
+        $model = D('Admin/RecruitResume');
+        $where = array('r.hr_user_id' => $user_id);
+        $field = 'r.add_time,c.company_name,c.id';
+        $list = $model->getDeliveryHistory($where, $field);
+        foreach($list['info'] as &$val){
+            $val['add_time'] = time_format($val['add_time'], 'Y-m-d H');
+        }
+        unset($val);
+        $this->apiReturn(V(1, '投递历史', $list['info']));
     }
 
     /**
@@ -294,45 +352,6 @@ class ReviseApiController extends ApiUserCommonController{
         }
         unset($val);
         return $list['info'];
-    }
-
-    /**
-     * @desc 求职者投递简历
-     * @TODO 自己投递简历  虚拟号问题
-     */
-    public function delivery(){
-        $user_id = UID;
-        $recruit_id = I('recruit_id', 0, 'intval');
-        $recruit_model = D('Admin/Recruit');
-        $resume_model = D('Admin/Resume');
-        $user_where = array('user_id' => $user_id);
-        $resume_info = $resume_model->getResumeInfo($user_where);
-        if(!$resume_info) $this->apiReturn(V(0, '请先完善简历信息！'));
-        if(!check_is_auth($user_id)){
-            $string = auth_string();
-            $error = '请先通过实名认证！';
-            if(false !== $string) $error = $string;
-            $this->apiReturn(V(0, $error));
-        }
-        $recruit_where = array('id' => $recruit_id);
-        $recruit_info = $recruit_model->getRecruitInfo($recruit_where);
-        if(!$recruit_info) $this->apiReturn(V(0, '悬赏信息获取失败！'));
-        if($recruit_info['is_post'] == 2) $this->apiReturn(V(0, '该悬赏职位已招满！'));
-        if($recruit_info['position_id'] != $resume_info['position_id']) $this->apiReturn(V(0, '求职岗位与悬赏不匹配！'));
-        $recruit_area = explode(',', $recruit_info['job_area']);
-        $resume_area = explode(',', $resume_info['job_area']);
-        if($recruit_area[0] != $resume_area[0] || $recruit_area[1] != $resume_area[1]) $this->apiReturn(V(0, '求职地区与悬赏不匹配！'));
-        $recruitResumeModel = D('Admin/RecruitResume');
-        $valid_info = $recruitResumeModel->getRecruitResumeInfo(array('recruit_id' => $recruit_id, 'resume_id' => $resume_info['id'], 'hr_user_id' => $user_id));
-        if($valid_info) $this->apiReturn(V(0, '该悬赏你已投递！'));
-        $data = array('recruit_id' => $recruit_id, 'recruit_hr_uid' => $recruit_info['hr_user_id'], 'resume_id' => $resume_info['id'], 'hr_user_id' => $user_id, 'is_open' => 1);
-        $res = $recruitResumeModel->add($data);
-        if($res){
-            $this->apiReturn(V(1, '投递成功！'));
-        }
-        else{
-            $this->apiReturn(V(0, $recruitResumeModel->getError()));
-        }
     }
 
     /**

@@ -129,9 +129,7 @@ class RecruitResumeModel extends Model {
         $info = $this->where($where)->find();
         $wordArr = C('WORK_NATURE');
         $exp = C('WORK_EXP');
-        $sexArr = array('0'=>'不限','1'=>'男','2'=>'女');
-        $degreeArr = M('Education')->where()->getField('id,education_name', true);
-        $tags = M('Tags')->where(array('tags_type'=>3))->getField('id, position_name',true);
+        $degreeArr = M('Education')->where(array('id' => array('gt', 0)))->getField('id,education_name', true);
         $info['sex'] = $exp[$info['sex']];
         $info['nature'] = $wordArr[$info['nature']];
         $info['degree'] = $degreeArr[$info['degree']];
@@ -154,5 +152,23 @@ class RecruitResumeModel extends Model {
     public function recruitResumeStatistic($where){
         $recruit_resume_count = $this->where($where)->field('id')->select();
         return $recruit_resume_count;
+    }
+
+    /**
+     * @desc 获取求职者投递历史
+     * @param $where
+     * @param bool $field
+     * @param string $order
+     * @return array
+     */
+    public function getDeliveryHistory($where, $field = false, $order = 'r.add_time desc'){
+        if(!$field) $field = 'c.*';
+        $count = $this->alias('r')->join('__COMPANY_INFO__ as c on r.recruit_hr_uid = c.user_id', 'LEFT')->where($where)->count();
+        $page = get_web_page($count);
+        $list = $this->alias('r')->join('__COMPANY_INFO__ as c on r.recruit_hr_uid = c.user_id', 'LEFT')->where($where)->field($field)->order($order)->limit($page['limit'])->select();
+        return array(
+            'info' => $list,
+            'page' => $page['page']
+        );
     }
 }
