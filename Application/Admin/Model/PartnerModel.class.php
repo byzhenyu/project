@@ -5,8 +5,8 @@
 namespace Admin\Model;
 use Think\Model;
 class PartnerModel extends Model {
-    protected $insertFields = array('partner_name', 'partner_mobile', 'partner_address', 'partner_position', 'parent_id', 'partner_level', 'audit_status', 'add_time');
-    protected $updateFields = array('partner_name', 'partner_mobile', 'partner_address', 'partner_position', 'parent_id', 'partner_level', 'audit_status', 'add_time', 'id');
+    protected $insertFields = array('user_id', 'partner_name', 'partner_mobile', 'partner_address', 'partner_position', 'parent_id', 'partner_level', 'audit_status', 'add_time');
+    protected $updateFields = array('user_id', 'partner_name', 'partner_mobile', 'partner_address', 'partner_position', 'parent_id', 'partner_level', 'audit_status', 'add_time', 'id');
     protected $_validate = array(
         array('partner_name', 'require', '合伙人名称不能为空！', 1, 'regex', 3),
         array('partner_name', '1,20', '名称长度不能超过20', 1, 'length', 3),
@@ -35,8 +35,25 @@ class PartnerModel extends Model {
         );
     }
 
+    /**
+     * @desc 合伙人详情
+     * @param $where
+     * @param bool $field
+     * @return mixed
+     */
+    public function getPartnerInfo($where, $field = false){
+        $res = $this->where($where)->field($field)->find();
+        return $res;
+    }
+
 
     protected function _before_insert(&$data, $option){
+        if(!$data['user_id']) $data['user_id'] = UID;
+        $partner_valid = $this->getPartnerInfo(array('user_id' => $data['user_id']));
+        if($partner_valid){
+            $this->error = '您已申请过合伙人！';
+            return false;
+        }
         $data['add_time'] = NOW_TIME;
 
     }
