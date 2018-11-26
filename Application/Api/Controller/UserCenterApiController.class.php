@@ -1579,7 +1579,7 @@ class UserCenterApiController extends ApiUserCommonController{
             $position = $recruit_info['position_id'];
             $where1 = array();
             if($job_area){
-                $where1[] = 'r.`job_area` = \''.$job_area.'\'';
+                $where1[] = 'r.`job_area` like \''.$job_area.'%\'';
             }
             $where2 = array();
             if($position){

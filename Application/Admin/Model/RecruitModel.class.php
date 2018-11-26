@@ -62,6 +62,25 @@ class RecruitModel extends Model {
         return array('info' => $list, 'page' => $page['page']);
     }
 
+    /**
+     * @desc 闪荐二期HR悬赏列表
+     * @param $where
+     * @param bool $field
+     * @param string $order
+     * @return array
+     */
+    public function getHrRecruitList($where, $field = false, $order = 'r.id desc'){
+        if(!$field) $field = '*';
+        $count = $this->alias('r')->join('__COMPANY_INFO__ as c on r.hr_user_id = c.user_id', 'LEFT')->where($where)->count();
+        if($count < 1){
+            unset($where['_string']);
+            $count = $this->alias('r')->join('__COMPANY_INFO__ as c on r.hr_user_id = c.user_id', 'LEFT')->where($where)->count();
+        }
+        $page = get_web_page($count);
+        $list = $this->alias('r')->join('__COMPANY_INFO__ as c on r.hr_user_id = c.user_id', 'LEFT')->where($where)->limit($page['limit'])->field($field)->order($order)->select();
+        return array('info' => $list, 'page' => $page['page']);
+    }
+
     protected function _before_insert(&$data, $option) {
         $data['add_time'] = NOW_TIME;
         $data['hr_user_id'] = UID;
@@ -83,7 +102,9 @@ class RecruitModel extends Model {
     }
 
     /**
-     *  获取字段
+     * @param $where
+     * @param string $field
+     * @return mixed
      */
     public function getRecruitInfo($where,$field='') {
         if (!$field) {
