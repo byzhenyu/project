@@ -50,4 +50,19 @@ class TransferAccountModel extends Model{
                'page' => $page['page']
           );
     }
+    public function pdf($company = '', $money = ''){
+        if($company == ''  || $money == ''){
+            return V(0, '缺少参数');
+        }
+        $contractTerms = D('Admin/Article')->where(array('article_id' => 5))->getField('content');
+        //引入类库
+        Vendor('mpdf.mpdf');
+        //设置中文编码
+        $mpdf=new \mPDF('zh-cn','A4', 0, '宋体', 0, 0);
+        //html内容
+        $html='<h1><a name="top"></a>'.$company.'</h1>'.$money.$contractTerms;
+        $mpdf->WriteHTML($html);
+        $mpdf->Output();
+        exit;
+    }
 }

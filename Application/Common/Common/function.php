@@ -1623,3 +1623,8 @@ function accountStatus($type){
             return '未知类型';
     }
 }
+/**
+* @desc
+* @param
+* @return mixed
+*/

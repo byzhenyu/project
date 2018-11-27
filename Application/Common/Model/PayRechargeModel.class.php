@@ -54,6 +54,7 @@ class PayRechargeModel extends Model{
         $data['money'] = $money;
         $data['payment'] = $pay_bank;
         $data['trade_no'] = $trade_no;
+        $data['return_state'] = 1;
         $data['add_time'] = NOW_TIME;
         return $this->add($data);
     }
