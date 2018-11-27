@@ -39,4 +39,59 @@ class HrController extends HrCommonController {
         $this->display();
     }
 
+    public function setCompany(){
+        $company_model = D('Admin/CompanyInfo');
+        $hr_id = HR_ID;
+        $company_where = array('user_id' => $hr_id);
+        $company_info = $company_model->getCompanyInfoInfo($company_where);
+        if(IS_POST){
+            $data = I('post.');
+            if($company_info){
+                $data['company_address'] = $data['province'].','.$data['city'].','.$data['county'].' '.$data['company_address'];
+                $create = $company_model->create($data, 2);
+                if(false !== $create){
+                    $res = $company_model->where($company_where)->save($data);
+                    if(false !== $res){
+                        $this->ajaxReturn(V(1, '保存成功！'));
+                    }
+                }
+            }
+            else{
+                $create = $company_model->create($data, 1);
+                if(false !== $create){
+                    $res = $company_model->add($data);
+                    if($res){
+                        $this->ajaxReturn(V(1, '保存成功！'));
+                    }
+                }
+            }
+            $this->ajaxReturn(V(0, $company_model->getError()));
+        }
+        $address = explode(' ' ,$company_info['company_address']);
+        $company_info['company_address_p'] = $address[0];
+        unset($address[0]);
+        $company_info['company_address'] = str_replace($company_info['company_address_p'], '', $company_info['company_address']);
+        $company_info['company_address'] = ltrim($company_info['company_address'], ' ');
+        $_p_c_c = explode(',', $company_info['company_address_p']);
+        $company_info['province'] = $_p_c_c[0];
+        $company_info['city'] = $_p_c_c[1];
+        $company_info['county'] = $_p_c_c[2];
+        $company_size = returnArrData(C('COMPANY_SIZE'));
+        $nature_list = D('Admin/CompanyNature')->getCompanyNatureList();
+        $industry = D('Admin/Industry')->getIndustryList();
+        $this->industry = $industry;
+        $this->company_nature = $nature_list;
+        $this->company_size = $company_size;
+        $this->info = $company_info;
+        $this->display();
+    }
+
+    public function uploadImg(){
+        $this->_uploadImg();
+    }
+
+    public function delFile(){
+        $this->_delFile();
+    }
+
 }

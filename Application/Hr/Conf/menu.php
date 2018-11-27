@@ -2,6 +2,7 @@
 $modules = array(
     'Hr' => array('label' => '基本资料', 'action' => '', 'items' => array(
         array('label' => '基本资料', 'action' => U('Hr/setHr')),
+        array('label' => '公司资料', 'action' => U('Hr/setCompany')),
         )),
     'resume' => array('label' => '简历管理' , 'action' => '' , 'items' => array(
         array('label' => '简历列表', 'action' => U('Resume/listHrResume')),
