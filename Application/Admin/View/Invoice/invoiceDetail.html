@@ -1,0 +1,170 @@
+<extend name="Common/base"/>
+<block name="style">
+	<style>
+		.am-table {
+			font-size: 1.3rem;
+			margin-bottom: 0;
+		}
+		.am-btn{
+			padding:5px 15px;font-size:12px
+		}
+	</style>
+</block>
+<block name="body">
+	<!-- 内容区域 -->
+	<div class="row-content am-cf">
+		<div class="row">
+			<div class="widget am-cf">
+				<div class="widget-head am-cf">
+					<div class="widget-title  am-cf">发票基本信息</div>
+				</div>
+				<div class="widget-body  am-fr">
+					<form id="invoiceForm" action="__ACTION__" method="post" class="ajaxForm">
+						<table width="100%" class="am-table am-table-bordered">
+							<thead>
+							<tr><th colspan="4">发票基本信息</th></tr>
+							</thead>
+							<tbody>
+							<tr>
+								<td style="width: 35%;"><div align="right"><strong>发票金额：</strong></div></td>
+								<td>{:fen_to_yuan($info['invoice_amount'])}</td>
+							</tr>
+							<tr>
+								<td style="width: 35%;"><div align="right"><strong>公司名称：</strong></div></td>
+								<td>{$info['company_name']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>营业执照税号：</strong></div></td>
+								<td>{$info['business_license']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>银行名称：</strong></div></td>
+								<td>{$info['bank_name']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>银行卡号：</strong></div></td>
+								<td>{$info['bank_no']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>营业执照所在地：</strong></div></td>
+								<td>{$info['business_address']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>联系人电话：</strong></div></td>
+								<td>{$info['contacts_name']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>联系人手机号：</strong></div></td>
+								<td>{$info['contacts_mobile']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>联系人手机号：</strong></div></td>
+								<td>{$info['contacts_mobile']}</td>
+							</tr>
+							<tr>
+								<td><div align="right"><strong>发票类型</strong></div></td>
+								<td>{:invoiceType($info['invoice_type'])}</td>
+							</tr>
+							<if condition="$info[invoice_type] eq 0">
+								<tr>
+									<td><div align="right"><strong>电子邮箱：</strong></div></td>
+									<td>{$info['invoice_email']}</td>
+								</tr>
+								<else />
+								<tr>
+									<td><div align="right"><strong>收货人名称：</strong></div></td>
+									<td>{$info['receive_contacts']}</td>
+								</tr>
+								<tr>
+									<td><div align="right"><strong>收货人电话：</strong></div></td>
+									<td>{$info['receive_mobile']}</td>
+								</tr>
+								<tr>
+									<td><div align="right"><strong>收货地址：</strong></div></td>
+									<td>{$info['receive_address']}</td>
+								</tr>
+							</if>
+							</tbody>
+						</table>
+						<table width="100%" class="am-table am-table-bordered">
+							<thead>
+							<tr><th colspan="4">用户验证信息</th></tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td style="width: 35%;"><div align="right"><strong>真实姓名：</strong></div></td>
+									<td>{$info['nickname']}</td>
+								</tr>
+								<tr>
+									<td><div align="right"><strong>可开发票的金额：</strong></div></td>
+									<td>{:fen_to_yuan($info['user_invoice_amount'])}</td>
+								</tr>
+								<tr>
+									<td><div align="right"><strong>申请时间：</strong></div></td>
+									<td>{:time_format($info['add_time'])}</td>
+								</tr>
+								<if condition="$info['status'] eq 0">
+									<tr>
+										<td><div align="right"><strong>请操作发票信息：</strong></div></td>
+										<td>  <select  name="status" data-am-selected="">
+											<option value="0">请操作发票信息</option>
+											<option value="1">已发票</option>
+											<option value="2">拒绝</option>
+										</select></td>
+									</tr>
+									<else />
+									<tr>
+										<td><div align="right"><strong>发票状态：</strong></div></td>
+										<td>{:invoiceStatus($info['status'])}</td>
+									</tr>
+								</if>
+								<if condition="$info[invoice_type] eq  1 &&  $info[status] neq 2">
+										<tr>
+											<td style="width: 35%;"><div align="right"><strong>快递名称：</strong></div></td>
+											<td><input type="text" name="express_name" value="{$info[express_name]}" required="required"></td>
+										</tr>
+										<tr>
+											<td style="width: 35%;"><div align="right"><strong>快递单号：</strong></div></td>
+											<td><input type="number" name="express_no" value="{$info[express_no]}" required="required"></td>
+										</tr>
+									<else />
+								</if>
+							</tbody>
+						</table>
+						<input type="hidden" name="id"  value="{$info[id]}">
+						<input type="hidden" name="user_id"  value="{$info[hr_user_id]}">
+						<input type="hidden" name="invoice_amount"  value="{$info[invoice_amount]}">
+						<input type="hidden" name="invoice_type"  value="{$info[invoice_type]}">
+						<table width="100%" class="am-table">
+							<tbody>
+							<tr>
+								<td align="center">
+									<if condition="$info['status'] eq 0">
+										<button type="button" class="am-btn am-btn-default tpl-btn-bg-color-default" onclick="btn()" >提交</button>
+									</if>
+									<span style="padding:20px;"></span>
+									<button class="am-btn am-btn-default tpl-btn-bg-color-default " onclick="goback()">返回</button>
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</block>
+<block name="script">
+	<script>
+		function btn(){
+		    // var value =  $("select[name=status]:checked").val();
+            $('#invoiceForm').submit();
+            setTimeout(function () {
+                window.location.reload();
+            },1000);
+		}
+        $("select[name=status]").change(function(){
+
+        });
+	</script>
+</block>

@@ -27,17 +27,45 @@ class InvoiceModel extends Model {
         array('contacts_mobile', 'require', '联系人手机不能为空', 1, 'regex', 3),
         array('contacts_mobile','/^1[3|4|5|7|8|9][0-9]\d{8}$/','不是有效的手机号码',1,'regex', 3),
         array('invoice_type', array(0,1), '发票类型错误', 1, 'in', 2),
-        array('business_address', 'require', '营业执照所在地不能为空', 1, 'regex', 3),
-        array('invoice_email', 'require', '电子邮箱不能为空', 1, 'length', 3),
-        array('receive_contacts', 'require', '收货人名称不能为空', 1, 'regex', 3),
-        array('receive_mobile', 'require', '收货人手机不能为空', 1, 'regex', 3),
-        array('receive_mobile','/^1[3|4|5|7|8|9][0-9]\d{8}$/','不是有效的手机号码',1,'regex', 3),
-        array('receive_address', 'require', '收货人地址不能为空', 1, 'regex', 3),
-        array('express_name', 'require', '快递名称不能为空', 1, 'regex', 3),
-        array('express_no', 'require', '快递单号不能为空', 1, 'regex', 3),
-        array('audit_desc', 'require', '审核留言不能为空', 1, 'regex', 3)
+        array('business_address', 'require', '营业执照所在地不能为空', 1, 'regex', 3)
     );
     protected function _before_insert(&$data, $option){
         $data['add_time'] = NOW_TIME;
+    }
+    /**
+    * @desc  发票管理
+    * @param   HR_ID
+    * @return mixed
+    */
+    public function invoiceList($where = [], $field = null, $sort = 'i.add_time DESC'){
+        $count  = $this->alias('i')
+                 ->join('__USER__ as u on u.user_id = i.hr_user_id', 'LEFT')
+                 ->where($where)
+                 ->count();
+        $page = get_page($count);
+        $list = $this->alias('i')
+                ->join('__USER__ as u on u.user_id = i.hr_user_id', 'LEFT')
+                ->field('i.* , u.nickname, u.invoice_amount as user_invoice_amount')
+                ->where($where)
+                ->order($sort)
+                ->limit($page['limit'])
+                ->select();
+        return array(
+             'list' => $list,
+             'page' => $page['page']
+        );
+    }
+    /**
+    * @desc 获取发票信息
+    * @param  id
+    * @return mixed
+    */
+    public function getInvoiceInfo($where = [], $filed = null){
+        $info  = $this->alias('i')
+            ->join('__USER__ as u on u.user_id = i.hr_user_id', 'LEFT')
+            ->field('i.* , u.nickname, u.invoice_amount as user_invoice_amount')
+            ->where($where)
+            ->find();
+        return $info;
     }
 }
