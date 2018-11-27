@@ -89,6 +89,24 @@ class ResumeModel extends Model {
     }
 
     /**
+     * @desc 闪荐二期  简历审核列表
+     * @param $where
+     * @param bool $field
+     * @param string $order
+     * @return array
+     */
+    public function getAuditResumeList($where, $field = false, $order = ''){
+        if(!$field) $field = 'r.*,u.user_name,u.mobile as hr_mobile,u.nickname';
+        $count = $this->alias('r')->join('__USER__ as u on u.user_id = r.user_id')->where($where)->count();
+        $page = get_web_page($count);
+        $list = $this->alias('r')->join('__USER__ as u on u.user_id = r.user_id')->where($where)->field($field)->limit($page['limit'])->order($order)->select();
+        return array(
+            'info' => $list,
+            'page' => $page['page']
+        );
+    }
+
+    /**
      * @desc 简历字段
      * @param $where
      * @param $field

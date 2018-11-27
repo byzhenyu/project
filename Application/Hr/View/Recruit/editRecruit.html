@@ -165,7 +165,6 @@
                             </tr>
                             <tr>
                                 <td colspan="4" align="center">
-                                    <input type="hidden" id="id" class="recruit_hidden_class" name="recruit_id" value="{$info['id']}">
                                     <button type="submit" id="submit_class" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
                                     <button type="button" class="am-btn am-btn-primary am-btn-warning " onclick="goback1();">返回</button>
                                 </td>
@@ -191,13 +190,19 @@
             toastr(data.info);
             if(data.status == 1){
                 location.href='/index.php/Hr/Recruit/recruitList';
-                //$('.recruit_hidden_class').val(data.data);
             }
+            if(data.status == 2){
+                setTimeout(recruit_pay, 2000);
+            }
+        }
+
+        function recruit_pay(){
+            location.href='/index.php/Hr/Pay/pay';
         }
 
         var ue = UE.getEditor('content1', {
             autoHeightEnabled: false,
-            initialFrameWidth: '700',
+            initialFrameWidth: 700,
             initialFrameHeight: 350
         });
         function goback1(){

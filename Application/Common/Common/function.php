@@ -1114,14 +1114,16 @@ function show_resume_auth_result($auth_result){
  * @param $user_id
  * @param $task_id
  * @param $task_name
+ * @param $update_time bool
  * @return mixed
  */
-function add_task_log($user_id, $task_id, $task_name = ''){
+function add_task_log($user_id, $task_id, $task_name = '', $update_time = false){
     $model = D('Admin/TaskLog');
     $data = array(
         'user_id' => $user_id,
         'task_id' => $task_id,
-        'task_name' => $task_name
+        'task_name' => $task_name,
+        'update_time' => $update_time
     );
     $res = $model->add($data);
     if($res){
