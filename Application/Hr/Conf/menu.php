@@ -11,6 +11,7 @@ $modules = array(
         array('label' => '发票额度', 'action' => U('Invoice/userInvoice')),
         array('label' => '申请发票', 'action' => U('Invoice/invoiceList')),
         array('label' => '充值管理', 'action' => U('Pay/pay')),
+        array('label' => '转账管理', 'action' => U('TransferAccount/getMyAccounts')),
         array('label' => '意见反馈', 'action' => U('Resume/editFeedBack'))
         )),
     

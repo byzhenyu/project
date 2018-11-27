@@ -1,0 +1,100 @@
+<extend name="Common/base"/>
+<block name="style">
+    <style>
+        .am-table {
+            font-size: 1.3rem;
+            margin-bottom: 0;
+        }
+        .am-btn{
+            padding:5px 15px;font-size:12px
+        }
+    </style>
+</block>
+<block name="body">
+    <!-- 内容区域 -->
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">转账基本信息</div>
+                </div>
+                <div class="widget-body  am-fr">
+                    <form id="invoiceForm" action="__ACTION__" method="post" class="ajaxForm">
+                        <table width="100%" class="am-table am-table-bordered">
+                            <thead>
+                            <tr><th colspan="4">转账基本信息</th></tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td style="width: 35%;"><div align="right"><strong>转账金额：</strong></div></td>
+                                <td>{:fen_to_yuan($info['transfer_amount'])}</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 35%;"><div align="right"><strong>转账银行：</strong></div></td>
+                                <td>{$info['bank_name']}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>银行卡号：</strong></div></td>
+                                <td>{$info['bank_no']}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>持卡人：</strong></div></td>
+                                <td>{$info['bank_holder']}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>开户行：</strong></div></td>
+                                <td>{$info['bank_opening']}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>转账图：</strong></div></td>
+                                <td><img src="{$info[transfer_img]}" alt="" width="300" height="500"></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>转账说明：</strong></div></td>
+                                <td>{$info['transfer_remark']}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>转账：</strong></div></td>
+                                <td>{:time_format($info['transfer_time'])}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>审核状态：</strong></div></td>
+                                <td>{:accountStatus($info['audit_status'])}</td>
+                            </tr>
+                            <if condition="$info[audit_status] neq 0">
+                                <tr>
+                                    <td><div align="right"><strong>审核说明：</strong></div></td>
+                                    <td>{$info['audit_desc']}</td>
+                                </tr>
+                            </if>
+                            </tbody>
+                        </table>
+                        <table width="100%" class="am-table">
+                            <tbody>
+                            <tr>
+                                <td align="center">
+                                    <button class="am-btn am-btn-default tpl-btn-bg-color-default " onclick="goback()">返回</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script>
+        function btn(){
+            // var value =  $("select[name=status]:checked").val();
+            $('#invoiceForm').submit();
+            setTimeout(function () {
+                window.location.reload();
+            },1000);
+        }
+        $("select[name=status]").change(function(){
+
+        });
+    </script>
+</block>

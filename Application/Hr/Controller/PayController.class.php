@@ -22,10 +22,17 @@ class PayController extends HrCommonController {
     * @return mixed
     */
     public function pay(){
+           $bankList = D('Admin/SysBank')->select();
            $userInfo = $this->User->field('head_pic,nickname,user_money')->where(array('user_id' => HR_ID))->find();
            $this->userInfo = $userInfo;
+           $this->bankList = $bankList;
            $this->display();
     }
+    /**
+    * @desc 微信充值
+    * @param
+    * @return mixed
+    */
     public function weiChatPay(){
         $recharge_money = I('recharge_money', '');
         if (!$recharge_money || $recharge_money < 1) {
