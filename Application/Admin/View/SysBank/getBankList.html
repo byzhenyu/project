@@ -1,0 +1,110 @@
+<extend name="Common/base"/>
+<block name="style">
+
+</block>
+
+<block name="body">
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                <div class="widget am-cf">
+                    <div class="widget-head am-cf">
+                        <div class="widget-title  am-cf">银行列表</div>
+
+                    </div>
+                    <div class="widget-body  am-fr">
+
+                        <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+                            <div class="am-form-group">
+                                <div class="am-btn-toolbar">
+                                    <div class="am-btn-group am-btn-group-xs">
+                                        <a type="button" class="am-btn am-btn-default am-btn-success" href="{:U('SysBank/editBank')}"><span class="am-icon-plus"></span> 新增</a>
+                                        <button type="button" class="am-btn am-btn-default am-btn-danger" onclick="javascript:recycle('chkbId', '确认删除?! 删除后无法恢复!', true)">
+                                            <span class="am-icon-trash-o"></span> 批量删除
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <form action="__SELF__" method="get">
+                            <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
+                                <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
+                                    <input type="text" class="am-form-field" name="keyword" placeholder="请输入银行关键字" value="{$keyword}">
+                                    <span class="am-input-group-btn">
+                                        <button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="submit"></button>
+                                        <a class="am-btn  am-btn-default am-btn-danger tpl-table-list-field am-icon-refresh" type="button" href="__ACTION__"></a>
+                                    </span>
+                                </div>
+                            </div>
+                            <input name="p" value="1" type="hidden"/>
+                        </form>
+
+                        <div class="am-u-sm-12">
+                            <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
+                                <thead>
+                                <tr>
+                                    <th><input class="check-all" type="checkbox"></th>
+                                    <th>序号</th>
+                                    <th>银行名称</th>
+                                    <th>银行卡号</th>
+                                    <th>持卡人</th>
+                                    <th>开户行</th>
+                                    <th>添加时间</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <foreach name="list" item="v">
+                                    <tr class="gradeX">
+                                        <td><input class="ids" type="checkbox" name="chkbId" value="{$v['id']}"></td>
+                                        <td>{$v['id']}</td>
+                                        <td style="text-align:left; width: 20%;">
+                                            {$v['bank_name']}
+                                        </td>
+                                        <td class="center">{$v['bank_no']}</td>
+                                        <td class="center">{$v['bank_holder']}</td>
+                                        <td class="center">{$v['bank_opening']}</td>
+                                        <td class="center">
+                                            {:time_format($v['add_time'])}
+                                        </td>
+                                        <td class="f-14">
+                                            <div class="tpl-table-black-operation">
+                                                <a href="{:U('SysBank/editBank',array('id'=>$v['id']))}">
+                                                    <i class="am-icon-pencil"></i> 编辑
+                                                </a>
+                                                <a href="javascript:void(0)" onclick="javascript:recycle({$v['id']}, '确认删除?!此步骤无法恢复!', true)" class="tpl-table-black-operation-del">
+                                                    <i class="am-icon-trash"></i> 删除
+                                                </a>
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </foreach>
+
+                                <!-- more data -->
+                                </tbody>
+                            </table>
+
+                            <empty name="list">
+                                <h4>aOh! 没有相关内容!</h4>
+                            </empty>
+                        </div>
+                        <div class="am-u-lg-12 am-cf">
+
+                            <div class="am-fr">
+                                <div class="am-pagination tpl-pagination">
+                                    {$page}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+    </script>
+</block>

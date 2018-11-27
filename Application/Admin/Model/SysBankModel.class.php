@@ -11,9 +11,9 @@
 
 namespace Admin\Model;
 use Think\Model;
-class TagsModel extends Model{
-    protected $insertFields = array('bank_name', 'bank_no', 'bank_holder','bank_holder');
-    protected $updateFields = array('bank_name', 'bank_name', 'bank_name', 'bank_holder', 'id');
+class SysBankModel extends Model{
+    protected $insertFields = array('bank_name', 'bank_no', 'bank_holder','bank_opening');
+    protected $updateFields = array('bank_name', 'bank_no', 'bank_holder', 'bank_opening', 'id');
     protected $findFields = array('bank_name', 'bank_name', 'bank_name', 'bank_holder', 'id');
     protected $_validate = array(
         array('bank_name', 'require', '银行名称不能为空！', 1, 'regex', 3),
@@ -21,5 +21,29 @@ class TagsModel extends Model{
         array('bank_holder', 'require', '持卡人姓名不能为空！', 1, 'regex', 3),
         array('bank_opening', 'require', '开户行不能为空！', 1, 'regex', 3)
     );
-
+    /**
+    * @desc  银行卡号列表
+    * @param
+    * @return mixed
+    */
+    public function getBankList($where = [], $field = null ,$sort = 'add_time DESC'){
+        if (is_null($field)) {
+            $field = $this->selectFields;
+        }
+        $count = $this->where($where)->count();
+        $page = get_page($count);
+        $list = $this
+            ->field($field)
+            ->where($where)
+            ->limit($page['limit'])
+            ->order($sort)
+            ->select();
+        return array(
+            'info'=>$list,
+            'page'=>$page['page']
+        );
+    }
+    protected function _before_insert(&$data, $option){
+        $data['add_time'] = NOW_TIME;
+    }
 }

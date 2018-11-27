@@ -64,7 +64,7 @@
                                 </div>
                                 <div class="tr_rechoth am-form-group">
                                     <span>其他金额：</span>
-                                    <input type="number" min="10" max="10000" value="10.00元" class="othbox" data-validation-message="充值金额范围：10-10000元" />
+                                    <input type="number" min="1" max="10000" value="10.00元" class="othbox" data-validation-message="充值金额范围：10-10000元" />
                                     <!--<p>充值金额范围：10-10000元</p>-->
                                 </div>
                                 <div class="tr_rechcho am-form-group">
@@ -176,7 +176,17 @@
                        $("#codeImg").append('<img alt="扫描二扫码支付" src="'+ data.info+'"/>');
                    }
                })
+           }else if(type == 2){
+
+           }else{
+               $.post("{:U('Pay/weiChatPay')}", {'recharge_money':recharge_money}, function (data) {
+                   // alert(JSON.stringify(data));
+                   if (data.status == 1) {
+                       $("#codeImg").append('<img alt="扫描二扫码支付" src="'+ data.info+'"/>');
+                   }
+               })
            }
         }
+
     </script>
 </block>

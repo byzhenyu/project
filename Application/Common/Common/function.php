@@ -1605,3 +1605,23 @@ function time_list($type){
     }
     return array('start' => $start_time, 'end' => $end_time);
 }
+/**
+* @desc  转账状态
+* @param  type
+* @return mixed
+*/
+function accountStatus($type){
+    switch ($type) {
+        case '0':
+            return '待审核';
+            break;
+        case '1':
+            return '审核通过';
+            break;
+        case '2':
+            return '未通过';
+            break;
+        default:
+            return '未知类型';
+    }
+}

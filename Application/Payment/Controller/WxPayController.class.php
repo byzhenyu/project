@@ -13,7 +13,7 @@ class WxPayController extends CommonController {
         require_once("Plugins/WxPay/WxPay.php");
         $wxPay = new \WxPay();
         LL($_POST,'./log1.txt');
-        //验证是否是支付宝发送
+        //验证是否是微信发送
         $flag = $wxPay->WxPayNotifyCheck();
         LL($flag,'./log1.txt');
         //验证成功
