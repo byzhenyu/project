@@ -1542,7 +1542,43 @@ function refreshUserResume($mobile, $user_id){
     $resume_info = $model->getResumeInfo(array('mobile' => $mobile));
     if($resume_info) $model->where(array('mobile' => $mobile))->save(array('user_id' => $user_id));
 }
-
+/**
+* @desc  发票状态
+* @param  type
+* @return mixed
+*/
+function invoiceStatus($type){
+    switch ($type) {
+        case '0':
+            return '待审核';
+            break;
+        case '1':
+            return '已开发票';
+            break;
+        case '2':
+            return '拒绝开发票';
+            break;
+        default:
+            return '未知类型';
+    }
+}
+/**
+* @desc 发票类型
+* @param
+* @return mixed
+*/
+function invoiceType($type){
+    switch ($type) {
+        case '0':
+            return '电子发票';
+            break;
+        case '1':
+            return '纸质发票';
+            break;
+        default:
+            return '未知类型';
+    }
+}
 function time_list($type){
     switch($type){
         case 1://本日

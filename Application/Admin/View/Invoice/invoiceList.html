@@ -9,7 +9,7 @@
             <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
                 <div class="widget am-cf">
                     <div class="widget-head am-cf">
-                        <div class="widget-title  am-cf">发票管理</div>
+                        <div class="widget-title  am-cf">发票列表</div>
 
                     </div>
                     <div class="widget-body  am-fr">
@@ -30,11 +30,6 @@
                             </div>
                             <div class="am-u-sm-12 am-u-md-12 am-u-lg-3">
                                 <div class="am-input-group am-input-group-sm tpl-form-border-form cl-p">
-                                    <!--<input type="text" class="am-form-field" name="keyword" placeholder="请输入推荐标签" value="{$keyword}">-->
-                                    <!--<span class="am-input-group-btn">-->
-                                        <!--<button class="am-btn  am-btn-default am-btn-success tpl-table-list-field am-icon-search" type="submit"></button>-->
-                                        <!--<a class="am-btn  am-btn-default am-btn-danger tpl-table-list-field am-icon-refresh" type="button" href="__ACTION__"></a>-->
-                                    <!--</span>-->
                                 </div>
                             </div>
                             <input name="p" value="1" type="hidden"/>
@@ -45,24 +40,33 @@
                                 <thead>
                                 <tr>
                                     <th width="7%" class="align-center">序号</th>
-                                    <th width="12%" class="align-center">用户昵称</th>
-                                    <th width="12%" class="align-center">可开票额度</th>
+                                    <th class="align-center">公司名称</th>
+                                    <th width="12%" class="align-center">开票额度</th>
+                                    <th width="12%" class="align-center">审核状态</th>
+                                    <th width="12%" class="align-center">添加时间</th>
                                     <th class="align-center">操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="gradeX">
-                                        <td class="align-center">{$userInfo['user_id']}</td>
-                                        <td class="align-center">{$userInfo['nickname']}</td>
-                                        <td class="align-center">{:fen_to_yuan($userInfo[invoice_amount])}</td>
-                                        <td class="f-14 align-center">
-                                            <div class="tpl-table-black-operation">
-                                                <a href="{:U('Invoice/InvoiceInfo')}">
-                                                    <i class="am-icon-dedent"></i> 查看详情
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                <foreach name="list" item="v">
+                                <tr class="gradeX">
+                                    <td class="align-center">{$v['id']}</td>
+                                    <td class="align-center">{$v['company_name']}</td>
+                                    <td class="align-center">{:fen_to_yuan($v[invoice_amount])}</td>
+                                    <td class="align-center">{:invoiceStatus($v['status'])}</td>
+                                    <td class="align-center">{:time_format($v[add_time])}</td>
+                                    <td class="f-14 align-center">
+                                        <div class="tpl-table-black-operation">
+                                            <a href="{:U('Invoice/invoiceDetail',array('id' => $v['id']))}">
+                                                <i class="am-icon-dedent"></i> 查看详情
+                                            </a>
+                                            <a href="javascript:void(0)" onclick="javascript:recycle({$v['id']}, '确认删除?!此步骤无法恢复!', true)" class="tpl-table-black-operation-del">
+                                                <i class="am-icon-trash"></i> 删除
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                </foreach>
                                 </tbody>
                             </table>
                         </div>
@@ -83,22 +87,22 @@
 
 <block name="script">
     <script type="text/javascript">
-        function changeDisabled(answer_id){
-            $.ajax({
-                url : "{:U('Question/changeAnswerDisabled')}",
-                type : "POST",
-                dataType : "json",
-                data : {
-                    "answer_id" : answer_id,
-                },
-                success : function(data){
-                    toastr(data.info);
-                    if(data.status == 1){
-                        setInterval('reload()', 2000);
-                    }
-                }
-            });
-        }
+        // function changeDisabled(answer_id){
+        //     $.ajax({
+        //         url : "{:U('Question/changeAnswerDisabled')}",
+        //         type : "POST",
+        //         dataType : "json",
+        //         data : {
+        //             "answer_id" : answer_id,
+        //         },
+        //         success : function(data){
+        //             toastr(data.info);
+        //             if(data.status == 1){
+        //                 setInterval('reload()', 2000);
+        //             }
+        //         }
+        //     });
+        // }
         function reload() {
             location.reload();
         }
