@@ -164,13 +164,14 @@
             });
         });
         function pay(){
-           var money  = parseInt($('.rechnum').text().replace(/[^0-9]/ig,""));
+           var recharge_money  = parseInt($('.rechnum').text().replace(/[^0-9]/ig,""));
            var type  = $('input[name=radio1]:checked').val();
-           if(money == 0){
+           if(recharge_money == 0){
                mui.alert('请选择或输入充值金额');
            }
            if(type == 1){
-               $.post("{:U('Pay/weiChatPay')}", {'money':money}, function (data) {
+               $.post("{:U('Pay/weiChatPay')}", {'recharge_money':recharge_money}, function (data) {
+                   alert(JSON.stringify(data));
                    if (data.status == 1) {
                        $("#codeImg").append('<img alt="扫描二扫码支付" src="'+ data.info+'"/>');
                    }

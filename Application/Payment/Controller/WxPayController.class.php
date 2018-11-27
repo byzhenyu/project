@@ -12,7 +12,6 @@ class WxPayController extends CommonController {
     public function wxNotify() {
         require_once("Plugins/WxPay/WxPay.php");
         $wxPay = new \WxPay();
-
         //验证是否是支付宝发送
         $flag = $wxPay->WxPayNotifyCheck();
         LL($flag,'./log1.txt');
