@@ -3,6 +3,7 @@ namespace Core\Controller;
 use Common\Controller\CommonController;
 /**
  * 结算
+ * TODO HR悬赏可开发票金额
  */
 class SettleController extends CommonController {
     public function __construct(){

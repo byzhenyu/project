@@ -18,11 +18,13 @@ class HrResumeModel extends Model {
      * @param $where
      * @param bool $field
      * @param string $order
+     * @param $onlyCount bool 是否仅统计数量
      * @return array
      */
-    public function getHrResumeList($where, $field = false, $order = 'h.add_time desc'){
+    public function getHrResumeList($where, $field = false, $order = 'h.add_time desc', $onlyCount = false){
         if(!$field) $field = 'h.id,h.resume_id,r.true_name,r.head_pic,h.add_time,r.age,r.sex';
         $number = $this->alias('h')->join('__RESUME__ as r on h.resume_id = r.id')->join('__USER__ as u on h.hr_user_id = u.user_id', 'LEFT')->where($where)->count();
+        if($onlyCount) return $number;
         $page = get_web_page($number);
         $list = $this->alias('h')->join('__RESUME__ as r on h.resume_id = r.id')->join('__USER__ as u on h.hr_user_id = u.user_id', 'LEFT')->field($field)->order($order)->limit($page['limit'])->where($where)->select();
         return array(

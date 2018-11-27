@@ -60,7 +60,8 @@ class RecruitApiController extends ApiUserCommonController{
             $this->apiReturn(V(0, '悬赏令牌小数点最多两位！'));
         }
         //判断余额
-        $data['last_token'] = $data['commission'] = yuan_to_fen($data['commission']);
+        $data['commission'] = yuan_to_fen($data['commission']);
+        $data['last_token'] = $data['commission'] * $data['recruit_num'];
         $data['get_resume_token'] = yuan_to_fen($getResumeMoney);
         $data['entry_token'] = $data['commission'] - $data['get_resume_token'];//入职获取令牌
         $user_money = D('Admin/User')->getUserField(array('user_id'=>UID),'user_money');
@@ -230,7 +231,9 @@ class RecruitApiController extends ApiUserCommonController{
         $recruit_resume_count = $recruit_resume_model->getRecruitResumeNum(array('recruit_id' => $recruit_id, 'is_open' => 1));
         $get_resume_money = C('GET_RESUME_MONEY');
         $recruit_get_money = yuan_to_fen($get_resume_money);
+        $pay_back = false;
         if($recruit_resume_count >= $recruit_num){
+            $pay_back = true;
             $user_money = $user_model->getUserField(array('user_id' => UID), 'user_money');
             if($user_money < $recruit_get_money) $this->apiReturn(V(0, '您的余额不足，请前往充值页面充值。'));
             M()->startTrans();
@@ -246,7 +249,7 @@ class RecruitApiController extends ApiUserCommonController{
             }
         }
         M()->startTrans();
-        $recruit_res = $recruit_model->recruitPayOff($recruit_resume_id);
+        $recruit_res = $recruit_model->recruitPayOff($recruit_resume_id, 1, $pay_back);
         $recruit_resume_res = M('RecruitResume')->where(array('id' => $recruit_resume_id))->setField('is_open', 1);
         if(false !== $recruit_res && false !== $recruit_resume_res){
             $recruitResume = $recruit_resume_model->getRecruitResumeField(array('id' => $recruit_resume_id), 'resume_id');
@@ -611,6 +614,9 @@ class RecruitApiController extends ApiUserCommonController{
         if(!$info) $this->apiReturn(V(0, '获取不到对应的悬赏信息！'));
         $create = $model->create($data, 4);
         if(false !== $create){
+            unset($data['recruit_num']);
+            unset($data['commission']);
+            unset($data['last_token']);
             $res = $model->where(array('id' => $data['id']))->save($data);
             if(false !== $res){
                 $this->apiReturn(V(1, '保存成功！'));

@@ -1579,7 +1579,7 @@ class UserCenterApiController extends ApiUserCommonController{
             $position = $recruit_info['position_id'];
             $where1 = array();
             if($job_area){
-                $where1[] = 'r.`job_area` = \''.$job_area.'\'';
+                $where1[] = 'r.`job_area` like \''.$job_area.'%\'';
             }
             $where2 = array();
             if($position){
@@ -1591,6 +1591,7 @@ class UserCenterApiController extends ApiUserCommonController{
             if(count($where1) == 0) $map = $position_string;
             if(count($where2) == 0) $map = $area_string;
             $where['_string'] = $map;
+            $where['r.is_incumbency'] = 1;//接受推荐[根据悬赏筛选人才列表]
         }
         $model = D('Admin/HrResume');
         $keywords = I('keywords', '', 'trim');

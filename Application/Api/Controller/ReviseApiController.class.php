@@ -4,6 +4,7 @@
  */
 namespace Api\Controller;
 use Common\Controller\ApiUserCommonController;
+use Think\Verify;
 
 class ReviseApiController extends ApiUserCommonController{
 
@@ -16,8 +17,10 @@ class ReviseApiController extends ApiUserCommonController{
         $user_model = D('Admin/User');
         $incumbency = I('incumbency', 0, 'intval');
         $save = array('is_incumbency' => $incumbency);
-        $res = $user_model->where(array('user_id' => UID))->save($save);
+        $user_where = array('user_id' => UID);
+        $res = $user_model->where($user_where)->save($save);
         if(false !== $res){
+            D('Admin/Resume')->saveResumeData($user_where, $save);
             $this->apiReturn(V(1, '求职状态更改成功！'));
         }
         else{
@@ -118,8 +121,11 @@ class ReviseApiController extends ApiUserCommonController{
      */
     public function getHrCompanyInfo(){
         $user_id = UID;
+        $where = array('user_id' => $user_id);
+        $id = I('id', 0, 'intval');
+        if($id) $where = array('id' => $id);
         $array = array('id','user_id', 'company_logo', 'company_name','company_size','company_nature','company_mobile','company_email','company_industry','company_address');
-        $info = D('Admin/CompanyInfo')->getCompanyInfoInfo(array('user_id' => $user_id));
+        $info = D('Admin/CompanyInfo')->getCompanyInfoInfo($where);
         $address = explode(' ' ,$info['company_address']);
         if(count($address) > 0){
             $info['company_address_p'] = $address[0];
@@ -189,11 +195,167 @@ class ReviseApiController extends ApiUserCommonController{
      */
     public function getRecruitList(){
         $user_id = UID;
+        $user_model = D('Admin/User');
+        $user_type = $user_model->getUserField(array('user_id' => $user_id), 'user_type');
+        if($user_type == 1){
+            $list = $this->hrRecruitList();
+        }
+        else{
+            $list = $this->normalRecruitList();
+        }
+        $this->apiReturn(V(1, '悬赏列表', $list));
     }
 
-    private function hrRecruitList(){}
+    /**
+     * @desc 求职者投递简历
+     * @TODO 自己投递简历  虚拟号问题
+     */
+    public function delivery(){
+        $user_id = UID;
+        $recruit_id = I('recruit_id', 0, 'intval');
+        $recruit_model = D('Admin/Recruit');
+        $resume_model = D('Admin/Resume');
+        $user_where = array('user_id' => $user_id);
+        $resume_info = $resume_model->getResumeInfo($user_where);
+        if(!$resume_info) $this->apiReturn(V(0, '请先完善简历信息！'));
+        if(!check_is_auth($user_id)){
+            $string = auth_string();
+            $error = '请先通过实名认证！';
+            if(false !== $string) $error = $string;
+            $this->apiReturn(V(0, $error));
+        }
+        $recruit_where = array('id' => $recruit_id);
+        $recruit_info = $recruit_model->getRecruitInfo($recruit_where);
+        if(!$recruit_info) $this->apiReturn(V(0, '悬赏信息获取失败！'));
+        if($recruit_info['is_post'] == 2) $this->apiReturn(V(0, '该悬赏职位已招满！'));
+        if($recruit_info['position_id'] != $resume_info['position_id']) $this->apiReturn(V(0, '求职岗位与悬赏不匹配！'));
+        $recruit_area = explode(',', $recruit_info['job_area']);
+        $resume_area = explode(',', $resume_info['job_area']);
+        if($recruit_area[0] != $resume_area[0] || $recruit_area[1] != $resume_area[1]) $this->apiReturn(V(0, '求职地区与悬赏不匹配！'));
+        $recruitResumeModel = D('Admin/RecruitResume');
+        $valid_info = $recruitResumeModel->getRecruitResumeInfo(array('recruit_id' => $recruit_id, 'resume_id' => $resume_info['id'], 'hr_user_id' => $user_id));
+        if($valid_info) $this->apiReturn(V(0, '该悬赏你已投递！'));
+        $data = array('recruit_id' => $recruit_id, 'recruit_hr_uid' => $recruit_info['hr_user_id'], 'resume_id' => $resume_info['id'], 'hr_user_id' => $user_id, 'is_open' => 1);
+        $res = $recruitResumeModel->add($data);
+        if($res){
+            $this->apiReturn(V(1, '投递成功！'));
+        }
+        else{
+            $this->apiReturn(V(0, $recruitResumeModel->getError()));
+        }
+    }
 
-    private function normalRecruitList(){}
+    /**
+     * @desc 求职者投递历史
+     */
+    public function deliveryHistory(){
+        $user_id = UID;
+        $model = D('Admin/RecruitResume');
+        $where = array('r.hr_user_id' => $user_id);
+        $field = 'r.add_time,c.company_name,c.id';
+        $list = $model->getDeliveryHistory($where, $field);
+        foreach($list['info'] as &$val){
+            $val['add_time'] = time_format($val['add_time'], 'Y-m-d H');
+        }
+        unset($val);
+        $this->apiReturn(V(1, '投递历史', $list['info']));
+    }
+
+    /**
+     * @desc HR悬赏列表
+     * @return mixed
+     */
+    private function hrRecruitList(){
+        $keywords = I('keywords', '', 'trim');
+        $city_name = I('city_name', '', 'trim');
+        $user_id = UID;
+        $tags = user_tags($user_id);
+        $map = '';
+        if(count($tags) > 0){
+            $where1 = array();
+            foreach($tags as &$val){
+                $val['job_area'] = rtrim($val['job_area'], ',');
+                if(false !== strpos($val['job_position'], '|')){
+                    $pos = 'in ('.str_replace('|', ',', $val['job_position']).')';
+                }
+                else{
+                    $pos = '= '.$val['job_position'];
+                }
+                $where1[] = ' (r.`job_area` like \''.$val['job_area'].'%\' and r.`position_id` '.$pos.') ';
+            }
+            unset($val);
+            $map = implode(' or ', $where1);
+        }
+        if($map) $where['_string'] = $map;
+        if(!$map) $where['_string'] = 'r.id > 0';//无符合条件悬赏展示所有的悬赏
+        if($keywords) $where['r.position_name'] = array('like', '%'.$keywords.'%');
+        if($city_name) $where['r.job_area'] = array('like', '%'.$city_name.'%');
+        $where['r.hr_user_id'] = array('neq', $user_id);
+        $where['r.is_post'] = array('lt', 2);
+        $where['r.status'] = 1;
+
+        $recruit_model = D('Admin/Recruit');
+        $position_model = D('Admin/Position');
+        $hr_resume_model = D('Admin/HrResume');
+
+        $list = $recruit_model->getHrRecruitList($where,'r.id, r.position_name, r.recruit_num, r.commission, r.add_time, r.position_id,c.company_name,r.job_area');
+        foreach($list['info'] as &$val){
+            $t_parent_id = $position_model->getPositionField(array('id' => $val['position_id']), 'parent_id');
+            $position_name = $position_model->getPositionField(array('id' => $t_parent_id), 'position_name');
+            $val['position_name'] = $position_name .'-'. $val['position_name'];
+            $val['add_time'] = time_format($val['add_time'], 'Y-m-d');
+            $val['commission'] = fen_to_yuan($val['commission']);
+
+            $hr_resume_where = array('h.hr_user_id' => $user_id, 'r.is_incumbency' => 1);//接受推荐
+            $hr_resume_where['r.position_id'] = $val['position_id'];
+            $hr_resume_where['r.job_area'] = array('like', $val['job_area'].'%');
+            $val['resume_matching'] = $hr_resume_model->getHrResumeList($hr_resume_where, 'h.id', 'h.add_time desc', true);
+        }
+        unset($val);
+        return $list['info'];
+    }
+
+    /**
+     * @desc 求职者悬赏列表
+     * @extra keywords string 悬赏检索关键字
+     */
+    private function normalRecruitList(){
+        $user_id = UID;
+        $recruit_model = D('Admin/Recruit');
+        $position_model = D('Admin/Position');
+        $resume_model = D('Admin/Resume');
+        $user_where = array('user_id' => $user_id);
+        $resume_info = $resume_model->getResumeInfo($user_where);
+        if(!$resume_info) $this->apiReturn(V(0, '请先完善简历信息！'));
+        if(!check_is_auth($user_id)){
+            $string = auth_string();
+            $error = '请先通过实名认证！';
+            if(false !== $string) $error = $string;
+            $this->apiReturn(V(0, $error));
+        }
+        $keywords = I('keywords', '', 'trim');//首页悬赏筛选
+        $user_job_area = $resume_info['job_area'];
+        $job_area = explode(',', $user_job_area);
+        $_job_area_where = $job_area[0].','.$job_area[1];
+        $where = array();
+        $where['_string'] = 'r.`job_area` like \''.$_job_area_where.'%\' and r.`position_id` = '.$resume_info['position_id'];
+        $where['r.hr_user_id'] = array('neq', $user_id);
+        $where['r.is_post'] = array('lt', 2);
+        $where['r.status'] = 1;
+        if($keywords) $where['r.position_name'] = array('like', '%'.$keywords.'%');
+        $list = $recruit_model->getHrRecruitList($where,'r.id, r.position_name, r.recruit_num, r.commission, r.add_time, r.position_id,c.company_name,r.job_area');
+        foreach($list['info'] as &$val){
+            $t_parent_id = $position_model->getPositionField(array('id' => $val['position_id']), 'parent_id');
+            $position_name = $position_model->getPositionField(array('id' => $t_parent_id), 'position_name');
+            $val['position_name'] = $position_name .'-'. $val['position_name'];
+            $val['add_time'] = time_format($val['add_time'], 'Y-m-d');
+            $val['commission'] = fen_to_yuan($val['commission']);
+
+            $val['resume_matching'] = 0;
+        }
+        unset($val);
+        return $list['info'];
+    }
 
     /**
      * @desc 每日任务列表

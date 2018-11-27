@@ -32,7 +32,7 @@ class RecruitController extends HrCommonController {
             if ($checkCompanyInfo == 0) {
                 $this->ajaxReturn(V(0, '请先完善个人资料'));
             }
-            $recruit_resume_model = D('Admin/RecruitResume');
+            //$recruit_resume_model = D('Admin/RecruitResume');
             $position_name = M('Position')->where(array('id' => $data['position_id']))->getField('position_name');
             if(!$position_name) $this->ajaxReturn(V(0, '获取不到职位名称！'));
             $getResumeMoney = C('GET_RESUME_MONEY');

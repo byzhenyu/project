@@ -44,23 +44,25 @@ class UserModel extends Model{
 
     /**
      * 获取会员列表或获取指定查询的会员信息
-     * @param  String $mobile [查询时所使用的手机号]
+     * @param $where
+     * @param bool $field
+     * @param string $sort
      * @return array
      */
     public function getUsersList($where, $field = false, $sort = 'register_time desc'){
         if(!$field) $field = 'u.*,a.audit_status';
         $where['status'] = array('eq', 1);
-
         $count = $this->where($where)->alias('u')->join('__USER_AUTH__ as a on u.user_id = a.user_id', 'LEFT')->count();
         $usersData = get_page($count, 15);
-        $userslist = $this->field($field)->alias('u')->join('__USER_AUTH__ as a on u.user_id = a.user_id', 'LEFT')->where($where)->limit($usersData['limit'])->order($sort)->select();
-        foreach($userslist as &$val){
+        $usersList = $this->field($field)->alias('u')->join('__USER_AUTH__ as a on u.user_id = a.user_id', 'LEFT')->where($where)->limit($usersData['limit'])->order($sort)->select();
+        foreach($usersList as &$val){
             if(($val['weixin'] || $val['qq']) && !$val['mobile']) $val['mobile'] = '三方登录未绑定';
             if($val['audit_status'] == '') $val['is_auth'] = 2;
         }
+        unset($val);
         return array(
-            'userslist'=>$userslist,
-            'page'=>$usersData['page']
+            'userslist' => $usersList,
+            'page' => $usersData['page']
         );
     }
 
@@ -304,9 +306,8 @@ class UserModel extends Model{
     }
 
     /**
-     * 发布悬赏资金变动
-     * @param array $where
-     * @param string $money 变动金额（分）
+     * @param $money
+     * @return array
      */
     public function recruitUserMoney($money) {
         $userModel = M('User');
@@ -332,9 +333,9 @@ class UserModel extends Model{
     }
 
     /**
-     * 查看简历和入职资金变动
-     * @param $recruit_resume_id 悬赏简历表信息id
-     * @param $type 1 查看简历 2 入职
+     * @param $recruit_resume_id
+     * @param int $type
+     * @return array
      */
     public function changeUserMoney($recruit_resume_id,$type = 1) {
         //悬赏简历表信息
