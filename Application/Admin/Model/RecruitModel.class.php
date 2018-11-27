@@ -39,7 +39,7 @@ class RecruitModel extends Model {
     /**
      * 获取悬赏列表
      * @param $where array 条件
-     * @param $field string 字段
+     * @param $field bool 字段
      * @param $isPage bool 是否返回分页数据
      * @param $order string 排序顺序
      * @return mixed
@@ -207,7 +207,7 @@ class RecruitModel extends Model {
      * @desc 获取简历联系方式/简历入职
      * @param $recruit_resume_id int 悬赏推荐表主键id
      * @param $operate_type int 1、获取简历联系方式 2、入职获取简历
-     * @param $is_pay_back bool 是否属于补缴下载简历
+     * @param $is_pay_back bool 是否属于补缴下载简历 true :是 false: 不是
      * @return bool
      */
     public function recruitPayOff($recruit_resume_id, $operate_type = 1, $is_pay_back = false){
