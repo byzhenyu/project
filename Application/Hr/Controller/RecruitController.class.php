@@ -13,6 +13,7 @@ class RecruitController extends HrCommonController {
         $hr_id = HR_ID;
         $model = D('Hr/Recruit');
         $user_model = D('Hr/User');
+        $cacheModel = D('Admin/RecruitCache');
         $recruit_id = I('recruit_id', 0, 'intval');
         $recruit_info = $model->getRecruitInfo(array('id' => $recruit_id));
         if(IS_POST){
@@ -71,7 +72,9 @@ class RecruitController extends HrCommonController {
             }
             else{
                 if (($data['commission'] * $data['recruit_num']) > $user_money) {
-                    $this->ajaxReturn(V(0, '悄悄的告诉你，你的令牌不足喽。马上充值令牌，快速发布悬赏。'));
+                    //余额不足，跳转充值页，保存之前的数据
+                    $cacheModel->add($data);
+                    $this->ajaxReturn(V(2, '悄悄的告诉你，你的令牌不足喽。马上充值令牌，快速发布悬赏。'));
                 }
                 $trans = M();
                 if ($model->create($data, 1) ===false) {
@@ -97,6 +100,8 @@ class RecruitController extends HrCommonController {
                 $this->ajaxReturn(V(1,'发布成功', $newId));
             }
         }
+        $cache_info = $cacheModel->getRecruitCacheInfo(array('hr_user_id' => HR_ID));
+        if(!$recruit_info) $recruit_info = $cache_info;
         $recruit_info['position_parent'] = 0;
         if(!$recruit_info['position_id']) $recruit_info['position_id'] = 0;
         if($recruit_info['position_id']) $recruit_info['position_parent'] = D('Admin/Position')->getPositionField(array('id' => $recruit_info['position_id']), 'parent_id');

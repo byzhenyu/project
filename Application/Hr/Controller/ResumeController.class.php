@@ -65,6 +65,8 @@ class ResumeController extends HrCommonController {
         $userModel = D('Admin/User');
         $resume_id = I('resume_id', 0, 'intval');
         $data = I('post.');
+        $resume_where = array('id' => $resume_id);
+        $info = $model->getResumeInfo($resume_where);
         if(IS_POST){
             $data['user_id'] = HR_ID;
             $data['age'] = strtotime($data['age']);
@@ -78,8 +80,6 @@ class ResumeController extends HrCommonController {
             if($resume_id){
                 $data['id'] = $resume_id;
                 $create = $model->create($data, 1);
-                //$check_res = D('Admin/HrResume')->checkHrResumeMobile($data['mobile'], $resume_id, HR_ID);
-                //if($check_res) $this->ajaxReturn(V(0, '该手机号已存在！'));
                 if(false !== $create){
                     $user_info = $userModel->getUserInfo(array('mobile' => $data['mobile']));
                     if($user_info) $this->ajaxReturn(V(0, '该手机号已在C端注册，请前往小程序认证获得！'));
@@ -87,9 +87,12 @@ class ResumeController extends HrCommonController {
                     if(false !== $res){
                         header('Content-Type:application/json; charset=utf-8');
                         echo json_encode(V(1, '上传成功，等待后台审核！', $resume_id));
-                        fastcgi_finish_request();
-                        set_time_limit(0);
-                        refreshUserTags(false, $resume_id, array('job_position' => $data['position_id'], 'job_area' => $data['job_area']));
+                        //审核通过，更新HR tags标签
+                        if($info['is_audit'] == 1){
+                            fastcgi_finish_request();
+                            set_time_limit(0);
+                            refreshUserTags(false, $resume_id, array('job_position' => $data['position_id'], 'job_area' => $data['job_area']));
+                        }
                     }
                     else{
                         $this->ajaxReturn(V(0, $model->getError()));
@@ -103,8 +106,6 @@ class ResumeController extends HrCommonController {
                 M()->startTrans();
                 $data['is_audit'] = 0;
                 $create = $model->create($data, 2);
-                //$check_res = D('Admin/HrResume')->checkHrResumeMobile($data['mobile'], false, HR_ID);
-                //if($check_res) $this->ajaxReturn(V(0, '该手机号已存在！'));
                 if(false !== $create){
                     $str = '保存成功，等待后台审核！';
                     $user_info = $userModel->getUserInfo(array('mobile' => $data['mobile']));
@@ -112,40 +113,12 @@ class ResumeController extends HrCommonController {
                     if(!$this->firstValid()) $str = '简历保存成功，请前往小程序推荐！';
                     $res = $model->add($data);
                     if(false !== $res){
-                        $tag_recommend = I('post.recommend');
-                        if($tag_recommend) $tag_recommend = implode(',', $tag_recommend);
-                        $hr_data = array('resume_id' => $res, 'hr_user_id' => HR_ID, 'recommend_label' => $tag_recommend);
-                        $hrModel = D('Admin/HrResume');
-                        $hr_create = $hrModel->create($hr_data, 1);
-                        if(false !== $hr_create){
-                            $hr_res = $hrModel->add();
-                            if(false !== $hr_res){
-                                $task_id = 3;
-                                add_task_log(HR_ID, $task_id);
-                                refreshUserTags(HR_ID, $res);
-                                M()->commit();
-                                //$this->addResumeWorkEducation($res);
-                                $this->ajaxReturn(V(1, $str, $res));
-                            }
-                            else{
-                                M()->rollback();
-                                $this->ajaxReturn(V(0, $hrModel->getError()));
-                            }
-                        }
-                        else{
-                            M()->rollback();
-                            $this->ajaxReturn(V(0, $hrModel->getError()));
-                        }
-                    }
-                    else{
-                        M()->rollback();
-                        $this->ajaxReturn(V(0, $model->getError()));
+                        M()->commit();
+                        $this->ajaxReturn(V(1, $str, $res));
                     }
                 }
-                else{
-                    M()->rollback();
-                    $this->ajaxReturn(V(0, $model->getError()));
-                }
+                M()->rollback();
+                $this->ajaxReturn(V(0, $model->getError()));
             }
         }
         else{
@@ -174,9 +147,7 @@ class ResumeController extends HrCommonController {
             }
             unset($val);
             $area = D('Admin/Region')->getRegionList(array('level' => 2), 'id,name');
-            $resume_where = array('id' => $resume_id);
             $edu_list = D('Admin/Education')->getEducationList(array('id' => array('gt', 0)));
-            $info = $model->getResumeInfo($resume_where);
             if(!$info['age']) $info['age'] = time();
             if($info['address']){
                 $address = explode(' ' ,$info['address']);
