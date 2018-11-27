@@ -12,8 +12,8 @@ class WxPayController extends CommonController {
     public function wxNotify() {
         require_once("Plugins/WxPay/WxPay.php");
         $wxPay = new \WxPay();
-        LL($_POST,'./log1.txt');
-        //验证是否是微信发送
+
+        //验证是否是支付宝发送
         $flag = $wxPay->WxPayNotifyCheck();
         LL($flag,'./log1.txt');
         //验证成功
@@ -27,7 +27,6 @@ class WxPayController extends CommonController {
                 $trade_no_array = explode('-', $out_trade_no);
                 $user_id = $trade_no_array[1];
                 $result = D('Common/PayRecharge')->paySuccess(fen_to_yuan($total_amount), $user_id, $trade_no, $pay_bank);
-                
                 if ($result['status'] == 1) {
                     $r_arr['return_code'] = 'SUCCESS';
                     $r_arr['return_msg'] = '回调成功';

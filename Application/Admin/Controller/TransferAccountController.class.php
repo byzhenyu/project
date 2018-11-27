@@ -39,7 +39,7 @@ class TransferAccountController extends CommonController {
      */
     public function accountDetail(){
         $where['t.id'] = I('id', 0, 'intval');
-        $field = 'u.nickname, u.head_pic, u.user_money, t.*, s.bank_name, s.bank_no, s.bank_holder, s.bank_opening';
+        $field = 'u.nickname, u.mobile,u.head_pic, u.user_money, t.*, s.bank_name, s.bank_no, s.bank_holder, s.bank_opening';
         $AccountsInfo =  $this->TransferAccount->getAccounts($where, $field);
         if(IS_POST){
             $data = I('post.');
@@ -54,11 +54,15 @@ class TransferAccountController extends CommonController {
                 $trade_no  = 'Y' . date('YmdHis', time()) . '-' . $AccountsInfo['list'][0]['user_id']; //订单号
                 $result = D('Common/PayRecharge')->paySuccess(fen_to_yuan($AccountsInfo['list'][0]['transfer_amount']), $AccountsInfo['list'][0]['user_id'], $trade_no, 3);
                 if ($result['status'] == 1) {
-                    $this->TransferAccount->where(array('id' => $data['id']))->save($data);
-                    $this->ajaxReturn(V(1, '操作成功'));
+                    $res =  $this->TransferAccount->where(array('id' => $data['id']))->save($data);
+                    if($res){
+                        $messageTemplate = str_replace( "#money#", fen_to_yuan($AccountsInfo['list'][0]['transfer_amount']),C('SHAN_MONEY_AUDIT'));
+                        sendMessageRequest('17660388896', $messageTemplate);
+                        $this->ajaxReturn(V(1, '操作成功'));
+                    }
                 }
             }
-            $this->ajaxReturn(V(0, $this->Invoice->getError()));
+            $this->ajaxReturn(V(0, $this->TransferAccount->getError()));
         }
         $this->info = $AccountsInfo['list'][0];
         $this->display();
@@ -74,5 +78,9 @@ class TransferAccountController extends CommonController {
     }
     public function del(){
         $this->_del('TransferAccount', 'id');
+    }
+    public function pdf(){
+
+        $this->TransferAccount->pdf('这是一个PDF','哈哈哈哈哈哈');
     }
 }
