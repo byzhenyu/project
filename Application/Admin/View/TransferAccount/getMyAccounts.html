@@ -62,6 +62,11 @@
                                         <td class="align-center">{:time_format($v[add_time])}</td>
                                         <td class="f-14 align-center">
                                             <div class="tpl-table-black-operation">
+                                                <if condition="$v[audit_status]  eq 1">
+                                                    <a href="{:U('Admin/TransferAccount/pdf',array('id' => $v['id']))}">
+                                                        <i class="am-icon-dedent"></i> 查看合同
+                                                    </a>
+                                                </if>
                                                 <a href="{:U('TransferAccount/accountDetail',array('id' => $v['id']))}">
                                                     <i class="am-icon-dedent"></i> 查看详情
                                                 </a>

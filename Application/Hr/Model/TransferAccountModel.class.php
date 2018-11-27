@@ -33,13 +33,15 @@ class TransferAccountModel extends Model{
     public function getAccounts($where = [], $field = null, $sort = 'transfer_time DESC'){
           $count = $this->alias('t')
                    ->join('__USER__ as u on u.user_id = t.user_id', 'LEFT')
-                   ->join('__SYS_BANK__ as s on s.id = t.bank_id', 'LEFT')
+                   ->join('__SYS_BANK__ as s on s.id = t.bank_id')
+                  ->join('__COMPANY_INFO__ as c on c.user_id = t.user_id')
                    ->where($where)
                    ->count();
           $page = get_page($count);
           $list = $this->alias('t')
                   ->join('__USER__ as u on u.user_id = t.user_id', 'LEFT')
-                  ->join('__SYS_BANK__ as s on s.id = t.bank_id', 'LEFT')
+                  ->join('__SYS_BANK__ as s on s.id = t.bank_id')
+                  ->join('__COMPANY_INFO__ as c on c.user_id = t.user_id')
                   ->field($field)
                   ->limit($page['limit'])
                   ->order($sort)
