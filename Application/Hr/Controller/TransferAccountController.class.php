@@ -74,4 +74,10 @@ class TransferAccountController extends HrCommonController{
     public function del(){
         $this->_del('TransferAccount', 'id');
     }
+    public function pdf(){
+        $where['t.id'] = I('id', 0, 'intval');
+        $field = 'u.nickname, u.mobile,u.head_pic, u.user_money, c.company_name, c.company_mobile, c.company_email,c.company_address, t.*, s.bank_name, s.bank_no, s.bank_holder, s.bank_opening';
+        $AccountsInfo =  $this->TransferAccount->getAccounts($where, $field);
+        $this->TransferAccount->pdf('这是一个PDF','哈哈哈哈哈哈',$AccountsInfo['list'][0]);
+    }
 }
