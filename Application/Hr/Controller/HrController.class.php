@@ -87,11 +87,48 @@ class HrController extends HrCommonController {
     }
 
     public function uploadImg(){
-        $this->_uploadImg();
+        $this->companyUpload();
     }
 
     public function delFile(){
         $this->_delFile();
+    }
+
+    public function companyUpload(){
+        $config = array(
+            'rootPath' => '.'.C('UPLOAD_PICTURE_ROOT').'/Company/',
+            'savePath' => HR_ID.'/',
+            'maxSize' => C('UPLOAD_SIZE'),
+            'exts' => 'jpg,jpeg,png,gif',
+        );
+        $Upload = new \Think\Upload($config);
+        $info = $Upload->upload();
+
+        if ($info === false) {
+            $this->ajaxReturn(array('status' => 0, 'msg' => $Upload->getError()));
+        } else {
+            vendor('Alioss.autoload');
+            $config=C('AliOss');
+
+            $oss=new \OSS\OssClient($config['accessKeyId'],$config['accessKeySecret'],$config['endpoint']);
+            $bucket=$config['bucket'];
+
+            // 返回成功信息
+            foreach($info as $file){
+                $path = '.'.C('UPLOAD_PICTURE_ROOT').'/Company/'.$file['savepath'].$file['savename'];
+
+                $oss_path = trim($path, './');
+                $local_path = trim($path, '.');
+                $oss->uploadFile($bucket,$oss_path,$path);
+                unlink('.'.C('UPLOAD_PICTURE_ROOT').'/Company/'.$file['savepath'].$file['savename']);
+                $data['status'] = 1;
+                $data['src'] ='http://'.$bucket.'.'.$config['endpoint'].'/'.$oss_path;
+                $data['name'] =$local_path;
+
+            }
+
+            $this->ajaxReturn($data);
+        }
     }
 
 }
