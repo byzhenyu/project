@@ -125,13 +125,13 @@
                                         <input type="file">
                                     </div>
                                     <div class="upload-img-box-ids">
-                                        <notempty name="goods_info[img_list]">
-                                            <foreach name="goods_info[img_list]" item="v">
+                                        <notempty name="info[img_list]">
+                                            <foreach name="info[img_list]" item="v">
                                                 <div class="upload-item">
                                                     <img src="{$v.image_path}" style="max-width: 150px;">
                                                     <div class="file-del" onclick="delPicIds(this)" style="color:red;cursor:pointer">删除</div>
-                                                    <input type="hidden" name="goods_img_ids[]" value="{$v.image_path}">
-                                                    <input type="hidden" name="local_goods_img_ids[]" value="{$v.local_img_path}">
+                                                    <input type="hidden" name="company_img_ids[]" value="{$v.image_path}">
+                                                    <input type="hidden" name="local_company_img_ids[]" value="{$v.local_img_path}">
                                                 </div>
                                             </foreach>
                                         </notempty>
@@ -163,15 +163,10 @@
     <script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
     <script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.all.min.js"></script>
     <script type="text/javascript" src="__STATIC__/js/address.js"></script>
-
     <script type="text/javascript" src="__PUBLIC__/fileupload/js/vendor/jquery.ui.widget.js"></script>
     <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.iframe-transport.js"></script>
     <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.fileupload.js"></script>
-    <script type="text/javascript" src="__STATIC__/js/goods_class.js?v=4.3"></script>
     <script type="text/javascript" src="__STATIC__/js/goods.js?v=4.3"></script>
-    <script type="text/javascript">
-        GOODS_IMG_UPLAOD_URL = "{:U('Hr/Hr/companyUpload')}";
-    </script>
     <script type="text/javascript">
         var ue = UE.getEditor('content1', {
             autoHeightEnabled: false,

@@ -46,6 +46,7 @@ class HrController extends HrCommonController {
         $company_info = $company_model->getCompanyInfoInfo($company_where);
         if(IS_POST){
             $data = I('post.');
+            $data['company_pic'] = implode(',', $data['company_img_ids']);
             if($company_info){
                 $data['company_address'] = $data['province'].','.$data['city'].','.$data['county'].' '.$data['company_address'];
                 $create = $company_model->create($data, 2);
@@ -67,6 +68,13 @@ class HrController extends HrCommonController {
             }
             $this->ajaxReturn(V(0, $company_model->getError()));
         }
+        $company_pic = explode(',', $company_info['company_pic']);
+        $pic_arr = array();
+        foreach($company_pic as &$val){
+            $pic_arr[] = array('image_path' => $val);
+        }
+        unset($val);
+        $company_info['img_list'] = $pic_arr;
         $address = explode(' ' ,$company_info['company_address']);
         $company_info['company_address_p'] = $address[0];
         unset($address[0]);
