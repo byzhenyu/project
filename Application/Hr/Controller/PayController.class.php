@@ -21,7 +21,7 @@ class PayController extends HrCommonController {
     * @param
     * @return mixed
     */
-    public function pay(){
+    public function Pay(){
            $bankList = D('Admin/SysBank')->select();
            $userInfo = $this->User->field('head_pic,nickname,user_money')->where(array('user_id' => HR_ID))->find();
            $this->userInfo = $userInfo;
