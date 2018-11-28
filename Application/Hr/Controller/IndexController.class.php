@@ -25,6 +25,34 @@ class IndexController extends HrCommonController {
         $user_id = HR_ID;
         $recruit_model = D('Admin/Recruit');
         $tags = user_tags($user_id);
+
+        $user_model = D('Admin/User');
+        $hr_resume = D('Admin/HrResume');
+        $accountLogModel = D('Admin/AccountLog');
+        $company_model = D('Admin/CompanyInfo');
+        $company_info = $company_model->getCompanyInfoInfo(array('user_id' => $user_id));
+        $userRanking = $user_model->getUserRankingInfo($user_id);
+        $hrResumeRanking = $hr_resume->getHrResumeRankingInfo($user_id);
+        $userFields = $user_model->getUserInfo(array('user_id' => $user_id), 'head_pic,nickname,user_name');
+        if($userFields['head_pic']) {
+            $head_pic = $userFields['head_pic'];
+        } else {
+            $head_pic = 'https://shanjian.oss-cn-hangzhou.aliyuncs.com/nopic.png';
+        };
+        if(!empty($userFields['nickname'])) {
+            $nickname = $userFields['nickname'];
+        } else {
+            $nickname = $userFields['user_name'];
+        }
+        $resume_number = $hr_resume->getHrResumeCount(array('hr_user_id' => $user_id));
+        if(!$hrResumeRanking) $hrResumeRanking = '999+';
+        $_time = time_list(3);
+        $start_time = $_time['start'];
+        $end_time = $_time['end'];
+        $account_where = array('change_type' => array('in', array(2, 3, 6)), 'change_time' => array('between', array($start_time, $end_time)));
+        $sum_money = $accountLogModel->getAccountLogMoneySum($account_where);
+        $return_array = array('user_ranking' => $userRanking, 'resume_ranking' => $hrResumeRanking,'head_pic'=>$head_pic,'nickname'=>$nickname, 'resume_number' => $resume_number, 'month_amount' => fen_to_yuan($sum_money));
+
         $map = '';
         if(count($tags) > 0){
             $where1 = array();
@@ -51,6 +79,8 @@ class IndexController extends HrCommonController {
         $where['status'] = 1;
         $where['is_post'] = array('lt', 2);
         $list = $recruit_model->getRecruitList($where,'id, position_name, recruit_num, commission, add_time, job_area, position_name, welfare');
+        $this->company_info = $company_info;
+        $this->ranking = $return_array;
         $this->info = $list['info'];
         $this->page = $list['page'];
         $this->display();

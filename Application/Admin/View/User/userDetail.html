@@ -100,6 +100,14 @@
 										<img src="{$info['hand_pic']}" alt="手持身份证照片" width="100px">
 									</td>
 								</tr>
+								<if condition="$userInfo.user_type eq 1">
+									<tr>
+										<td><div align="right"><strong>营业执照：</strong></div></td>
+										<td>
+											<img src="{$info['business_license']}" alt="营业执照" width="100px">
+										</td>
+									</tr>
+								</if>
 								<tr>
 									<td><div align="right"><strong>添加时间：</strong></div></td>
 									<td>{:time_format($info['add_time'])}</td>
@@ -130,5 +138,11 @@
 	</div>
 </block>
 <block name="script">
-
+	<script type="text/javascript">
+        $(function(){
+            $('img').click(function(){
+                window.open($(this).attr('src'));
+            });
+        });
+	</script>
 </block>
