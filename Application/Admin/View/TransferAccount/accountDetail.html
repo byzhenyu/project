@@ -57,7 +57,7 @@
                         </table>
                         <table width="100%" class="am-table am-table-bordered">
                             <thead>
-                            <tr><th colspan="4">用户验证信息</th></tr>
+                            <tr><th colspan="4">用户信息</th></tr>
                             </thead>
                             <tbody>
                             <tr>
@@ -71,6 +71,22 @@
                             <tr>
                                 <td><div align="right"><strong>用户余额：</strong></div></td>
                                 <td>{:fen_to_yuan($info['user_money'])}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>公司名称：</strong></div></td>
+                                <td>{$info['company_name']}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>公司电话：</strong></div></td>
+                                <td>{$info['company_mobile']}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>公司邮箱：</strong></div></td>
+                                <td>{$info['company_email']}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>公司地址：</strong></div></td>
+                                <td>{$info['company_address']}</td>
                             </tr>
                             <tr>
                                 <td><div align="right"><strong>转账时间：</strong></div></td>
