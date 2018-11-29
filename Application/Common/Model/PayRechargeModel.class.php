@@ -11,10 +11,11 @@ class PayRechargeModel extends Model{
      * 支付/微信充值
      * @param $money string 支付金额
      * @param $user_id int 会员id
-     * @param $out_trade_no string 支付流水号
+     * @param $trade_no string 支付流水号
+     * @param $out_trade_no string 订单号
      * @return array
      */
-    public function paySuccess($money, $user_id, $out_trade_no, $pay_bank){
+    public function paySuccess($money, $user_id, $trade_no, $pay_bank, $out_trade_no){
         M()->startTrans(); // 开启事务
         //增加店铺保证金 并改完已缴纳保证金
         $money = yuan_to_fen($money);
@@ -25,12 +26,12 @@ class PayRechargeModel extends Model{
             return V(0, '充值失败');
         }
         //充值记录
-        $recharge_log = $this->user_account_log($user_id, $money, $pay_bank, $out_trade_no);
+        $recharge_log = $this->user_account_log($user_id, $money, $pay_bank, $trade_no, $out_trade_no);
         if ($recharge_log === false) {
             M()->rollback(); // 事务回滚
             return V(0, '充值失败');
         }
-        $account_log = account_log($user_id, $money, 0, '充值');
+        $account_log = account_log($user_id, $money, 0, '充值' , $out_trade_no);
         if ($account_log === false) {
             M()->rollback(); // 事务回滚
             return V(0, '充值失败');
@@ -48,12 +49,13 @@ class PayRechargeModel extends Model{
      * @param $trade_no string 支付流水号
      * @return array
      */
-    private function user_account_log($user_id, $money, $pay_bank, $trade_no = '') {
+    private function user_account_log($user_id, $money, $pay_bank, $trade_no = '', $out_trade_no = '') {
         $data['user_id'] = $user_id;
         $data['type'] = 0;
         $data['money'] = $money;
         $data['payment'] = $pay_bank;
         $data['trade_no'] = $trade_no;
+        $data['order_sn'] = $out_trade_no;
         $data['return_state'] = 1;
         $data['add_time'] = NOW_TIME;
         return $this->add($data);
