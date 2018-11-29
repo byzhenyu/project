@@ -28,9 +28,9 @@ class WxPayController extends CommonController {
                 $user_id = $trade_no_array[1];
                 $type = substr($out_trade_no, 0 , 1);
                 if($type == 'W'){
-                    $pay_bank = 1;
-                }else{
                     $pay_bank = 2;
+                }else{
+                    $pay_bank = 1;
                 }
                 $result = D('Common/PayRecharge')->paySuccess(fen_to_yuan($total_amount), $user_id, $trade_no, $pay_bank);
                 if ($result['status'] == 1) {
