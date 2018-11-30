@@ -52,7 +52,7 @@ class TransferAccountController extends CommonController {
                 }
             }else{
                 $trade_no  = 'Y' . date('YmdHis', time()) . '-' . $AccountsInfo['list'][0]['user_id']; //订单号
-                $result = D('Common/PayRecharge')->paySuccess(fen_to_yuan($AccountsInfo['list'][0]['transfer_amount']), $AccountsInfo['list'][0]['user_id'], $trade_no, 3);
+                $result = D('Common/PayRecharge')->paySuccess(fen_to_yuan($AccountsInfo['list'][0]['transfer_amount']), $AccountsInfo['list'][0]['user_id'], $trade_no, 3 ,$trade_no);
                 if ($result['status'] == 1) {
                     $res =  $this->TransferAccount->where(array('id' => $data['id']))->save($data);
                     if($res){

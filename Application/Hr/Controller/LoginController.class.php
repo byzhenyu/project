@@ -16,7 +16,23 @@ class LoginController extends Controller {
         }
         $this->display();
     }
-
+    /**
+    * @desc  微信扫码登录
+    * @param
+    * @return mixed
+    */
+    public function weiChatDoLogin(){
+        $code = $_GET['code'];
+        p($code);
+        die;
+        if (empty($code)) {
+            $this->redirect('Login/Login');
+        }
+        /*引入微信登录类*/
+        require_once("./Plugins/WxLogin/WxLogin.php");
+        $WxLogin = new \WxLogin();
+        $result = $WxLogin->getWeiChat($code);
+    }
     public function dologin(){
         $user = D('Admin/User');
         if (! $user->create(I('post.'), 5)){

@@ -88,9 +88,31 @@
             //api密钥
             'key' => 'shanjian2018SJ1006liuniuKe00jikk',
             #异步回调地址
-            'notify_url' =>'http://shanjian.host5.liuniukeji.net/index.php/Payment/WxPay/wxNotify',
+            'notify_url' =>'https://shanjian.host5.liuniukeji.net/index.php/Payment/WxPay/wxNotify',
             //公众帐号secert（仅JSAPI支付的时候需要配置)
             'appsecret' => '985066e0fb30cd22c15cfd4dea532527',
+        ),
+        /* 微信扫码登录 */
+        'WxLogin' => array(
+            #微信商户平台应用APPID
+            'app_id' => 'wxb7221179eaa2ade7',
+            //公众帐号secert（仅JSAPI支付的时候需要配置)
+            'appsecret' => '985066e0fb30cd22c15cfd4dea532527',
+        ),
+        /* 支付宝支付相关配置 */
+        'AliPay' => array(
+            /*应用ID，在支付宝上获取*/
+            'appId'    => '2018112262292235',
+            /*签名方式*/
+            'signType'    => 'RSA2',
+            /*应用密钥，与应用公钥一组，公钥填写到支付宝上*/
+            'rsaPrivateKey'    => 'MIIEpAIBAAKCAQEAr5zWT/zZHEREaf7rjeqYQ5sTTmxmSPTHGnwZPxk9VIoYq++PjgPHEM7YkGDWi4ky4quiHqjcP4n5uGo22jjI9I9jKrOR+/ZmuTjMQIdjlI7kL4NPu68uXEOF8Axw89r/eeW0pEBAAq22zDx5MGYB0b9CPpn6yg+sgUvJ7vb5Sf+BB6a1Cn2PZvrDgrC27ccxDmku7bczJXNcaLgn2UMP0M984247saHOaXRhPZcNxfwD63mS/noFb9zAS0nX90DtB9CS6Taqr9tVeuScxEgkwBmuooVfSWbuBRfgn/5dwhWzUSn18nR66yB4JVr2foBlHN5RiNW6Ycy8gf5kqOjFnwIDAQABAoIBAFO0iBqcRMhKaem0DocYmPcwhaVN2ftQYU7odAg1eZxALr5Vc7GXb109mtBGuDzOaqjMcnv2tPS8SYFzby3Y/0BC0FvcN+tHaXND9WeUoQyAh5d2GZ02RPzJWqAu7e/uJPPvX4ki7t/X+VekQ4ekN53IckTwlC+YBPukKl5y7iQskQ3/pBMFzaEbiNRmeR7g4k0M0lXIEQ2hGjzed3btkbUNOct3AEbUl4CcOnB4PTMvkUilk0GqjmIRG1/xu8yUj7M9Jee7jQMzLraUlr1mkrFX6E/RAM115mhbRc5z2eQpxRzubSuWGzLzKLJhZ4EF+gRZGRTXQ+GHtzHr1qGBu7ECgYEA23h+b1jkqLEOmnmg540fXogsfEzwoZXkDC7+dRq2UIKOuNaK36UC0B6Dlu7VlyZW/5JpxzFojZxsVe6474JPJ8gbw5FSDmSM9fdgzQB/EoqpARJcHBz5j+rpGTTE886+rRFBALcO0xacqN7DY/JxqAQdk1MLRz/i+8aCB5kosQUCgYEAzNeUj/Plop4uCIzlBNkXZddC8o/Gj888Hgnkiiq70KQ6lGocDkMpLVsWVPKJ0i870fqQiusH/nvFiOu+GSInckhnD7eZs2X4t9fMrAi2VhTmhurFuBTq83s3RI+dEGTUQI+BSdrhbbv5xgTdvYCneKXuBIZlO9dsKhvJZLRrrVMCgYEAnlQD6nIXq3boERrzsHgHjFvys82RvxByTzPL0FFv+w7kxYXI8+SH7fpFdipgnkVDd+Z5NwF26spRAYFRmz/HuOxM0z5QEyAI7R0EkX/tLEQp/iLvnjxs8Z1Hgi6mczjQJ+yNl2V4ZWInrE/gZ4cs5UfqyjCbr0/wgTBI+BBO4b0CgYEAqKdqyyctz7la/3E58sbnK9OTbHESND+VKMpOX7AVmRBOpvnChb+oPI69kU1sSiDXqOgbcDVZDJ9NoZEvoDPttHuGV3t8UifII13LR22Y6sEkmLrd9dVLKRMvCwUPdXr/AvTkpzFO3/GgEfjZtPgjawN7OECLQzz38qeUJpUh/r8CgYBXdZ14CejZdYUbWA8IofrjlJgoD5bFSupJ8wm4964tMFBZLjiZ7vZ0i+i7aMj+VEqxcIZ/R2lDiiFWetHlEIobGMgBSIGAB6GWz772R2jVGZvhQG+/lpcK8GFsQ/CWbDhDx7eeGteeE0wdy3DKu+eMgaIO5rPFkMvbdYwmBBkn8Q==',
+            /*支付宝公钥，在支付宝上获取*/
+            'alipayrsaPublicKey'    => 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAicQEk3C9NvoGm+nlVdswq7sJSIBp61U7YCBhqbYMrdZ2lZl8Gj3LKuFQywRjEDcEOhbLvp7tiVgh0Sy+d9KggW03DQ6Axxr9Y6T/647L4gJ604aiBFgJoFJTTHhMnSWDL61XAKkJuLM41hh0hzHRa/tjw8y/BJ9IxVf3ZavRxNlssGa6hpJZuBXDHIxfr4WkL7wOV/pBeuoFlP+BCgh1W5kLYHwM4jAKwjLPSIBuKRhDqzv9tcaaofRTFT/vGbSXIWTZxk0oechtWQXJJaZtSA1zzK/qvARpOP5qwHTTrIJ+IVHQDrLtrbmgVO1pcuwAehZYzsI/prr2SY3ZlwSLLwIDAQAB',
+            /*支付宝回调地址*/
+            'notifyUrl'    => 'http://bby.host5.liuniukeji.net/index.php/Payment/Alipay/alipayNotify',
+            /*用于web支付返回地址*/
+//            'returnUrl'    => 'http://bby.host5.liuniukeji.net/index.php/Home/Pay/myWallet',
         ),
         'MOBILE_APP_KEY' => 'nR0PMcWCFPkeBKaNjdkTmCUZZlmMirRn1AmNZ0C44w6oR6qng4Q1Q5oTjQ0NkZBO',
         'UNIT_ID' => 10000000074,

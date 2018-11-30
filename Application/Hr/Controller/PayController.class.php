@@ -43,7 +43,7 @@ class PayController extends HrCommonController {
             $this->ajaxReturn(V(0, '充值金额小数点最多两位！'));
         }
         $data['body'] = C('APP_NAME').'HR充值';//订单详情
-        $out_trade_no = 'H' . date('YmdHis', time()) . '-' . HR_ID; //订单号
+        $out_trade_no = 'W' . date('YmdHis', time()) . '-' . HR_ID; //订单号
         $data['out_trade_no'] = $out_trade_no;//订单号
         $data['total_fee'] = '0.01';//订单金额元
         require_once("./Plugins/WxPay/WxPay.php");
