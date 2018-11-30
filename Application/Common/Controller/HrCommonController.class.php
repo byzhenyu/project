@@ -14,7 +14,6 @@ class HrCommonController extends Controller
         $hrName = $hr_auth['hr_name'] ? $hr_auth['hr_name'] : 0;
         define('HR_ID', $hr_id);
         define('HR_NAME', $hrName);
-
         if(!$hr_id) {
             redirect(U('/Hr/Login'));
         } 
@@ -30,7 +29,6 @@ class HrCommonController extends Controller
     protected function _del($table, $keyname = ''){
         $id = I('id', 0);
         if ($keyname == '') $keyname = $table . '_id';
-        // echo $id;
         $result = V(0, '删除失败, 未知错误. Unknown Error!');
         if($table != '' && $id != 0){
             $where[$keyname] = array('in', $id);
@@ -39,7 +37,6 @@ class HrCommonController extends Controller
             } else {
                 $result = V(0, M($table)->getError());
             }
-            //echo M()->_sql();
         }
         $this->ajaxReturn($result);
     }
