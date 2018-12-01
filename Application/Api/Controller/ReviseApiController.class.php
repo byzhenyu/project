@@ -374,6 +374,7 @@ class ReviseApiController extends ApiUserCommonController{
             $val['can'] = intval($val['can']);
             $t_n = $task_log->validTaskNumber($val['id'], UID, true);
             $val['type_number'] = $task_arr[$val['type']].$val['type_number'].'份/已完成'.$t_n;
+            $val['task_icon'] = C('IMG_SERVER').$val['task_icon'];
         }
         unset($val);
         return $info;
@@ -416,6 +417,10 @@ class ReviseApiController extends ApiUserCommonController{
         $nav_where = array('position' => $position);
         $field = 'link_type,img,title,id,sort';
         $list = $nav_model->navList($nav_where, $field, 'sort asc');
+        foreach($list as &$val){
+            $val['img'] = C('IMG_SERVER').$val['img'];
+        }
+        unset($val);
         return $list;
     }
 
@@ -445,6 +450,9 @@ class ReviseApiController extends ApiUserCommonController{
         $where = array('ad.position_id' => $ad_position, 'display' => 1);
         $field = 'title,content';
         $list = $model->getAdlist($where, $field);
+        foreach($list['info'] as &$val){
+            $val['content'] = C('IMG_SERVER').$val['content'];
+        }
         return $list['info'];
     }
 
@@ -457,9 +465,11 @@ class ReviseApiController extends ApiUserCommonController{
         //发布悬赏配图
         $recruit_position = array('position_id' => 3, 'display' => 1);
         $recruit_info = $model->getAdInfo($recruit_position, 'title,content');
+        $recruit_info['content'] = C('IMG_SERVER').$recruit_info['content'];
         //每日任务配图
         $task_position = array('position_id' => 4, 'display' => 1);
         $task_info = $model->getAdInfo($task_position, 'title,content');
+        $task_info['content'] = C('IMG_SERVER').$task_info['content'];
         $return_info = array(
             'recruit' => $recruit_info,
             'task' => $task_info
