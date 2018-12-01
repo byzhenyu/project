@@ -96,10 +96,12 @@ class ReviseApiController extends ApiUserCommonController{
         $_time = time_list(3);
         $start_time = $_time['start'];
         $end_time = $_time['end'];
-        $account_where = array('change_type' => array('in', array(2, 3, 6)), 'change_time' => array('between', array($start_time, $end_time)));
+        $account_where = array('change_type' => array('in', array(2, 3, 6)), 'change_time' => array('between', array($start_time, $end_time)), 'user_id' => $user_id);
         $sum_money = $accountLogModel->getAccountLogMoneySum($account_where);
+        unset($account_where['change_time']);
+        $total_money = $accountLogModel->getAccountLogMoneySum($account_where);
         $can_money = $userModel->getUserField(array('user_id' => $user_id), 'withdrawable_amount');
-        $money = array('month_amount' => fen_to_yuan($sum_money), 'can_money' => fen_to_yuan($can_money));
+        $money = array('month_amount' => fen_to_yuan($sum_money), 'can_money' => fen_to_yuan($can_money), 'total_amount' => fen_to_yuan($total_money));
         $return_list['money'] = $money;
         $this->apiReturn(V(1, '任务首页内容', $return_list));
     }
