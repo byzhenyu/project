@@ -231,7 +231,7 @@ class UserController extends CommonController {
                             $this->ajaxReturn(V(0, '操作失败'));
                         }
                         //增加会员余额
-                        $setUserMoney = D('Admin/User')->where('user_id='.$accountInfo['user_id'])->setInc('user_money', $accountInfo['money']);
+                        $setUserMoney = D('Admin/User')->where('user_id='.$accountInfo['user_id'])->setInc('withdrawable_amount', $accountInfo['money']);
                         if ($setUserMoney === false) {
                             M()->rollback(); // 事务回滚
                             $this->ajaxReturn(V(0, '操作失败'));
