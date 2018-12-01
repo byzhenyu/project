@@ -177,7 +177,8 @@
                    }
                })
            }else if(type == 2){
-
+               var newurl = "{:U('Pay/aliPay')}/recharge_money/"+money;
+               window.open(newurl);
            }else{
                $.post("{:U('Pay/weiChatPay')}", {'recharge_money':recharge_money}, function (data) {
                    // alert(JSON.stringify(data));

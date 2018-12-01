@@ -42,7 +42,7 @@ class PayController extends HrCommonController {
         if(!preg_match($regex, $recharge_money)){
             $this->ajaxReturn(V(0, '充值金额小数点最多两位！'));
         }
-        $data['body'] = C('APP_NAME').'HR充值';//订单详情
+        $data['body'] = C('APP_NAME').'HR微信充值';//订单详情
         $out_trade_no = 'W' . date('YmdHis', time()) . '-' . HR_ID; //订单号
         $data['out_trade_no'] = $out_trade_no;//订单号
         $data['total_fee'] = '0.01';//订单金额元
@@ -53,4 +53,31 @@ class PayController extends HrCommonController {
         $result = $wxPay->WxPayWeb($data);
         $this->ajaxReturn(V(1, $result));
     }
+    /**
+    * @desc  支付宝支付
+    * @param
+    * @return mixed
+    */
+    public function aliPay(){
+        $recharge_money = I('recharge_money', '');
+        if (!$recharge_money || $recharge_money < 1) {
+            $this->ajaxReturn(V(0, '充值金额不能小于1元！'));
+        }
+        $regex = '/^\d+(\.\d{1,2})?$/';
+        if(!preg_match($regex, $recharge_money)){
+            $this->ajaxReturn(V(0, '充值金额小数点最多两位！'));
+        }
+        $out_trade_no = 'Z' . date('YmdHis', time()) . '-' . HR_ID; //订单号
+        $data['add_time'] = NOW_TIME;
+        $data['body'] = C('APP_NAME').'HR支付宝充值';
+        $data['subject'] = C('APP_NAME').'HR支付宝充值';
+        $data['out_trade_no'] = $out_trade_no;
+        $data['total_amount'] = '0.01';
+        header("Content-type: text/html; charset=utf-8");
+        require_once("./Plugins/AliPay/AliPay.php");
+        $alipay = new \AliPay();
+        echo '页面跳转中, 请稍后...';
+        echo $alipay->AliPayWeb($data);
+    }
+
 }
