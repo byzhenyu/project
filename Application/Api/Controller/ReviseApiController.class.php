@@ -375,6 +375,9 @@ class ReviseApiController extends ApiUserCommonController{
             $t_n = $task_log->validTaskNumber($val['id'], UID, true);
             $val['type_number'] = $task_arr[$val['type']].$val['type_number'].'份/已完成'.$t_n;
             $val['task_icon'] = C('IMG_SERVER').$val['task_icon'];
+            if(0 == $t_n) $val['finish_status'] = 0;
+            if($val['type_number'] > $t_n) $val['finish_status'] = 1;
+            if($val['type_number'] == $t_n) $val['finish_status'] = 2;
         }
         unset($val);
         return $info;
