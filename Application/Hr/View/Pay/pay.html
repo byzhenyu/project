@@ -171,13 +171,12 @@
            }
            if(type == 1){
                $.post("{:U('Pay/weiChatPay')}", {'recharge_money':recharge_money}, function (data) {
-                   alert(JSON.stringify(data));
                    if (data.status == 1) {
                        $("#codeImg").append('<img alt="扫描二扫码支付" src="'+ data.info+'"/>');
                    }
                })
            }else if(type == 2){
-               var newurl = "{:U('Pay/aliPay')}/recharge_money/"+money;
+               var newurl = "{:U('Pay/aliPay')}/recharge_money/"+recharge_money;
                window.open(newurl);
            }else{
                $.post("{:U('Pay/weiChatPay')}", {'recharge_money':recharge_money}, function (data) {
