@@ -45,6 +45,16 @@ class ReviseApiController extends ApiUserCommonController{
     }
 
     /**
+     * @desc 获取HR信息
+     */
+    public function hrAuxData(){
+        $user_model = D('Admin/User');
+        $user_info = $user_model->getUserInfo(array('user_id' => UID), 'is_incumbency,withdrawable_amount');
+        $user_info['withdrawable_amount'] = fen_to_yuan($user_info['withdrawable_amount']);
+        $this->apiReturn(V(1, '用户信息', $user_info));
+    }
+
+    /**
      * @desc 获取公告详情
      */
     public function getArticleInfo(){
