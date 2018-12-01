@@ -85,6 +85,7 @@ class ResumeController extends HrCommonController {
                     if($user_info) $this->ajaxReturn(V(0, '该手机号已在C端注册，请前往小程序认证获得！'));
                     $res = $model->where(array('id' => $resume_id))->save($data);
                     if(false !== $res){
+                        //TODO 短信发送
                         header('Content-Type:application/json; charset=utf-8');
                         echo json_encode(V(1, '上传成功，等待后台审核！', $resume_id));
                         //审核通过，更新HR tags标签

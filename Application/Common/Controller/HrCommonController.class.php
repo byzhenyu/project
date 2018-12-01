@@ -86,7 +86,6 @@ class HrCommonController extends Controller
 
         $result = array( 'status' => 1, 'msg' => '上传完成');
         //判断有没有上传图片
-        //p(trim($_FILES['photo2']['name']));
         if(trim($_FILES['photo']['name']) != ''){
             $upload = new \Think\Upload(C('PICTURE_UPLOAD')); // 实例化上传类
             $upload->replace  = true; //覆盖

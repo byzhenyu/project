@@ -37,6 +37,17 @@ class AdModel extends Model {
         );
     }
 
+    /**
+     * @desc 广告内容
+     * @param $where
+     * @param bool $field
+     * @return mixed
+     */
+    public function getAdInfo($where, $field = false){
+        $result = $this->where($where)->field($field)->find();
+        return $result;
+    }
+
 
     //广告添加之前的钩子操作
     protected function _before_insert(&$data, $option){

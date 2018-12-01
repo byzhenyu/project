@@ -138,6 +138,7 @@ class UserController extends CommonController {
                         D('Admin/User')->decreaseUserFieldNum($id, 'frozen_money', $account);
                         D('Admin/User')->increaseUserFieldNum($id, 'withdrawable_amount', $account);
                     }
+                    //TODO 短信发送
                     $this->ajaxReturn(V(1, '操作成功'));
                 }
                 $this->ajaxReturn(V(0, '修改失败请稍后重试！'));
@@ -230,7 +231,7 @@ class UserController extends CommonController {
                             $this->ajaxReturn(V(0, '操作失败'));
                         }
                         //增加会员余额
-                        $setUserMoney = D('Admin/User')->where('user_id='.$accountInfo['user_id'])->setInc('user_money', $accountInfo['money']);
+                        $setUserMoney = D('Admin/User')->where('user_id='.$accountInfo['user_id'])->setInc('withdrawable_amount', $accountInfo['money']);
                         if ($setUserMoney === false) {
                             M()->rollback(); // 事务回滚
                             $this->ajaxReturn(V(0, '操作失败'));

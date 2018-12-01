@@ -163,9 +163,9 @@ class RecruitResumeModel extends Model {
      */
     public function getDeliveryHistory($where, $field = false, $order = 'r.add_time desc'){
         if(!$field) $field = 'c.*';
-        $count = $this->alias('r')->join('__COMPANY_INFO__ as c on r.recruit_hr_uid = c.user_id', 'LEFT')->where($where)->count();
+        $count = $this->alias('r')->join('__COMPANY_INFO__ as c on r.recruit_hr_uid = c.user_id', 'LEFT')->join('__RECRUIT__ as re on re.id = r.recruit_id')->where($where)->count();
         $page = get_web_page($count);
-        $list = $this->alias('r')->join('__COMPANY_INFO__ as c on r.recruit_hr_uid = c.user_id', 'LEFT')->where($where)->field($field)->order($order)->limit($page['limit'])->select();
+        $list = $this->alias('r')->join('__COMPANY_INFO__ as c on r.recruit_hr_uid = c.user_id', 'LEFT')->join('__RECRUIT__ as re on re.id = r.recruit_id')->where($where)->field($field)->order($order)->limit($page['limit'])->select();
         return array(
             'info' => $list,
             'page' => $page['page']

@@ -4,7 +4,6 @@
  */
 namespace Api\Controller;
 use Common\Controller\ApiUserCommonController;
-use Think\Verify;
 
 class ReviseApiController extends ApiUserCommonController{
 
@@ -36,10 +35,23 @@ class ReviseApiController extends ApiUserCommonController{
      */
     public function getHomeData(){
         $return_list = array();
+        $user_model = D('Admin/User');
+        $user_type = $user_model->getUserField(array('user_id' => UID), 'user_type');
         $return_list['nav'] = $this->navList();
-        $return_list['notice'] = $this->noticeList();
-        $return_list['banner'] = $this->bannerList();
+        $return_list['notice'] = $this->noticeList($user_type);
+        $return_list['banner'] = $this->bannerList($user_type);
+        $return_list['layout'] = $this->recruitTaskBanner();
         $this->apiReturn(V(1, '首页数据', $return_list));
+    }
+
+    /**
+     * @desc 获取HR信息
+     */
+    public function hrAuxData(){
+        $user_model = D('Admin/User');
+        $user_info = $user_model->getUserInfo(array('user_id' => UID), 'is_incumbency,withdrawable_amount');
+        $user_info['withdrawable_amount'] = fen_to_yuan($user_info['withdrawable_amount']);
+        $this->apiReturn(V(1, '用户信息', $user_info));
     }
 
     /**
@@ -84,10 +96,12 @@ class ReviseApiController extends ApiUserCommonController{
         $_time = time_list(3);
         $start_time = $_time['start'];
         $end_time = $_time['end'];
-        $account_where = array('change_type' => array('in', array(2, 3, 6)), 'change_time' => array('between', array($start_time, $end_time)));
+        $account_where = array('change_type' => array('in', array(2, 3, 6)), 'change_time' => array('between', array($start_time, $end_time)), 'user_id' => $user_id);
         $sum_money = $accountLogModel->getAccountLogMoneySum($account_where);
+        unset($account_where['change_time']);
+        $total_money = $accountLogModel->getAccountLogMoneySum($account_where);
         $can_money = $userModel->getUserField(array('user_id' => $user_id), 'withdrawable_amount');
-        $money = array('month_amount' => fen_to_yuan($sum_money), 'can_money' => fen_to_yuan($can_money));
+        $money = array('month_amount' => fen_to_yuan($sum_money), 'can_money' => fen_to_yuan($can_money), 'total_amount' => fen_to_yuan($total_money));
         $return_list['money'] = $money;
         $this->apiReturn(V(1, '任务首页内容', $return_list));
     }
@@ -252,10 +266,12 @@ class ReviseApiController extends ApiUserCommonController{
         $user_id = UID;
         $model = D('Admin/RecruitResume');
         $where = array('r.hr_user_id' => $user_id);
-        $field = 'r.add_time,c.company_name,c.id';
+        $field = 'r.add_time,c.company_name,c.id,re.position_name,re.position_id,c.company_logo,re.id as recruit_id';
         $list = $model->getDeliveryHistory($where, $field);
+        $position_model = D('Admin/Position');
         foreach($list['info'] as &$val){
             $val['add_time'] = time_format($val['add_time'], 'Y-m-d H');
+            if(!$val['position_name']) $val['position_name'] = $position_model->getPositionField(array('id' => $val['position_id']), 'position_name');
         }
         unset($val);
         $this->apiReturn(V(1, '投递历史', $list['info']));
@@ -370,6 +386,10 @@ class ReviseApiController extends ApiUserCommonController{
             $val['can'] = intval($val['can']);
             $t_n = $task_log->validTaskNumber($val['id'], UID, true);
             $val['type_number'] = $task_arr[$val['type']].$val['type_number'].'份/已完成'.$t_n;
+            $val['task_icon'] = C('IMG_SERVER').$val['task_icon'];
+            if(0 == $t_n) $val['finish_status'] = 0;
+            if($val['type_number'] > $t_n) $val['finish_status'] = 1;
+            if($val['type_number'] == $t_n) $val['finish_status'] = 2;
         }
         unset($val);
         return $info;
@@ -412,15 +432,20 @@ class ReviseApiController extends ApiUserCommonController{
         $nav_where = array('position' => $position);
         $field = 'link_type,img,title,id,sort';
         $list = $nav_model->navList($nav_where, $field, 'sort asc');
+        foreach($list as &$val){
+            $val['img'] = C('IMG_SERVER').$val['img'];
+        }
+        unset($val);
         return $list;
     }
 
     /**
      * @desc 获取公告列表
      */
-    private function noticeList(){
+    private function noticeList($user_type){
         $model = D('Admin/Article');
-        $notice_where = array('article_cat_id' => 6, 'display' => 1);
+        $cat_id = $user_type == 1 ? 6 : 10;
+        $notice_where = array('article_cat_id' => $cat_id, 'display' => 1);
         $field = 'article_id,title';
         $list = $model->getArticleList($notice_where, $field, 'sort asc');
         return $list['articlelist'];
@@ -429,12 +454,41 @@ class ReviseApiController extends ApiUserCommonController{
     /**
      * @desc 轮播图列表
      */
-    private function bannerList(){
+    private function bannerList($user_type){
         $model = D('Admin/Ad');
         $position = I('ad_position', 1, 'intval');
-        $where = array('ad.position_id' => $position, 'display' => 1);
+        //首页分为HR和求职者
+        if(1 == $position) $ad_position = 1 == $user_type ? $position : 5;
+        //合伙人端仅HR
+        if(2 == $position) $ad_position = $position;
+        if(0 == $user_type && 2 == $position) return array();
+        $where = array('ad.position_id' => $ad_position, 'display' => 1);
         $field = 'title,content';
         $list = $model->getAdlist($where, $field);
+        foreach($list['info'] as &$val){
+            $val['content'] = C('IMG_SERVER').$val['content'];
+        }
         return $list['info'];
+    }
+
+    /**
+     * @desc 公告下方悬赏发布/每日任务配图
+     * @return array
+     */
+    private function recruitTaskBanner(){
+        $model = D('Admin/Ad');
+        //发布悬赏配图
+        $recruit_position = array('position_id' => 3, 'display' => 1);
+        $recruit_info = $model->getAdInfo($recruit_position, 'title,content');
+        $recruit_info['content'] = C('IMG_SERVER').$recruit_info['content'];
+        //每日任务配图
+        $task_position = array('position_id' => 4, 'display' => 1);
+        $task_info = $model->getAdInfo($task_position, 'title,content');
+        $task_info['content'] = C('IMG_SERVER').$task_info['content'];
+        $return_info = array(
+            'recruit' => $recruit_info,
+            'task' => $task_info
+        );
+        return $return_info;
     }
 }

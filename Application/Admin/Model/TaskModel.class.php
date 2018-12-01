@@ -7,8 +7,8 @@ namespace Admin\Model;
 use Think\Model;
 
 class TaskModel extends Model {
-    protected $insertFields = array('task_name', 'reward', 'task_desc', 'type', 'task_url', 'type_number');
-    protected $updateFields = array('task_name', 'reward', 'task_desc', 'type', 'task_url', 'type_number', 'id');
+    protected $insertFields = array('task_name', 'reward', 'task_desc', 'type', 'task_url', 'type_number', 'sort', 'task_icon');
+    protected $updateFields = array('task_name', 'reward', 'task_desc', 'type', 'task_url', 'type_number', 'id', 'sort', 'task_icon');
     protected $_validate = array(
         array('task_name', 'require', '任务名称不能为空！', 1, 'regex', 3),
         array('task_name', '1,100', '任务名称长度不能超过100！', 1, 'length', 3),
@@ -17,7 +17,9 @@ class TaskModel extends Model {
         array('task_desc', '1,100', '任务描述长度不能超过100！', 1, 'length', 3),
         //array('task_url', 'require', '任务链接不能为空！', 1, 'regex', 3),
         array('type_number', 'require', '可领任务数量不能为空！', 1, 'regex', 3),
-        array('type', 'require', '请选择任务类型', 1, 'regex', 3)
+        array('type', 'require', '请选择任务类型', 1, 'regex', 3),
+        array('sort', 'require', '排序序号不能为空', 1, 'regex', 3),
+        array('task_icon', 'require', '任务图标不能为空', 1, 'regex', 3)
     );
 
     /**
@@ -54,7 +56,7 @@ class TaskModel extends Model {
      *  获取任务列表及完成情况
      */
     public function getTaskList() {
-        $info = $this->select();
+        $info = $this->order('sort asc')->select();
         $TaskLogModel = D('Admin/TaskLog');
         foreach ($info as $k=>$v) {
             $info[$k]['can'] = $TaskLogModel->validTaskNumber($v['id']);

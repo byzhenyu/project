@@ -68,4 +68,12 @@ class TaskController extends CommonController {
         if(in_array(1, $id) || in_array(2, $id) || in_array(3, $id) || in_array(5, $id)) $this->ajaxReturn(V(0, '删除任务中包含不可删除的任务！'));
         $this->_del('Task', 'id');
     }
+
+    public function delFile(){
+        $this->_delFile();
+    }
+
+    public function uploadImg(){
+        $this->_uploadImg();
+    }
 }

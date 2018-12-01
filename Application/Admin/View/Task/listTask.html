@@ -45,7 +45,7 @@
                             <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black " id="example-r">
                                 <thead>
                                     <tr>
-                                        <th width="50" class="align-center">序号</th>
+                                        <th width="8%" class="align-center">排序序号</th>
                                         <th width="12%" class="align-center">任务名称</th>
                                         <th width="12%" class="align-center">奖励令牌</th>
                                         <th width="12%" class="align-center">限制数量</th>
@@ -57,7 +57,7 @@
                                 <tbody>
                                     <foreach name="list" item="v">
                                         <tr class="gradeX">
-                                            <td class="align-center">{$v['id']}</td>
+                                            <td class="align-center">{$v['sort']}</td>
                                             <td class="align-center">{$v['task_name']}</td>
                                             <td class="align-center">{:fen_to_yuan($v['reward'])}</td>
                                             <td class="align-center">{$v['type_number']}</td>
@@ -68,11 +68,11 @@
                                                     <a href="{:U('Task/editTask',array('id'=>$v['id']))}">
                                                         <i class="am-icon-pencil"></i> 编辑
                                                     </a>
-                                                    <if condition="$v['id'] neq 1 && $v['id'] neq 2 && $v['id'] neq 3 && $v['id'] neq 5">
-                                                        <a href="javascript:void(0)" onclick="javascript:recycle({$v['id']}, '确认删除?!此步骤无法恢复!', true)" class="tpl-table-black-operation-del">
-                                                            <i class="am-icon-trash"></i> 删除
-                                                        </a>
-                                                    </if>
+                                                    <!--<if condition="$v['id'] neq 1 && $v['id'] neq 2 && $v['id'] neq 3 && $v['id'] neq 5">-->
+                                                        <!--<a href="javascript:void(0)" onclick="javascript:recycle({$v['id']}, '确认删除?!此步骤无法恢复!', true)" class="tpl-table-black-operation-del">-->
+                                                            <!--<i class="am-icon-trash"></i> 删除-->
+                                                        <!--</a>-->
+                                                    <!--</if>-->
                                                 </div>
                                             </td>
                                         </tr>
