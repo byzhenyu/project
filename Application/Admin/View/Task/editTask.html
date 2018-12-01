@@ -24,6 +24,29 @@
                                 </div>
                             </div>
                             <div class="am-form-group">
+                                <label class="am-u-sm-2 am-form-label">任务图标</label>
+                                <div class="am-u-sm-10">
+                                    <div class="row">
+                                        <div class="am-u-sm-3">
+                                            <div class="am-form-group am-form-file">
+                                                <div class="tpl-form-file-img">
+                                                    <img src="{$info['task_icon']}" alt="" style="min-height:122px; width: 122px;" id="img_">
+                                                </div>
+                                                <input type="hidden" value="{$info['task_icon']}" name="task_icon" id="img" />
+                                                <button type="button" class="am-btn am-btn-success am-btn-sm" id="btnUpload">上传</button>
+                                                <button type="button" class="am-btn am-btn-danger am-btn-sm" onclick="delFile($('#img').val(), '')" id="btn_delete_">删除</button>
+                                                <if condition="$info['task_icon'] eq ''">
+                                                    <script>
+                                                        $("#img_, #btn_delete_").hide();
+                                                    </script>
+                                                </if>
+                                            </div>
+                                        </div>
+                                        <div class="am-u-sm-9"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="am-form-group">
                                 <label for="reward" class="am-u-sm-2 am-form-label">
                                     奖励令牌 <span class="tpl-form-line-small-title must-input">*</span>
                                 </label>
@@ -53,6 +76,14 @@
                                 </label>
                                 <div class="am-u-sm-10">
                                     <input type="text" class="tpl-form-input" id="task_desc" name="task_desc" placeholder="请输入任务描述"  value="{$info['task_desc']}">
+                                </div>
+                            </div>
+                            <div class="am-form-group">
+                                <label for="task_desc" class="am-u-sm-2 am-form-label">
+                                    任务排序 <span class="tpl-form-line-small-title must-input">*</span>
+                                </label>
+                                <div class="am-u-sm-10">
+                                    <input type="text" class="tpl-form-input" id="sort" name="sort" placeholder="请输入任务排序序号"  value="{$info['sort']}">
                                 </div>
                             </div>
                             <div class="am-form-group">
@@ -91,6 +122,8 @@
 </block>
 
 <block name="script">
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ajaxupload/ajaxupload.js?v=1.0"></script>
+<script type="text/javascript" charset="utf-8" src="__PUBLIC__/ajaxupload/imgupload.js?v=1.0"></script>
 <script type="text/javascript">
     function callback(data) {
         toastr(data.info);
@@ -98,5 +131,8 @@
             location.href = '__URL__/listTask';
         }
     }
+    $(function(){
+        ajaxUpload('#btnUpload', $("#img"), 'Task', '');
+    })
 </script>
 </block>
