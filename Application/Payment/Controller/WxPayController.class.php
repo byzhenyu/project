@@ -20,7 +20,6 @@ class WxPayController extends CommonController {
         if ($flag['status']) {
             if ($flag['data']['return_code'] == 'SUCCESS' && $flag['data']['result_code'] == 'SUCCESS') {
                 $out_trade_no = trim($flag['data']['out_trade_no']);//商家订单号
-                LL($out_trade_no,'./log1.txt');
                 $total_amount = trim($flag['data']['total_fee']); //支付的金额
                 $trade_no = trim($flag['data']['transaction_id']); //商户订单号
                 //成功后的业务逻辑处理

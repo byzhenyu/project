@@ -112,7 +112,7 @@
             /*支付宝回调地址*/
             'notifyUrl'    => 'https://shanjian.host5.liuniukeji.net/index.php/Payment/Alipay/alipayNotify',
             /*用于web支付返回地址*/
-//            'returnUrl'    => 'http://bby.host5.liuniukeji.net/index.php/Home/Pay/myWallet',
+            'returnUrl'    => 'https://shanjian.host5.liuniukeji.net/index.php/Hr/UserAccount/getAccount',
         ),
         'MOBILE_APP_KEY' => 'nR0PMcWCFPkeBKaNjdkTmCUZZlmMirRn1AmNZ0C44w6oR6qng4Q1Q5oTjQ0NkZBO',
         'UNIT_ID' => 10000000074,
