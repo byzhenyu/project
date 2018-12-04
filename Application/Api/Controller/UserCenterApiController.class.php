@@ -116,6 +116,7 @@ class UserCenterApiController extends ApiUserCommonController{
         if(1 == $user_type){
             if(empty($data['business_license'])) $this->apiReturn(V(0, '请上传营业执照！'));
             if(!$data['company_name']) $this->apiReturn(V(0, '请填写公司名称！'));
+            if(!$data['license_number']) $this->apiReturn(V(0, '请填写组织代码！'));
             $upArray['business_license'] = $data['business_license'];
             $upArray['company_name'] = $data['company_name'];
         }
