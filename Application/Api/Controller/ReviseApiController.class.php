@@ -266,12 +266,13 @@ class ReviseApiController extends ApiUserCommonController{
         $user_id = UID;
         $model = D('Admin/RecruitResume');
         $where = array('r.hr_user_id' => $user_id);
-        $field = 'r.add_time,c.company_name,c.id,re.position_name,re.position_id,c.company_logo,re.id as recruit_id';
+        $field = 'r.add_time,c.company_name,c.id,re.position_name,re.position_id,c.company_logo,re.id as recruit_id,re.base_pay,re.merit_pay';
         $list = $model->getDeliveryHistory($where, $field);
         $position_model = D('Admin/Position');
         foreach($list['info'] as &$val){
             $val['add_time'] = time_format($val['add_time'], 'Y-m-d H');
             if(!$val['position_name']) $val['position_name'] = $position_model->getPositionField(array('id' => $val['position_id']), 'position_name');
+            $val['salary'] = $val['base_pay'].'-'.($val['base_pay'] + $val['merit_pay']);
         }
         unset($val);
         $this->apiReturn(V(1, '投递历史', $list['info']));
@@ -315,7 +316,7 @@ class ReviseApiController extends ApiUserCommonController{
         $position_model = D('Admin/Position');
         $hr_resume_model = D('Admin/HrResume');
 
-        $list = $recruit_model->getHrRecruitList($where,'r.id, r.position_name, r.recruit_num, r.commission, r.add_time, r.position_id,c.company_name,r.job_area,r.experience');
+        $list = $recruit_model->getHrRecruitList($where,'r.id, r.position_name, r.recruit_num, r.commission, r.add_time, r.position_id,c.company_name,r.job_area,r.experience,r.base_pay,r.merit_pay');
         $experience = C('WORK_EXP');
         foreach($list['info'] as &$val){
             $t_parent_id = $position_model->getPositionField(array('id' => $val['position_id']), 'parent_id');
@@ -324,6 +325,7 @@ class ReviseApiController extends ApiUserCommonController{
             $val['add_time'] = time_format($val['add_time'], 'Y-m-d');
             $val['commission'] = fen_to_yuan($val['commission']);
             $val['experience'] = $experience[$val['experience']];
+            $val['salary'] = $val['base_pay'].'-'.($val['base_pay'] + $val['merit_pay']);
 
             $hr_resume_where = array('h.hr_user_id' => $user_id, 'r.is_incumbency' => 1);//接受推荐
             $hr_resume_where['r.position_id'] = $val['position_id'];
@@ -362,7 +364,7 @@ class ReviseApiController extends ApiUserCommonController{
         $where['r.is_post'] = array('lt', 2);
         $where['r.status'] = 1;
         if($keywords) $where['r.position_name'] = array('like', '%'.$keywords.'%');
-        $list = $recruit_model->getHrRecruitList($where,'r.id, r.position_name, r.recruit_num, r.commission, r.add_time, r.position_id,c.company_name,r.job_area,r.experience');
+        $list = $recruit_model->getHrRecruitList($where,'r.id, r.position_name, r.recruit_num, r.commission, r.add_time, r.position_id,c.company_name,r.job_area,r.experience,r.base_pay,r.merit_pay');
         $experience = C('WORK_EXP');
         foreach($list['info'] as &$val){
             $t_parent_id = $position_model->getPositionField(array('id' => $val['position_id']), 'parent_id');
@@ -371,6 +373,7 @@ class ReviseApiController extends ApiUserCommonController{
             $val['add_time'] = time_format($val['add_time'], 'Y-m-d');
             $val['commission'] = fen_to_yuan($val['commission']);
             $val['experience'] = $experience[$val['experience']];
+            $val['salary'] = $val['base_pay'].'-'.($val['base_pay'] + $val['merit_pay']);
 
             $val['resume_matching'] = 0;
         }
