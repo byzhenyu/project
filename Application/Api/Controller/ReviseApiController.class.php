@@ -362,13 +362,15 @@ class ReviseApiController extends ApiUserCommonController{
         $where['r.is_post'] = array('lt', 2);
         $where['r.status'] = 1;
         if($keywords) $where['r.position_name'] = array('like', '%'.$keywords.'%');
-        $list = $recruit_model->getHrRecruitList($where,'r.id, r.position_name, r.recruit_num, r.commission, r.add_time, r.position_id,c.company_name,r.job_area');
+        $list = $recruit_model->getHrRecruitList($where,'r.id, r.position_name, r.recruit_num, r.commission, r.add_time, r.position_id,c.company_name,r.job_area,r.experience');
+        $experience = C('WORK_EXP');
         foreach($list['info'] as &$val){
             $t_parent_id = $position_model->getPositionField(array('id' => $val['position_id']), 'parent_id');
             $position_name = $position_model->getPositionField(array('id' => $t_parent_id), 'position_name');
             $val['position_name'] = $position_name .'-'. $val['position_name'];
             $val['add_time'] = time_format($val['add_time'], 'Y-m-d');
             $val['commission'] = fen_to_yuan($val['commission']);
+            $val['experience'] = $experience[$val['experience']];
 
             $val['resume_matching'] = 0;
         }
