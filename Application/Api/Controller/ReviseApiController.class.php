@@ -279,6 +279,7 @@ class ReviseApiController extends ApiUserCommonController{
 
     /**
      * @desc HR悬赏列表
+     * @extra TODO 学历选项  匹配问题。
      * @return mixed
      */
     private function hrRecruitList(){
@@ -314,13 +315,15 @@ class ReviseApiController extends ApiUserCommonController{
         $position_model = D('Admin/Position');
         $hr_resume_model = D('Admin/HrResume');
 
-        $list = $recruit_model->getHrRecruitList($where,'r.id, r.position_name, r.recruit_num, r.commission, r.add_time, r.position_id,c.company_name,r.job_area');
+        $list = $recruit_model->getHrRecruitList($where,'r.id, r.position_name, r.recruit_num, r.commission, r.add_time, r.position_id,c.company_name,r.job_area,r.experience');
+        $experience = C('WORK_EXP');
         foreach($list['info'] as &$val){
             $t_parent_id = $position_model->getPositionField(array('id' => $val['position_id']), 'parent_id');
             $position_name = $position_model->getPositionField(array('id' => $t_parent_id), 'position_name');
             $val['position_name'] = $position_name .'-'. $val['position_name'];
             $val['add_time'] = time_format($val['add_time'], 'Y-m-d');
             $val['commission'] = fen_to_yuan($val['commission']);
+            $val['experience'] = $experience[$val['experience']];
 
             $hr_resume_where = array('h.hr_user_id' => $user_id, 'r.is_incumbency' => 1);//接受推荐
             $hr_resume_where['r.position_id'] = $val['position_id'];
