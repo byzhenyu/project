@@ -278,6 +278,20 @@ class ReviseApiController extends ApiUserCommonController{
         $this->apiReturn(V(1, '投递历史', $list['info']));
     }
 
+    public function getHrAccountLog() {
+        $where['user_id'] = UID;
+        $where['change_type'] = array('in', [2,3,6]);
+        $data = D('Admin/AccountLog')->getAccountLogByPage($where,'log_id,user_id,user_money,change_time,change_desc,change_type,order_sn', 'change_time desc');
+        $info = $data['info'];
+        $return = array();
+        foreach($info as &$val){
+            $val['change_month'] = substr($val['change_time'], 0, 7);
+            $return[$val['change_month']][] = $val;
+        }
+        unset($val);
+        $this->apiReturn(V(1, '收益明细', $return));
+    }
+
     /**
      * @desc HR悬赏列表
      * @extra TODO 学历选项  匹配问题。
