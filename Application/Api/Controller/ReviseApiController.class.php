@@ -286,10 +286,16 @@ class ReviseApiController extends ApiUserCommonController{
         $return = array();
         foreach($info as &$val){
             $val['change_month'] = substr($val['change_time'], 0, 7);
-            $return[$val['change_month']][] = $val;
+            $return[$val['change_month']]['data'] = $val['change_month'];
+            $return[$val['change_month']]['account_list'][] = $val;
         }
         unset($val);
-        $this->apiReturn(V(1, '收益明细', $return));
+        $return_info = array();
+        foreach($return as &$val){
+            $return_info[] = $val;
+        }
+        unset($val);
+        $this->apiReturn(V(1, '收益明细', $return_info));
     }
 
     /**
