@@ -232,12 +232,12 @@ class ReviseApiController extends ApiUserCommonController{
         $user_where = array('user_id' => $user_id);
         $resume_info = $resume_model->getResumeInfo($user_where);
         if(!$resume_info) $this->apiReturn(V(0, '请先完善简历信息！'));
-        if(!check_is_auth($user_id)){
+        /*if(!check_is_auth($user_id)){
             $string = auth_string();
             $error = '请先通过实名认证！';
             if(false !== $string) $error = $string;
             $this->apiReturn(V(0, $error));
-        }
+        }*/
         $recruit_where = array('id' => $recruit_id);
         $recruit_info = $recruit_model->getRecruitInfo($recruit_where);
         if(!$recruit_info) $this->apiReturn(V(0, '悬赏信息获取失败！'));
@@ -368,12 +368,12 @@ class ReviseApiController extends ApiUserCommonController{
         $user_where = array('user_id' => $user_id);
         $resume_info = $resume_model->getResumeInfo($user_where);
         if(!$resume_info) $this->apiReturn(V(0, '请先完善简历信息！'));
-        if(!check_is_auth($user_id)){
+        /*if(!check_is_auth($user_id)){
             $string = auth_string();
             $error = '请先通过实名认证！';
             if(false !== $string) $error = $string;
             $this->apiReturn(V(0, $error));
-        }
+        }*/
         $keywords = I('keywords', '', 'trim');//首页悬赏筛选
         $user_job_area = $resume_info['job_area'];
         $job_area = explode(',', $user_job_area);

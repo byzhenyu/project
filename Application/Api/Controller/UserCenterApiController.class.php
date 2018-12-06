@@ -1366,12 +1366,12 @@ class UserCenterApiController extends ApiUserCommonController{
      * @desc 简历认证确认/放弃
      */
     public function confirmResumeAuth(){
-        if(!check_is_auth(UID)){
+        /*if(!check_is_auth(UID)){
             $string = auth_string();
             $error = '请先通过实名认证！';
             if(false !== $string) $error = $string;
             $this->apiReturn(V(0, $error));
-        }
+        }*/
         $id = I('post.id');
         $auth_result = I('post.auth_result');
         if(1 == $auth_result) $this->apiReturn(V(1, '操作成功！'));
@@ -1435,12 +1435,12 @@ class UserCenterApiController extends ApiUserCommonController{
      * @desc 简历详情 简历认证确认/放弃
      */
     public function detailResumeAuth(){
-        if(!check_is_auth(UID)){
+        /*if(!check_is_auth(UID)){
             $string = auth_string();
             $error = '请先通过实名认证！';
             if(false !== $string) $error = $string;
             $this->apiReturn(V(0, $error));
-        }
+        }*/
         $resume_id = I('post.resume_id');
         $auth_result = I('post.auth_result');
         if(1 == $auth_result) $this->apiReturn(V(1, '操作成功！'));
@@ -1649,6 +1649,12 @@ class UserCenterApiController extends ApiUserCommonController{
      * @extra resume_id string 多个简历同时推荐使用,分开
      */
     public function confirmRecruitResume(){
+        if(!check_is_auth(UID)){
+            $string = auth_string();
+            $error = '请先通过实名认证！';
+            if(false !== $string) $error = $string;
+            $this->apiReturn(V(0, $error));
+        }
         $data = I('post.');
         $hr_user_id = UID;
         $recruitModel = D('Admin/Recruit');
