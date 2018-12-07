@@ -36,7 +36,7 @@ class LoginController extends Controller {
        /**
        * @desc 手机验证码登录
        * @param   phone
-       * @param   code
+       * @param   chkcode
        * @return mixed
        */
        public  function phoneLogin(){
