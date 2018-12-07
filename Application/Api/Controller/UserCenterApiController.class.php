@@ -6,7 +6,6 @@ use Think\Verify;
 class UserCenterApiController extends ApiUserCommonController{
 
     /**
-     * @TODO
      * @desc 编辑个人资料
      */
     public function editUserInfo(){
