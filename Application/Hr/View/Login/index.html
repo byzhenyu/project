@@ -169,29 +169,35 @@
     </div>
     <div class="login-b cf">
         <div class="login-l fl">
-            <form class="form ajaxForm" name="login" action="{:U('Login/dologin')}" method="post">
+            <form class="form ajaxForm" name="login" action="{:U('Login/phoneLogin')}" method="post">
                 <ul>
                     <li>
-                        <div class="lg-i">
-                            <span><img src="__PUBLIC__/Hr/images/i1@3x.png"/></span>
-                            <input placeholder="输入你绑定的手机号" type="text" name="mobile" value="" autocomplete="off" />
-                        </div>
-                    </li>
+                    <div class="lg-i">
+                        <span><img src="__PUBLIC__/Hr/images/i1@3x.png"/></span>
+                        <input placeholder="输入你绑定的手机号" type="text" name="mobile" value="" autocomplete="off" /><div id="send">发送</div>
+                    </div>
+                   </li>
                     <li>
                         <div class="lg-i">
                             <span><img src="__PUBLIC__/Hr/images/i2@3x.png"/></span>
-                            <input placeholder="输入你的密码" type="password" name="password" value="" autocomplete="new-password" />
+                            <input placeholder="输入你的验证码" type="text" name="chkcode" value="" autocomplete="off" />
                         </div>
                     </li>
-                    <li>
-                        <div class="lg-i">
-                            <span><img src="__PUBLIC__/Hr/images/i3@3x.png"/></span>
-                            <input placeholder="输入验证码" type="text" name="chkcode" />
-                        </div>
-                        <div class="lg-code">
-                            <img id="chk_img" src="{:U('Login/chkcode','','')}"/>
-                        </div>
-                    </li>
+                    <!--<li>-->
+                        <!--<div class="lg-i">-->
+                            <!--<span><img src="__PUBLIC__/Hr/images/i2@3x.png"/></span>-->
+                            <!--<input placeholder="输入你的密码" type="password" name="password" value="" autocomplete="new-password" />-->
+                        <!--</div>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<div class="lg-i">-->
+                            <!--<span><img src="__PUBLIC__/Hr/images/i3@3x.png"/></span>-->
+                            <!--<input placeholder="输入验证码" type="text" name="chkcode" />-->
+                        <!--</div>-->
+                        <!--<div class="lg-code">-->
+                            <!--<img id="chk_img" src="{:U('Login/chkcode','','')}"/>-->
+                        <!--</div>-->
+                    <!--</li>-->
                 </ul>
                 <button type="submit" id="login-button">登录</button>
             </form>
@@ -200,9 +206,9 @@
             <span>
                 <img src="__PUBLIC__/Hr/images/code.jpg">
             </span>
-            <div id="login_container">
+            <!--<div id="login_container">-->
 
-            </div>
+            <!--</div>-->
             <p>扫描二维码<br>
                 立即使用小程序</p>
         </div>
@@ -251,16 +257,36 @@
         }
 
     }
-    var obj = new WxLogin({
-        self_redirect:false,
-        id:"login_container",
-        appid: "wxb7221179eaa2ade7",
-        scope: "snsapi_login",
-        redirect_uri: "https%3a%2f%2fshanjian.host5.liuniukeji.net%2findex.php%2fhr%2fLogin%2fweiChatDoLogin",
-        state: "Mobile",
-        style: "black",
-        href: ""
-    });
+    // var obj = new WxLogin({
+    //     self_redirect:false,
+    //     id:"login_container",
+    //     appid: "wxb7221179eaa2ade7",
+    //     scope: "snsapi_login",
+    //     redirect_uri: "https%3a%2f%2fshanjian.host5.liuniukeji.net%2findex.php%2fhr%2fLogin%2fweiChatDoLogin",
+    //     state: "Mobile",
+    //     style: "black",
+    //     href: ""
+    // });
+    $('#send').click(function () {
+        var  mobile = $(" input[ name='mobile' ] ").val();
+        if(mobile == ''){
+            toastr("请输入手机号");
+            return
+        }
+        if(!isPhoneNo(mobile)){
+            toastr("您输入的手机号有误");
+            return
+        }
+        $.post("{:U('Api/PublicApi/smsCode')}",{"mobile":mobile,"user_type":1,"type":7},function(result){
+                  console.log(result);
+                  toastr(result['info']);
+        });
+
+    })
+    function isPhoneNo(phone) {
+        var pattern = /^1[34578]\d{9}$/;
+        return pattern.test(phone);
+    }
 </script>
 </body>
 </html>

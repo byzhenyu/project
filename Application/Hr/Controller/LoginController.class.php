@@ -33,6 +33,31 @@ class LoginController extends Controller {
         $WxLogin = new \WxLogin();
         $result = $WxLogin->getWeiChat($code);
     }
+       /**
+       * @desc 手机验证码登录
+       * @param   phone
+       * @param   code
+       * @return mixed
+       */
+       public  function phoneLogin(){
+           $user = D('Admin/User');
+           if (! $user->create(I('post.'), 2)){
+               $this->ajaxReturn(V(0, $user->getError()));
+           }
+           $mobile = I('post.mobile', '');
+           $chkcode = I('chkcode');
+           $valid = D('Admin/SmsMessage')->checkSmsMessage($chkcode, $mobile, 1, 7);
+           if (!$valid['status']) $this->ajaxReturn($valid);
+           $loginInfo = D('Admin/User')->phoneLogin($mobile);
+           if( $loginInfo['status'] == 1 ){ //登录成功
+               /* 存入session */
+               $this->_autoSession($loginInfo['data']);
+               $this->ajaxReturn($loginInfo);
+           } else {
+               $this->ajaxReturn($loginInfo);
+           }
+       }
+
     public function dologin(){
         $user = D('Admin/User');
         if (! $user->create(I('post.'), 5)){

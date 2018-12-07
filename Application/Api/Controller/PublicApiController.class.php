@@ -80,7 +80,7 @@ class PublicApiController extends ApiCommonController
         $user_type = I('user_type', 0, 'intval');
         $type = I('type', 0, 'intval');
         //1注册短信，2找回密码 3修改密码 4绑定手机 6设置支付密码
-        $type_array = array(1, 2, 3, 4, 6);
+        $type_array = array(1, 2, 3, 4, 6, 7);
         if (!in_array($type, $type_array)) {
             $this->apiReturn(V(0, '参数错误'));
         }
@@ -97,7 +97,7 @@ class PublicApiController extends ApiCommonController
 
         if ($result == false && $type == 1) {
             $this->apiReturn(V(0, '手机号码已存在'));
-        } elseif ($result == true && in_array($type, array(2, 3, 6))) {
+        } elseif ($result == true && in_array($type, array(2, 3, 6,7))) {
             $this->apiReturn(V(0, '手机号码不存在'));
         } elseif ($result == false && $type == 4) {
             $this->apiReturn(V(0, '手机号码已存在'));
@@ -124,6 +124,10 @@ class PublicApiController extends ApiCommonController
             case 6:
                 $msg = '设置支付密码验证码';
                 $sms_content = C('SMS_PAY_MSG') . $sms_code;
+                break;
+            case 7:
+                $msg = 'HR后台登录验证码';
+                $sms_content = C('HR_LOGIN_CODE') . $sms_code;
                 break;
         }
 
