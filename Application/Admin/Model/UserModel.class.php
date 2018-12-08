@@ -108,7 +108,25 @@ class UserModel extends Model{
             return V(0, '账号不存在！');
         }
     }
-
+    /**
+    * @desc HR手机登录
+    * @param   phone
+    * @return mixed
+    */
+    public function phoneLogin($mobile, $field = null){
+        if(!$field) $field = 'user_id,user_name,mobile,email,head_pic,nickname,sex,user_money,frozen_money,disabled,register_time,recommended_number,recruit_number,is_auth,user_type,log_count';
+        $info = $this->where(array('mobile' => $mobile,'status' => 1, 'user_type' => 1))->field($field)->find();
+        if($info){
+            if(!$info['disabled']) return V(0, '用户已经被禁用');
+            $info['head_pic'] = !empty($info['head_pic']) ? strval($info['head_pic']) : DEFAULT_IMG;
+            $info['nickname'] = strval($info['nickname']);
+            $info['token'] = $this->updateUserToken($info['user_id']);
+            return V(1, '用户登录成功', $info);
+        }
+        else{
+            return V(0, '账号不存在！');
+        }
+    }
     /**
      * @desc 修改用户可提现金额
      * @param $user_id int 用户id
