@@ -229,6 +229,7 @@ class PublicApiController extends ApiCommonController
             $map['last_login_ip'] = get_client_ip();
             $map['mobile'] = $mobile;
             $map['user_type'] = $user_type;
+            $map['union_id'] = $open_data['union_id'];
             $row_id = $memberModel->add($map);
             if ($row_id) {
                 $token = randNumber(18);

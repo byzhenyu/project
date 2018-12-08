@@ -1315,14 +1315,13 @@ function getOpenId($code, $iv = false, $encrypt = false, $union_iv = false, $uni
         $pc = new \wx\WXBizDataCrypt($app_id, $data['session_key']);
         $errCode = $pc->decryptData($encrypt, $iv, $p_data);
         $union_code = $pc->decryptData($union_encrypt, $union_iv, $u_data);
-        log_record($union_code);
-        log_record($u_data);
-
-
         if($errCode == 0){
             $p_data = json_decode($p_data, true);
         }
-        $openid = array('openid' => $openid, 'mobile' => $p_data['purePhoneNumber']);
+        if($union_code == 0){
+            $u_data = json_decode($u_data, true);
+        }
+        $openid = array('openid' => $openid, 'mobile' => $p_data['purePhoneNumber'], 'union_id' => $u_data['unionId']);
     }
     return $openid;
 }
