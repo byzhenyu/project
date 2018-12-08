@@ -199,6 +199,7 @@ class PublicApiController extends ApiCommonController
         $wx_code = I('wx_code', '', 'trim');
         $iv = I('iv', '', 'trim');
         $encrypt_data = I('encrypt', '', 'trim');
+        $user_type = I('user_type', 2, 'intval');
         log_record(I('post.'));
         $open_data = getOpenId($wx_code, $iv, $encrypt_data);
         $open_id = $open_data['openid'];
@@ -224,6 +225,7 @@ class PublicApiController extends ApiCommonController
             $map['last_login_time'] = NOW_TIME;
             $map['last_login_ip'] = get_client_ip();
             $map['mobile'] = $mobile;
+            $map['user_type'] = $user_type;
             $row_id = $memberModel->add($map);
             if ($row_id) {
                 $token = randNumber(18);
