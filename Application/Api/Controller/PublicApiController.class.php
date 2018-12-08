@@ -201,14 +201,13 @@ class PublicApiController extends ApiCommonController
         $encrypt_data = I('encrypt', '', 'trim');
         $open_data = getOpenId($wx_code, $iv, $encrypt_data);
         $open_id = $open_data['openid'];
-        $t_open_id = I('open_id', '', 'trim');
-        if($t_open_id) $open_id = $t_open_id;
         $thirdType = 'wx';
         if ('wx' == $thirdType) {
             $where['wx'] = $map['wx'] = $open_id;
         }
         $where['wx'] = $map['wx'] = $open_id;
         $mobile = $open_data['mobile'];
+        if(!isMobile($mobile)) $this->apiReturn(V(0, '不是合法的手机号码！'));
         $map['head_pic'] = I('head_pic', '');
         $map['nickname'] = I('nickname', '');
         if (!$open_id) {
@@ -223,6 +222,7 @@ class PublicApiController extends ApiCommonController
             $map['register_time'] = NOW_TIME;
             $map['last_login_time'] = NOW_TIME;
             $map['last_login_ip'] = get_client_ip();
+            $map['mobile'] = $mobile;
             $row_id = $memberModel->add($map);
             if ($row_id) {
                 $token = randNumber(18);
