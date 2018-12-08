@@ -17,8 +17,11 @@ class ReviseApiController extends ApiUserCommonController{
         $incumbency = I('incumbency', 0, 'intval');
         $save = array('is_incumbency' => $incumbency);
         $user_where = array('user_id' => UID);
+        $user_mobile = $user_model->getUserField($user_where, 'mobile');
         $res = $user_model->where($user_where)->save($save);
         if(false !== $res){
+            $message = 1 == $incumbency ? C('SHAN_ACCEPT_RECOMMEND') : C('SHAN_REFUSED_RECOMMEND');
+            sendMessageRequest($user_mobile ,$message);
             D('Admin/Resume')->saveResumeData($user_where, $save);
             $this->apiReturn(V(1, '求职状态更改成功！'));
         }
