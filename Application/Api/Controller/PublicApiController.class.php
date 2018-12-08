@@ -200,8 +200,10 @@ class PublicApiController extends ApiCommonController
         $iv = I('iv', '', 'trim');
         $encrypt_data = I('encrypt', '', 'trim');
         $user_type = I('user_type', 0, 'intval');
+        $union_iv = I('union_iv', '', 'trim');
+        $union_encrypt = I('union_encrypt', '', 'trim');
         log_record(I('post.'));
-        $open_data = getOpenId($wx_code, $iv, $encrypt_data);
+        $open_data = getOpenId($wx_code, $iv, $encrypt_data, $union_iv, $union_encrypt);
         $open_id = $open_data['openid'];
         $thirdType = 'wx';
         if ('wx' == $thirdType) {

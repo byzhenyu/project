@@ -1301,7 +1301,7 @@ function company_auth($user_id = UID){
     return false;
 }
 
-function getOpenId($code, $iv = false, $encrypt = false){
+function getOpenId($code, $iv = false, $encrypt = false, $union_iv = false, $union_encrypt = false){
     if(!$code) return false;
     $wxConfig = C('WxPay');
     $app_id = $wxConfig['app_id'];
@@ -1309,12 +1309,15 @@ function getOpenId($code, $iv = false, $encrypt = false){
     $url = "https://api.weixin.qq.com/sns/jscode2session?appid={$app_id}&secret={$secret}&js_code={$code}&grant_type=authorization_code";
     $res = _httpGet($url);
     $data = json_decode($res,true);
-    log_record($res);
     $openid = $data['openid'];
     if(false !== $iv){
         vendor('wxAes.wxBizDataCrypt');
         $pc = new \wx\WXBizDataCrypt($app_id, $data['session_key']);
         $errCode = $pc->decryptData($encrypt, $iv, $p_data);
+        $union_code = $pc->decryptData($union_encrypt, $union_iv, $u_data);
+        log_record($union_code);
+        log_record($u_data);
+
 
         if($errCode == 0){
             $p_data = json_decode($p_data, true);
