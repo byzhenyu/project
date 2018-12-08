@@ -121,6 +121,7 @@ class UserController extends CommonController {
     public function editUsersAuth() {
         $id = I('user_id', 0, 'intval');
         $where['user_id'] = $id;
+        $user_model = D('Admin/User');
         $result = D('Admin/UserAuth')->getAuthInfo($where);
         if (IS_POST) {
             if ($id > 0) {
@@ -135,10 +136,12 @@ class UserController extends CommonController {
                 if(false !== $result && false !== $auth_res){
                     $account = D('Admin/AccountLog')->where(array('user_id' => $id, 'change_type' => 6))->getField('user_money');
                     if($account > 0 && $auth_data['audit_status'] == 1){
-                        D('Admin/User')->decreaseUserFieldNum($id, 'frozen_money', $account);
-                        D('Admin/User')->increaseUserFieldNum($id, 'withdrawable_amount', $account);
+                        $user_model->decreaseUserFieldNum($id, 'frozen_money', $account);
+                        $user_model->increaseUserFieldNum($id, 'withdrawable_amount', $account);
                     }
-                    //TODO 短信发送
+                    $user_mobile = D('Admin/User')->getUserField($where, 'mobile');
+                    $message = $auth_data['audit_status'] == 1 ? C('SHAN_CERT_TRUE') : C('SHAN_CERT_FALSE');
+                    sendMessageRequest($user_mobile, $message);
                     $this->ajaxReturn(V(1, '操作成功'));
                 }
                 $this->ajaxReturn(V(0, '修改失败请稍后重试！'));

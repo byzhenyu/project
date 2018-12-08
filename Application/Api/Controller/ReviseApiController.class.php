@@ -10,7 +10,6 @@ class ReviseApiController extends ApiUserCommonController{
     /**
      * @desc 更改求职状态
      * @param incumbency 1、接收推荐 0、不接受推荐
-     * @extra TODO 短信发送
      */
     public function setIncumbency(){
         $user_model = D('Admin/User');
