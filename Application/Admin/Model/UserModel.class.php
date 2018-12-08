@@ -5,8 +5,8 @@
 namespace Admin\Model;
 use Think\Model;
 class UserModel extends Model{
-    protected $insertFields = array('user_name','nickname','password','mobile','email', 'register_time', 'sex', 'status', 'user_type', 'is_auth','log_count', 'wx','invoice_amount');
-    protected $updateFields = array('user_id','user_name','nickname','password','mobile','email', 'sex', 'status', 'disabled', 'user_type', 'is_auth', 'head_pic','log_count', 'wx','invoice_amount');
+    protected $insertFields = array('user_name','nickname','password','mobile','email', 'register_time', 'sex', 'status', 'user_type', 'is_auth','log_count', 'wx','invoice_amount', 'union_id');
+    protected $updateFields = array('user_id','user_name','nickname','password','mobile','email', 'sex', 'status', 'disabled', 'user_type', 'is_auth', 'head_pic','log_count', 'wx','invoice_amount', 'union_id');
     protected $selectFields = array('user_id, user_name, nickname, password, mobile, email, sex, status, user_money,frozen_money,withdrawable_amount,disabled,register_time,user_type,is_auth,log_count,wx','invoice_amount');
     protected $_validate = array(
         array('mobile', 'require', '会员手机/账号不能为空！', 1, 'regex', 3),
