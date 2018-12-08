@@ -1238,6 +1238,7 @@ function token_log_type($type){
 }
 
 function hideMobile($mobile){
+    return true;
     $time = time();
     $ts = date('Y-m-d H:i:s');
     $app_key = C('MOBILE_APP_KEY');
