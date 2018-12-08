@@ -199,6 +199,7 @@ class PublicApiController extends ApiCommonController
         $wx_code = I('wx_code', '', 'trim');
         $iv = I('iv', '', 'trim');
         $encrypt_data = I('encrypt', '', 'trim');
+        log_record(I('post.'));
         $open_data = getOpenId($wx_code, $iv, $encrypt_data);
         $open_id = $open_data['openid'];
         $thirdType = 'wx';

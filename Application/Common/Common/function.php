@@ -1323,6 +1323,10 @@ function getOpenId($code, $iv = false, $encrypt = false){
     return $openid;
 }
 
+function log_record($data){
+    M('Log')->add(array('content' => json_encode($data)));
+}
+
 function _httpGet($url){
     $curl = curl_init();
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
