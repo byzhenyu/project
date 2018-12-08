@@ -1309,7 +1309,7 @@ function getOpenId($code, $iv = false, $encrypt = false){
     $url = "https://api.weixin.qq.com/sns/jscode2session?appid={$app_id}&secret={$secret}&js_code={$code}&grant_type=authorization_code";
     $res = _httpGet($url);
     $data = json_decode($res,true);
-    log_record($data);
+    log_record($res);
     $openid = $data['openid'];
     if(false !== $iv){
         vendor('wxAes.wxBizDataCrypt');
