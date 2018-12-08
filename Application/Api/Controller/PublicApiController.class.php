@@ -215,6 +215,7 @@ class PublicApiController extends ApiCommonController
         if (!$open_id) {
             $this->apiReturn(V(0, '参数有误'));
         }
+        $where['user_type'] = $user_type;
 
         $memberModel = M('User');
         $findFields = array('user_id,user_name,password,pay_password,mobile,email,head_pic,nickname,sex,user_money,frozen_money,disabled,register_time,recommended_number,recruit_number,is_auth,user_type,log_count');
