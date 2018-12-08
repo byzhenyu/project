@@ -224,7 +224,6 @@ class ReviseApiController extends ApiUserCommonController{
 
     /**
      * @desc 求职者投递简历
-     * @TODO 自己投递简历  虚拟号问题
      */
     public function delivery(){
         $user_id = UID;
