@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <link rel="stylesheet" type="text/css" href="../../Statics/css/base.css"/>
+    <!--<link href="../css/bootstrap.min.css" type="text/css" rel="stylesheet">-->
+    <link rel="stylesheet" type="text/css" href="../../Statics/css/header.css"/>
+    <!--<link rel="stylesheet" type="text/css" href="../css/frame.css"/>-->
+
+</head>
+<body>
+<header>
+    <div class="head clearfix">
+        <div class="fl head_left">
+            <img src="../../Statics/images/z_32.png">
+            <label>HR端</label>
+        </div>
+        <div class="fr head_right">
+            <span class="head_logo">
+            <img src="../../Statics/images/logo.png">
+            <span>山东某某网络科技有限公司</span>
+            </span>
+            <span class="head_exit">
+            <img src="../../Statics/images/exit.png">
+                <span>退出</span>
+            </span>
+        </div>
+    </div>
+</header>
+
+<div class="container clearfix">
+    <div class="left_tab fl">
+        <div class="tab_userinfo">
+            <div class="userimg">
+                <img src="../../Statics/images/tx.png">
+            </div>
+            <div class="username">
+                <label>刘女士</label>
+            </div>
+        </div>
+        <div class="tab_nav">
+            <ul class="navItem">
+                <li class="home nav_active">
+                    <a>首页</a>
+                </li>
+                <li class="resume">
+                    <a>简历列表</a>
+                </li>
+                <li class="reward">
+                    <a>悬赏管理</a>
+                </li>
+                <li class="recharge">
+                    <a>充值页面</a>
+                </li>
+                <li class="data">
+                    <a>公司资料</a>
+                </li>
+                <li class="bill">
+                    <a>发票申请</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="tab_info">
+            <div>
+                联系方式：15155912501
+            </div>
+            <div>
+                联系地址： <br>猎新信息科技（上海）有限公司
+            </div>
+            <div class="info_ewm">
+                <img src="../../Statics/images/ewm.png">
+            </div>
+        </div>
+    </div>
+    <div class="right_content fl ">
+        <iframe id="iframe"  scrolling="yes" frameborder="0" src="home.html"></iframe>
+    </div>
+</div>
+
+<script src="../../Statics/js/jquery-3.1.1.min.js"></script>
+<!--<script src="../js/bootstrap.min.js"></script>-->
+
+<script>
+    (function(){
+        if (document.documentElement && document.documentElement.clientHeight && document.documentElement.clientWidth)
+        {
+            var winHeight = document.documentElement.clientHeight;
+            var winWidth = document.documentElement.clientWidth;
+        }
+        var iframe = document.getElementById("iframe");
+        iframe.height = winHeight;
+        iframe.width = winWidth-213;
+//        console.log(iframe.width)
+    })()
+</script>
+<script type="text/javascript">
+//    function ResizeWindow(){
+//        h = $(window).height();
+//        w = $(window).width();
+//
+//
+//        topHeight = $('header').outerHeight(true);
+//
+//        $('.left_tab, #iframe').height(h - topHeight);
+//        $(' #iframe').width(w - $('.left_tab').outerWidth(true));
+//    }
+//
+//    $(function(){
+//        //定位
+//        ResizeWindow();
+//        $(window).resize(function(){
+//            ResizeWindow();
+//        })
+//    })
+</script>
+
+</body>
+</html>

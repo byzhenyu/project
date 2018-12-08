@@ -1,0 +1,41 @@
+.container{
+    width: 100%;
+    margin: 0 auto;
+}
+.cr_container {
+    padding: 14px 40px 48px 44px;
+    /*width: 1724px;*/
+    height: 100%;
+    background: #EEF0F5;
+}
+
+.inputbutton {
+    background: #0DBCD1;
+    color: white;
+    width: 160px;
+    height: 46px;
+    border: none;
+    margin-bottom: 15px;
+}
+.content{
+    background: white;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

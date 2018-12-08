@@ -22,6 +22,7 @@
             '__ADMIN__'     => '/Application/Admin/Statics',
             '__SHOP__'     => '/Application/Shop/Statics',
             '__HOME__'     => '/Application/Home/Statics',
+            '__HR__'       => '/Application/NewHr/Statics',
             '__UPLOADS__'   => '/Uploads/',
         ),
 
