@@ -220,7 +220,7 @@ class PublicApiController extends ApiCommonController
         $where['user_type'] = $user_type;
 
         $memberModel = M('User');
-        $findFields = array('user_id,user_name,password,pay_password,mobile,email,head_pic,nickname,sex,user_money,frozen_money,disabled,register_time,recommended_number,recruit_number,is_auth,user_type,log_count');
+        $findFields = array('user_id,user_name,password,pay_password,mobile,email,head_pic,nickname,sex,user_money,frozen_money,disabled,register_time,recommended_number,recruit_number,is_auth,user_type,log_count,union_id');
         $user = $memberModel->where($where)->field($findFields)->find();
         if (!$user) {
             $map['user_name'] = $map['nickname'];
@@ -248,8 +248,10 @@ class PublicApiController extends ApiCommonController
             }
 
         } else {
-            $token = D('Admin/User')->updateWeixinData($user);
-            D('Admin/User')->increaseUserFieldNum($user['user_id'], 'log_count', 1);
+            $user_model = D('Admin/User');
+            if(!$user['union_id']) $user_model->saveUserData(array('user_id' => $user['user_id']), array('union_id' => $open_data['union_id']));
+            $token = $user_model->updateWeixinData($user);
+            $user_model->increaseUserFieldNum($user['user_id'], 'log_count', 1);
             $user['token'] = $token;
             $user['log_count']++;
             $user['register_time'] = time_format($user['register_time'], 'Y-m-d');
