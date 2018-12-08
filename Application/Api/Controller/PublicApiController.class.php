@@ -197,7 +197,10 @@ class PublicApiController extends ApiCommonController
     public function thirdLogin()
     {
         $wx_code = I('wx_code', '', 'trim');
-        $open_id = getOpenId($wx_code);
+        $iv = I('iv', '', 'trim');
+        $encrypt_data = I('encrypt', '', 'trim');
+        $open_data = getOpenId($wx_code, $iv, $encrypt_data);
+        $open_id = $open_data['openid'];
         $t_open_id = I('open_id', '', 'trim');
         if($t_open_id) $open_id = $t_open_id;
         $thirdType = 'wx';
@@ -205,8 +208,7 @@ class PublicApiController extends ApiCommonController
             $where['wx'] = $map['wx'] = $open_id;
         }
         $where['wx'] = $map['wx'] = $open_id;
-        $mobile = I('mobile', 0, 'trim');
-        if(!isMobile($mobile)) $this->apiReturn(V(0, '不是合法的手机号码！'));
+        $mobile = $open_data['mobile'];
         $map['head_pic'] = I('head_pic', '');
         $map['nickname'] = I('nickname', '');
         if (!$open_id) {
@@ -245,6 +247,41 @@ class PublicApiController extends ApiCommonController
             $user['log_count']++;
             $user['register_time'] = time_format($user['register_time'], 'Y-m-d');
             $this->apiReturn(V(1, '登录成功', $user));
+        }
+    }
+
+    public function testAes(){
+        vendor('wxAes.wxBizDataCrypt');
+        $appid = 'wxb7221179eaa2ade7';
+        $sessionKey = 'gqANpPd5nMPquy47+DLCvw==';
+
+        $encryptedData="CiyLU1Aw2KjvrjMdj8YKliAjtP4gsMZM
+                QmRzooG2xrDcvSnxIMXFufNstNGTyaGS
+                9uT5geRa0W4oTOb1WT7fJlAC+oNPdbB+
+                3hVbJSRgv+4lGOETKUQz6OYStslQ142d
+                NCuabNPGBzlooOmB231qMM85d2/fV6Ch
+                evvXvQP8Hkue1poOFtnEtpyxVLW1zAo6
+                /1Xx1COxFvrc2d7UL/lmHInNlxuacJXw
+                u0fjpXfz/YqYzBIBzD6WUfTIF9GRHpOn
+                /Hz7saL8xz+W//FRAUid1OksQaQx4CMs
+                8LOddcQhULW4ucetDf96JcR3g0gfRK4P
+                C7E/r7Z6xNrXd2UIeorGj5Ef7b1pJAYB
+                6Y5anaHqZ9J6nKEBvB4DnNLIVWSgARns
+                /8wR2SiRS7MNACwTyrGvt9ts8p12PKFd
+                lqYTopNHR1Vf7XjfhQlVsAJdNiKdYmYV
+                oKlaRv85IfVunYzO0IKXsyl7JCUjCpoG
+                20f0a04COwfneQAGGwd5oa+T8yO5hzuy
+                Db/XcxxmK01EpqOyuxINew==";
+
+        $iv = 'r7BXXKkLb8qrSNn05n0qiA==';
+
+        $pc = new \wx\WXBizDataCrypt($appid, $sessionKey);
+        $errCode = $pc->decryptData($encryptedData, $iv, $data );
+
+        if ($errCode == 0) {
+            print($data . "\n");
+        } else {
+            print($errCode . "\n");
         }
     }
 

@@ -1301,7 +1301,7 @@ function company_auth($user_id = UID){
     return false;
 }
 
-function getOpenId($code){
+function getOpenId($code, $iv = false, $encrypt = false){
     if(!$code) return false;
     $wxConfig = C('WxPay');
     $app_id = $wxConfig['app_id'];
@@ -1310,6 +1310,16 @@ function getOpenId($code){
     $res = _httpGet($url);
     $data = json_decode($res,true);
     $openid = $data['openid'];
+    if(false !== $iv){
+        vendor('wxAes.wxBizDataCrypt');
+        $pc = new \wx\WXBizDataCrypt($app_id, $data['session_key']);
+        $errCode = $pc->decryptData($encrypt, $iv, $p_data);
+
+        if($errCode == 0){
+            $p_data = json_decode($p_data, true);
+        }
+        $openid = array('openid' => $openid, 'mobile' => $p_data['purePhoneNumber']);
+    }
     return $openid;
 }
 
