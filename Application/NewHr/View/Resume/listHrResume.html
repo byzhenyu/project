@@ -1,0 +1,59 @@
+<extend name="Common/base"/>
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__HR__/css/resumeList.css"/>
+</block>
+<block name="body">
+<div class="container">
+    <div class="rl_container">
+        <div class="addresume">
+            <a href="{:U('Resume/editResume')}">
+                <input type="button" class="inputbutton" value="+ 添加简历">
+            </a>
+        </div>
+        <div class="content">
+            <div class="rl_title">
+                <span>序号</span>
+                <span>姓名</span>
+                <span>联系方式</span>
+                <span>求职方向</span>
+                <span>工作性质</span>
+                <span>更新时间</span>
+                <span>操作</span>
+            </div>
+            <div class="rl_item">
+                <ul>
+                    <foreach name="info" item="v">
+                        <li>
+                            <span>{$v['id']}</span>
+                            <span>{$v['true_name']}</span>
+                            <span>
+                            <p>电话：{$v['mobile']}</p>
+                            <p>邮箱：{$v['email']}</p>
+                        </span>
+                            <span>
+                            <p>地区：{$v['job_area']} </p>
+                            <p>职业：{$v['job_intension']}</p>
+                        </span>
+                            <span>{$v['post_nature']}</span>
+                            <span>{:time_format($v['update_time'])}</span>
+                            <span>
+                                <div class="bj ">
+                                    <if condition="$v['is_edit'] eq 1">
+                                        <a href="{:U('Resume/editResume',array('resume_id'=>$v['id']))}">编辑</a>
+                                        <else/><span style="color: #ff1408;">认证简历不可操作</span>
+                                    </if>
+                                </div>
+                                <div class="detail">
+                                    <a href="{:U('Resume/seeResumeDetail',array('id'=>$v['id']))}">详情</a>
+                                </div>
+                            </span>
+                        </li>
+                    </foreach>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</block>
+<block name="script">
+</block>

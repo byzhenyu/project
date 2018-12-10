@@ -27,9 +27,93 @@
                             <tr><th colspan="4">公司信息</th></tr>
                         </thead>
                         <tbody>
-
-
-
+                            <tr>
+                                <td style="width: 25%"><div align="right"><strong>公司名称：</strong></div></td>
+                                <td>
+                                    <input type="text" name="company_name" value="{$info['company_name']}" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>公司LOGO：</strong></div></td>
+                                <td>
+                                    <div class="am-u-sm-3">
+                                        <div class="am-form-group am-form-file">
+                                            <div class="tpl-form-file-img">
+                                                <img src="{$info['company_logo']}" alt="" style="min-height:122px; width: 122px;" id="img_">
+                                            </div>
+                                            <input type="hidden" value="{$info['company_logo']}" name="company_logo" id="img" />
+                                            <button type="button" class="am-btn am-btn-success am-btn-sm" id="btnUpload">上传</button>
+                                            <button type="button" class="am-btn am-btn-danger am-btn-sm" onclick="delFile($('#img').val(), '')" id="btn_delete_">删除</button>
+                                            <if condition="$info['company_logo'] eq ''">
+                                                <script>
+                                                    $("#img_, #btn_delete_").hide();
+                                                </script>
+                                            </if>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>公司规模：</strong></div></td>
+                                <td>
+                                    <select name="company_size" id="company_size" data-am-selected="">
+                                        <option value="">请选择</option>
+                                        <foreach name="company_size" item="v">
+                                            <option value="{$v['value']}" <if condition="$v['value'] eq $info['company_size']"> selected</if>>{$v['value']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>公司性质：</strong></div></td>
+                                <td>
+                                    <select name="company_nature" id="company_nature" data-am-selected="">
+                                        <option value="">请选择</option>
+                                        <foreach name="company_nature" item="v">
+                                            <option value="{$v['nature_name']}" <if condition="$v['nature_name'] eq $info['company_nature']">selected</if>>{$v['nature_name']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>公司行业：</strong></div></td>
+                                <td>
+                                    <select name="company_industry" id="industry" data-am-selected="">
+                                        <option value="">请选择</option>
+                                        <foreach name="industry" item="v">
+                                            <option value="{$v['industry_name']}" <if condition="$v['industry_name'] eq $info['company_industry']">selected</if>>{$v['industry_name']}</option>
+                                        </foreach>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>公司地址：</strong></div></td>
+                                <td>
+                                    <div class="am-form-group" id="company_address">
+                                        <select name="province"></select>
+                                        <select name="city"></select>
+                                        <select name="county"></select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>详细地址：</strong></div></td>
+                                <td>
+                                    <input type="text" name="company_address" value="{$info['company_address']}" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>公司电话：</strong></div></td>
+                                <td>
+                                    <input type="text" name="company_mobile" value="{$info['company_mobile']}" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>公司邮箱：</strong></div></td>
+                                <td>
+                                    <input type="text" name="company_email" value="{$info['company_email']}" />
+                                </td>
+                            </tr>
                             <tr>
                                 <td><div align="right"><strong>公司环境：</strong></div></td>
                                 <td>
@@ -41,17 +125,23 @@
                                         <input type="file">
                                     </div>
                                     <div class="upload-img-box-ids">
-                                        <notempty name="info[img_list]">
-                                            <foreach name="info[img_list]" item="v">
+                                        <notempty name="goods_info[img_list]">
+                                            <foreach name="goods_info[img_list]" item="v">
                                                 <div class="upload-item">
                                                     <img src="{$v.image_path}" style="max-width: 150px;">
                                                     <div class="file-del" onclick="delPicIds(this)" style="color:red;cursor:pointer">删除</div>
-                                                    <input type="hidden" name="company_img_ids[]" value="{$v.image_path}">
-                                                    <input type="hidden" name="local_company_img_ids[]" value="{$v.local_img_path}">
+                                                    <input type="hidden" name="goods_img_ids[]" value="{$v.image_path}">
+                                                    <input type="hidden" name="local_goods_img_ids[]" value="{$v.local_img_path}">
                                                 </div>
                                             </foreach>
                                         </notempty>
                                     </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>描述：</strong></div></td>
+                                <td>
+                                    <script id="content1" name="describe" type="text/plain">{$info["describe"]|htmlspecialchars_decode}</script>
                                 </td>
                             </tr>
                             <tr>
