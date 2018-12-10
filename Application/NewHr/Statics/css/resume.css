@@ -6,8 +6,8 @@
 .r_container {
     height: 100%;
     width: 100%;
-    background: black;
-    opacity: 0.5;
+    background:rgba(0,0,0,0.46);
+    /*opacity:0.46;*/
     padding-top: 126px;
     padding-bottom: 79px;
 }
@@ -19,7 +19,6 @@
     overflow-y: scroll;
     padding: 55px 50px;
     background: white;
-    opacity: 1;
 }
 
 ::-webkit-scrollbar {
@@ -72,6 +71,7 @@
     display: inline-block;
     text-align: center;
     height: 14px;
+    line-height:14px;
 }
 .li2img {
     color: #23BCCF;

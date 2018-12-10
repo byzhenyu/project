@@ -76,24 +76,27 @@ header {
     /*width: 1920px;*/
     margin: 0 auto;
     padding: 0;
-    padding-top:76px;
+    /*padding-top:76px;*/
 }
 
 .left_tab {
-    width: 213px;
+    width: 211px;
     background: #25282F;
     height: 100%;
     overflow: scroll;
     position: fixed;
     top: 76px;
     left: 0;
+    padding-bottom: 80px;
 }
 
 .right_content {
     background: #EEF0F5;
     height: 100%;
     overflow: visible;
-    padding-left: 213px;
+    padding-left: 211px;
+    padding-top:76px;
+
     /*position: relative;*/
     /*left: 196px;*/
 }
@@ -143,7 +146,7 @@ header {
 }
 .resume{
     color: #62656E;
-    background: url("../images/33.png") left 1.4285714285714286rem center no-repeat;
+    background: url("../images/150.png") left 1.4285714285714286rem center no-repeat;
 }
 .reward{
     color: #62656E;
@@ -173,6 +176,47 @@ header {
     background-repeat: no-repeat;
     background-color: #181B21;
 }
+.nav_activejllb {
+    color: white;
+    background-image: url("../images/13.png");
+    background-position: left 1.4285714285714286rem center ;
+    background-size: 1.5rem 1.4285714285714286rem;
+    background-repeat: no-repeat;
+    background-color: #181B21;
+}
+.nav_activexsgl {
+    color: white;
+    background-image: url("../images/15.png");
+    background-position: left 1.4285714285714286rem center ;
+    background-size: 1.5rem 1.4285714285714286rem;
+    background-repeat: no-repeat;
+    background-color: #181B21;
+}
+.nav_activeczym {
+    color: white;
+    background-image: url("../images/11.png");
+    background-position: left 1.4285714285714286rem center ;
+    background-size: 1.5rem 1.4285714285714286rem;
+    background-repeat: no-repeat;
+    background-color: #181B21;
+}
+.nav_activegszl {
+    color: white;
+    background-image: url("../images/12.png");
+    background-position: left 1.4285714285714286rem center ;
+    background-size: 1.5rem 1.4285714285714286rem;
+    background-repeat: no-repeat;
+    background-color: #181B21;
+}
+.nav_activefpsq {
+    color: white;
+    background-image: url("../images/143.png");
+    background-position: left 1.4285714285714286rem center ;
+    background-size: 1.5rem 1.4285714285714286rem;
+    background-repeat: no-repeat;
+    background-color: #181B21;
+}
+
 
 .tab_info {
     color: white;

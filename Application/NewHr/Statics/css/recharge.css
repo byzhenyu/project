@@ -3,159 +3,148 @@
     padding: 0;
 }
 
-.r_container {
-    padding: 25px 36px 0 48px;
+.rc_container {
+    padding: 25px 40px 0 44px;
     height: 100%;
     background: #EEF0F5;
 }
 
-.content {
+.left_content {
     background: white;
-    min-width: 800px;
+    width: 68%;
+    display: inline-block;
+    padding: 0 40px;
+    padding-bottom: 35px;
 }
 
-.r_items {
-    padding-left: 63px;
-    padding-top: 30px;
-    margin-bottom: 73px;
-}
-
-.r_items > ul > li {
-    margin-bottom: 15px;
+.right_content {
+    background: white;
+    width: 30%;
     height: 100%;
-}
-
-.r_items > ul > li > div {
     display: inline-block;
 }
 
-#uplogo {
-    width: 59px;
-    height: 59px;
-    border-radius: 50%;
-    /*line-height: 59px;*/
-}
-#uplogo img{
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-}
-.r_items > ul > li > div:nth-child(1) {
-    font-size: 14px;
-    color: #999999;
-    margin-right: 31px;
-    vertical-align: top;
+.left_content > ul > li {
+    height: 85px;
+    /*line-height: 85px;*/
+    border-bottom: 1px solid #EFEFEF;
 }
 
-.r_items > ul > li:nth-child(1) > div:nth-child(1) {
-    font-size: 14px;
-    color: #999999;
-    margin-right: 31px;
-    height: 59px;
-    line-height: 59px;
+.rc_op {
+    line-height: 85px;
+    color: #0DBCD1;
+    font-size: 16px;
 }
 
-.r_items > ul > li > div label {
-    font-size: 12px;
+.rc_op span {
+    margin-left: 36px;
+    cursor: pointer;
+}
+
+.rc_info {
+    padding-top: 20px;
+}
+
+.rc_date {
     color: #CECECE;
-    text-align: center;
+    font-size: 16px;
 }
 
-.inputfile {
-    position: relative;
-    width: 50px;
-    top: -30px;
-    opacity: 0;
+.rc_title span:nth-child(1) {
+    color: #555555;
+    font-size: 16px;
+    margin-right: 6px;
+}
+
+.rc_title span:nth-child(2) {
+    color: #FC784C;
+    font-size: 20px;
+}
+
+.rc_money {
+    padding: 28px 30px;
+    color: #62656E;
+    font-size: 20px;
+}
+
+.rc_money div:nth-child(1) {
+    padding: 50px 0;
+    text-align: center;
+    color: #FC784C;
+    font-size: 30px;
+}
+
+.rc_money div:nth-child(2) {
+
 }
 
 .inputtext {
-    border-color: #EFEFEF;
-    height: 36px;
-    width: 378px;
+    width: 100%;
+    height: 44px;
+    border-color: #DEDEDE;
+    border-radius: 4px;
     padding-left: 12px;
-    border-radius: 4px;
-    /*color: #CECECE;*/
 }
 
-.r_address select {
-    width: 184px;
-    height: 36px;
-    border-color: #EFEFEF;
-    margin-right: 6px;
-    color: #555555;
+.rc_radio {
+    padding-left: 17px;
 }
 
-.r_address > div:nth-child(1) {
-    margin-bottom: 11px;
+.rc_radio li {
+    height: 60px;
+    font-size: 16px;
+    color: #62656E;
+    background: url("../images/radio0.png") left top no-repeat;
+    background-size: 21px 21px;
+    cursor: pointer;
 }
 
-.inputtext2 {
-    width: 571px;
+.rc_radio li img {
+    margin-right: 26px;
+    margin-left: 42px;
 }
 
-.inputtextarea {
-    border-radius: 4px;
-    width: 572px;
-    height: 79px;
-    border-color: #EFEFEF;
-    padding-left: 15px;
-    text-align: left;
+.rc_radio .ra_active {
+    background: url("../images/radio1.png") left top no-repeat;
+    background-size: 21px 21px;
 }
 
-.upimg {
-    /*width: 100%;*/
-    height: 100%;
-display: inline-block;
-    margin-bottom: 10px;
-    vertical-align: top;
+.bankcard {
+    padding:0 36px;
 }
 
-.upimg img {
-    width: 110px;
-    height: 71px;
-    margin-bottom: 10px;
-    margin-right: 20px;
-    display: none;
+.bankcard li {
+    cursor: pointer;
+    border: 1px solid #F4F4F4;
+    border-radius: 9px;
+    padding: 10px;
+    margin-bottom: 12px;
 }
-#hjimg1{
+.bankcard li div span{
+    width: 58px;
+    color: #999999;
     display: inline-block;
 }
-#hjimg2{
-    /*display: inline-block;*/
+.bankcard .bc_active{
+    border: 1px solid #0DBCD1;
+    background:rgba(245,254,255,1);
 }
-.upimg_button img {
-    width: 110px;
-    height: 71px;
+.inputbuttonstyle{
+    width: 100%;
+    padding: 40px 50px;
 }
-
-.upimg_button {
-    width: 110px;
-display: inline-block;
-    vertical-align: top;
-}
-
-.inputbutton {
-    background: #0DBCD1;
-    border: none;
-    border-radius: 4px;
-    color: white;
-    width: 272px;
+.inputbutton{
+    width: 100%;
     height: 44px;
+    border:1px solid rgba(13,188,209,1);
+    opacity:1;
+    border-radius:4px;
+    font-size:16px;
+    font-weight:400;
+    color:rgba(13,188,209,1);
+    background: white;
+    cursor: pointer;
 }
-
-.buttonstyle {
-    padding-left: 118px;
-    margin-bottom: 31px;
-}
-
-.tip {
-    padding-left: 50px;
-    color: #FF6440;
-    font-size: 14px;
-    width: 350px;
-    line-height: 24px;
-}
-
 
 
 

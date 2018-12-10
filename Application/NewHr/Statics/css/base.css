@@ -101,3 +101,14 @@ html body {
 a{
     cursor: pointer;
 }
+
+
+input::-webkit-input-placeholder {
+    color: #CECECE;
+}
+input:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    #CECECE;
+}
+input:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color:    #CECECE;
+}

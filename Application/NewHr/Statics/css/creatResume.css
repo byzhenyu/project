@@ -1,9 +1,10 @@
-.container{
+.container {
     width: 100%;
     margin: 0 auto;
 }
+
 .cr_container {
-    padding: 14px 40px 48px 44px;
+    padding: 14px 40px 0px 44px;
     /*width: 1724px;*/
     height: 100%;
     background: #EEF0F5;
@@ -17,16 +18,247 @@
     border: none;
     margin-bottom: 15px;
 }
-.content{
+
+.content {
     background: white;
+    padding: 13px 56px 90px 56px;
 }
 
+.cr_title > div {
+    display: inline-block;
+}
+
+.cr_num {
+    color: #0DBCD1;
+    font-size: 50px;
+    margin-right: 20px;
+}
+
+.cr_name div:nth-child(1) {
+    color: #555555;
+    font-size: 20px;
+    margin-bottom: 2px;
+}
+
+.cr_name div:nth-child(2) {
+    color: #999999;
+    font-size: 12px;
+}
+
+.keepbutton {
+    cursor: pointer;
+    background: #0DBCD1;
+    color: white;
+    font-size: 16px;
+    width: 172px;
+    height: 44px;
+    border: none;
+    border-radius: 4px;
+    margin-left: 273px;
+}
+
+.cr_pack1 {
+    margin-bottom: 60px;
+    max-width: 920px;
+    padding-left: 22px;
+}
+
+.cr_pack1 ul li {
+    margin-bottom: 14px;
+}
+
+.pack_name {
+    color: #999999;
+    margin-right: 10px;
+    width: 70px;
+    display: inline-block;
+    /*text-align: justify;*/
+    /*background: url("../images/x.png") left -8px center no-repeat;*/
+}
+
+/*.pack_name:after{*/
+    /*display:inline-block;*/
+    /*overflow:hidden;*/
+    /*width:100%;*/
+    /*height:0;*/
+    /*content:'';*/
+    /*vertical-align:top;*/
+/*}*/
 
 
+.pack_info {
+width: 100%;
+    color: #CECECE;
+}
 
+.inputtext1 {
+    height: 36px;
+    width: 378px;
+    border-color: #EFEFEF;
+    padding-left: 12px;
+    border-radius: 4px;
+}
 
+.ages {
+    width: 184px;
+    height: 36px;
+    border-color: #EFEFEF;
+    margin-right: 6px;
+    color: #CECECE;
+}
+.boy {
+    cursor: pointer;
+    width: 60px;
+    text-align: right;
+    display: inline-block;
+    background: url("../images/radio0.png") left 16px top no-repeat;
+    background-size: 20px 20px;
+}
+.girl{
+    cursor: pointer;
+    width: 60px;
+    text-align: right;
+    display: inline-block;
+    background: url("../images/radio0.png") left 16px top no-repeat;
+    background-size: 20px 20px;
+}
+.bg_active{
+    background: url("../images/radio1.png") left 16px top no-repeat;
+    background-size: 20px 20px;
+}
+.language span{
+    cursor: pointer;
+}
+.marriage {
+    width: 378px;
+    height: 36px;
+    border-color: #EFEFEF;
+    margin-right: 10px;
+    color: #CECECE;
+}
 
+.language span {
+    display: inline-block;
+    text-align: center;
+    padding-top: 6px;
+    width: 86px;
+    height: 36px;
+    background: rgba(255, 255, 255, 1);
+    border: 1px solid rgba(239, 239, 239, 1);
+    border-radius: 4px;
+    margin-right: 8px;
+    color: #CECECE;
+}
 
+.language .lanactive {
+    color: #0DBCD1;
+    background: rgba(13, 188, 209, 0.06);
+    border: 1px solid rgba(13, 188, 209, 1);
+}
+
+.textarea {
+    width: 571px;
+    height: 160px;
+    border-color: #EFEFEF;
+    padding-left: 12px;
+}
+
+.pack_intro {
+    vertical-align: top;
+}
+
+.edu_school {
+
+}
+
+.edu_school div {
+    margin-bottom: 8px;
+}
+
+.edu_school div:nth-child(2) {
+    color: #999999;
+}
+
+.edu_school div span {
+    padding: 0 14px;
+    border-right: 1px solid #555555;
+    color: #555555;
+    font-size: 16px;
+    height: 14px;
+}
+
+.edu_school div span:nth-child(1) {
+    padding-left: 0;
+}
+
+.edu_school div span:nth-child(3) {
+    border-right: none;
+}
+
+.edu_date span {
+    margin-right: 20px;
+    color: #0DBCD1;
+    cursor: pointer;
+}
+
+.edu_date span img {
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+.edu_date span:nth-child(1) {
+    margin-right: 30px;
+    color: #555555;
+}
+
+.edu_tj {
+    cursor: pointer;
+    border-color: #0DBCD1;
+    border-radius: 4px;
+    width: 86px;
+    height: 36px;
+    background: white;
+    color: #0DBCD1;
+    margin-left: 300px;
+    margin-top: 20px;
+}
+
+.inputdate {
+    width: 230px;
+    height: 36px;
+    margin-right: 17px;
+    border-color: #EFEFEF;
+    color: #CECECE;
+    border-radius: 4px;
+}
+
+.work {
+
+}
+
+.work div:nth-child(1) > span {
+    border-right: 1px solid #555555;
+    font-size: 16px;
+    padding: 0 20px;
+    height: 16px;
+}
+.work div:nth-child(1) > span:nth-child(1) {
+    padding-left: 0;
+}
+.work div:nth-child(1) > span:nth-child(2) {
+    border-right: none;
+}
+.work_info{
+    margin-top: 14px;
+    color: #999999;
+    font-size: 16px;
+}
+.addwork{
+margin-top: 20px;
+}
+.addwork ul li{
+/*margin-bottom: 20px;*/
+}
 
 
 
