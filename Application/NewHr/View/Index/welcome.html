@@ -9,15 +9,15 @@
     <div class="h_container">
         <div class="top clearfix">
             <div class="h_userinfo fl">
-                <img src="__HR__/images/tx.png">
-                <p>刘女士</p>
+                <img src="{$ranking['head_pic']}">
+                <p>{$ranking.nickname}</p>
             </div>
             <div class="rightItem fr ">
                 <div class="up">
                     <ul class="clearfix">
                         <li class="col-md-3 col-sm-6 fr">
                             <div class="num">
-                                566
+                                {$ranking['resume_ranking']}
                             </div>
                             <div class="name">
                                 <img src="__HR__/images/18.png">
@@ -26,7 +26,7 @@
                         </li>
                         <li class="col-md-3 col-sm-6">
                             <div class="num1">
-                                566
+                               {$ranking['resume_number']}
                             </div>
                             <div class="name">
                                 <img src="__HR__/images/33.png">
@@ -35,7 +35,7 @@
                         </li>
                         <li class="col-md-3 col-sm-6">
                             <div class="num2">
-                                566<span>令牌</span>
+                                {$ranking.month_amount}<span>令牌</span>
                             </div>
                             <div class="name">
                                 <img src="__HR__/images/21.png">
@@ -44,11 +44,11 @@
                         </li>
                         <li class="col-md-3 col-sm-6">
                             <div class="num2">
-                                566<span>令牌</span>
+                                {$ranking['user_ranking']}<span></span>
                             </div>
                             <div class="name">
-                                <img src="__HR__/images/21.png">
-                                年度收益
+                                <img src="__HR__/images/18.png">
+                                注册排名
                             </div>
                         </li>
                     </ul>
@@ -78,19 +78,21 @@
             </div>
             <div class="h_items">
                 <ul>
-                    <li>
-                        <span>序号</span>
-                        <span>悬赏职位</span>
-                        <span>招聘人数</span>
-                        <span>岗位性质</span>
-                        <span>语言要求</span>
-                        <span>工作地区</span>
-                        <span>悬赏令牌</span>
-                        <span>剩余数量</span>
-                        <span>添加时间</span>
-                        <span>已匹配</span>
-                        <span>操作</span>
-                    </li>
+                    <foreach name="info" item="v">
+                        <li>
+                            <span>{$v['id']}</span>
+                            <span>{$v['position_name']}</span>
+                            <span>{$v['recruit_num']}</span>
+                            <span>{$v['nature']}</span>
+                            <span>{$v['language_ability']}</span>
+                            <span>{$v['job_area']}</span>
+                            <span>{:fen_to_yuan($v['commission'])}</span>
+                            <span>{:fen_to_yuan($v['last_token'])}</span>
+                            <span>{:time_format($v['add_time'])}</span>
+                            <span>已匹配</span>
+                            <span>操作</span>
+                        </li>
+                    </foreach>
                 </ul>
             </div>
 
@@ -101,4 +103,6 @@
 </block>
 <block name="script">
     <script src="__HR__/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+    </script>
 </block>
