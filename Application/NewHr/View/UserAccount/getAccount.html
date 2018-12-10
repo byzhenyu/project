@@ -104,7 +104,6 @@
 </block>
 
 <block name="script">
-    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
     <script type="text/javascript">
         $(".rc_radio li ").click(function () {
                 $(".rc_radio li").removeClass("ra_active");
@@ -140,7 +139,15 @@
             if(type == 0){
                 $.post("{:U('Pay/weiChatPay')}", {'recharge_money':recharge_money}, function (data) {
                     if (data.status == 1) {
-                        window.open(data.info);
+                        layer.open({
+                            type: 1,
+                            // skin: '微信扫码支付', //加上边框
+                            title: false,
+                            area: ['186px', '186px'], //宽高
+                            content: '<img alt="扫描二扫码支付" src="'+ data.info+'">'
+                        });
+
+                        // window.open(data.info);
                         // window.href=data.info;
                     }
                 })
@@ -170,7 +177,15 @@
                 })
             }else if(type == 2){
                 var newurl = "{:U('Pay/aliPay')}/recharge_money/"+recharge_money;
-                window.open(newurl);
+                layer.open({
+                    type: 2,
+                    title: 'layer mobile页',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['380px', '90%'],
+                    content: 'http://m.baidu.com'
+                });
+                // window.open(newurl);
             }else{
                 $.post("{:U('Pay/weiChatPay')}", {'recharge_money':recharge_money}, function (data) {
                     // alert(JSON.stringify(data));
