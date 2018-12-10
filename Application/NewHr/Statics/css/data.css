@@ -1,0 +1,173 @@
+.container {
+    margin: 0 auto;
+    padding: 0;
+}
+
+.r_container {
+    padding: 25px 36px 0 48px;
+    height: 100%;
+    background: #EEF0F5;
+}
+
+.content {
+    background: white;
+    min-width: 800px;
+}
+
+.r_items {
+    padding-left: 63px;
+    padding-top: 30px;
+    margin-bottom: 73px;
+}
+
+.r_items > ul > li {
+    margin-bottom: 15px;
+    height: 100%;
+}
+
+.r_items > ul > li > div {
+    display: inline-block;
+}
+
+#uplogo {
+    width: 59px;
+    height: 59px;
+    border-radius: 50%;
+    cursor: pointer;
+    /*line-height: 59px;*/
+}
+
+.r_items > ul > li > div:nth-child(1) {
+    font-size: 14px;
+    color: #999999;
+    margin-right: 31px;
+    vertical-align: top;
+}
+
+.r_items > ul > li:nth-child(1) > div:nth-child(1) {
+    font-size: 14px;
+    color: #999999;
+    margin-right: 31px;
+    height: 59px;
+    line-height: 59px;
+}
+
+.r_items > ul > li > div label {
+    font-size: 12px;
+    color: #CECECE;
+    text-align: center;
+}
+
+.inputfile {
+    position: relative;
+    width: 50px;
+    top: -30px;
+    cursor: pointer;
+    opacity: 0;
+}
+
+.inputtext {
+    border-color: #EFEFEF;
+    height: 36px;
+    width: 378px;
+    padding-left: 12px;
+    border-radius: 4px;
+    /*color: #CECECE;*/
+}
+
+.r_address select {
+    width: 184px;
+    height: 36px;
+    border-color: #EFEFEF;
+    margin-right: 6px;
+    color: #CECECE;
+}
+
+.r_address > div:nth-child(1) {
+    margin-bottom: 11px;
+}
+
+.inputtext2 {
+    width: 571px;
+}
+
+.inputtextarea {
+    border-radius: 4px;
+    width: 572px;
+    height: 79px;
+    border-color: #EFEFEF;
+    padding-left: 15px;
+    text-align: left;
+}
+
+.upimg {
+    /*width: 100%;*/
+    height: 100%;
+    display: inline-block;
+    margin-bottom: 10px;
+    vertical-align: top;
+}
+
+.upimg img {
+    width: 110px;
+    height: 71px;
+    margin-bottom: 10px;
+    margin-right: 20px;
+    display: none;
+}
+
+#hjimg1 {
+    /*display: inline-block;*/
+}
+
+#hjimg2 {
+    /*display: inline-block;*/
+}
+
+.upimg_button img {
+    width: 110px;
+    height: 71px;
+}
+
+.upimg_button {
+    width: 110px;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.inputbutton {
+    background: #0DBCD1;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    width: 272px;
+    height: 44px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.buttonstyle {
+    padding-left: 118px;
+    margin-bottom: 31px;
+}
+
+.tip {
+    padding-left: 50px;
+    color: #FF6440;
+    font-size: 14px;
+    width: 350px;
+    line-height: 24px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
