@@ -15,7 +15,7 @@ class HrCommonController extends Controller
         define('HR_ID', $hr_id);
         define('HR_NAME', $hrName);
         if(!$hr_id) {
-            redirect(U('/Hr/Login'));
+            redirect(U('/NewHr/Login'));
         } 
 
         

@@ -1,8 +1,7 @@
 <?php
 namespace NewHr\Controller;
-use Think\Controller;
-
-class IndexController extends Controller {
+use Common\Controller\HrCommonController;
+class IndexController extends HrCommonController {
     public function Index(){
         require_once(APP_PATH . '/NewHr/Conf/menu.php');
         $menus = array();
