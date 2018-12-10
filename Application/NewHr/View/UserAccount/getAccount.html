@@ -1,0 +1,183 @@
+<extend name="Common/base"/>
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__HR__/css/base.css"/>
+    <link rel="stylesheet" type="text/css" href="__HR__/css/recharge.css"/>
+</block>
+
+<block name="body">
+    <div class="container">
+        <div class="rc_container clearfix">
+            <div class="left_content fl">
+                <if condition="empty($info)">
+                    <div class="isdata">
+                        <span>没有数据</span>
+                    </div>
+                </if>
+                <ul>
+                    <foreach name="info" item="v">
+                        <li class="clearfix">
+                            <div class="fl rc_info">
+                                <div class="rc_title">
+                                    <span>{:paymentType($v['payment'])}充值</span>
+                                    <span>{:fen_to_yuan($v['money'])}</span>
+                                </div>
+                                <div class="rc_date">
+                                    <!--{$v['add_time']|date='Y-m-d H:i', ###}-->
+                                    {:time_format($v['add_time'])}
+                                </div>
+                            </div>
+                            <div class="fr rc_op">
+                                <span>查看合同</span>
+                                <span>下载合同</span>
+                            </div>
+                        </li>
+                    </foreach>
+                </ul>
+                <div class="pageList">
+                    {$page}
+                </div>
+            </div>
+            <div class="right_content fr">
+                <div class="rc_money">
+                    我的余额
+                    <div>
+                        ￥ {:fen_to_yuan($userMoney)}
+                    </div>
+                    <div>
+                        <input type="number" class="inputtext" id="recharge_money" placeholder="请输入充值金额">
+                    </div>
+                </div>
+                <div>
+                    <ul class="rc_radio">
+                        <li class="ra_active" name="0">
+                            <img src="__HR__/images/44.png">微信充值
+                        </li>
+                        <li name="1">
+                            <img src="__HR__/images/40.png">支付宝充值
+                        </li>
+                        <li name="2">
+                            <img src="__HR__/images/45.png">银行卡转账
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <ul class="bankcard">
+                        <foreach name="SysBankList" item="v" key="k">
+                            <if condition="$k eq 0">
+                                <li class="bc_active">
+                                    <div>
+                                        <span>持卡人:</span>{$v.bank_holder}
+                                    </div>
+                                    <div>
+                                        <span>卡  号:</span>{$v.bank_no}
+                                    </div>
+                                    <div>
+                                        <span>银  行:</span>{$v.bank_name}
+                                    </div>
+                                    <input type="hidden" name="bank_id" value="{$v.id}">
+                                </li>
+                                  <esle />
+                                 <li>
+                                    <div>
+                                        <span>持卡人:</span>{$v.bank_holder}
+                                    </div>
+                                    <div>
+                                        <span>卡  号:</span>{$v.bank_no}
+                                    </div>
+                                    <div>
+                                        <span>银  行:</span>{$v.bank_name}
+                                    </div>
+                                     <input type="hidden" name="bank_id" value="{$v.id}">
+                                </li>
+                            </if>
+
+                        </foreach>
+                    </ul>
+                </div>
+                <div class="inputbuttonstyle">
+                    <input type="button" class="inputbutton" value="立即充值">
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript" src="__PUBLIC__/layer/layer.js"></script>
+    <script type="text/javascript">
+        $(".rc_radio li ").click(function () {
+                $(".rc_radio li").removeClass("ra_active");
+                $(this).addClass("ra_active");
+            }
+        );
+
+        $(".bankcard li ").click(function () {
+                $(".bankcard li").removeClass("bc_active");
+                $(this).addClass("bc_active");
+            }
+        );
+        /*充值*/
+        $('.inputbutton').click(function () {
+            var recharge_money  = $('#recharge_money').val();
+            var y = String(recharge_money).indexOf(".") + 1;
+            if(y > 0) {
+                //判断有几位小数
+                if((recharge_money.toString().split(".")[1].length) > 2){
+                    layer.alert( '只能保留两位小数/ 分');
+                    return
+                }
+            }
+            if(!is_num(recharge_money)){
+                layer.alert( '请输入正整数!');
+                return
+            }
+            if(recharge_money == 0){
+                layer.alert('请选择或输入充值金额');
+            }
+            var type = $('.ra_active').attr('name');
+            /* 0 weichatPay  1 aliPay  2 bankPay*/
+            if(type == 0){
+                $.post("{:U('Pay/weiChatPay')}", {'recharge_money':recharge_money}, function (data) {
+                    if (data.status == 1) {
+                        window.open(data.info);
+                        // window.href=data.info;
+                    }
+                })
+            }
+        });
+        /*判断是否为正整数*/
+        function is_num(num){
+            var r = /^[0-9]*[1-9][0-9]*$/;
+            if(r.test(num)){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        function pay(){
+            var recharge_money  = parseInt($('.inputtext').val().replace(/[^0-9]/ig,""));
+            alert();
+            var type  = $('input[name=radio1]:checked').val();
+            if(recharge_money == 0){
+                layer.alert('请选择或输入充值金额');
+            }
+            if(type == 1){
+                $.post("{:U('Pay/weiChatPay')}", {'recharge_money':recharge_money}, function (data) {
+                    if (data.status == 1) {
+                        $("#codeImg").append('<img alt="扫描二扫码支付" src="'+ data.info+'"/>');
+                    }
+                })
+            }else if(type == 2){
+                var newurl = "{:U('Pay/aliPay')}/recharge_money/"+recharge_money;
+                window.open(newurl);
+            }else{
+                $.post("{:U('Pay/weiChatPay')}", {'recharge_money':recharge_money}, function (data) {
+                    // alert(JSON.stringify(data));
+                    if (data.status == 1) {
+                        $("#codeImg").append('<img alt="扫描二扫码支付" src="'+ data.info+'"/>');
+                    }
+                })
+            }
+        }
+    </script>
+</block>

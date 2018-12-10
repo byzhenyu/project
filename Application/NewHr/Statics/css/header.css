@@ -72,15 +72,15 @@ header {
     color: #333333;
 }
 
-.container {
-    /*width: 1920px;*/
+.hcontainer {
+    width: 1920px;
     margin: 0 auto;
     padding: 0;
     /*padding-top:76px;*/
 }
 
 .left_tab {
-    width: 211px;
+    width: 213px;
     background: #25282F;
     height: 100%;
     overflow: scroll;
@@ -90,7 +90,7 @@ header {
     padding-bottom: 80px;
 }
 
-.right_content {
+.hright_content {
     background: #EEF0F5;
     height: 100%;
     overflow: visible;
