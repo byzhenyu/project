@@ -2,6 +2,8 @@
 <block name="style">
     <link rel="stylesheet" type="text/css" href="__HR__/css/base.css"/>
     <link rel="stylesheet" type="text/css" href="__HR__/css/recharge.css"/>
+    <link rel="stylesheet" type="text/css" href="__HR__/css/evidence.css"/>
+    <link rel="stylesheet" type="text/css" href="__HR__/css/data.css"/>
 </block>
 
 <block name="body">
@@ -62,7 +64,7 @@
                     </ul>
                 </div>
                 <div>
-                    <ul class="bankcard">
+                    <ul style="display: none;" class="bankcard">
                         <foreach name="SysBankList" item="v" key="k">
                             <if condition="$k eq 0">
                                 <li class="bc_active">
@@ -101,6 +103,37 @@
             </div>
         </div>
     </div>
+    <!--<div class="e_container">-->
+        <!--<div class="content">-->
+            <!--<div class="pack">-->
+                <!--<div>-->
+                    <!--转账金额-->
+                <!--</div>-->
+                <!--<div>-->
+                    <!--<input class="inputtext" name="recharge_money" placeholder="请输入转账金额">-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="pack">-->
+                <!--<div>-->
+                    <!--上传凭证-->
+                <!--</div>-->
+                <!--<div class="clearfix">-->
+                    <!--<div id="imgs" class="upimg">-->
+                        <!--<img id="hjimg1" src="__HR__/images/img1.png">-->
+                        <!--<img id="hjimg2" src="__HR__/images/img1.png">-->
+                        <!--<img id="hjimg3" src="__HR__/images/img1.png">-->
+                    <!--</div>-->
+                    <!--<div  class="upimg_button">-->
+                        <!--<img id="upimgs" src="__HR__/images/upimg.png">-->
+                        <!--<input id="upimg2" type="file" class="inputfile">-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="button">-->
+                <!--<input type="button" class="inputbutton" value="保存">-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
 </block>
 
 <block name="script">
@@ -108,6 +141,12 @@
         $(".rc_radio li ").click(function () {
                 $(".rc_radio li").removeClass("ra_active");
                 $(this).addClass("ra_active");
+                var name = $(this).attr('name');
+                if(name == 2){
+                    $('.bankcard').show();
+                }else{
+                    $('.bankcard').hide();
+                }
             }
         );
 
@@ -141,20 +180,36 @@
                     if (data.status == 1) {
                         layer.open({
                             type: 1,
-                            title: false,
-                            area: ['186px', '190px'], //宽高
+                            title: '请微信扫码支付',
+                            area: ['200px', '235px'], //宽高
                             content: '<img alt="扫描二扫码支付" src="'+ data.info+'">'
                         });
-
-                        // window.open(data.info);
-                        // window.href=data.info;
                     }
                 })
             }else if(type == 1){
                 var newurl = "{:U('Pay/aliPay')}/recharge_money/"+recharge_money;
                 window.open(newurl);
+            }else{
+                // var newurl = "{:U('Pay/aliPay')};
+                // window.open(newurl);
+                layer.open({
+                    type: 1,
+                    title : '请上传支付凭证',
+                    skin: 'layui-layer-demo', //样式类名
+                    closeBtn: 1, //不显示关闭按钮
+                    shift: 2,
+                    area: ['40%', '50%'], //宽高
+                    shadeClose: true, //开启遮罩关闭
+                    content: '<html><head><title></title></head><body><div class="e_container content"><div class="pack"><div>转账金额</div><div><input class="inputtext" id="voucher" ></div></div><div class="pack"><div>上传凭证</div><div class="clearfix"><div id="imgs" class="upimg"><img id="hjimg1" src="__HR__/images/img1.png" name="hjimg1"> <img id="hjimg2" src="__HR__/images/img1.png" name="hjimg2"> <img id="hjimg3" src="__HR__/images/img1.png" name="hjimg3"></div><div class="upimg_button"><img id="upimgs" src="__HR__/images/upimg.png" name="upimgs"> <input id="upimg2" type="file" class="inputfile"></div></div></div><div class="button"><input type="button" onclick="uploadVoucher()" class="inputbutton" value="确定"></div></div></body></html>'
+                });
+
             }
         });
+        /*上传凭证*/
+        function uploadVoucher(){
+            var recharge_money  = $('#voucher').val();
+            alert(recharge_money);
+        }
         /*判断是否为正整数*/
         function is_num(num){
             var r = /^[0-9]*[1-9][0-9]*$/;
@@ -197,5 +252,30 @@
                 })
             }
         }
+    </script>
+    <script>
+        var imgnum=0;
+        $("#upimgs").click(function () {
+            $("#upimg2").click()
+        })
+        $("#upimg2").change(function () {
+            imgnum++;
+            console.log(imgnum)
+            if(imgnum > 1){
+                layer.msg('只能一张凭证');
+                return
+            }
+            $("#hjimg"+imgnum).css('display','inline-block');
+            var obj = $("#upimg2")[0].files[0];
+            var fr = new FileReader();
+            fr.readAsDataURL(obj);
+            fr.onload = function () {
+                console.log(this.result)
+                $("#hjimg"+imgnum).attr('src', this.result);
+            };
+            if(imgnum>2){
+                $(".upimg_button").css('display','none');
+            }
+        })
     </script>
 </block>
