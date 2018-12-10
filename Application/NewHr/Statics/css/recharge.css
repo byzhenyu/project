@@ -29,7 +29,19 @@
     /*line-height: 85px;*/
     border-bottom: 1px solid #EFEFEF;
 }
-
+.isdata{
+    text-align: center;
+    color: white;
+    font-size: 26px;
+    padding: 50px 0;
+}
+.isdata span{
+    background: #0DBCD1;
+    width: 240px;
+    display: inline-block;
+    padding: 10px 0;
+    border-radius: 4px;
+}
 .rc_op {
     line-height: 85px;
     color: #0DBCD1;

@@ -46,8 +46,8 @@ class LoginController extends Controller {
            }
            $mobile = I('post.mobile', '');
            $chkcode = I('chkcode');
-           $valid = D('Admin/SmsMessage')->checkSmsMessage($chkcode, $mobile, 1, 7);
-           if (!$valid['status']) $this->ajaxReturn($valid);
+//           $valid = D('Admin/SmsMessage')->checkSmsMessage($chkcode, $mobile, 1, 7);
+//           if (!$valid['status']) $this->ajaxReturn($valid);
            $loginInfo = D('Admin/User')->phoneLogin($mobile);
            if( $loginInfo['status'] == 1 ){ //登录成功
                /* 存入session */
