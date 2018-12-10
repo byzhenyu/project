@@ -6,7 +6,7 @@
  * item: 一个页面上传多个图片时的标识
  * by zhaojiping
  **/
-function ajaxUpload(btnUpload, inputImg, savePath, item){
+function ajaxUpload(btnUpload, inputImg, savePath, item, up_area){
     var filename = ""; // 旧文件的文件名
     var oldImg = $(inputImg).val();
     if($.trim(oldImg) != "" && oldImg.indexOf('/') != -1){
@@ -31,11 +31,11 @@ function ajaxUpload(btnUpload, inputImg, savePath, item){
             this.disable();
         },
         onComplete: function(file, response){
+            console.log(response);
             json = $.parseJSON($(response).text());
             if(json['status'] == true || json['status'] == 1 || json['status'].toString() == '1'){
-                $("#img_" + item).attr('src', json['src']).show();
+                $(up_area + item).attr('src', json['src']);
                 $("#img" + item).val(json['src']);
-                $('#btn_delete_' + item).show();
             }else{
                 toastr(json['msg'])
             }

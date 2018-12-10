@@ -19,6 +19,16 @@
     <script type="text/javascript" src="__PUBLIC__/layer/extend/layer.ext.js"></script>
     <script type="text/javascript" src="__ADMIN__/js/common.js?v=1.01"></script>
     <script type="text/javascript" src="__STATIC__/js/ajaxForm.js"></script>
+    <script>
+        // 定义全局变量
+        RECYCLE_URL = "{:U('recycle')}"; // 默认逻辑删除操作执行的地址
+        RESTORE_URL = "{:U('restore')}"; // 默认逻辑删除恢复执行的地址
+        DELETE_URL = "{:U('del')}"; // 默认删除操作执行的地址
+        UPLOAD_IMG_URL = "{:U('uploadImg')}"; // 默认上传图片地址
+        UPLOAD_FIELD_URL = "{:U('uploadField')}"; // 默认上传图片地址
+        DELETE_FILE_URL = "{:U('delFile')}"; // 默认删除图片执行的地址
+        CHANGE_STAUTS_URL = "{:U('changeDisabled')}"; // 修改数据的启用状态
+    </script>
     <block name="script"></block>
 </body>
 </html>

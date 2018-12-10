@@ -1,0 +1,164 @@
+<extend name="Common/base"/>
+    <block name="style">
+        <link rel="stylesheet" type="text/css" href="__PUBLIC__/fileupload/css/jquery.fileupload.css" media="all">
+        <link href="__HR__/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="__HR__/css/data.css"/>
+    </block>
+<block name="body">
+<div class="container">
+    <div class="r_container">
+        <div class="content">
+            <form id="orderForm" action="__ACTION__" method="post" class="ajaxForm">
+            <div class="r_items">
+                <ul>
+                    <li>
+                        <div>公司logo</div>
+                        <div >
+                            <img id="uplogo" src="{$info['company_logo']}" />
+                            <input id="upimg1" type="file" class="inputfile">
+                            <input type="hidden" value="{$info['company_logo']}" id="img" name="company_logo" />
+                        </div>
+                    </li>
+                    <li>
+                        <div>公司名称</div>
+                        <div>
+                            <input class="inputtext" placeholder="请输入公司名称" name="company_name" value="{$info['company_name']}">
+                        </div>
+                    </li>
+                    <li>
+                        <div>公司地址</div>
+                        <div class="r_address">
+                            <div id="company_address">
+                                <span>
+                                    <select name="province"></select>
+                                </span>
+                                <span>
+                                    <select name="city"></select>
+                                </span>
+                                <span>
+                                    <select name="county"></select>
+                                </span>
+                            </div>
+                            <div>
+                                <input class="inputtext inputtext2" placeholder="请输入详细地址" name="company_address" value="{$info['company_address']}" />
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div>联系方式</div>
+                        <div>
+                            <input class="inputtext" placeholder="请输入公司联系方式" name="company_mobile" value="{$info['company_mobile']}" />
+                        </div>
+                    </li>
+                    <li>
+                        <div>公司邮箱</div>
+                        <div>
+                            <input class="inputtext" placeholder="请输入公司邮箱" name="company_email" value="{$info['company_email']}" />
+                        </div>
+                    </li>
+                    <li>
+                        <div>公司性质</div>
+                        <div class="r_address">
+                            <div>
+                                <span>
+                                    <select name="company_nature" id="company_nature">
+                                        <option value="">请选择</option>
+                                        <foreach name="company_nature" item="v">
+                                            <option value="{$v['nature_name']}" <if condition="$v['nature_name'] eq $info['company_nature']">selected</if>>{$v['nature_name']}</option>
+                                        </foreach>
+                                    </select>
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div>公司规模</div>
+                        <div class="r_address">
+                            <div>
+                                <span>
+                                    <select name="company_size" id="company_size" data-am-selected="">
+                                        <option value="">请选择</option>
+                                        <foreach name="company_size" item="v">
+                                            <option value="{$v['value']}" <if condition="$v['value'] eq $info['company_size']"> selected</if>>{$v['value']}</option>
+                                        </foreach>
+                                    </select>
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div>公司行业</div>
+                        <div class="r_address">
+                            <div>
+                                <span>
+                                    <select name="company_industry" id="industry">
+                                        <option value="">请选择</option>
+                                        <foreach name="industry" item="v">
+                                            <option value="{$v['industry_name']}" <if condition="$v['industry_name'] eq $info['company_industry']">selected</if>>{$v['industry_name']}</option>
+                                        </foreach>
+                                    </select>
+                                </span>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div>公司简介</div>
+                        <div>
+                            <script id="content1" name="describe" type="text/plain">{$info["describe"]|htmlspecialchars_decode}</script>
+                        </div>
+                    </li>
+                    <li>
+                        <div style="height: auto">环境照片</div>
+                        <div class="clearfix">
+                            <div class="company_imgs">
+                                <notempty name="info[img_list]">
+                                    <foreach name="info[img_list]" item="v">
+                                        <div class="upimg">
+                                            <img src="{$v.image_path}" />
+                                            <input type="hidden" name="company_img_ids[]" value="{$v.image_path}">
+                                            <div class="file-del" onclick="delPicIds(this)" style="color:red;cursor:pointer">删除</div>
+                                        </div>
+                                    </foreach>
+                                </notempty>
+                            </div>
+                            <div class="upimg_button">
+                                <img id="upimgs" src="__HR__/images/upimg.png">
+                                <input id="upimg2" type="file" class="inputfile">
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="buttonstyle">
+                <input class="inputbutton" type="submit" value="确定修改">
+            </div>
+            <div class="tip">
+                提示：如果您已经更换工作，请在此处重新提交公司信息 如果更改公司信息，需要重新提交公司营业执照图片。
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+</block>
+<block name="script">
+    <script type="text/javascript" charset="utf-8" src="__PUBLIC__/ajaxupload/ajaxupload.js"></script>
+    <script type="text/javascript" charset="utf-8" src="__PUBLIC__/ajaxupload/imgupload.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.all.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/address.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/vendor/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.fileupload.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/goods.js?v=4.3"></script>
+    <script>
+        var ue = UE.getEditor('content1', {
+            autoHeightEnabled: false,
+            initialFrameWidth: 700,
+            initialFrameHeight: 350
+        });
+        $(function(){
+            initAddress('#company_address',"{$info['province']}", "{$info['city']}", "{$info['county']}", 1);
+        });
+    </script>
+</block>

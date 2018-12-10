@@ -1,0 +1,96 @@
+<extend name="Common/base"/>
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/fileupload/css/jquery.fileupload.css" media="all">
+    <style>
+        .am-table {
+            font-size: 1.3rem;
+            margin-bottom: 0;
+        }
+        .am-btn{
+            padding:5px 15px;font-size:12px
+        }
+    </style>
+</block>
+
+<block name="body">
+    <!-- 内容区域 -->
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="widget am-cf">
+                <div class="widget-head am-cf">
+                    <div class="widget-title  am-cf">编辑基本信息</div>
+                </div>
+                <div class="widget-body  am-fr">
+                    <form id="orderForm" action="__ACTION__" method="post" class="ajaxForm">
+                    <table width="100%" class="am-table am-table-bordered">
+                        <thead>
+                            <tr><th colspan="4">基本信息</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="width: 12%;"><div align="right"><strong>名称：</strong></div></td>
+                                <td style="width: 25%;">{$info['nickname']}</td>
+                                <td style="width: 12%"><div align="right"><strong>手机号：</strong></div></td>
+                                <td><input type="text" maxlength="11" id="mobile" name="mobile" value="{$info['mobile']}"  /></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>昵称：</strong></div></td>
+                                <td>{$info['nickname']}</td>
+                                <td><div align="right"><strong>所在地：</strong></div></td>
+                                <td>{$info['city_name']}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>邮箱：</strong></div></td>
+                                <td>{$info['email']}</td>
+                                <td><div align="right"><strong>可提现金额：</strong></div></td>
+                                <td>{:fen_to_yuan($info['withdrawable_amount'])}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>推荐人数：</strong></div></td>
+                                <td>{$info['recommended_number']}</td>
+                                <td><div align="right"><strong>招揽人数：</strong></div></td>
+                                <td>{$info['recruit_number']}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>是否完成认证：</strong></div></td>
+                                <td><if condition="$info.is_auth eq 1">已完成<else/>未完成</if></td>
+                                <td><div align="right"><strong>擅长领域：</strong></div></td>
+                                <td>{$info['like_tags']}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>登录密码：</strong></div></td>
+                                <td><input type="password" id="password" name="password" value="" placeholder="请输入新的登录密码,不修改请勿填写" /></td>
+                                <td><div align="right"><strong>确认密码：</strong></div></td>
+                                <td><input type="password" id="new_password" name="new_password" value="" placeholder="请再次输入新的登录密码" /></td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>账户金额：</strong></div></td>
+                                <td>{:fen_to_yuan($info['user_money'])}</td>
+                                <td><div align="right"><strong>注册时间：</strong></div></td>
+                                <td>{:time_format($info['register_time'])}</td>
+                            </tr>
+                            <tr>
+                                <td><div align="right"><strong>上次登录时间：</strong></div></td>
+                                <td>{:time_format($info['last_login_time'])}</td>
+                                <td><div align="right"><strong>上次登录IP：</strong></div></td>
+                                <td>{$info['last_login_ip']}</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" align="center">
+                                    <button type="submit" class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </form>         
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/vendor/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.fileupload.js"></script>
+    <script type="text/javascript" charset="utf-8" src="__SHOP__/js/shop.js?v=1.9"></script>
+</block>
