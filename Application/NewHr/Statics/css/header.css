@@ -237,6 +237,25 @@ header {
     width: 130px;
     height: 148px;
 }
+.pageList{
+    padding-top: 40px;
+    font-size:26px;
+    color: #9B410E;
+    text-align: center;
+}
+.pageList span{
+    margin-right: 16px;
+    cursor: pointer;
+}
+.pageList a{
+    margin-right: 16px;
+    color: #0DBCD1;
+    cursor: pointer;
+}
+.p_active{
+    color: #0DBCD1;
+}
+
 
 
 
