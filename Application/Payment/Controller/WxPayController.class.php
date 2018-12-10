@@ -30,6 +30,7 @@ class WxPayController extends CommonController {
                     $r_arr['return_code'] = 'SUCCESS';
                     $r_arr['return_msg'] = '回调成功';
                     echo $wxPay->arrayToXml($r_arr);
+                    $this->redirect('https://shanjian.host5.liuniukeji.net/index.php/Hr/UserAccount/getAccount');
                     die;
                 }
             }
