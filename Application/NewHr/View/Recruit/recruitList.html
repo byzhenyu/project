@@ -1,0 +1,74 @@
+<extend name="Common/base"/>
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__HR__/css/resumeList.css"/>
+</block>
+<block name="body">
+<div class="container">
+    <div class="rl_container">
+        <div class="addresume">
+            <a href="{:U('Recruit/editRecruit')}">
+                <input type="button" class="inputbutton" value="+ 发布悬赏">
+            </a>
+        </div>
+        <div class="content">
+            <div class="rl_title">
+                <span style="width: 4%;">序号</span>
+                <span style="width: 10%;">悬赏职位</span>
+                <span style="width: 6%;">招聘人数</span>
+                <span style="width: 8%;">岗位性质</span>
+                <span style="width: 12%;">语言要求</span>
+                <span style="width: 10%;">工作地区</span>
+                <span style="width: 10%;">悬赏令牌</span>
+                <span style="width: 10%;">剩余数量</span>
+                <span style="width: 15%;">添加时间</span>
+                <span>操作</span>
+            </div>
+            <div class="rl_item">
+                <ul>
+                    <foreach name="list" item="v">
+                        <li>
+                            <span style="width: 4%">{$v['id']}</span>
+                            <span style="width: 10%;">{$v['position_name']}</span>
+                            <span style="width: 6%; text-align: center">{$v['recruit_num']}</span>
+                            <span style="width: 8%; text-align: center">{$v['nature']}</span>
+                            <span style="width: 12%;">{$v['language_ability']}</span>
+                            <span style="width: 10%">{$v['job_area']}</span>
+                            <span style="width: 10%;">{$v['commission']}</span>
+                            <span style="width: 10%">{$v['last_token']}</span>
+                            <span style="width: 15%;">{$v['add_time']}</span>
+                            <span>
+                                <div class="bj ">
+                                    <a href="{:U('Recruit/listRecruitResume',array('id'=>$v['id']))}">推荐列表</a>
+                                </div>
+                                <div class="detail">
+                                    <a class="seeRecruitDetail" data-url="{:U('Recruit/seeRecruitDetail',array('id'=>$v['id']))}">详情</a>
+                                </div>
+                                <div style="text-align: left">
+                                    <a style="display: inline-block; color: rgb(13,188,209)" href="{:U('Recruit/seeRecruitAccountLog',array('recruit_id'=>$v['id']))}">赏金详情</a>
+                                </div>
+                            </span>
+                        </li>
+                    </foreach>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</block>
+<block name="script">
+<script type="text/javascript">
+    $(function(){
+        $('.seeRecruitDetail').click(function(){
+            var url = $(this).data('url');
+            layer.open({
+                type: 2,
+                title: '悬赏详情',
+                shadeClose: false,
+                shade: 0.5,
+                area: ['80%', '80%'],
+                content: url
+            });
+        });
+    });
+</script>
+</block>

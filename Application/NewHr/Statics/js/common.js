@@ -63,11 +63,11 @@ function openLayerPopup(url, title, params){
 }
 
 /**
- * toastr message
+ * message
  * 弹出信息
  */
 function toastr(msg) {
-    layer.msg(msg, {
+    parent.window.layer.msg(msg, {
         offset: 0,
         shift: 6
     });
@@ -150,6 +150,7 @@ function checkedIds(objName) {
 // 改变数据的可用状态 
 function change_disabled(id, value){
 	var url = CHANGE_STAUTS_URL + "/id/" + id + "/disabled/" + value;
+    // console.log(url);// return false;
     $.get(url, function(data){
         if(data.status == '1'){
             window.location.reload();

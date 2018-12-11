@@ -1,0 +1,52 @@
+<extend name="Common/base"/>
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__HR__/css/resumeList.css"/>
+</block>
+<block name="body">
+<div class="container">
+    <div class="rl_container">
+        <div class="addresume">
+            <a href="{:U('Recruit/recruitList')}">
+                <input type="button" class="inputbutton" value="返回">
+            </a>
+        </div>
+        <div class="content">
+            <div class="rl_title">
+                <span style="width: 4%;">序号</span>
+                <span style="width: 20%;">用户</span>
+                <span style="width: 6%;">令牌数量</span>
+                <span style="width: 8%;">备注</span>
+                <span style="width: 12%;">时间</span>
+                <span>是否结算</span>
+            </div>
+            <div class="rl_item">
+                <ul>
+                    <foreach name="info" item="v">
+                        <li>
+                            <span style="width: 4%">{$v['log_id']}</span>
+                            <span style="width: 20%;">
+                                <if condition="$v['user_id'] lt 1">
+                                    <span style="color: #ff1408">平台</span>
+                                    <else/>
+                                    手机号：{$v['mobile']}<br />
+                                    用户名：{$v['nickname']}
+                                </if></span>
+                            <span style="width: 6%; text-align: center">{$v['user_money']}</span>
+                            <span style="width: 8%; text-align: center">{$v['change_desc']}</span>
+                            <span style="width: 12%;">{$v['change_time']}</span>
+                            <span>{$v['diss_string']}</span>
+                        </li>
+                    </foreach>
+                </ul>
+            </div>
+            <div style="text-align: right">
+                {$page}
+            </div>
+        </div>
+    </div>
+</div>
+</block>
+<block name="script">
+<script type="text/javascript">
+</script>
+</block>

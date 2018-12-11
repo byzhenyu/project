@@ -46,6 +46,20 @@
                         </span>
                     </li>
                     <li>
+                            <span class="pack_name">
+                                学&#12288;&#12288;历:
+                            </span>
+                        <span class="pack_info">
+                                <select name="first_degree" id="first_degree" class="marriage">
+                                    <option value="">请选择学历</option>
+                                    <foreach name="edu_list" item="v">
+                                        <option value="{$v['education_name']}" <if condition="$v.education_name eq $info['first_degree']">selected</if>>{$v['education_name']}</option>
+                                    </foreach>
+                                </select>
+
+                            </span>
+                    </li>
+                    <li>
                         <span class="pack_name">
                             *性&#12288;&#12288;别:
                         </span>
@@ -196,8 +210,8 @@
                         </div>
                     </div>
                 </foreach>
-                <input type="button" class="edu_tj edu_tj1" value="添加">
             </div>
+            <input type="button" class="edu_tj edu_tj1" value="添加">
             <div class="cr_title">
                 <div class="cr_num">
                     3
@@ -228,55 +242,8 @@
                         </div>
                     </foreach>
                 </div>
-                <div class="addwork">
-                    <ul>
-                        <li>
-                        <span class="pack_name">
-                            公司名称:
-                        </span>
-                        <span class="pack_info">
-                            <input class="inputtext1" placeholder="请输入公司名称">
-                        </span>
-                        </li>
-                        <li>
-                        <span class="pack_name">
-                            职&#12288;&#12288;位:
-                        </span>
-                        <span class="pack_info">
-                            <select class="marriage">
-                                <option value="">请选择职位</option>
-                                <option value="">1</option>
-                                <option value="">2</option>
-                            </select>
-                        </span>
-                        </li>
-                        <li>
-                        <span class="pack_name">
-                            开始时间:
-                        </span>
-                        <span class="pack_info">
-                            <input type="date" class="inputdate">
-                        </span>
-                            <span class="pack_name">
-                            结束时间:
-                        </span>
-                        <span class="pack_info">
-                            <input type="date" class="inputdate">
-                        </span>
-                        </li>
-                        <li>
-                        <span class="pack_name pack_intro">
-                            描述信息:
-                        </span>
-                        <span class="pack_info ">
-                            <textarea class="textarea"></textarea>
-                        </span>
-                        </li>
-                    </ul>
-                </div>
-                <input type="button" class="edu_tj" value="添加">
             </div>
-            <input type="button" class="keepbutton" value="保存简历">
+            <input type="button" class="edu_tj work_tj1" value="添加">
         </div>
     </div>
 </div>
@@ -298,7 +265,7 @@
     }
     var ue = UE.getEditor('content1', {
         autoHeightEnabled: false,
-        initialFrameWidth: '700',
+        initialFrameWidth: 700,
         initialFrameHeight: 350
     });
     $(function(){
@@ -391,33 +358,11 @@
                 $.get($(this).data('url'), {}, function(data){toastr(data.info);if(data.status == 1) remove_class.remove();});
             }
         });
-        $('.increase_resume_work').click(function(){
-            var url = '/index.php/Hr/ResumeWork/editResumeWork/resume_id/'+$('#resume_id_class').val();
-            layer.open({
-                type: 2,
-                title: '新增工作经历',
-                shadeClose: false,
-                shade: 0.5,
-                area: ['80%', '80%'],
-                content: url
-            });
-        });
         $('.increase_resume_work1').click(function(){
             var url = $(this).data('url');
             layer.open({
                 type: 2,
                 title: '编辑工作经历',
-                shadeClose: false,
-                shade: 0.5,
-                area: ['80%', '80%'],
-                content: url
-            });
-        });
-        $('.increase_resume_edu').click(function(){
-            var url ='/index.php/Hr/ResumeEdu/editResumeEdu/resume_id/'+$('#resume_id_class').val();
-            layer.open({
-                type: 2,
-                title: '新增教育经历',
                 shadeClose: false,
                 shade: 0.5,
                 area: ['80%', '80%'],
@@ -435,6 +380,7 @@
                 content: url
             });
         });
+        //教育经历添加/显示/隐藏
         $('body').on('click','.edu_tj1', function(){
             $('.edit_resume_edu1').append('<form class="edit_resume_edu">\n' +
                 '                    <div>\n' +
@@ -444,7 +390,7 @@
                 '                            学校名称:\n' +
                 '                        </span>\n' +
                 '                                <span class="pack_info">\n' +
-                '                            <input class="inputtext1" placeholder="请输入学校名称">\n' +
+                '                            <input class="inputtext1" placeholder="请输入学校名称" name="school_name" />\n' +
                 '                        </span>\n' +
                 '                            </li>\n' +
                 '                            <li>\n' +
@@ -452,10 +398,18 @@
                 '                            学&#12288;&#12288;历:\n' +
                 '                        </span>\n' +
                 '                                <span class="pack_info">\n' +
-                '                            <select class="marriage">\n' +
+                '                            <select class="marriage" name="degree">\n' +
                 '                                <option value="">请选择学历</option>\n' +
-                '                                <option value="">1</option>\n' +
-                '                                <option value="">2</option>\n' +
+                '                                <option value="小学">小学</option>\n' +
+                '                                <option value="初中">初中</option>\n' +
+                '                                <option value="高中">高中</option>\n' +
+                '                                <option value="大专">大专</option>\n' +
+                '                                <option value="本科">本科</option>\n' +
+                '                                <option value="硕士">硕士</option>\n' +
+                '                                <option value="博士">博士</option>\n' +
+                '                                <option value="博士后">博士后</option>\n' +
+                '                                <option value="MBA">MBA</option>\n' +
+                '                                <option value="FMBA">FMBA</option>\n' +
                 '                            </select>\n' +
                 '\n' +
                 '                        </span>\n' +
@@ -465,7 +419,7 @@
                 '                            专&#12288;&#12288;业:\n' +
                 '                        </span>\n' +
                 '                                <span class="pack_info">\n' +
-                '                            <input class="inputtext1" placeholder="请输入专业">\n' +
+                '                            <input class="inputtext1" placeholder="请输入专业" name="major" />\n' +
                 '                        </span>\n' +
                 '                            </li>\n' +
                 '                            <li>\n' +
@@ -473,20 +427,20 @@
                 '                            开始时间:\n' +
                 '                        </span>\n' +
                 '                                <span class="pack_info">\n' +
-                '                            <input type="date" class="inputdate">\n' +
+                '                            <input type="date" class="inputdate" name="starttime" />\n' +
                 '                        </span>\n' +
                 '                                <span class="pack_name">\n' +
                 '                            结束时间:\n' +
                 '                        </span>\n' +
                 '                                <span class="pack_info">\n' +
-                '                            <input type="date" class="inputdate">\n' +
+                '                            <input type="date" class="inputdate" name="endtime" />\n' +
                 '                        </span>\n' +
                 '                            </li>\n' +
                 '                        </ul>\n' +
                 '                        <input type="button" class="keepbutton resume_edu_button" value="保存教育经历">\n' +
                 '                    </div>\n' +
                 '                </form>');
-                $('.edu_tj1').remove();
+                $('.edu_tj1').hide();
                 $('.resume_edu_button').click(function(){
                     var submit_data = {};
                     var request_data = $('.edit_resume_edu').serializeArray();
@@ -502,11 +456,148 @@
                         success: function(data){
                             toastr(data.info);
                             if(data.status == 1){
+                                $('.edu_tj1').show();
+                                $('.edit_resume_edu').hide();
+                                $('.edit_resume_edu1').append('<div class="clearfix">\n' +
+                                    '                        <div class="fl edu_school">\n' +
+                                    '                            <div>\n' +
+                                    '                                <span>'+submit_data['school_name']+'</span>\n' +
+                                    '                                <span>'+submit_data['major']+'</span>\n' +
+                                    '                                <span>'+submit_data['degree']+'</span>\n' +
+                                    '                            </div>\n' +
+                                    '                        </div>\n' +
+                                    '                        <div class="fr edu_date">\n' +
+                                    '                            <span>'+submit_data['starttime']+'&nbsp;-&nbsp;'+submit_data['endtime']+'</span>\n' +
+                                    '                            <span onclick="edit_resume_edu('+data.data+')" class="increase_resume_edu1"><img src="__HR__/images/bj.png">编辑</span>\n' +
+                                    '                            <span class="delete_resume_edu" onclick="delete_resume_edu('+data.data+')"><img src="__HR__/images/sc.png">删除</span>\n' +
+                                    '                        </div>\n' +
+                                    '                    </div>');
                             }
                         }
                     });
                 });
         });
+        //工作经历添加/显示/隐藏
+        $('body').on('click','.work_tj1', function(){
+            $('.work').append('<form class="edit_resume_work">\n' +
+                '                    <div class="addwork">\n' +
+                '                        <ul>\n' +
+                '                            <li>\n' +
+                '                            <span class="pack_name">\n' +
+                '                                公司名称:\n' +
+                '                            </span>\n' +
+                '                            <span class="pack_info">\n' +
+                '                                <input class="inputtext1" placeholder="请输入公司名称" name="company_name" />\n' +
+                '                            </span>\n' +
+                '                            </li>\n' +
+                '                            <li>\n' +
+                '                            <span class="pack_name">\n' +
+                '                                职&#12288;&#12288;位:\n' +
+                '                            </span>\n' +
+                '                            <span class="pack_info">\n' +
+                '                                <input class="inputtext1" placeholder="请输入职位名称" name="position" />\n' +
+                '                            </span>\n' +
+                '                            </li>\n' +
+                '                            <li>\n' +
+                '                            <span class="pack_name">\n' +
+                '                                开始时间:\n' +
+                '                            </span>\n' +
+                '                            <span class="pack_info">\n' +
+                '                                <input type="date" class="inputdate" name="starttime" />\n' +
+                '                            </span>\n' +
+                '                                <span class="pack_name">\n' +
+                '                                结束时间:\n' +
+                '                            </span>\n' +
+                '                            <span class="pack_info">\n' +
+                '                                <input type="date" class="inputdate" name="endtime" />\n' +
+                '                            </span>\n' +
+                '                            </li>\n' +
+                '                            <li>\n' +
+                '                            <span class="pack_name pack_intro">\n' +
+                '                                描述信息:\n' +
+                '                            </span>\n' +
+                '                            <span class="pack_info ">\n' +
+                '                                <textarea class="textarea" name="describe"></textarea>\n' +
+                '                            </span>\n' +
+                '                            </li>\n' +
+                '                        </ul>\n' +
+                '                        <input type="button" class="keepbutton resume_work_button" value="保存工作经历">\n' +
+                '                    </div>\n' +
+                '                </form>');
+            $('.work_tj1').hide();
+            $('.resume_work_button').click(function(){
+                var submit_data = {};
+                var request_data = $('.edit_resume_work').serializeArray();
+                $.each(request_data, function () {
+                    submit_data[this.name] = this.value;
+                });
+                submit_data['resume_id'] = $('#resume_id_class').val();
+                $.ajax({
+                    type: 'post',
+                    url: "{:U('resumeWork/editResumeWork')}",
+                    dataType: 'json',
+                    data: submit_data,
+                    success: function(data){
+                        toastr(data.info);
+                        if(data.status == 1){
+                            $('.work_tj1').show();
+                            $('.edit_resume_work').hide();
+                            $('.work').append('<div class="remove_clear_fix">\n' +
+                                '                            <div class="clearfix">\n' +
+                                '                                <div class="fl">\n' +
+                                '                                    <span>'+submit_data['company_name']+'</span>\n' +
+                                '                                    <span>'+submit_data['position']+'</span>\n' +
+                                '                                </div>\n' +
+                                '                                <div class="fr edu_date">\n' +
+                                '                                    <span>'+submit_data['starttime']+'&nbsp;&nbsp;-&nbsp;&nbsp;'+submit_data['endtime']+'</span>\n' +
+                                '                                    <span onclick="edit_resume_work('+data.data+')" class="increase_resume_work1"><img src="__HR__/images/bj.png">编辑</span>\n' +
+                                '                                    <span onclick="delete_resume_work('+data.data+')" class="delete_resume_work"><img src="__HR__/images/sc.png">删除</span>\n' +
+                                '                                </div>\n' +
+                                '                            </div>\n' +
+                                '                            <div class="work_info">\n' +
+                                '                                {$v[\'describe\']}\n' +
+                                '                            </div>\n' +
+                                '                        </div>');
+                        }
+                    }
+                });
+            });
+        });
     });
+    //JS动态追加的工作经历/教育经历 删除/编辑方法
+    function delete_resume_edu(edu_id){
+        var url = "/index.php/NewHr/ResumeEdu/delResumeEdu/id/"+edu_id;
+        if(confirm('确认删除该教育经历？')){
+            $.get(url, {}, function(data){toastr(data.info);if(data.status == 1) location.reload();});
+        }
+    }
+    function delete_resume_work(work_id){
+        var url = "/index.php/NewHr/ResumeWork/delResumeWork/id/"+work_id;
+        if(confirm('确认删除该工作经历？')){
+            $.get(url, {}, function(data){toastr(data.info);if(data.status == 1) location.reload();});
+        }
+    }
+    function edit_resume_edu(edu_id){
+        var url = "/index.php/NewHr/ResumeEdu/editResumeEdu/id/"+edu_id;
+        layer.open({
+            type: 2,
+            title: '编辑教育经历',
+            shadeClose: false,
+            shade: 0.5,
+            area: ['80%', '80%'],
+            content: url
+        });
+    }
+    function edit_resume_work(work_id){
+        var url = "/index.php/NewHr/ResumeWork/editResumeWork/id/"+work_id;
+        layer.open({
+            type: 2,
+            title: '编辑工作经历',
+            shadeClose: false,
+            shade: 0.5,
+            area: ['80%', '80%'],
+            content: url
+        });
+    }
 </script>
 </block>

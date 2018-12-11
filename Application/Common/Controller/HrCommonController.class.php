@@ -7,6 +7,7 @@ class HrCommonController extends Controller
     {
         parent::__construct();
         //获取参数配置
+        define('DEFAULT_IMG', 'https://shanjian.oss-cn-hangzhou.aliyuncs.com/nopic.png');
         $this->get_global_config();
         $hr_auth = session('hr_auth');
         $hr_id = $hr_auth['hr_id'];

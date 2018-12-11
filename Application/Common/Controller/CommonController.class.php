@@ -14,7 +14,6 @@ class CommonController extends Controller
     public function __construct()
     {
         parent::__construct();
-
         if (!class_exists('\Think\Secret', false)) die;
         //获取参数配置
         $this->get_global_config();

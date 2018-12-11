@@ -158,13 +158,24 @@
 
 .bj {
     margin-right: 30px;
+    display: inline-block;
     cursor: pointer;
+    color: rgb(13,188,209);
+}
+.bj a{
+    cursor: pointer;
+    color: rgb(13,188,209);
 }
 
 .detail {
     cursor: pointer;
+    display: inline-block;
+    color: rgb(13,188,209);
 }
-
+.detail a{
+    display: inline-block;
+    color: rgb(13,188,209);
+}
 
 
 
