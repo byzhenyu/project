@@ -52,7 +52,8 @@ class InvoiceModel extends Model {
                 ->select();
         return array(
              'list' => $list,
-             'page' => $page['page']
+             'page' => $page['page'],
+             'count' => $count
         );
     }
     /**

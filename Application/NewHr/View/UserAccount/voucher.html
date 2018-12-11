@@ -16,7 +16,15 @@
                         转账金额
                     </div>
                     <div>
-                        <input name="" class="inputtext" placeholder="请输入转账金额">
+                        <input type="number" name="transfer_amount" class="inputtext" value="{$recharge_money}" placeholder="请输入转账金额">
+                    </div>
+                </div>
+                <div class="pack">
+                    <div>
+                        转账说明
+                    </div>
+                    <div>
+                        <input type="text" name="transfer_remark" class="inputtext" value="" placeholder="请输入转账说明">
                     </div>
                 </div>
                 <div class="pack">
@@ -25,13 +33,6 @@
                     </div>
                     <div class="clearfix">
                         <div id="imgs" class="upimg">
-                            <!--<img id="hjimg1" src="__HR__/images/img1.png">-->
-                            <!--<img id="cha1" class="cha" src="__HR__/images/cha.png">-->
-                            <!--<img id="hjimg2" src="__HR__/images/img1.png">-->
-                            <!--<img id="cha2" class="cha" src="__HR__/images/cha.png">-->
-                            <!--<img id="hjimg3" src="__HR__/images/img1.png">-->
-                            <!--<img id="cha3" class="cha" src="__HR__/images/cha.png">-->
-
                         </div>
                         <div  class="upimg_button">
                             <img id="upimgs" src="__HR__/images/upimg.png">
@@ -39,6 +40,7 @@
                         </div>
                     </div>
                 </div>
+                <input type="hidden" name="bank_id" value="{$bank_id}">
                 <div class="button">
                     <input  type="submit" class="inputbutton" value="上传凭证">
                 </div>
@@ -81,7 +83,7 @@
                 }
                 $("#hjimg"+imgnum).css('display','inline-block');
                 $("#hjimg"+imgnum).attr('src', data.result.src);
-                $('#imgs').append('<span><img style="width: 110px;height:71px;" id="'+imgnum+'" src="'+data.result.src+'"><button onclick="delPic('+imgnum +')" style="display: block;margin-left: 30px;padding:6px 8px;color: white;text-align: center;background: rgb(13,188,209)">删除</button><input id="uploadImgs'+imgnum +'" type="hidden" name="voucher[]" value="'+data.result.src+'"></span>');
+                $('#imgs').append('<span style="display: inline-block"><img style="width: 110px;height:71px;" id="'+imgnum+'" src="'+data.result.src+'"><button onclick="delPic('+imgnum +')" style="display: block;margin-left: 30px;padding:6px 8px;color: white;text-align: center;background: rgb(13,188,209)">删除</button><input id="uploadImgs'+imgnum +'" type="hidden" name="voucher[]" value="'+data.result.src+'"></span>');
             }
         }).prop('disabled', !$.support.fileInput)
             .parent().addClass($.support.fileInput ? undefined : 'disabled');
@@ -98,8 +100,5 @@
                 }
             })
         }
-        $('.inputbutton').click(function () {
-
-        })
     </script>
 </block>

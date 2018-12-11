@@ -1,0 +1,171 @@
+<extend name="Common/base"/>
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__HR__/css/base.css"/>
+    <link rel="stylesheet" type="text/css" href="__HR__/css/bill.css"/>
+</block>
+<block name="body">
+    <div class="container">
+        <div class="cr_container">
+            <div class="content">
+                <div class="b_item">
+                    可开发票的额度: {:fen_to_yuan($userInvoice_amount)}
+                </div>
+                <div class="billtype">
+                    <span id="email" class="b_active">电子发票</span>
+                    <span id="paper">纸质发票</span>
+                </div>
+                <form action="__ACTION__" method="post" class="ajaxForm">
+                <div class="b_item">
+                    <ul>
+                        <li>
+                            <div class="b_title">
+                                开票金额
+                            </div>
+                            <div class="b_info">
+                                <input type="number" name="invoice_amount" class="inputtext"   placeholder="请输入开票金额" value="{:fen_to_yuan($info[invoice_amount])}">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="b_title">
+                                公司名称
+                            </div>
+                            <div class="b_info">
+                                <input type="text" name="company_name" class="inputtext" placeholder="公司名称" value="{$info[company_name]}">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="b_title">
+                                营业执照税号
+                            </div>
+                            <div class="b_info">
+                                <input type="number"  name="business_license" class="inputtext" value="{$info[business_license]}" placeholder="请输入营业执照税号">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="b_title">
+                                开户行
+                            </div>
+                            <div class="b_info">
+                                <input type="text" name="bank_name"  class="inputtext" value="{$info[bank_name]}" placeholder="请输入开户行">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="b_title">
+                                开户帐号
+                            </div>
+                            <div class="b_info">
+                                <input  type="number"  name="bank_no" class="inputtext" value="{$info[bank_no]}"  placeholder="请输入开户帐号">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="b_title">
+                                营业执照注册地
+                            </div>
+                            <div class="b_info">
+                                <input type="text"  name="business_address"  class="inputtext" value="{$info[business_address]}"  placeholder="请输入营业执照注册地">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="b_title">
+                                联系人
+                            </div>
+                            <div class="b_info">
+                                <input type="text" name="contacts_name" class="inputtext" value="{$info[contacts_name]}" placeholder="请输入联系人">
+                            </div>
+                        </li>
+                        <li>
+                            <div class="b_title">
+                                联系电话
+                            </div>
+                            <div class="b_info">
+                                <input type="number" name="contacts_mobile"  value="{$info[contacts_mobile]}" class="inputtext" placeholder="请输入联系方式">
+                            </div>
+                        </li>
+                        <li id="mail">
+                            <div class="b_title">
+                                收票邮箱
+                            </div>
+                            <div class="b_info">
+                                <input type="text"  name="invoice_email"  class="inputtext"  value="{$info[invoice_email]}" placeholder="请输入收票邮箱">
+                            </div>
+                        </li>
+                        <span id="addr" style="display: none;">
+                            <li>
+                                <div class="b_title">
+                                        收货人名称
+                                </div>
+                                <div class="b_info">
+                                    <input type="text"  name="receive_contacts"  value="{$info[receive_contacts]}" class="inputtext" placeholder="请输入收货人名称或者公司名称">
+                                </div>
+                            </li>
+                            <li>
+                                <div class="b_title">
+                                       收货人手机号
+                                </div>
+                                <div class="b_info">
+                                    <input type="number"  name="receive_mobile" class="inputtext"  value="{$info[receive_mobile]}"  placeholder="请输入收货手机号">
+                                </div>
+                            </li>
+                            <li>
+                                <div class="b_title">
+                                    收货地址
+                                </div>
+                                <div class="b_info">
+                                    <input type="text"  name="receive_address"  class="inputtext" value="{$info[receive_address]}" placeholder="请输入收货地址">
+                                </div>
+                            </li>
+                        </span>
+                    </ul>
+                </div>
+                    <input id="invoice_type" type="hidden" name="invoice_type" >
+                <div>
+                    <if condition="!empty($info)">
+                        <input onclick="window.history.go(-1);" class="inputbutton" style="text-align: center;" value="返回">
+                          <else />
+                        <input type="submit" class="inputbutton" value="确定申请">
+                    </if>
+                </div>
+                </form>
+                <div class="tip">
+                    提示：
+                    <p>1、只有在成功发布悬赏后，已经支付对方佣金后，方可申请。</p>
+                    <p>2、发票申请额度=悬赏总额度。</p>
+                    <p>3、请确认提交的发票内容正确，错误填写将会导致发票不能正常报销。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</block>
+<block name="script">
+    <script>
+        $(".billtype span ").click(function () {
+                $(".billtype span").removeClass("b_active");
+                $(this).addClass("b_active");
+                if($(this).text() ==  '电子发票'){
+                     $('#mail').show();
+                     $('#addr').hide();
+                     $('#invoice_type').val(0);
+                }else{
+                    $('#addr').show();
+                    $('#mail').hide();
+                    $('#invoice_type').val(1);
+                }
+            }
+        );
+        var invoice_type = "{$info['invoice_type']}";
+        if(invoice_type == 0 || invoice_type == ''){
+            $(".billtype span").removeClass("b_active");
+            $('#email').addClass("b_active");
+            $('#mail').show();
+            $('#addr').hide();
+            $('#invoice_type').val(0);
+        }else{
+            $(".billtype span").removeClass("b_active");
+            $('#paper').addClass("b_active");
+            $('#addr').show();
+            $('#mail').hide();
+            $('#invoice_type').val(1);
+        }
+    </script>
+</block>

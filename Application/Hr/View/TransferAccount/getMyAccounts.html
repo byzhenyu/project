@@ -59,7 +59,7 @@
                                         <td class="align-center">{:fen_to_yuan($v[transfer_amount])}</td>
                                         <td class="align-center">{$v['bank_name']}</td>
                                         <td class="align-center">{:accountStatus($v['audit_status'])}</td>
-                                        <td class="align-center">{:time_format($v[add_time])}</td>
+                                        <td class="align-center">{:time_format($v[transfer_time])}</td>
                                         <td class="f-14 align-center">
                                             <div class="tpl-table-black-operation">
                                                 <if condition="$v[audit_status]  eq 1">

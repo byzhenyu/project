@@ -30,6 +30,7 @@ class UserAccountController extends HrCommonController{
         $userMoney =  $this->User->where(array( 'user_id' => HR_ID))->getField('user_money');
         $this->info = $list['info'];
         $this->page = $list['page'];
+        $this->count = $list['count'];
         $this->SysBankList = $SysBankList['info'];
         $this->userMoney = $userMoney;
         $this->display();
@@ -79,9 +80,26 @@ class UserAccountController extends HrCommonController{
     * @return mixed
     */
     public function voucher(){
+        $recharge_money = I('recharge_money', 0 ,'intval');
+        $bank_id = I('bank_id', 0 ,'intval');
         if(IS_POST){
-            P(I('post.'));
+            $data = I('post.');
+            $data['transfer_img'] = '';
+            foreach($data['voucher'] as  $value){
+                $data['transfer_img'] .= $value.',';
+            }
+            unset($data['voucher']);
+            $data['transfer_amount'] = yuan_to_fen($data['transfer_amount']);
+            $data['user_id'] = HR_ID;
+            $TransferAccountModel = D('Hr/TransferAccount');
+            if($TransferAccountModel->create($data) !== false){
+                $TransferAccountModel->add();
+                $this->ajaxReturn(V('1', '上传成功'));
+            }
+            $this->ajaxReturn(V('0', $TransferAccountModel->getError()));
         }
+        $this->recharge_money = $recharge_money;
+        $this->bank_id = $bank_id;
         $this->display();
     }
     /**

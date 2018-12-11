@@ -1,0 +1,74 @@
+<extend name="Common/base"/>
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__HR__/css/base.css"/>
+    <link rel="stylesheet" type="text/css" href="__HR__/css/resumeList.css"/>
+    <style>
+         a{
+             color: #0DBCD1;
+         }
+         .isdata{
+             text-align: center;
+             color: white;
+             font-size: 26px;
+             padding: 50px 0;
+         }
+         .isdata span{
+             background: #0DBCD1;
+             width: 240px;
+             display: inline-block;
+             padding: 10px 0;
+             border-radius: 4px;
+         }
+    </style>
+</block>
+<block name="body">
+    <div class="container">
+        <div class="rl_container">
+            <if condition="empty($list)">
+                <div class="isdata">
+                    <span>没有数据</span>
+                </div>
+            </if>
+            <div class="addresume clearfix">
+
+            </div>
+            <div class="content">
+                <div class="rl_title">
+                    <span>序号</span>
+                    <span>转账金额</span>
+                    <span>转账银行</span>
+                    <span>转账状态</span>
+                    <span>添加时间</span>
+                    <span>操作</span>
+                </div>
+                <div class="rl_item">
+                    <ul>
+                        <foreach name="list" item="v">
+                        <li>
+                            <span>{$v['id']}</span>
+                            <span>{:fen_to_yuan($v[transfer_amount])}</span>
+                            <span style="text-align: center;">{$v['bank_name']}</span>
+                            <span style="text-align: center;">{:accountStatus($v['audit_status'])}</span>
+                            <span>{:time_format($v[transfer_time])}</span>
+                            <span>
+                                <if condition="$v[audit_status]  eq 1">
+                                          <a href="{:U('TransferAccount/pdf',array('id' => $v['id']))}" class="detail">查看合同</a>
+                                </if>
+                                <a class="bj " href="{:U('TransferAccount/accountDetail',array('id' => $v['id']))}">查看详情</a>
+                            </span>
+                        </li>
+                        </foreach>
+                    </ul>
+                </div>
+                <div class="pageList">
+                    {$page}
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+    </script>
+</block>

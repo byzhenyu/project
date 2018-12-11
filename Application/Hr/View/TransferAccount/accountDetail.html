@@ -47,14 +47,20 @@
                             </tr>
                             <tr>
                                 <td><div align="right"><strong>转账图：</strong></div></td>
-                                <td><img src="{$info[transfer_img]}" alt="" width="300" height="500"></td>
+                                <td>
+                                  <if condition="!empty($info[transfer_img])">
+                                      <foreach name="info[transfer_img]" item="v">
+                                          <img src="{$v}" alt="" width="300" height="500">
+                                      </foreach>
+                                  </if>
+                                </td>
                             </tr>
                             <tr>
                                 <td><div align="right"><strong>转账说明：</strong></div></td>
                                 <td>{$info['transfer_remark']}</td>
                             </tr>
                             <tr>
-                                <td><div align="right"><strong>转账：</strong></div></td>
+                                <td><div align="right"><strong>转账时间：</strong></div></td>
                                 <td>{:time_format($info['transfer_time'])}</td>
                             </tr>
                             <tr>

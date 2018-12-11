@@ -1,0 +1,91 @@
+<extend name="Common/base"/>
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__HR__/css/base.css"/>
+    <link rel="stylesheet" type="text/css" href="__HR__/css/resumeList.css"/>
+    <link href="__HR__/css/layui.css" type="text/css" rel="stylesheet">
+    <style>
+        a{
+            color: #0DBCD1;
+        }
+        .isdata{
+            text-align: center;
+            color: white;
+            font-size: 26px;
+            padding: 50px 0;
+        }
+        .isdata span{
+            background: #0DBCD1;
+            width: 240px;
+            display: inline-block;
+            padding: 10px 0;
+            border-radius: 4px;
+        }
+    </style>
+</block>
+
+<block name="body">
+    <div class="container">
+        <div class="rl_container">
+            <div class="addresume clearfix">
+                <div class="fl">
+                    <a href="{:U('Invoice/addInvoice')}">
+                        <input type="button" class="inputbutton" value="+ 申请发票">
+                    </a>
+                </div>
+                <if condition="empty($list)">
+                    <div class="isdata">
+                        <span>没有数据</span>
+                    </div>
+                </if>
+                <div class="fr">
+                <span>
+                <!--<select class="rl_select">-->
+                    <!--<option value="">111</option>-->
+                    <!--<option value="">2</option>-->
+                    <!--<option value="">3</option>-->
+                <!--</select>-->
+                <!--</span>-->
+                    <!--<span class="rl_find">-->
+                    <!--<input class="inputfind">-->
+                    <!--<button>搜索</button>-->
+                <!--</span>-->
+                </div>
+            </div>
+            <div class="content">
+                <div class="rl_title">
+                    <span>序号</span>
+                    <span>公司名称</span>
+                    <span>开票额度</span>
+                    <span>开票类型</span>
+                    <span>审核状态</span>
+                    <span>添加时间</span>
+                    <span>操作</span>
+                </div>
+                <div class="rl_item">
+                    <ul>
+                        <foreach name="list" item="v">
+                            <li>
+                                <span>{$v['id']}</span>
+                                <span style="text-align: center;">{$v['company_name']}</span>
+                                <span style="text-align: center;">{:fen_to_yuan($v[invoice_amount])}</span>
+                                <span style="text-align: center;">{:invoiceStatus($v['status'])}</span>
+                                <span style="text-align: center;">{$v[invoice_type] == 0 ? '电子发票':'纸质发票'}</span>
+                                <span>{:time_format($v[add_time])}</span>
+                                <span>
+                                <a class="bj "  href="{:U('Invoice/addInvoice',array('id' => $v['id']))}" style="padding-left:27px;">查看详情</a>
+                            </span>
+                            </li>
+                        </foreach>
+                    </ul>
+                </div>
+                <div class="pageList">
+                    {$page}
+                    <div id="ht-page">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+</block>

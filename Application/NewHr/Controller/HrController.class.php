@@ -136,7 +136,6 @@ class HrController extends HrCommonController {
                 $data['name'] =$local_path;
 
             }
-
             $this->ajaxReturn($data);
         }
     }

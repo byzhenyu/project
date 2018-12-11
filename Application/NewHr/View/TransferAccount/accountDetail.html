@@ -1,0 +1,109 @@
+<extend name="Common/base"/>
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__HR__/css/base.css"/>
+    <link rel="stylesheet" type="text/css" href="__HR__/css/rechargeDetail.css"/>
+</block>
+<block name="body">
+    <div class="container">
+        <div class="zd_container">
+            <div class="content">
+                <div class="zd_item">
+                    <ul>
+                        <li>
+                            <div class="zd_title">
+                                转账金额
+                            </div>
+                            <div class="zd_info">
+                                <span class="zd_inputtext">{:fen_to_yuan($info['transfer_amount'])}</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="zd_title">
+                                转账银行
+                            </div>
+                            <div class="zd_info">
+                                <span class="zd_inputtext">{$info['bank_name']}</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="zd_title">
+                                银行卡号
+                            </div>
+                            <div class="zd_info">
+                                <span class="zd_inputtext">{$info['bank_no']}</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="zd_title">
+                                持卡人
+                            </div>
+                            <div class="zd_info">
+                                <span class="zd_inputtext">{$info['bank_holder']}</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="zd_title zd_jietu">
+                                转账截图
+                            </div>
+                            <div class="zd_info">
+                                <if condition="!empty($info[transfer_img])">
+                                    <foreach name="info[transfer_img]" item="v">
+                                        <img src="{$v}" alt="" width="300" height="500">
+                                    </foreach>
+                                </if>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="zd_title">
+                                转账说明
+                            </div>
+                            <div class="zd_info">
+                                <span class="zd_inputtext">{$info['transfer_remark']}</span>
+                            </div>
+                        </li>
+                        <li>
+                        <li>
+                            <div class="zd_title">
+                                转账时间
+                            </div>
+                            <div class="zd_info">
+                                <span class="zd_inputtext">{:time_format($info['transfer_time'])}</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="zd_title zd_status">
+                                审核状态
+                            </div>
+                            <div class="zd_info">
+                                {:accountStatus($info['audit_status'])}
+                                <!--<div class="zd_shtype">-->
+                                    <!--<span class="zd_active">待审核</span>-->
+                                    <!--<span>审核通过</span>-->
+                                    <!--<span>未通过</span>-->
+                                <!--</div>-->
+                            </div>
+                        </li>
+                        <li>
+                            <div class="zd_title zd_jietu">
+                                审核说明
+                            </div>
+                            <div class="zd_info">
+                                <textarea disabled="disabled" class="zd_inputtext zd_textarea">{$info['audit_desc']}</textarea>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <input type="button" class="zd_inputbutton" onclick="window.history.go(-1);" value="返回">
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+    </script>
+</block>
