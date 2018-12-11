@@ -48,7 +48,8 @@ class UserAccountModel extends Model{
   
         return array(
             'info' => $info,
-            'page' => $page['page']
+            'page' => $page['page'],
+            'count' => $count
         );
     }  
 

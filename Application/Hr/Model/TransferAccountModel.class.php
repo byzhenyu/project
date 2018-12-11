@@ -47,9 +47,13 @@ class TransferAccountModel extends Model{
                   ->order($sort)
                   ->where($where)
                   ->select();
+          foreach ($list as &$value){
+              $value['transfer_img'] = explode( ',',rtrim($value['transfer_img'],','));
+          }
           return array(
                'list' => $list,
-               'page' => $page['page']
+               'page' => $page['page'],
+               'count' => $count
           );
     }
     public function pdf($company = '', $money = ''){

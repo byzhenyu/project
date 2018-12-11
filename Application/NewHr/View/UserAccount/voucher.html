@@ -1,0 +1,104 @@
+<extend name="Common/base"/>
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__HR__/css/base.css"/>
+    <link rel="stylesheet" type="text/css" href="__HR__/css/evidence.css"/>
+    <link rel="stylesheet" type="text/css" href="__HR__/css/data.css"/>
+    <link rel="stylesheet" type="text/css" href="__PUBLIC__/fileupload/css/jquery.fileupload.css" media="all">
+</block>
+
+<block name="body">
+    <div class="container">
+        <div class="e_container">
+            <form action="__ACTION__" method="post" class="ajaxForm">
+            <div class="content">
+                <div class="pack">
+                    <div>
+                        转账金额
+                    </div>
+                    <div>
+                        <input type="number" name="transfer_amount" class="inputtext" value="{$recharge_money}" placeholder="请输入转账金额">
+                    </div>
+                </div>
+                <div class="pack">
+                    <div>
+                        转账说明
+                    </div>
+                    <div>
+                        <input type="text" name="transfer_remark" class="inputtext" value="" placeholder="请输入转账说明">
+                    </div>
+                </div>
+                <div class="pack">
+                    <div>
+                        上传凭证
+                    </div>
+                    <div class="clearfix">
+                        <div id="imgs" class="upimg">
+                        </div>
+                        <div  class="upimg_button">
+                            <img id="upimgs" src="__HR__/images/upimg.png">
+                            <input id="upload" style="position: relative;opacity:0;top: -30px;left:10px;width: 50px" class="weui-uploader__input" type="file" accept="image/*" multiple="">
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="bank_id" value="{$bank_id}">
+                <div class="button">
+                    <input  type="submit" class="inputbutton" value="上传凭证">
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/vendor/jquery.ui.widget.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.iframe-transport.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/fileupload/js/jquery.fileupload.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/goods.js?v=4.3"></script>
+    <script>
+        /*上传凭证*/
+        function uploadVoucher(){
+            var recharge_money  = $('#voucher').val();
+            alert(recharge_money);
+            layer.close(index);
+        }
+    </script>
+    <script>
+        $("#upimgs").click(
+            function () {
+                $("#upload").click()
+            }
+        )
+        var imgnum = 0;
+        //单图上传
+        $('#upload').fileupload({
+            url: "{:U('UserAccount/uploadImg')}",
+            dataType: 'json',
+            done: function (e, data) {
+                console.log(data);
+                imgnum++;
+                if(imgnum > 3){
+                    layer.msg('只能上传三张照片!');
+                    return
+                }
+                $("#hjimg"+imgnum).css('display','inline-block');
+                $("#hjimg"+imgnum).attr('src', data.result.src);
+                $('#imgs').append('<span style="display: inline-block"><img style="width: 110px;height:71px;" id="'+imgnum+'" src="'+data.result.src+'"><button onclick="delPic('+imgnum +')" style="display: block;margin-left: 30px;padding:6px 8px;color: white;text-align: center;background: rgb(13,188,209)">删除</button><input id="uploadImgs'+imgnum +'" type="hidden" name="voucher[]" value="'+data.result.src+'"></span>');
+            }
+        }).prop('disabled', !$.support.fileInput)
+            .parent().addClass($.support.fileInput ? undefined : 'disabled');
+        /*删除图片*/
+        function delPic(imgnum) {
+            var aa = '#uploadImgs'+ imgnum;
+            var img_src = $(aa).val();
+            $.post("{:U('oss_delet_object')}",{'img_src':img_src}, function (data) {
+                layer.msg('删除成功');
+                if (data.status == 1) {
+                    $(aa).parent().remove();
+                    imgnum--;
+                    $('#upload').attr('disabled',false);
+                }
+            })
+        }
+    </script>
+</block>

@@ -32,7 +32,6 @@ class UserAccountController extends HrCommonController{
     public function listUserAccount(){
 
     }
-
     // 放入回收站
     public function del(){
         $this->_del('UserAccount', 'id');
