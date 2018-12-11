@@ -46,7 +46,7 @@ class ResumeWorkController extends HrCommonController {
                     $res = $model->save($data);
                     if(false !== $res){
                         $info = $model->getResumeWorkInfo(array('id' => $id));
-                        $this->ajaxReturn(V(1, '保存成功！', $info['resume_id']));
+                        $this->ajaxReturn(V(1, '保存成功！', $id));
                     }
                     else{
                         $this->ajaxReturn(V(0, $model->getError()));
@@ -59,7 +59,7 @@ class ResumeWorkController extends HrCommonController {
                 if (false !== $create){
                     $res = $model->add($data);
                     if($res > 0){
-                        $this->ajaxReturn(V(1, '保存成功！', $data['resume_id']));
+                        $this->ajaxReturn(V(1, '保存成功！', $res));
                     }
                     else{
                         $this->ajaxReturn(V(0, $model->getError()));

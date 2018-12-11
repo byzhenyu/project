@@ -1648,3 +1648,10 @@ function accountStatus($type){
 * @param
 * @return mixed
 */
+function getMarryInfo($status){
+    switch ($status){
+        case 0: return '保密'; break;
+        case 1: return '已婚'; break;
+        case 2: return '未婚'; break;
+    }
+}

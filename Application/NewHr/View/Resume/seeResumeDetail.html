@@ -1,0 +1,96 @@
+<extend name="Common/base"/>
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__HR__/css/resume.css"/>
+</block>
+<block name="body">
+    <div class="r_container">
+        <div class="content">
+            <div class="r_date">
+                更新时间：{:time_format($info['detail']['update_time'])}
+            </div>
+            <div class="r_personinfo clearfix">
+                <div class="r_perimg fl">
+                    <img src="{$info['detail']['head_pic']}">
+                </div>
+                <div class="r_perinfo fr">
+                    <ul>
+                        <li class="clearfix">
+                            <div class="per_name fl">
+                                {$info['detail']['true_name']}
+                            </div>
+                            <div class="fr per_info">
+                                <span>{:getSexInfo($info['detail']['sex'])}</span>
+                                <span>{$info['detail']['age']}</span>
+                                <span>{:getMarryInfo($info['detail']['is_marry'])}</span>
+                                <span>{$info['detail']['first_degree']}</span>
+                            </div>
+                        </li>
+                        <li class="clearfix">
+                            <div class="fl">
+                                求职方向：{$info['detail']['job_intension']}
+                            </div>
+                            <div class="li2img fr">
+                                <img src="__HR__/images/tel.png">{$info['detail']['mobile']}
+                            </div>
+                        </li>
+                        <li class="clearfix">
+                            <div class="fl">
+                                工作城市：{$info['detail']['job_area']}
+                            </div>
+                            <div class="li3img fr">
+                                <img src="__HR__/images/wz.png">{$info['detail']['address']}
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="r_works">
+                <div class="work_title">
+                    工作经历
+                </div>
+                <foreach name="info.resume_work" item="v">
+                    <div class="work_company">
+                        <label>
+                            {$v['company_name']}
+                        </label>
+                        <if condition="$v['state'] eq 1">
+                            <span class="work_yrz"><img src="__HR__/images/rz.png">已认证</span>
+                            <else/>
+                            <span class="work_wrz"><img src="__HR__/images/wrz.png">未认证</span>
+                        </if>
+                    </div>
+                    <div class="work_name">
+                        {$v['position']}
+                    </div>
+                    <div class="work_content clearfix">
+                        <span class="fl">内容</span>
+                        <span class="fr wc_info">
+                            {$v['describe']}
+                        </span>
+                    </div>
+                </foreach>
+            </div>
+            <div class="r_edu">
+                <div class="edu_title">
+                    教育经历
+                </div>
+                <foreach name="info.resume_edu" item="v">
+                    <div class="edu_school">
+                        <span>{$v['school_name']}</span>
+                        <span>{$v['major']}</span>
+                        <span>{$v['degree']}</span>
+                        <div>
+                            {$v['starttime']}&nbsp;-&nbsp;{$v['endtime']}
+                        </div>
+                    </div>
+                </foreach>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        $(function(){
+        });
+    </script>
+</block>

@@ -1,0 +1,86 @@
+<extend name="Common/base"/>
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__HR__/css/creatResume.css"/>
+</block>
+<block name="body">
+<div class="container">
+    <div class="cr_container">
+        <div class="addresume">
+            <input type="button" class="inputbutton" value="+ 编辑工作经历">
+        </div>
+        <div class="content">
+            <div class="cr_pack1">
+                <form action="__ACTION__" method="post" class="ajaxForm" id="orderForm">
+                    <div>
+                        <ul>
+                            <li>
+                            <span class="pack_name">
+                                公司名称:
+                            </span>
+                                <span class="pack_info">
+                                <input class="inputtext1" placeholder="请输入公司名称" name="company_name" value="{$info['company_name']}" />
+                            </span>
+                            </li>
+                            <li>
+                            <span class="pack_name">
+                                专&#12288;&#12288;业:
+                            </span>
+                                <span class="pack_info">
+                                <input class="inputtext1" placeholder="请输入职位" name="position" value="{$info['position']}" />
+                            </span>
+                            </li>
+                            <li>
+                            <span class="pack_name">
+                                开始时间:
+                            </span>
+                                <span class="pack_info">
+                                <input type="date" class="inputdate" name="starttime" value="{$info['starttime']|date='Y-m-d', ###}" />
+                            </span>
+                                <span class="pack_name">
+                                结束时间:
+                            </span>
+                                <span class="pack_info">
+                                <input type="date" class="inputdate" name="endtime" value="{$info['endtime']|date='Y-m-d', ###}" />
+                            </span>
+                            </li>
+                            <li>
+                            <span class="pack_name">
+                                工作描述:
+                            </span>
+                                <span class="pack_info">
+                                <textarea class="textarea" name="describe" id="" cols="30" rows="10">{$info['describe']}</textarea>
+                            </span>
+                            </li>
+                        </ul>
+                        <input type="hidden" name="resume_id" value="{$info['resume_id']}">
+                        <input type="hidden" name="id" value="{$info['id']}">
+                        <input type="button" class="keepbutton resume_edu_button" onclick="editResumeWork()" value="保存工作经历">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        function editResumeWork(){
+            $.ajax({
+                url : "{:U('ResumeWork/editResumeWork')}",
+                type : "POST",
+                dataType : "json",
+                data : $("#orderForm").serialize(),
+                success : function(data){
+                    toastr(data.info);
+                    if(data.status == 1){
+                        window.parent.location.href='/index.php/NewHr/Resume/editResume/resume_id/'+data.data;
+                        setTimeout(layer_reload, 1000);
+                    }
+                }
+            });
+        }
+        function layer_reload() {
+            window.parent.layer.closeAll();
+        }
+    </script>
+</block>

@@ -244,6 +244,7 @@ class ResumeController extends HrCommonController {
         $resume_where = array('id' => $resume_id);
         $resumeDetail = $resumeModel->getResumeInfo($resume_where);
         $resumeDetail['age'] = time_to_age($resumeDetail['age']);
+        if(!$resumeDetail['head_pic']) $resumeDetail['head_pic'] = DEFAULT_IMG;
         $where = array('resume_id' => $resume_id);
         $resumeWorkList = $resumeWorkModel->getResumeWorkList($where);
         $resumeEduList = $resumeEduModel->getResumeEduList($where);

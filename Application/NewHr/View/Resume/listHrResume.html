@@ -44,7 +44,7 @@
                                     </if>
                                 </div>
                                 <div class="detail">
-                                    <a href="{:U('Resume/seeResumeDetail',array('id'=>$v['id']))}">详情</a>
+                                    <a class="seeResumeDetail" data-url="{:U('Resume/seeResumeDetail',array('id'=>$v['id']))}">详情</a>
                                 </div>
                             </span>
                         </li>
@@ -56,4 +56,19 @@
 </div>
 </block>
 <block name="script">
+<script type="text/javascript">
+    $(function(){
+        $('.seeResumeDetail').click(function(){
+            var url = $(this).data('url');
+            layer.open({
+                type: 2,
+                title: '简历详情',
+                shadeClose: false,
+                shade: 0.5,
+                area: ['80%', '80%'],
+                content: url
+            });
+        });
+    });
+</script>
 </block>

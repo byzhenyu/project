@@ -64,7 +64,7 @@ class ResumeEduController extends HrCommonController {
                 if(false !== $create){
                     $res = $model->add($data);
                     if($res > 0){
-                        $this->ajaxReturn(V(1, '学历信息保存成功！', $data['resume_id']));
+                        $this->ajaxReturn(V(1, '学历信息保存成功！', $res));
                     }
                     else{
                         $this->ajaxReturn(V(0, $model->getError()));

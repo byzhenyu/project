@@ -1,0 +1,65 @@
+<extend name="Common/base"/>
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__HR__/css/resumeList.css"/>
+</block>
+<block name="body">
+<div class="container">
+    <div class="rl_container">
+        <div class="addresume">
+            <a href="{:U('Recruit/recruitList')}">
+                <input type="button" class="inputbutton" value="返回">
+            </a>
+        </div>
+        <div class="content">
+            <div class="rl_title">
+                <span style="width: 4%;">序号</span>
+                <span style="width: 10%;">用户昵称</span>
+                <span style="width: 6%;">性别</span>
+                <span style="width: 8%;">年龄</span>
+                <span style="width: 12%;">修改时间</span>
+                <span style="width: 10%;">获取方式</span>
+                <span>操作</span>
+            </div>
+            <div class="rl_item">
+                <ul>
+                    <foreach name="list" item="v">
+                        <li>
+                            <span style="width: 4%">{$v['id']}</span>
+                            <span style="width: 10%;">{$v['true_name']}</span>
+                            <span style="width: 6%; text-align: center">{$v['sex']}</span>
+                            <span style="width: 8%; text-align: center">{$v['age']|intval}</span>
+                            <span style="width: 12%;">{$v['update_time']}</span>
+                            <span style="width: 10%">{:show_is_open($v['is_open'])}</span>
+                            <span>
+                                <div style="text-align: center">
+                                    <a style="display: inline-block; color: rgb(13,188,209)" class="seeResumeDetail" data-url="{:U('Resume/seeResumeDetail',array('id'=>$v['resume_id']))}">简历详情</a>
+                                </div>
+                            </span>
+                        </li>
+                    </foreach>
+                </ul>
+            </div>
+        </div>
+        <div style="text-align: right">
+            {$page}
+        </div>
+    </div>
+</div>
+</block>
+<block name="script">
+<script type="text/javascript">
+    $(function(){
+        $('.seeResumeDetail').click(function(){
+            var url = $(this).data('url');
+            layer.open({
+                type: 2,
+                title: '简历详情',
+                shadeClose: false,
+                shade: 0.5,
+                area: ['80%', '80%'],
+                content: url
+            });
+        });
+    });
+</script>
+</block>
