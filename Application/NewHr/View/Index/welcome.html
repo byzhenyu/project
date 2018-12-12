@@ -73,6 +73,7 @@
                 <span>剩余数量</span>
                 <span>添加时间</span>
                 <span>已匹配</span>
+                <span>操作</span>
             </div>
             <div class="h_items">
                 <ul>
@@ -88,12 +89,10 @@
                             <span>{:fen_to_yuan($v['last_token'])}</span>
                             <span>{:time_format($v['add_time'])}</span>
                             <span>已匹配</span>
+                            <span><span style="width: 60px;" onclick="javascript: toastr('请前往小程序推荐~');">去推荐</span></span>
                         </li>
                     </foreach>
                 </ul>
-            </div>
-            <div class="pageList">
-                {$page}
             </div>
 
         </div>
