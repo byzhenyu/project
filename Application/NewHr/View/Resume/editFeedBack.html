@@ -1,0 +1,40 @@
+<extend name="Common/base"/>
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__HR__/css/creatResume.css"/>
+</block>
+<block name="body">
+<div class="container">
+    <div class="cr_container">
+        <div class="addresume">
+            <input type="button" class="inputbutton" value="+ 意见反馈">
+        </div>
+        <div class="content">
+            <form id="orderForm" action="__ACTION__" method="post" class="ajaxForm">
+            <div class="cr_pack1">
+                <ul>
+                    <li>
+                        <span class="pack_name">
+                            联系方式:
+                        </span>
+                        <span class="pack_info">
+                            <input class="inputtext1" placeholder="请输入联系方式" name="mobile" value="">
+                        </span>
+                    </li>
+                    <li>
+                        <span class="pack_name">
+                            反馈意见:
+                        </span>
+                        <span class="pack_info">
+                            <textarea name="comment" class="textarea" id="" cols="30" rows="10"></textarea>
+                        </span>
+                    </li>
+                </ul>
+                <input type="submit" class="keepbutton" value="提交">
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+</block>
+<block name="script">
+</block>

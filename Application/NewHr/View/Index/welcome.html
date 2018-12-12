@@ -53,9 +53,9 @@
                     </ul>
                 </div>
                 <div class="down">
-                    <input class="d_button" type="button" value="+ 发布悬赏">
+                    <input class="d_button release_recruit" type="button" value="+ 发布悬赏">
                     <input class="d_button" type="button" value="去赚钱">
-                    <input class="d_button" type="button" value="上传简历赚奖金">
+                    <input class="d_button release_resume" type="button" value="上传简历赚奖金">
                     <input class="d_button" type="button" value="推荐人才赚佣金">
                     <input class="d_button" type="button" value="认证简历转奖金">
                 </div>
@@ -73,7 +73,6 @@
                 <span>剩余数量</span>
                 <span>添加时间</span>
                 <span>已匹配</span>
-                <span>操作</span>
             </div>
             <div class="h_items">
                 <ul>
@@ -89,10 +88,12 @@
                             <span>{:fen_to_yuan($v['last_token'])}</span>
                             <span>{:time_format($v['add_time'])}</span>
                             <span>已匹配</span>
-                            <span><span style="width: 30px;margin-right: 14px">上架</span><span style="width: 30px">详情</span></span>
                         </li>
                     </foreach>
                 </ul>
+            </div>
+            <div class="pageList">
+                {$page}
             </div>
 
         </div>
@@ -101,7 +102,14 @@
 </div>
 </block>
 <block name="script">
-    <script src="__HR__/js/bootstrap.min.js"></script>
-    <script type="text/javascript">
-    </script>
+<script type="text/javascript">
+    $(function(){
+        $('.release_recruit').click(function(){
+            location.href="{:U('Recruit/editRecruit')}";
+        });
+        $('.release_resume').click(function(){
+            location.href="{:U('Resume/editResume')}";
+        });
+    });
+</script>
 </block>

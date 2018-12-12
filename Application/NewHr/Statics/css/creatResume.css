@@ -129,6 +129,9 @@ width: 100%;
 .language span{
     cursor: pointer;
 }
+.welfare span{
+    cursor: pointer;
+}
 .marriage {
     width: 378px;
     height: 36px;
@@ -138,6 +141,18 @@ width: 100%;
 }
 
 .language span {
+     display: inline-block;
+     text-align: center;
+     padding-top: 6px;
+     width: 86px;
+     height: 36px;
+     background: rgba(255, 255, 255, 1);
+     border: 1px solid rgba(239, 239, 239, 1);
+     border-radius: 4px;
+     margin-right: 8px;
+     color: #CECECE;
+ }
+.welfare span {
     display: inline-block;
     text-align: center;
     padding-top: 6px;
@@ -151,6 +166,12 @@ width: 100%;
 }
 
 .language .lanactive {
+    color: #0DBCD1;
+    background: rgba(13, 188, 209, 0.06);
+    border: 1px solid rgba(13, 188, 209, 1);
+}
+
+.welfare .lanactive {
     color: #0DBCD1;
     background: rgba(13, 188, 209, 0.06);
     border: 1px solid rgba(13, 188, 209, 1);
