@@ -168,6 +168,7 @@ class ReviseApiController extends ApiUserCommonController{
         $model = D('Admin/User');
         $create = $model->create($data, 4);
         if(false !== $create){
+            $data['age'] = strtotime($data['age']);
             $res = $model->saveUserData(array('user_id' => $user_id), $data);
             if(false !== $res){
                 $this->apiReturn(V(1, '保存成功！'));
