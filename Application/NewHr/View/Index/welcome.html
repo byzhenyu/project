@@ -53,9 +53,9 @@
                     </ul>
                 </div>
                 <div class="down">
-                    <input class="d_button" type="button" value="+ 发布悬赏">
+                    <input class="d_button release_recruit" type="button" value="+ 发布悬赏">
                     <input class="d_button" type="button" value="去赚钱">
-                    <input class="d_button" type="button" value="上传简历赚奖金">
+                    <input class="d_button release_resume" type="button" value="上传简历赚奖金">
                     <input class="d_button" type="button" value="推荐人才赚佣金">
                     <input class="d_button" type="button" value="认证简历转奖金">
                 </div>
@@ -70,7 +70,6 @@
                 <span>语言要求</span>
                 <span>工作地区</span>
                 <span>悬赏令牌</span>
-                <span>剩余数量</span>
                 <span>添加时间</span>
                 <span>已匹配</span>
                 <span>操作</span>
@@ -86,10 +85,9 @@
                             <span>{$v['language_ability']}</span>
                             <span>{$v['job_area']}</span>
                             <span>{:fen_to_yuan($v['commission'])}</span>
-                            <span>{:fen_to_yuan($v['last_token'])}</span>
-                            <span>{:time_format($v['add_time'])}</span>
+                            <span>{$v['add_time']}</span>
                             <span>已匹配</span>
-                            <span><span style="width: 30px;margin-right: 14px">上架</span><span style="width: 30px">详情</span></span>
+                            <span><span style="width: 60px;" onclick="javascript: toastr('请前往小程序推荐~');">去推荐</span></span>
                         </li>
                     </foreach>
                 </ul>
@@ -101,7 +99,14 @@
 </div>
 </block>
 <block name="script">
-    <script src="__HR__/js/bootstrap.min.js"></script>
-    <script type="text/javascript">
-    </script>
+<script type="text/javascript">
+    $(function(){
+        $('.release_recruit').click(function(){
+            location.href="{:U('Recruit/editRecruit')}";
+        });
+        $('.release_resume').click(function(){
+            location.href="{:U('Resume/editResume')}";
+        });
+    });
+</script>
 </block>

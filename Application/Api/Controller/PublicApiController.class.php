@@ -294,6 +294,11 @@ class PublicApiController extends ApiCommonController
         }
     }
 
+    public function where_string(){
+        $hr_id = 27;
+        D('Admin/HrResume')->getHrTags($hr_id);
+    }
+
     /**
      * @desc 关于我们
      * @param 1、关于我们 2、注册协议 4、新手指南[C] 5、新手指南[HR] 7、帮助中心

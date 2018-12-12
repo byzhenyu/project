@@ -139,7 +139,7 @@ class RecruitController extends HrCommonController {
     public function frozenShelfRecruit(){
         $model = D('Hr/Recruit');
         $recruit_id = I('recruit_id', 0, 'intval');
-        $field = I('field', '', 'trim');
+        $field = I('field', 'is_shelf', 'trim');
         if(!in_array($field, array('is_frozen', 'is_shelf'))) $this->ajaxReturn(V(0, '操作类型有误！'));
         $result = $model->changeRecruitFrozenShelf(array('id' => $recruit_id), $field);
         if(false !== $result){

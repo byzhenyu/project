@@ -168,6 +168,7 @@ class ReviseApiController extends ApiUserCommonController{
         $model = D('Admin/User');
         $create = $model->create($data, 4);
         if(false !== $create){
+            $data['age'] = strtotime($data['age']);
             $res = $model->saveUserData(array('user_id' => $user_id), $data);
             if(false !== $res){
                 $this->apiReturn(V(1, '保存成功！'));
@@ -308,9 +309,15 @@ class ReviseApiController extends ApiUserCommonController{
         $keywords = I('keywords', '', 'trim');
         $city_name = I('city_name', '', 'trim');
         $user_id = UID;
-        $tags = user_tags($user_id);
-        $map = '';
-        if(count($tags) > 0){
+        //$tags = user_tags($user_id);
+        $string_where = D('Admin/HrResume')->getHrTags($user_id);
+        if(is_array($string_where)){
+            $map = false;
+        }
+        else{
+            $map = $string_where;
+        }
+        /*if(count($tags) > 0){
             $where1 = array();
             foreach($tags as &$val){
                 $val['job_area'] = rtrim($val['job_area'], ',');
@@ -324,7 +331,7 @@ class ReviseApiController extends ApiUserCommonController{
             }
             unset($val);
             $map = implode(' or ', $where1);
-        }
+        }*/
         if($map) $where['_string'] = $map;
         if(!$map) $where['_string'] = 'r.id > 0';//无符合条件悬赏展示所有的悬赏
         if($keywords) $where['r.position_name'] = array('like', '%'.$keywords.'%');

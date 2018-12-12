@@ -5,22 +5,33 @@
 <block name="body">
 <div class="container">
     <div class="rl_container">
-        <div class="addresume">
-            <a href="{:U('Recruit/editRecruit')}">
-                <input type="button" class="inputbutton" value="+ 发布悬赏">
-            </a>
+        <div class="cf">
+            <div class="addresume fl">
+                <a href="{:U('Recruit/editRecruit')}">
+                    <input type="button" class="inputbutton" value="+ 发布悬赏">
+                </a>
+            </div>
+            <div class="fr">
+                <form action="__SELF__" method="get">
+                    <span style="height: 46px">
+                        <input name="keyword" style="height: 46px;border-color:#F2F2F2;padding-left: 12px;border-radius: 4px;width: 240px " placeholder="请输入悬赏职位/工作地区" value="{$keyword}" />
+                        <input type="submit" value="搜索" style="background: #0DBCD1;color: white;display:inline-block;width: 80px;height: 46px;border: none;position: relative;left: -4px; cursor: pointer" />
+                    </span>
+                </form>
+            </div>
         </div>
+
         <div class="content">
             <div class="rl_title">
                 <span style="width: 4%;">序号</span>
                 <span style="width: 10%;">悬赏职位</span>
-                <span style="width: 6%;">招聘人数</span>
+                <span style="width: 6%;">人数</span>
                 <span style="width: 8%;">岗位性质</span>
                 <span style="width: 12%;">语言要求</span>
                 <span style="width: 10%;">工作地区</span>
                 <span style="width: 10%;">悬赏令牌</span>
-                <span style="width: 10%;">剩余数量</span>
-                <span style="width: 15%;">添加时间</span>
+                <span style="width: 12%;">添加时间</span>
+                <span style="width: 7%">上/下架</span>
                 <span>操作</span>
             </div>
             <div class="rl_item">
@@ -34,8 +45,12 @@
                             <span style="width: 12%;">{$v['language_ability']}</span>
                             <span style="width: 10%">{$v['job_area']}</span>
                             <span style="width: 10%;">{$v['commission']}</span>
-                            <span style="width: 10%">{$v['last_token']}</span>
-                            <span style="width: 15%;">{$v['add_time']}</span>
+                            <span style="width: 12%;">{$v['add_time']}</span>
+                            <span style="width: 7%; cursor: pointer" onclick="changeRecruitShelf({$v['id']})">
+                                <if condition="$v['is_shelf'] eq 1">
+                                    <em style="color: rgb(13,188,209);">上架</em><else/><em style="color: red;">下架</em>
+                                </if>
+                            </span>
                             <span>
                                 <div class="bj ">
                                     <a href="{:U('Recruit/listRecruitResume',array('id'=>$v['id']))}">推荐列表</a>
@@ -51,12 +66,29 @@
                     </foreach>
                 </ul>
             </div>
+            <div class="pageList">
+                {$page}
+            </div>
         </div>
     </div>
 </div>
 </block>
 <block name="script">
 <script type="text/javascript">
+    function changeRecruitShelf(recruit_id){
+        $.ajax({
+            url: "{:U('Recruit/frozenShelfRecruit')}",
+            type: 'get',
+            data: {recruit_id: recruit_id},
+            dataType: 'json',
+            success: function(data){
+                toastr(data.info);
+                if(1 == data.status){
+                    location.reload();
+                }
+            }
+        });
+    }
     $(function(){
         $('.seeRecruitDetail').click(function(){
             var url = $(this).data('url');
