@@ -10,17 +10,38 @@
 
 <block name="body">
     <div class="container">
+
+
         <div class="rc_container clearfix">
             <div class="left_content fl">
+
+                <div class="cf" style="background: white">
+                    <div style="float: right;padding-top: 10px">
+                        <form action="__ACTION__" method="post">
+                        <span class="inputdate2">开始时间:<input type="date" id="kssj"  name="startTime"  class="inputdate1"></span>
+                        <span class="inputdate2">结束时间:<input type="date" id="jssj"  name="endTime"  class="inputdate1"></span>
+                        <span class="rl_find">
+                        <button>搜索</button>
+                        </span>
+                        </form>
+                    </div>
+
+                </div>
+
                 <if condition="empty($info)">
                     <div class="isdata">
                         <span>没有数据</span>
                     </div>
                 </if>
+
                 <ul>
+
                     <foreach name="info" item="v">
                         <li class="clearfix">
                             <div class="fl rc_info">
+
+
+
                                 <div class="rc_title">
                                     <span>{:paymentType($v['payment'])}充值</span>
                                     <span>{:fen_to_yuan($v['money'])}</span>
