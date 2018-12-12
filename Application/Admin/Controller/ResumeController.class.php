@@ -51,7 +51,6 @@ class ResumeController extends CommonController {
                         $hr_res = $hrModel->add($hr_data);
                         if(false !== $hr_res){
                             $task_id = 3;
-                            //TODO 简历审核任务完成情况 根据简历更新验证任务完成次数
                             add_task_log($resume_audit_info['user_id'], $task_id, '', $resume_audit_info['update_time']);
                             header('Content-Type:application/json; charset=utf-8');
                             echo json_encode(V(1, '审核成功！', $resume_id));

@@ -117,4 +117,27 @@ class HrResumeModel extends Model {
         if($res) return true;
         return false;
     }
+
+    /**
+     * @desc HR拥有简历组成的条件
+     * @param $hr_id
+     * @return array
+     */
+    public function getHrTags($hr_id){
+        if(!$hr_id) return array();
+        $edu_list = D('Admin/Education')->getEducationList(array('id' => array('gt', 0)));
+        $edu_arr = array();
+        foreach($edu_list as &$val) $edu_arr[$val['education_name']] = $val['id']; unset($val);
+        $result = $this->alias('a')->join('__RESUME__ as r on a.resume_id = r.id')->where(array('a.hr_user_id' => $hr_id))->field('r.position_id,r.job_area,r.first_degree')->select();
+        $where = array();
+        foreach($result as &$val){
+            $degree_where = ')';
+            $degree_id = $edu_arr[$val['first_degree']];
+            if($degree_id > 0) $degree_where = ' and r.`degree` <= '.$degree_id.' )';
+            $where[] = ' (r.`position_id` = '.$val['position_id'].' and r.`job_area` like \''.$val['job_area'].'%\''.$degree_where;
+        }
+        unset($val);
+        $where_string = implode(' or ', $where);
+        return $where_string;
+    }
 }
