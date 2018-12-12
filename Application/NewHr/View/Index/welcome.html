@@ -70,7 +70,6 @@
                 <span>语言要求</span>
                 <span>工作地区</span>
                 <span>悬赏令牌</span>
-                <span>剩余数量</span>
                 <span>添加时间</span>
                 <span>已匹配</span>
                 <span>操作</span>
@@ -86,8 +85,7 @@
                             <span>{$v['language_ability']}</span>
                             <span>{$v['job_area']}</span>
                             <span>{:fen_to_yuan($v['commission'])}</span>
-                            <span>{:fen_to_yuan($v['last_token'])}</span>
-                            <span>{:time_format($v['add_time'])}</span>
+                            <span>{$v['add_time']}</span>
                             <span>已匹配</span>
                             <span><span style="width: 60px;" onclick="javascript: toastr('请前往小程序推荐~');">去推荐</span></span>
                         </li>

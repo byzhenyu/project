@@ -1,0 +1,60 @@
+<extend name="Common/base"/>
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__HR__/css/rechargeDetail.css"/>
+</block>
+<block name="body">
+<div class="container">
+    <div class="zd_container">
+        <div class="content" style="padding: 20px 40px 20px 40px;">
+            <div class="zd_item" style="padding-top: 20px">
+                <ul>
+                    <li>
+                        <div class="zd_title">
+                            发布人
+                        </div>
+                        <div class="zd_info">
+                            <span class="zd_inputtext">{$info['release_name']}</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="zd_title">
+                            创建时间
+                        </div>
+                        <div class="zd_info">
+                            <span class="zd_inputtext">{$info['add_time']|date='Y-m-d H:i:s',###}</span>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="zd_title">
+                            悬赏职位
+                        </div>
+                        <div class="zd_info">
+                            <span class="zd_inputtext">{$info['position_name']}</span>
+                        </div>
+                    </li>
+                    <li><div class="zd_title">招聘人数</div><div class="zd_info"><span class="zd_inputtext">{$info['recruit_num']}</span></div></li>
+                    <li><div class="zd_title">年龄</div><div class="zd_info"><span class="zd_inputtext">{$info['age']}</span></div></li>
+                    <li><div class="zd_title">岗位性质</div><div class="zd_info"><span class="zd_inputtext">{$info['nature']}</span></div></li>
+                    <li><div class="zd_title">性别</div><div class="zd_info"><span class="zd_inputtext">{:getSexInfo($info['sex'])}</span></div></li>
+                    <li><div class="zd_title">语言要求</div><div class="zd_info"><span class="zd_inputtext">{$info['language_ability']}</span></div></li>
+                    <li><div class="zd_title">工作经验</div><div class="zd_info"><span class="zd_inputtext">{$info['experience']}</span></div></li>
+                    <li><div class="zd_title">工作地区</div><div class="zd_info"><span class="zd_inputtext">{$info['job_area']}</span></div></li>
+                    <li><div class="zd_title">基本工资</div><div class="zd_info"><span class="zd_inputtext">{$info['base_pay']}</span></div></li>
+                    <li><div class="zd_title">绩效工资</div><div class="zd_info"><span class="zd_inputtext">{$info['merit_pay']}</span></div></li>
+                    <li><div class="zd_title">福利</div><div class="zd_info"><textarea disabled="disabled" class="zd_inputtext zd_textarea">{$info['welfare']}</textarea></div></li>
+                    <li><div class="zd_title">详细信息</div><div class="zd_info">{$info['description']}</div></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</block>
+<block name="script">
+<script type="text/javascript">
+    $(".zd_shtype span ").click(function () {
+            $(".zd_shtype span").removeClass("zd_active");
+            $(this).addClass("zd_active");
+        }
+    )
+</script>
+</block>

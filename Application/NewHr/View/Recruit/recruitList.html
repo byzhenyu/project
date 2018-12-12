@@ -25,12 +25,11 @@
             <div class="rl_title">
                 <span style="width: 4%;">序号</span>
                 <span style="width: 10%;">悬赏职位</span>
-                <span style="width: 6%;">招聘人数</span>
+                <span style="width: 6%;">人数</span>
                 <span style="width: 8%;">岗位性质</span>
                 <span style="width: 12%;">语言要求</span>
                 <span style="width: 10%;">工作地区</span>
                 <span style="width: 10%;">悬赏令牌</span>
-                <span style="width: 8%;">剩余数量</span>
                 <span style="width: 12%;">添加时间</span>
                 <span style="width: 7%">上/下架</span>
                 <span>操作</span>
@@ -46,7 +45,6 @@
                             <span style="width: 12%;">{$v['language_ability']}</span>
                             <span style="width: 10%">{$v['job_area']}</span>
                             <span style="width: 10%;">{$v['commission']}</span>
-                            <span style="width: 8%">{$v['last_token']}</span>
                             <span style="width: 12%;">{$v['add_time']}</span>
                             <span style="width: 7%; cursor: pointer" onclick="changeRecruitShelf({$v['id']})">
                                 <if condition="$v['is_shelf'] eq 1">
