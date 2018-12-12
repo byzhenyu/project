@@ -8,7 +8,17 @@
         <div class="cr_container">
             <div class="content">
                 <div class="b_item">
-                    可开发票的额度: {:fen_to_yuan($userInvoice_amount)}
+                    <ul>
+                        <li>
+                            <div class="b_title">
+                                可开发票的额度:
+                            </div>
+                            <div class="b_info">
+                                <input type="number" name="invoice_amount" class="inputtext"   disabled="disabled" value="{:fen_to_yuan($userInvoice_amount)}">
+                            </div>
+                        </li>
+                    </ul>
+
                 </div>
                 <div class="billtype">
                     <span id="email" class="b_active">电子发票</span>
