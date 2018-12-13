@@ -8,7 +8,27 @@
     height: 100%;
     background: #EEF0F5;
 }
-
+.inputdate2{
+    margin-right: 14px;
+}
+.inputdate1{
+    height: 46px;
+    /*border: none;*/
+    margin-left: 8px;
+}
+.rl_find {
+    height: 46px;
+    background: white;
+    display: inline-block;
+}
+.rl_find button{
+    height: 46px;
+    width: 66px;
+    background: #0DBCD1;
+    color: white;
+    display: inline-block;
+    border-color: #EFEFEF;
+}
 .left_content {
     background: white;
     width: 68%;

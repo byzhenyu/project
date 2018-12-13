@@ -25,6 +25,19 @@
 </block>
 <block name="body">
     <div class="container">
+        <div class="cf" style="padding-right: 50px">
+            <div style="float: right;padding-top: 10px">
+                <form action="__ACTION__" method="post">
+                <span class="inputdate2">开始时间:<input type="date" id="kssj" name="startTime" class="inputdate1"></span>
+                <span class="inputdate2">结束时间:<input type="date" id="jssj" name="endTime" class="inputdate1"></span>
+                <span class="rl_find">
+                <button>搜索</button>
+                </form>
+        </span>
+            </div>
+
+        </div>
+
         <div class="rl_container">
             <if condition="empty($list)">
                 <div class="isdata">

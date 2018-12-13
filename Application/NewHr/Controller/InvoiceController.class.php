@@ -32,6 +32,16 @@ class InvoiceController extends HrCommonController {
     * @return mixed
     */
     public function invoiceList(){
+        $startTime = I('startTime');
+        $endTime = I('endTime');
+        if($startTime && $endTime){
+            $startTime = strtotime($startTime);
+            $endTime = strtotime($endTime) + 86400;
+            if($startTime > $endTime){
+                $this->error('截止日期小于开始日期!');
+            }
+            $where['add_time'] = array('between',array($startTime,$endTime));
+        }
         $where['i.hr_user_id'] = HR_ID;
         $invoiceList = $this->Invoice->invoiceList($where);
         $this->list = $invoiceList['list'];

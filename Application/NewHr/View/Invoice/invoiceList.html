@@ -32,23 +32,17 @@
                         <input type="button" class="inputbutton" value="+ 申请发票">
                     </a>
                 </div>
-                <if condition="empty($list)">
-                    <div class="isdata">
-                        <span>没有数据</span>
-                    </div>
-                </if>
                 <div class="fr">
+                    <form action="__ACTION__" method="post">
+                    <span class="inputdate2">开始时间:<input type="date" id="kssj" name="startTime" class="inputdate1"></span>
+                    <span class="inputdate2">结束时间:<input type="date" id="jssj" name="endTime" class="inputdate1"></span>
                 <span>
-                <!--<select class="rl_select">-->
-                    <!--<option value="">111</option>-->
-                    <!--<option value="">2</option>-->
-                    <!--<option value="">3</option>-->
-                <!--</select>-->
-                <!--</span>-->
-                    <!--<span class="rl_find">-->
-                    <!--<input class="inputfind">-->
-                    <!--<button>搜索</button>-->
-                <!--</span>-->
+                </span>
+                    <span class="rl_find">
+                    <button>搜索</button>
+                    </span>
+                    </form>
+                </span>
                 </div>
             </div>
             <div class="content">
@@ -78,6 +72,11 @@
                         </foreach>
                     </ul>
                 </div>
+                <if condition="empty($list)">
+                    <div class="isdata">
+                        <span>没有数据</span>
+                    </div>
+                </if>
                 <div class="pageList">
                     {$page}
                     <div id="ht-page">
@@ -88,4 +87,11 @@
     </div>
 </block>
 <block name="script">
+    <script>
+        // $("#kssj").change(
+        //     function () {
+        //         alert(""+this.value)
+        //     }
+        // )
+    </script>
 </block>

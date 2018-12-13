@@ -23,6 +23,16 @@ class UserAccountController extends HrCommonController{
     * @return mixed
     */
     public function getAccount(){
+        $startTime = I('startTime');
+        $endTime = I('endTime');
+        if($startTime && $endTime){
+            $startTime = strtotime($startTime);
+            $endTime = strtotime($endTime) + 86400;
+            if($startTime > $endTime){
+                $this->error('截止日期小于开始日期!');
+            }
+            $where['add_time'] = array('between',array($startTime,$endTime));
+        }
         $where['u.user_id'] = HR_ID;
         $list = $this->TransferAccount->getUserAccountList($where);
         $SysBankModel = D("Admin/SysBank");

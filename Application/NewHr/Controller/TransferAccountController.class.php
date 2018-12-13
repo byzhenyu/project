@@ -39,9 +39,15 @@ class TransferAccountController extends HrCommonController{
     * @return mixed
     */
     public function getMyAccounts(){
-        $keyword = I('keyword', '');
-        if ($keyword) {
-            $where['t.transfer_amount'] = array('like','%'.$keyword.'%');
+        $startTime = I('startTime');
+        $endTime = I('endTime');
+        if($startTime && $endTime){
+            $startTime = strtotime($startTime);
+            $endTime = strtotime($endTime) + 86400;
+            if($startTime > $endTime){
+                $this->error('截止日期小于开始日期!');
+            }
+            $where['t.transfer_time'] = array('between',array($startTime,$endTime));
         }
         $where['t.user_id'] = HR_ID;
         $field = 't.*, s.bank_name, s.bank_no, s.bank_holder, s.bank_opening';
