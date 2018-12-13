@@ -170,7 +170,7 @@ header {
 }
 .nav_active {
     color: white;
-    background-image: url("../images/16.png");
+    /*background-image: url("../images/16.png");*/
     background-position: left 1.4285714285714286rem center ;
     background-size: 1.5rem 1.4285714285714286rem;
     background-repeat: no-repeat;

@@ -1615,6 +1615,10 @@ function time_list($type){
             $start_time = mktime(0,0,0,date('m'),1,date('Y'));
             $end_time = mktime(23,59,59,date('m'),date('t'),date('Y'));
             break;
+        case 4:
+            $start_time = mktime(0, 0, 0, 1, 1, date('Y'));
+            $end_time = mktime(23, 59, 59, 12, 31, date('Y'));
+            break;
         case 0:
             $start_time = 0;
             $end_time = 0;

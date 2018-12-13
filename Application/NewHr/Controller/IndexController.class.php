@@ -64,7 +64,12 @@ class IndexController extends HrCommonController{
         $end_time = $_time['end'];
         $account_where = array('change_type' => array('in', array(2, 3, 6)), 'change_time' => array('between', array($start_time, $end_time)));
         $sum_money = $accountLogModel->getAccountLogMoneySum($account_where);
-        $return_array = array('user_ranking' => $userRanking, 'resume_ranking' => $hrResumeRanking,'head_pic'=>$head_pic,'nickname'=>$nickname, 'resume_number' => $resume_number, 'month_amount' => fen_to_yuan($sum_money));
+        $_year_time = time_list(4);
+        $_year_start = $_year_time['start'];
+        $_year_end = $_year_time['end'];
+        $_year_account_where = array('change_type' => array('in', array(2, 3, 6)), 'change_time' => array('between', array($_year_start, $_year_end)));
+        $_year_money = $accountLogModel->getAccountLogMoneySum($_year_account_where);
+        $return_array = array('user_ranking' => $userRanking, 'resume_ranking' => $hrResumeRanking,'head_pic'=>$head_pic,'nickname'=>$nickname, 'resume_number' => $resume_number, 'month_amount' => fen_to_yuan($sum_money), 'year_amount' => fen_to_yuan($_year_money));
 
         $string_where = D('Admin/HrResume')->getHrTags($user_id, '');
         if(is_array($string_where)){
@@ -96,7 +101,14 @@ class IndexController extends HrCommonController{
         $where['status'] = 1;
         $where['is_post'] = array('lt', 2);
         $where['is_shelf'] = 1;
-        $list = $recruit_model->getRecruitList($where,'id, position_name, recruit_num, commission, add_time, job_area, position_name, welfare, nature, language_ability, last_token');
+        $position_model = D('Admin/Position');
+        $list = $recruit_model->getRecruitList($where,'id, position_name, recruit_num, commission, add_time, job_area, position_id, welfare, nature, language_ability, last_token');
+        foreach($list['info'] as &$val){
+            $t_parent_id = $position_model->getPositionField(array('id' => $val['position_id']), 'parent_id');
+            $position_name = $position_model->getPositionField(array('id' => $t_parent_id), 'position_name');
+            $val['position_name'] = $position_name .'-'. $val['position_name'];
+        }
+        unset($val);
         $this->company_info = $company_info;
         $this->ranking = $return_array;
         $this->info = $list['info'];
