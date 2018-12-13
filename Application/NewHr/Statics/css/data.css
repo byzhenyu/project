@@ -80,7 +80,7 @@
     height: 36px;
     border-color: #EFEFEF;
     margin-right: 6px;
-    color: #CECECE;
+    /*color: #CECECE;*/
 }
 
 .r_address > div:nth-child(1) {

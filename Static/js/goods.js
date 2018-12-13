@@ -23,7 +23,7 @@ $("#upimg2").fileupload({
             $('.upimg_button').hide();
         }
         console.log(data);
-        $('.company_imgs').append('<div class="upimg"><img src="'+data.result.src+'" />'+
+        $('.company_imgs').append('<div class="upimg"><img src="'+data.result.src+'" style="height: 120px" />'+
             '<div class="file-del" onclick="delPicIds(this)" style="color:red;cursor:pointer">删除</div>'+
             '<input type="hidden" name="company_img_ids[]" value="'+data.result.src+'"></div>');
     }
