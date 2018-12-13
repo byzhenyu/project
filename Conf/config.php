@@ -98,9 +98,9 @@
         /* 微信扫码登录 */
         'WxLogin' => array(
             #微信商户平台应用APPID
-            'app_id' => 'wxb7221179eaa2ade7',
+            'app_id' => 'wxb4c6ff240e81df0e',
             //公众帐号secert（仅JSAPI支付的时候需要配置)
-            'appsecret' => '985066e0fb30cd22c15cfd4dea532527',
+            'appsecret' => 'd2877b06ba6dbbcdd15a99c5b985b542',
         ),
         /* 支付宝支付相关配置 */
         'AliPay' => array(

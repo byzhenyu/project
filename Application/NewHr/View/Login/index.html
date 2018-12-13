@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js" type="text/javascript" charset="utf-8"></script>
     <script>
         // 防止iframe
         if(self != top)
@@ -258,16 +258,18 @@
         }
 
     }
-    // var obj = new WxLogin({
-    //     self_redirect:false,
-    //     id:"login_container",
-    //     appid: "wxb7221179eaa2ade7",
-    //     scope: "snsapi_login",
-    //     redirect_uri: "https%3a%2f%2fshanjian.host5.liuniukeji.net%2findex.php%2fhr%2fLogin%2fweiChatDoLogin",
-    //     state: "Mobile",
-    //     style: "black",
-    //     href: ""
-    // });
+    $(function () {
+        var obj = new WxLogin({
+            self_redirect:false,
+            id:"login_container",
+            appid: "wxb4c6ff240e81df0e",
+            scope: "snsapi_login",
+            redirect_uri: "https%3a%2f%2fshanjian.host5.liuniukeji.net%2findex.php%2fNewhr%2fLogin%2fweiChatDoLogin",
+            state: "Mobile",
+            style: "black",
+            href: ""
+        });
+    });
     $('#send').click(function () {
         var  mobile = $(" input[ name='mobile' ] ").val();
         if(mobile == ''){
