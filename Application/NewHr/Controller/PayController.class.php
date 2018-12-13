@@ -45,7 +45,7 @@ class PayController extends HrCommonController {
         $data['body'] = C('APP_NAME').'HR微信充值';//订单详情
         $out_trade_no = 'W' . date('YmdHis', time()) . '-' . HR_ID; //订单号
         $data['out_trade_no'] = $out_trade_no;//订单号
-        $data['total_fee'] = $recharge_money;//订单金额元
+        $data['total_fee'] = '0.01';//订单金额元
         require_once("./Plugins/WxPay/WxPay.php");
         $wxPay = new \WxPay();
         //返回支付二维码图片的url地址，网页里直接如下调用
