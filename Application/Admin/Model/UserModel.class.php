@@ -141,8 +141,7 @@ class UserModel extends Model{
             $info['nickname'] = strval($info['nickname']);
             $info['token'] = $this->updateUserToken($info['user_id']);
             return V(1, '用户登录成功', $info);
-        }
-        else{
+        } else{
             return V(0, '账号不存在！');
         }
     }
