@@ -125,7 +125,10 @@ class RecruitController extends HrCommonController {
             $val['sel'] = 0;
             if(in_array($val['value'], $recruit_info['lan_data'])) $val['sel'] = 1;
         }
-        $recruit_info['commission'] = fen_to_yuan($recruit_info['commission']);
+        if(!$recruit_info['commission']) $recruit_info['commission'] = '';
+        else{
+            $recruit_info['commission'] = fen_to_yuan($recruit_info['commission']);
+        }
         $recruit_info['job_area_t'] = explode(',', $recruit_info['job_area']);
         $recruit_info['job_area1'] = $recruit_info['job_area_t'][0];
         $recruit_info['job_area2'] = $recruit_info['job_area_t'][1];

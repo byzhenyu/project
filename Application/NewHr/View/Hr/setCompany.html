@@ -45,15 +45,18 @@
                         </div>
                     </li>
                     <li>
-                        <div>联系方式</div>
-                        <div>
-                            <input class="inputtext" placeholder="请输入公司联系方式" name="company_mobile" value="{$info['company_mobile']}" />
-                        </div>
-                    </li>
-                    <li>
-                        <div>公司邮箱</div>
-                        <div>
-                            <input class="inputtext" type="email" required placeholder="请输入公司邮箱" name="company_email" value="{$info['company_email']}" />
+                        <div>公司规模</div>
+                        <div class="r_address">
+                            <div>
+                                <span>
+                                    <select name="company_size" id="company_size" data-am-selected="">
+                                        <option value="">请选择</option>
+                                        <foreach name="company_size" item="v">
+                                            <option value="{$v['value']}" <if condition="$v['value'] eq $info['company_size']"> selected</if>>{$v['value']}</option>
+                                        </foreach>
+                                    </select>
+                                </span>
+                            </div>
                         </div>
                     </li>
                     <li>
@@ -72,18 +75,15 @@
                         </div>
                     </li>
                     <li>
-                        <div>公司规模</div>
-                        <div class="r_address">
-                            <div>
-                                <span>
-                                    <select name="company_size" id="company_size" data-am-selected="">
-                                        <option value="">请选择</option>
-                                        <foreach name="company_size" item="v">
-                                            <option value="{$v['value']}" <if condition="$v['value'] eq $info['company_size']"> selected</if>>{$v['value']}</option>
-                                        </foreach>
-                                    </select>
-                                </span>
-                            </div>
+                        <div>联系方式</div>
+                        <div>
+                            <input class="inputtext" placeholder="请输入公司联系方式" name="company_mobile" value="{$info['company_mobile']}" />
+                        </div>
+                    </li>
+                    <li>
+                        <div>公司邮箱</div>
+                        <div>
+                            <input class="inputtext" type="email" required placeholder="请输入公司邮箱" name="company_email" value="{$info['company_email']}" />
                         </div>
                     </li>
                     <li>

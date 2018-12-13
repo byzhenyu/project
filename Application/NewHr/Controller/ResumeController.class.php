@@ -88,7 +88,9 @@ class ResumeController extends HrCommonController {
                     $res = $model->where(array('id' => $resume_id))->save($data);
                     if(false !== $res){
                         header('Content-Type:application/json; charset=utf-8');
-                        echo json_encode(V(1, '上传成功，等待后台审核！', $resume_id));
+                        $str = '保存成功！';
+                        if($info['is_audit'] != 1) $str = '保存成功，等待后台审核！';
+                        echo json_encode(V(1, $str, $resume_id));
                         //审核通过，更新HR tags标签
                         if($info['is_audit'] == 1){
                             fastcgi_finish_request();
@@ -112,7 +114,7 @@ class ResumeController extends HrCommonController {
                     $str = '保存成功，等待后台审核！';
                     $user_info = $userModel->getUserInfo(array('mobile' => $data['mobile']));
                     if($user_info) $this->ajaxReturn(V(0, '该手机号已在C端注册，请前往小程序认证获得！'));
-                    if(!$this->firstValid()) $str = '简历保存成功，请前往小程序推荐！';
+                    //if(!$this->firstValid()) $str = '简历保存成功，请前往小程序推荐！';
                     $res = $model->add($data);
                     if(false !== $res){
                         sendMessageRequest($data['mobile'], C('SHAN_RESUME_NOTICE'));

@@ -152,7 +152,7 @@ class HrResumeModel extends Model {
         foreach($result as &$val){
             $degree_where = ')';
             $degree_id = $edu_arr[$val['first_degree']];
-            if($degree_id > 0) $degree_where = ' and '.$limit.'`degree` <= '.$degree_id.' )';
+            if($degree_id > 1) $degree_where = ' and '.$limit.'`degree` <= '.$degree_id.' )';
             $where[] = ' ('.$limit.'`position_id` = '.$val['position_id'].' and '.$limit.'`job_area` like \''.$val['job_area'].'%\''.$degree_where;
         }
         unset($val);

@@ -95,6 +95,7 @@ class IndexController extends HrCommonController{
 
         $where['status'] = 1;
         $where['is_post'] = array('lt', 2);
+        $where['is_shelf'] = 1;
         $list = $recruit_model->getRecruitList($where,'id, position_name, recruit_num, commission, add_time, job_area, position_name, welfare, nature, language_ability, last_token');
         $this->company_info = $company_info;
         $this->ranking = $return_array;
