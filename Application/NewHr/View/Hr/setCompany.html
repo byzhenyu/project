@@ -14,7 +14,7 @@
                     <li>
                         <div>公司logo</div>
                         <div >
-                            <img id="uplogo" src="{$info['company_logo']}" />
+                            <img id="uplogo" src="{$info['company_logo']}" onerror="this.src='__HR__/images/uplogo.png'" />
                             <input id="upimg1" type="file" class="inputfile">
                             <input type="hidden" value="{$info['company_logo']}" id="img" name="company_logo" />
                         </div>

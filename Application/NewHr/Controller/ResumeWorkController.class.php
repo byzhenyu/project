@@ -40,6 +40,7 @@ class ResumeWorkController extends HrCommonController {
         $data['starttime'] = strtotime($data['starttime']);
         $data['endtime'] = $is_c ? 0 : strtotime($data['endtime']);
         if(!$is_c) {
+            if($data['endtime'] > time()) $this->ajaxReturn(V(0, '结束时间不能大于当前时间'));
             if($data['starttime'] > $data['endtime']) $this->ajaxReturn(V(0, '结束时间不能小于开始时间'));
         }
         if(IS_POST){

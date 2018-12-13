@@ -59,8 +59,11 @@
                             <span class="work_wrz"><img src="__HR__/images/wrz.png">未认证</span>
                         </if>
                     </div>
-                    <div class="work_name">
+                    <div class="work_name fl">
                         {$v['position']}
+                    </div>
+                    <div class="work_date fr">
+                        {$v['starttime']}-{$v['endtime']}
                     </div>
                     <div class="work_content clearfix">
                         <span class="fl">内容</span>
@@ -76,11 +79,15 @@
                 </div>
                 <foreach name="info.resume_edu" item="v">
                     <div class="edu_school">
-                        <span>{$v['school_name']}</span>
-                        <span>{$v['major']}</span>
-                        <span>{$v['degree']}</span>
-                        <div>
-                            {$v['starttime']}&nbsp;-&nbsp;{$v['endtime']}
+                        <div class="cf">
+                            <div class = "fl">
+                                <span>{$v['school_name']}</span>
+                                <span>{$v['major']}</span>
+                                <span>{$v['degree']}</span>
+                            </div>
+                            <div class="fr">
+                                {$v['starttime']}&nbsp;-&nbsp;{$v['endtime']}
+                            </div>
                         </div>
                     </div>
                 </foreach>
