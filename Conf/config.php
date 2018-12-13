@@ -77,7 +77,7 @@
             'accessKeyId' => 'LTAIz4aRXgMYzzLL',
             'accessKeySecret' => '8GjW7timJQxNlyoLHzsd4ifDCuCCql',
             'bucket' => 'shanjian',
-            'callbackUrl' => "https://shanjian.host5.liuniukeji.com/Api/AliyunCallback" //上传回调
+            'callbackUrl' => "https://shanjian.host5.liuniukeji.net/Api/AliyunCallback" //上传回调
             //上传回调中有返回图片路径写死
         ),
         /* 微信支付相关配置 */

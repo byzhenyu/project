@@ -121,6 +121,9 @@ class SettleController extends CommonController {
 
     /**
      * @desc 悬赏30日自动结算冻结赏金退还至余额
+     * @extra 1、[2018-12-15] 之前的悬赏根据悬赏推荐/资金记录退还悬赏剩余赏金
+     *        2、[2015-12-15] 之后的悬赏根据悬赏表last_token退还悬赏剩余赏金
+     *        3、用户冻结资金减少/退还至余额
      */
     public function recruitAutomaticSettlement(){
     }
