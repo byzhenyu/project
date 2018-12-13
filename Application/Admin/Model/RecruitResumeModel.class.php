@@ -125,7 +125,6 @@ class RecruitResumeModel extends Model {
      * 详情
      */
     public function getDetail($where) {
-
         $info = $this->where($where)->find();
         $wordArr = C('WORK_NATURE');
         $exp = C('WORK_EXP');
@@ -170,5 +169,16 @@ class RecruitResumeModel extends Model {
             'info' => $list,
             'page' => $page['page']
         );
+    }
+
+    /**
+     * @desc [退还悬赏赏金用]
+     * @param $where
+     * @param bool $field
+     * @return mixed
+     */
+    public function getRecommendAccountLog($where, $field = false){
+        $result = $this->alias('r')->join('__RECRUIT__ as t on r.recruit_id = t.id')->join('__ACCOUNT_LOG__ as a on r.id = a.order_sn')->where($where)->field($field)->find();
+        return $result;
     }
 }

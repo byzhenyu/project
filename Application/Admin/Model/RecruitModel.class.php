@@ -193,6 +193,16 @@ class RecruitModel extends Model {
     }
 
     /**
+     * @param $where
+     * @param $data
+     * @return bool
+     */
+    public function saveRecruitData($where, $data){
+        $res = $this->where($where)->save($data);
+        return $res;
+    }
+
+    /**
      * @desc 待结算
      * @param $where
      * @param $field

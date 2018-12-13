@@ -3,7 +3,10 @@ namespace Core\Controller;
 use Common\Controller\CommonController;
 /**
  * 结算
- * TODO HR悬赏可开发票金额
+ * 1、悬赏推荐/入职所得金额7日自动到账
+ * 2、悬赏推荐30日自动入职
+ * 3、未认证简历30日发短信验证
+ * 4、悬赏30日退还剩余赏金
  */
 class SettleController extends CommonController {
     public function __construct(){
@@ -126,6 +129,54 @@ class SettleController extends CommonController {
      *        3、用户冻结资金减少/退还至余额
      */
     public function recruitAutomaticSettlement(){
+        $recruitModel = D('Admin/Recruit');
+        $user_model = D('Admin/User');
+        $recruit_resume_model = D('Admin/RecruitResume');
+        $limit_time = NOW_TIME - 30 * 86400;
+        $dividing_time = mktime(0, 0, 0, 12, 15, 2018);
+        $recruit_where = array('is_post' => array('lt', 2), 'status' => 1, 'add_time' => array('lt', $limit_time));
+        $field = 'id,hr_user_id,add_time,commission,last_token';
+        $recruit_list = $recruitModel->getRecruitList($recruit_where, $field, '', false);
+        foreach($recruit_list as &$val){
+            if($val['add_time'] > $dividing_time){
+                $recommend_where = array('a.change_type' => array('in', array(2, 3)), 't.id' => $val['id']);
+                $recommend_field = 'sum(user_money) as money';
+                $recommend_result = $recruit_resume_model->getRecommendAccountLog($recommend_where, $recommend_field);
+                $last_money = $recommend_result['money'];
+                M()->startTrans();
+                //减少用户冻结资金
+                $decrease = $user_model->decreaseUserFieldNum(array('user_id' => $val['hr_user_id']), 'frozen_money', $last_money);
+                //增加用户余额资金
+                $increase = $user_model->increaseUserFieldNum(array('user_id' => $val['hr_user_id']), 'user_money', $last_money);
+                account_log($val['hr_user_id'], $last_money, 5, '悬赏赏金退还', $val['id']);
+                //清空悬赏剩余赏金
+                $recruit_result = $recruitModel->saveRecruitData(array('id' => $val['id']), array('last_token' => 0));
+                if(false !== $recruit_result && false !== $decrease && false !== $increase){
+                    M()->commit();
+                }
+                else{
+                    M()->rollback();
+                }
+            }
+            else{
+                if($val['last_token'] == 0) continue;
+                M()->startTrans();
+                //减少用户冻结资金
+                $decrease = $user_model->decreaseUserFieldNum(array('user_id' => $val['hr_user_id']), 'frozen_money', $val['last_token']);
+                //增加用户余额资金
+                $increase = $user_model->increaseUserFieldNum(array('user_id' => $val['hr_user_id']), 'user_money', $val['last_token']);
+                account_log($val['hr_user_id'], $val['last_token'], 5, '悬赏赏金退还', $val['id']);
+                //清空悬赏剩余赏金
+                $recruit_result = $recruitModel->saveRecruitData(array('id' => $val['id']), array('last_token' => 0));
+                if(false !== $decrease && false !== $increase && false !== $recruit_result){
+                    M()->commit();
+                }
+                else{
+                    M()->rollback();
+                }
+            }
+        }
+        unset($val);
     }
 
     /**

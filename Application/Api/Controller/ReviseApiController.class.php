@@ -282,7 +282,7 @@ class ReviseApiController extends ApiUserCommonController{
 
     public function getHrAccountLog() {
         $where['user_id'] = UID;
-        $where['change_type'] = array('in', [2,3,6]);
+        $where['change_type'] = array('in', [2,3,5,6]);
         $data = D('Admin/AccountLog')->getAccountLogByPage($where,'log_id,user_id,user_money,change_time,change_desc,change_type,order_sn', 'change_time desc');
         $info = $data['info'];
         $return = array();
