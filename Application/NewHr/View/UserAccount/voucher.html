@@ -100,5 +100,11 @@
                 }
             })
         }
+        function callback(data){
+            toastr(data.info);
+            if(data.status == 1){
+                location.href = "{:U('TransferAccount/getMyAccounts')}";
+            }
+        }
     </script>
 </block>

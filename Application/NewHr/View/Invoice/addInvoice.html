@@ -185,5 +185,11 @@
             $('#mail').hide();
             $('#invoice_type').val(1);
         }
+        function callback(data){
+            toastr(data.info);
+            if(data.status == 1){
+                location.href = "{:U('Invoice/invoiceList')}";
+            }
+        }
     </script>
 </block>
