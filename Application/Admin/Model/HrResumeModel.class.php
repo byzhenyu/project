@@ -139,9 +139,10 @@ class HrResumeModel extends Model {
     /**
      * @desc HR拥有简历组成的条件
      * @param $hr_id
+     * @param $limit string
      * @return array
      */
-    public function getHrTags($hr_id){
+    public function getHrTags($hr_id, $limit = 'r.'){
         if(!$hr_id) return array();
         $edu_list = D('Admin/Education')->getEducationList(array('id' => array('gt', 0)));
         $edu_arr = array();
@@ -151,8 +152,8 @@ class HrResumeModel extends Model {
         foreach($result as &$val){
             $degree_where = ')';
             $degree_id = $edu_arr[$val['first_degree']];
-            if($degree_id > 0) $degree_where = ' and r.`degree` <= '.$degree_id.' )';
-            $where[] = ' (r.`position_id` = '.$val['position_id'].' and r.`job_area` like \''.$val['job_area'].'%\''.$degree_where;
+            if($degree_id > 0) $degree_where = ' and '.$limit.'`degree` <= '.$degree_id.' )';
+            $where[] = ' ('.$limit.'`position_id` = '.$val['position_id'].' and '.$limit.'`job_area` like \''.$val['job_area'].'%\''.$degree_where;
         }
         unset($val);
         $where_string = implode(' or ', $where);

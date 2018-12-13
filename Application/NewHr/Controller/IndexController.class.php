@@ -37,7 +37,7 @@ class IndexController extends HrCommonController{
     public function welcome(){
         $user_id = HR_ID;
         $recruit_model = D('Admin/Recruit');
-        $tags = user_tags($user_id);
+        //$tags = user_tags($user_id);
 
         $user_model = D('Admin/User');
         $hr_resume = D('Admin/HrResume');
@@ -66,7 +66,14 @@ class IndexController extends HrCommonController{
         $sum_money = $accountLogModel->getAccountLogMoneySum($account_where);
         $return_array = array('user_ranking' => $userRanking, 'resume_ranking' => $hrResumeRanking,'head_pic'=>$head_pic,'nickname'=>$nickname, 'resume_number' => $resume_number, 'month_amount' => fen_to_yuan($sum_money));
 
-        $map = '';
+        $string_where = D('Admin/HrResume')->getHrTags($user_id, '');
+        if(is_array($string_where)){
+            $map = false;
+        }
+        else{
+            $map = $string_where;
+        }
+        /*$map = '';
         if(count($tags) > 0){
             $where1 = array();
             foreach($tags as &$val){
@@ -81,10 +88,7 @@ class IndexController extends HrCommonController{
             }
             unset($val);
             $map = implode(' or ', $where1);
-        }
-        if($map) $where['_string'] = $map;
-        if(!$map) $where['_string'] = 'hr_user_id = 0';//无符合条件人选
-        $where['hr_user_id'] = array('neq', $user_id);
+        }*/
         if($map) $where['_string'] = $map;
         if(!$map) $where['_string'] = 'hr_user_id = 0';//无符合条件人选
         $where['hr_user_id'] = array('neq', $user_id);
