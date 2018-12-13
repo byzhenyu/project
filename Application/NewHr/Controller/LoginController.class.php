@@ -31,7 +31,9 @@ class LoginController extends Controller {
         $WxLogin = new \WxLogin();
         $weiChat_token = $WxLogin->getWeiChat($code);
         $weiChatData = $WxLogin->getWeiChatInfo($weiChat_token['access_token'], $weiChat_token['openid']);
+        LL('./log/log1.txt',$weiChatData);
         $loginInfo = D('Admin/User')->weiChatLogin($weiChatData['unionid']);
+        LL('./log/log1.txt',$weiChatData);
         if( $loginInfo['status'] == 1 ){ //登录成功
             /* 存入session */
             $this->_autoSession($loginInfo['data']);
