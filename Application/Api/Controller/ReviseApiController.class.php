@@ -268,7 +268,7 @@ class ReviseApiController extends ApiUserCommonController{
         $user_id = UID;
         $model = D('Admin/RecruitResume');
         $where = array('r.hr_user_id' => $user_id);
-        $field = 'r.add_time,c.company_name,c.id,re.position_name,re.position_id,c.company_logo,re.id as recruit_id,re.base_pay,re.merit_pay';
+        $field = 'r.add_time,c.company_name,c.id,re.position_name,re.position_id,c.company_logo,re.id as recruit_id,re.base_pay,re.merit_pay,re.job_area';
         $list = $model->getDeliveryHistory($where, $field);
         $position_model = D('Admin/Position');
         foreach($list['info'] as &$val){
