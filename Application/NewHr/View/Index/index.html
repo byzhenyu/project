@@ -75,11 +75,5 @@
                 $(this).parent('li').addClass('nav_active').siblings().removeClass('nav_active');
             });
         });
-        function callback(data){
-            toastr(data.info);
-            if(data.status == 1){
-                location.href = "{:U('Index/index')}";
-            }
-        }
     </script>
 </block>
