@@ -157,6 +157,29 @@
             color: #555555;
             margin-top: 20px;
         }
+        .wxclass{
+            background: white;
+            border-radius: 8px;
+            padding: 30px 80px;
+            position: absolute;
+            left: 26%;
+            top: 0;
+            transform: translate(50%,50%);
+        }
+        .wxcha{
+            position: absolute;
+            right: 8px;
+            top: 6px;
+        }
+        .wxbg{
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            display: none;
+            background: rgba(0,0,0,0.40);
+        }
     </style>
 </head>
 <body>
@@ -181,8 +204,10 @@
                     <li>
                         <div class="lg-i">
                             <span><img src="__PUBLIC__/Hr/images/i2@3x.png"/></span>
-                            <input placeholder="输入你的验证码" type="text" name="chkcode" value="" autocomplete="off" />
+                            <input placeholder="输入您的短信验证码" type="text" name="chkcode" value="" autocomplete="off" />
                         </div>
+                    </li>
+                    <li >
                     </li>
                     <!--<li>-->
                         <!--<div class="lg-i">-->
@@ -201,15 +226,24 @@
                     <!--</li>-->
                 </ul>
                 <button type="submit" id="login-button">登录</button>
+                <div onclick="weiChat()" style="text-align: center;width: 100%;margin-top: 10px">
+                    <img  style="width: 16px;height: 16px;vertical-align: middle" src="__HR__/images/wx.png"> 微信登录
+                </div>
             </form>
         </div>
         <div class="login-code fr">
             <span>
                 <img src="__PUBLIC__/Hr/images/code.jpg">
             </span>
-            <div id="login_container">
+            <div  class="wxbg">
+                <div class="wxclass">
+                    <div class="wxcha"><img onclick="cha()" src="__HR__/images/cha.png"></div>
+                    <div id="login_container">
 
+                    </div>
+                </div>
             </div>
+
             <p>扫描二维码<br>
                 立即使用小程序</p>
         </div>
@@ -306,6 +340,12 @@
     function isPhoneNo(phone) {
         var pattern = /^1[34578]\d{9}$/;
         return pattern.test(phone);
+    }
+    function cha(){
+        $('.wxbg').hide();
+    }
+    function weiChat(){
+        $('.wxbg').show();
     }
 </script>
 </body>
