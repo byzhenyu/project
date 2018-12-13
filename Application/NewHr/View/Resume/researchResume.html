@@ -85,7 +85,7 @@
         });
         function initPosition(industry_id){
             if(industry_id > 0){
-                $.post("/index.php/Hr/Position/getPositionList", {industry_id: industry_id}, function (data) {
+                $.post("/index.php/NewHr/Position/getPositionList", {industry_id: industry_id}, function (data) {
                     $('#parent_id').html('<option data-id="0" value="0">一级菜单</option>');
                     var dataLen = data.data.length;
                     var parent_sel = 0;
@@ -103,7 +103,7 @@
         });
         function initPositionChildren(position_id){
             if(position_id > 0){
-                $.post("/index.php/Hr/Position/getPositionChildrenList", {position_id: position_id}, function (data) {
+                $.post("/index.php/NewHr/Position/getPositionChildrenList", {position_id: position_id}, function (data) {
                     $('#position_id').html('<option data-id="0" value="">请选择</option>');
                     var dataLen = data.data.length;
                     var parent_sel = '';

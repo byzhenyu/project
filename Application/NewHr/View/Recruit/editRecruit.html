@@ -194,7 +194,7 @@
     function callback(data){
         toastr(data.info);
         if(data.status == 1){
-            location.href='/index.php/Hr/Recruit/recruitList';
+            location.href='/index.php/NewHr/Recruit/recruitList';
         }
         if(data.status == 2){
             setTimeout(recruit_pay, 2000);
@@ -206,10 +206,10 @@
         initialFrameHeight: 350
     });
     function goback1(){
-        location.href='/index.php/Hr/Recruit/recruitList';
+        location.href='/index.php/NewHr/Recruit/recruitList';
     }
     function recruit_pay(){
-        location.href='/index.php/Hr/Pay/pay';
+        location.href='/index.php/NewHr/Pay/pay';
     }
     $(function() {
         initAddress('#start_address',"{$info['job_area1']}", "{$info['job_area2']}", "{$info['job_area3']}", 1);
@@ -263,7 +263,7 @@
         });
         function initPosition(industry_id){
             if(industry_id > 0){
-                $.post("/index.php/Hr/Position/getPositionList", {industry_id: industry_id}, function (data) {
+                $.post("/index.php/NewHr/Position/getPositionList", {industry_id: industry_id}, function (data) {
                     $('#parent_id').html('<option data-id="0" value="0">一级菜单</option>');
                     var dataLen = data.data.length;
                     var parent_sel = 0;
@@ -289,7 +289,7 @@
 
         function initPositionChildren(position_id){
             if(position_id > 0){
-                $.post("/index.php/Hr/Position/getPositionChildrenList", {position_id: position_id}, function (data) {
+                $.post("/index.php/NewHr/Position/getPositionChildrenList", {position_id: position_id}, function (data) {
                     $('#position_id').html('<option data-id="0" value="">请选择</option>');
                     var dataLen = data.data.length;
                     var parent_sel = '';
