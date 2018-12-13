@@ -307,12 +307,6 @@
         var pattern = /^1[34578]\d{9}$/;
         return pattern.test(phone);
     }
-    function callback(data){
-        toastr(data.info);
-        if(data.status == 1){
-            location.href = "{:U('Index/index')}";
-        }
-    }
 </script>
 </body>
 </html>
