@@ -279,10 +279,11 @@
             return
         }
         $.post("{:U('Api/PublicApi/smsCode')}",{"mobile":mobile,"user_type":1,"type":7},function(result){
-                  console.log(result);
                   toastr(result['info']);
-               var val = $('#getcode')[0];
-                  settime(val);
+               if(result.status == 1){
+                   var val = $('#getcode')[0];
+                   settime(val);
+               }
         });
 
     });
