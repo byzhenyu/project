@@ -30,7 +30,7 @@ class LoginController extends Controller {
         require_once("./Plugins/WxLogin/WxLogin.php");
         $WxLogin = new \WxLogin();
         $weiChat_token = $WxLogin->getWeiChat($code);
-        p($code);
+        p($weiChat_token);
         $weiChatData = $WxLogin->getWeiChatInfo($weiChat_token['access_token'], $weiChat_token['openid']);
         LL('./log/log1.txt',$weiChatData);
         p($weiChatData);
