@@ -33,6 +33,17 @@ class HrResumeModel extends Model {
         );
     }
 
+    public function getHrResumeListWeb($where, $field = false, $order = 'h.add_time desc'){
+        if(!$field) $field = 'h.id,h.resume_id,r.true_name,r.head_pic,h.add_time,r.age,r.sex';
+        $number = M('Resume')->alias('r')->join('__HR_RESUME__ as h on r.id = h.resume_id', 'LEFT')->field($field)->order($order)->where($where)->count();
+        $page = get_web_page($number);
+        $list = M('Resume')->alias('r')->join('__HR_RESUME__ as h on r.id = h.resume_id', 'LEFT')->field($field)->order($order)->where($where)->limit($page['limit'])->select();
+        return array(
+            'info' => $list,
+            'page' => $page['page']
+        );
+    }
+
     /**
      * @desc 获取hr简历库详情
      * @param $where

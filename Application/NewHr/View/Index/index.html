@@ -11,7 +11,7 @@
                 <a href="{:U('Index/index')}" style="margin-right: 20px">返回首页</a>
                 <span class="head_logo">
                 <img src="{$info['company_logo']}">
-                <span>{$info['company_name']}</span>
+                <span>{$info['company_name']|default='公司名称尚未填写'}</span>
                 </span>
                 <span class="head_exit">
                 <img src="__HR__/images/exit.png">

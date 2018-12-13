@@ -1595,6 +1595,7 @@ class UserCenterApiController extends ApiUserCommonController{
         }
         $model = D('Admin/HrResume');
         $keywords = I('keywords', '', 'trim');
+        $where['r.is_audit'] = 1;
         if($keywords) $where['r.true_name'] = array('like', '%'.$keywords.'%');
         $list = $model->getHrResumeList($where);
         foreach($list['info'] as &$val){
