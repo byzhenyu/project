@@ -23,15 +23,22 @@ class LoginController extends Controller {
     */
     public function weiChatDoLogin(){
         $code = $_GET['code'];
-        p($code);
-        die;
         if (empty($code)) {
             $this->redirect('Login/Login');
         }
         /*引入微信登录类*/
         require_once("./Plugins/WxLogin/WxLogin.php");
         $WxLogin = new \WxLogin();
-        $result = $WxLogin->getWeiChat($code);
+        $weiChat_token = $WxLogin->getWeiChat($code);
+        $weiChatData = $WxLogin->getWeiChatInfo($weiChat_token['access_token'], $weiChat_token['openid']);
+        $loginInfo = D('Admin/User')->weiChatLogin($weiChatData['unionid']);
+        if( $loginInfo['status'] == 1 ){ //登录成功
+            /* 存入session */
+            $this->_autoSession($loginInfo['data']);
+            $this->ajaxReturn($loginInfo);
+        } else {
+            $this->ajaxReturn($loginInfo);
+        }
     }
        /**
        * @desc 手机验证码登录
