@@ -13,7 +13,6 @@ class SettleController extends CommonController {
         ini_set('memory_limit','5120M');
     }
 
-
     /**
      * @desc 用户冻结金额/可提现金额变动
      */
@@ -118,6 +117,12 @@ class SettleController extends CommonController {
             }
         }
         unset($val);
+    }
+
+    /**
+     * @desc 悬赏30日自动结算冻结赏金退还至余额
+     */
+    public function recruitAutomaticSettlement(){
     }
 
     /**

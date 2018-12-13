@@ -142,19 +142,19 @@ class ReviseApiController extends ApiUserCommonController{
         if($id) $where = array('id' => $id);
         $array = array('id','user_id', 'company_logo', 'company_name','company_size','company_nature','company_mobile','company_email','company_industry','company_address');
         $info = D('Admin/CompanyInfo')->getCompanyInfoInfo($where);
-        $address = explode(' ' ,$info['company_address']);
-        if(count($address) > 0){
-            $info['company_address_p'] = $address[0];
-            unset($address[0]);
-            $info['company_address'] = str_replace($info['company_address_p'].' ', '', $info['company_address']);
-        }
-        else{
-            $info['company_address_p'] = '';
-        }
+
         if(!$info) {
             foreach($array as &$value) $info[$value] = '';
             $info['company_pic'] = array();
             $info['company_address_p'] = '';
+        }
+        else{
+            $address = explode(' ' ,$info['company_address']);
+            if(count($address) > 0){
+                $info['company_address_p'] = $address[0];
+                unset($address[0]);
+                $info['company_address'] = str_replace($info['company_address_p'].' ', '', $info['company_address']);
+            }
         }
         $this->apiReturn(V(1 ,'编辑个人资料',$info));
     }
