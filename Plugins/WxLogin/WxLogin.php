@@ -10,11 +10,8 @@ class WxLogin{
      * 初始化参数
      *
      * @param array $options
-     * @param $options ['app_id']  APPID：绑定支付的APPID（必须配置，开户邮件中可查看）
-     * @param $options ['mch_id'] MCHID：商户号（必须配置，开户邮件中可查看）
-     * @param $options ['key'] KEY：商户支付密钥，参考开户邮件设置（必须配置，登录商户平台自行设置）
-     * @param $options ['appsecret'] 公众帐号secert（仅JSAPI支付的时候需要配置)，
-     * @param $options ['notify_url'] 支付宝回调地址
+     * @param $options ['app_id'] #微信商户平台应用APPID
+     * @param $options ['appsecret']   #公众帐号secert
      */
     public function __construct($options = array())
     {

@@ -29,6 +29,8 @@ class LoginController extends Controller {
         /*引入微信登录类*/
         require_once("./Plugins/WxLogin/WxLogin.php");
         $WxLogin = new \WxLogin();
+        p($WxLogin);
+        die;
         $weiChat_token = $WxLogin->getWeiChat($code);
         p($weiChat_token);
         $weiChatData = $WxLogin->getWeiChatInfo($weiChat_token['access_token'], $weiChat_token['openid']);

@@ -258,7 +258,6 @@
         }
 
     }
-    $(function () {
         var obj = new WxLogin({
             self_redirect:false,
             id:"login_container",
@@ -269,7 +268,6 @@
             style: "black",
             href: ""
         });
-    });
     $('#send').click(function () {
         var  mobile = $(" input[ name='mobile' ] ").val();
         if(mobile == ''){
