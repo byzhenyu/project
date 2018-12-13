@@ -1655,3 +1655,11 @@ function getMarryInfo($status){
         case 2: return '未婚'; break;
     }
 }
+
+function resume_audit($status){
+    switch ($status){
+        case 1: return '已通过'; break;
+        case 2: return '未通过';break;
+        default: return '待审核'; break;
+    }
+}

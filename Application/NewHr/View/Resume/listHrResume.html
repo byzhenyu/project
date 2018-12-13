@@ -34,13 +34,20 @@
                             <p>地区：{$v['job_area']} </p>
                             <p>职业：{$v['job_intension']}</p>
                         </span>
-                            <span>{$v['post_nature']}</span>
+                            <span>
+                                <p>性质：{$v['post_nature']} </p>
+                            <p>认证：<if condition="$v['is_audit'] eq 2">
+                                <em style="color: red">{:resume_audit($v['is_audit'])}</em>
+                                <else/>
+                                <em>{:resume_audit($v['is_audit'])}</em>
+                            </if></p>
+                            </span>
                             <span>{:time_format($v['update_time'])}</span>
                             <span>
                                 <div class="bj ">
                                     <if condition="$v['is_edit'] eq 1">
                                         <a href="{:U('Resume/editResume',array('resume_id'=>$v['id']))}">编辑</a>
-                                        <else/><span style="color: #ff1408;">认证简历不可操作</span>
+                                        <else/>
                                     </if>
                                 </div>
                                 <div class="detail">

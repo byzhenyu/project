@@ -31,7 +31,7 @@ class RecruitController extends HrCommonController {
             $companyInfoModel = D('Admin/CompanyInfo');
             $checkCompanyInfo = $companyInfoModel->checkCompanyInfo($hr_id);
             if ($checkCompanyInfo == 0) {
-                $this->ajaxReturn(V(0, '请先完善个人资料'));
+                $this->ajaxReturn(V(0, '请先完善公司资料'));
             }
             //$recruit_resume_model = D('Admin/RecruitResume');
             $position_name = M('Position')->where(array('id' => $data['position_id']))->getField('position_name');

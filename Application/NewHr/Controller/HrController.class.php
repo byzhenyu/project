@@ -16,6 +16,8 @@ class HrController extends HrCommonController {
                 if(strlen($data['password']) < 6 || strlen($data['password']) > 18) $this->ajaxReturn(V(0, '密码长度控制在6-18位！'));
             }
             $mobile_info = $model->getUserInfo(array('mobile' => $data['mobile'], 'status' => 1, 'user_type' => 1, 'user_id' => array('neq', HR_ID)));
+            $data['user_name'] = trim($data['user_name']);
+            if(!$data['user_name']) $this->ajaxReturn(V(0, '用户名称不能为空！'));
             if($mobile_info) $this->ajaxReturn(V(0, '手机号已经被绑定！'));
             $res = $model->saveUserData($where,$data);
             if(false !== $res){
@@ -58,6 +60,7 @@ class HrController extends HrCommonController {
                 }
             }
             else{
+                $data['user_id'] = HR_ID;
                 $create = $company_model->create($data, 1);
                 if(false !== $create){
                     $res = $company_model->add($data);

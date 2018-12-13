@@ -9,7 +9,7 @@ class ResumeController extends HrCommonController {
     public function listHrResume(){
         $resume_name = I('keywords', '', 'trim');
         $model = D('Admin/HrResume');
-        $where = array('h.hr_user_id' => HR_ID);
+        $where = array('_string' => 'h.hr_user_id = '.HR_ID.' or r.user_id = '.HR_ID);
         //多功能检索处理
         $true_name = I('true_name', '', 'trim');
         $mobile = I('mobile', '', 'trim');
@@ -46,8 +46,9 @@ class ResumeController extends HrCommonController {
         if($career_label) $where['r.career_label'] = array('like', '%'.$career_label.'%');
 
         if($resume_name) $where['r.true_name|r.mobile'] = array('like', '%'.$resume_name.'%');
-        $list = $model->getHrResumeList($where, 'h.id as hr_resume_id,h.hr_user_id,r.*');
+        $list = $model->getHrResumeListWeb($where, 'h.id as hr_resume_id,h.hr_user_id,r.*, IFNULL(h.hr_user_id,'.HR_ID.') as hr_user_id_null');
         foreach($list['info'] as &$val){
+            $val['hr_user_id'] = $val['hr_user_id_null'];
             if($val['hr_user_id'] == $val['user_id']) $val['is_edit'] = 1;
             if(!$val['job_intension']) $val['job_intension'] = D('Admin/Position')->getPositionField(array('id' => $val['position_id']), 'position_name');
         }
