@@ -16,6 +16,7 @@ class CompanyInfoModel extends Model {
         array('company_nature', 'require', '请选择公司性质！', 1, 'regex', 3),
         array('company_mobile', 'require', '请填写公司联系电话！', 1, 'regex', 3),
         array('company_email', 'require', '请填写公司联系邮箱！', 1, 'regex', 3),
+        array('company_email', 'is_email', '请填写正确的邮箱号',1, 'function', 3),
         array('company_industry', 'require', '公司所属行业不能为空！', 1, 'regex', 3),
         array('company_address', 'require', '请填写公司地址！', 1, 'regex', 3),
         array('company_address', '1,150', '公司名称保持在1-150字！', 1, 'length', 3),

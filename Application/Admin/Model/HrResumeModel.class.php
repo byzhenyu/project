@@ -33,6 +33,13 @@ class HrResumeModel extends Model {
         );
     }
 
+    /**
+     * @desc web端HR简历库 [未审核简历展示问题]
+     * @param $where
+     * @param bool $field
+     * @param string $order
+     * @return array
+     */
     public function getHrResumeListWeb($where, $field = false, $order = 'h.add_time desc'){
         if(!$field) $field = 'h.id,h.resume_id,r.true_name,r.head_pic,h.add_time,r.age,r.sex';
         $number = M('Resume')->alias('r')->join('__HR_RESUME__ as h on r.id = h.resume_id', 'LEFT')->field($field)->order($order)->where($where)->count();

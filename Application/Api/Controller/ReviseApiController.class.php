@@ -302,7 +302,6 @@ class ReviseApiController extends ApiUserCommonController{
 
     /**
      * @desc HR悬赏列表
-     * @extra TODO 学历选项  匹配问题。
      * @return mixed
      */
     private function hrRecruitList(){
