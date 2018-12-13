@@ -28,8 +28,8 @@
 							<tr>
 								<td style="width: 25%;;"><div align="right"><strong>真实姓名：</strong></div></td>
 								<td style="width: 25%;">{$info['detail']['true_name']}</td>
-								<td style="width: 25%;"><div align="right"><strong>首字母：</strong></div></td>
-								<td>{$info['detail']['initials']}</td>
+								<td style="width: 25%;"><div align="right"><strong>婚否：</strong></div></td>
+								<td>{:getMarryInfo($info['detail']['is_marry'])}</td>
 							</tr>
 							<tr>
 								<td><div align="right"><strong>联系方式：</strong></div></td>
@@ -41,7 +41,7 @@
 								<td><div align="right"><strong>性别：</strong></div></td>
 								<td>{:getSexInfo($info['detail']['sex'])}</td>
 								<td><div align="right"><strong>年龄：</strong></div></td>
-								<td>{$info['detail']['age']}</td>
+								<td>{:time_to_age($info['detail']['age'])}</td>
 							</tr>
 							<tr>
 								<td><div align="right"><strong>求职方向：</strong></div></td>
@@ -62,7 +62,7 @@
 								<td>{$info['detail']['language_ability']}</td>
 							</tr>
 							<tr>
-								<td><div align="right"><strong>联系地址：</strong></div></td>
+								<td><div align="right"><strong>户籍：</strong></div></td>
 								<td>{$info['detail']['address']}</td>
 								<td><div align="right"><strong>自我介绍：</strong></div></td>
 								<td>{$info['detail']['introduced']}</td>

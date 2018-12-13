@@ -39,6 +39,9 @@ class ResumeWorkController extends HrCommonController {
         $is_c = I('is_current', 0, 'intval');
         $data['starttime'] = strtotime($data['starttime']);
         $data['endtime'] = $is_c ? 0 : strtotime($data['endtime']);
+        if(!$is_c) {
+            if($data['starttime'] > $data['endtime']) $this->ajaxReturn(V(0, '结束时间不能小于开始时间'));
+        }
         if(IS_POST){
             if($id > 0){
                 $create = $model->create($data, 2);
