@@ -35,7 +35,7 @@ class LoginController extends Controller {
         if( $loginInfo['status'] == 1 ){ //登录成功
             /* 存入session */
             $this->_autoSession($loginInfo['data']);
-            $this->ajaxReturn($loginInfo);
+            $this->display(('Index/index'));
         } else {
             $this->ajaxReturn($loginInfo);
         }
