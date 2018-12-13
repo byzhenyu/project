@@ -32,7 +32,7 @@
                                 开票金额
                             </div>
                             <div class="b_info">
-                                <input type="number" name="invoice_amount" class="inputtext"   placeholder="请输入开票金额" value="{:fen_to_yuan($info[invoice_amount])}">
+                                <input type="number" min="1" name="invoice_amount" class="inputtext"   placeholder="请输入开票金额/元" value="{:fen_to_yuan($info[invoice_amount])}">
                             </div>
                         </li>
                         <li>
@@ -96,7 +96,7 @@
                                 收票邮箱
                             </div>
                             <div class="b_info">
-                                <input type="text"  name="invoice_email"  class="inputtext"  value="{$info[invoice_email]}" placeholder="请输入收票邮箱">
+                                <input type="text"  name="invoice_email" required="required" class="inputtext"  value="{$info[invoice_email]}" placeholder="请输入收票邮箱">
                             </div>
                         </li>
                         <span id="addr" style="display: none;">
@@ -156,10 +156,18 @@
                      $('#mail').show();
                      $('#addr').hide();
                      $('#invoice_type').val(0);
+                    $('input[name="invoice_email"]').attr("required", "true");
+                    $('input[name="receive_contacts"]').removeAttr("required");
+                    $('input[name="receive_mobile"]').removeAttr("required");
+                    $('input[name="receive_address"]').removeAttr("required");
                 }else{
                     $('#addr').show();
                     $('#mail').hide();
                     $('#invoice_type').val(1);
+                    $('input[name="invoice_email"]').removeAttr("required");
+                    $('input[name="receive_contacts"]').attr("required", "true");
+                    $('input[name="receive_mobile"]').attr("required", "true");
+                    $('input[name="receive_address"]').attr("required", "true");
                 }
             }
         );
