@@ -19,6 +19,7 @@ class RecruitController extends CommonController {
             $user_info = $user_model->getUserInfo($where, 'nickname,user_name');
             $val['release_name'] = !empty($user_info['nickname']) ? $user_info['nickname'] : $user_info['user_name'];
         }
+        unset($val);
         $this->list = $list['info'];
         $this->page = $list['page'];
         $this->keyword = $keywords;
@@ -39,7 +40,11 @@ class RecruitController extends CommonController {
         $info['release_name'] = !empty($user_info['nickname']) ? $user_info['nickname'] : $user_info['user_name'];
         $info['experience'] = C('WORK_EXP')[$info['experience']];
         $education = D('Admin/Education')->getEducationInfo(array('id' => $info['degree']));
-        $info['education_name'] = $education['education_name'] == '不限' ? '不限' : $education['education_name'].'或'.$education['education_name'].'以上';
+        if($info['education_name']) $info['education_name'] = $education['education_name'] == '不限' ? '不限' : $education['education_name'].'或'.$education['education_name'].'以上';
+        $position_model = D('Admin/Position');
+        $t_parent_id = $position_model->getPositionField(array('id' => $info['position_id']), 'parent_id');
+        $position_name = $position_model->getPositionField(array('id' => $t_parent_id), 'position_name');
+        $info['position_name'] = $position_name .'-'. $info['position_name'];
         $this->info = $info;
         $this->display();
     }
