@@ -21,8 +21,6 @@ class RecruitController extends HrCommonController {
             if($data['recruit_num'] > 100) $this->ajaxReturn(V(0, '悬赏人数不能超过100'));
             $data['hr_user_id'] = $hr_id;
             $data['job_area'] = $data['province'].','.$data['city'].','.$data['county'];
-            $data['welfare'] = implode(',', $data['welfare']);
-            $data['language_ability'] = implode(',', $data['language_ability']);
             if(!check_is_auth($hr_id)) {
                 $string = auth_string();
                 if(false !== $string) $this->ajaxReturn(V(0, $string));
