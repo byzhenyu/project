@@ -30,20 +30,15 @@ class LoginController extends Controller {
         require_once("./Plugins/WxLogin/WxLogin.php");
         $WxLogin = new \WxLogin();
         $weiChat_token = $WxLogin->getWeiChat($code);
-        p($weiChat_token);
         $weiChatData = $WxLogin->getWeiChatInfo($weiChat_token['access_token'], $weiChat_token['openid']);
-        LL('./log/log1.txt',$weiChatData);
-        p($weiChatData);
         $loginInfo = D('Admin/User')->weiChatLogin($weiChatData['unionid']);
-        p($loginInfo);
-        LL('./log/log1.txt',$weiChatData);
-//        if( $loginInfo['status'] == 1 ){ //登录成功
-//            /* 存入session */
-//            $this->_autoSession($loginInfo['data']);
-//            $this->ajaxReturn($loginInfo);
-//        } else {
-//            $this->ajaxReturn($loginInfo);
-//        }
+        if( $loginInfo['status'] == 1 ){ //登录成功
+            /* 存入session */
+            $this->_autoSession($loginInfo['data']);
+            $this->ajaxReturn($loginInfo);
+        } else {
+            $this->ajaxReturn($loginInfo);
+        }
     }
        /**
        * @desc 手机验证码登录
